@@ -10,5 +10,7 @@ namespace TestAPI.Data
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<GoodsReceipt> GoodsReceipt { get; set; }
+        public DbSet<Partners> Partners { get; set; }
     }
 }
