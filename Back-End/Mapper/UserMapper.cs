@@ -18,8 +18,10 @@ namespace TestAPI.Mapper
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
             modelObject.Username = efObject.Username;
-            modelObject.Age = efObject.Age;
-            return modelObject;
+            modelObject.Branch = efObject.Branch;
+            modelObject.Address = efObject.Address;
+            modelObject.Age = efObject.Age;                      
+            return modelObject;                                  
         }
 
         public List<UserModel> ToModels(List<Users> efObjects)
@@ -32,6 +34,8 @@ namespace TestAPI.Mapper
                 modelObject.Name = item.Name;
                 modelObject.Username = item.Username;
                 modelObject.Age = item.Age;
+                modelObject.Branch = item.Branch;
+                modelObject.Address = item.Address;
                 result.Add(modelObject);
             }
             return result;
