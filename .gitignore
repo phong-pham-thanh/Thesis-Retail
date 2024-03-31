@@ -233,3 +233,4 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 Back-End/.vs
+Back-End/obj/Debug/net6.0
