@@ -1,4 +1,4 @@
-﻿namespace TestAPI.Models
+namespace TestAPI.Models
 {
     public class UserModel
     {
@@ -8,9 +8,10 @@
         public string Username { get; set; }
         public string Password { get; set; }
         public string Branch { get; set; }
-        public Data.Address Address { get; set; }
+        public string Address { get; set; }
         public DateTime DateOnboard { get; set; }
         public int Age { get; set; }
         
     }
 }
+
