@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TestAPI.Data.Enum;
 
 namespace TestAPI.Data
 {
@@ -10,6 +11,6 @@ namespace TestAPI.Data
         public DateTime ExportDate { get; set; }
         [ForeignKey("Partners.Id")]
         public int PartnerID { get; set; }
-        public bool ReceiptStatus { get; set; }
+        public Status ReceiptStatus { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TestAPI.Data.Enum;
 
 namespace TestAPI.Data
 {
@@ -9,6 +10,6 @@ namespace TestAPI.Data
         public int Id { get; set; }
         public DateTime ExportDate { get; set; }
         public int PartnerID { get; set; }
-        public bool ReceiptStatus { get; set; } = false;
+        public Status ReceiptStatus { get; set; }
     }
 }

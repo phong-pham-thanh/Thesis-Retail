@@ -23,4 +23,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Data\Enum\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Enum\" />
+  </ItemGroup>
 </Project>
