@@ -9,8 +9,9 @@ namespace TestAPI.Data
         [Key]
         public int Id { get; set; }
         public DateTime ExportDate { get; set; }
-        [ForeignKey("Partners.Id")]
         public int PartnerID { get; set; }
+        [ForeignKey("PartnersId")]
+        public Partners partners {get; set;}
         public Status ReceiptStatus { get; set; }
     }
 }

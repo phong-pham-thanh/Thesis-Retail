@@ -15,10 +15,10 @@ namespace TestAPI.Mapper
             ProductModel modelObject = new ProductModel();
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
-            modelObject.giaban = efObject.giaban;
-            modelObject.giavon = efObject.giavon;
-            modelObject.slnhap = efObject.slnhap;
-            modelObject.tonkho = efObject.tonkho;
+            modelObject.CategoryId = efObject.CategoryId;
+            modelObject.Category = efObject.Category;
+            modelObject.Status = efObject.Status;
+            modelObject.Description = efObject.Description;
             return modelObject;
         }
 
@@ -30,10 +30,10 @@ namespace TestAPI.Mapper
                 ProductModel modelObject = new ProductModel();
                 modelObject.Id = item.Id;
                 modelObject.Name = item.Name;
-                modelObject.giaban = item.giaban;
-                modelObject.giavon = item.giavon;
-                modelObject.slnhap = item.slnhap;
-                modelObject.tonkho = item.tonkho;
+                modelObject.CategoryId = item.CategoryId;
+                modelObject.Category = item.Category;
+                modelObject.Status = item.Status;
+                modelObject.Description = item.Description;
                 result.Add(modelObject);
             }
             return result;

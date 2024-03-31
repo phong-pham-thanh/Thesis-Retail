@@ -16,10 +16,18 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet]
-        public List<ProductModel> GetAll()
+        public List<ProductModel> GetAllProduct()
         {
-            List<ProductModel> temp = _productRepository.GetAllProducts();
-            return temp;
+            List<ProductModel> result = _productRepository.GetAllProducts();
+            return result;
+        }
+
+        [Route("getProductById/{id}")]
+        [HttpGet]
+        public ProductModel GetProductById(int id)
+        {
+            ProductModel result = _productRepository.GetProductById(id);
+            return result;
         }
     }
 }

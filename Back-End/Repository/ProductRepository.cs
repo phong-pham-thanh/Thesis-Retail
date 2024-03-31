@@ -20,5 +20,10 @@ namespace TestAPI.Repository
             List<Product> products = _coreContext.Product.ToList();
             return _productMapper.ToModels(products);
         }
+        public ProductModel GetProductById(int id)
+        {
+            Product product = _coreContext.Product.Where(p => p.Id == id).FirstOrDefault();
+            return _productMapper.ToModel(product);
+        }
     }
 }
