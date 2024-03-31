@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestAPI.Data;
 
@@ -11,9 +12,10 @@ using TestAPI.Data;
 namespace TestAPI.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    partial class CoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240331043458_GoodsReceipt_GoodsIssue")]
+    partial class GoodsReceipt_GoodsIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,6 @@ namespace TestAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-<<<<<<< HEAD
             modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
                 {
                     b.Property<int>("Id")
@@ -45,8 +46,6 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsIssue");
                 });
 
-=======
->>>>>>> origin
             modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -61,13 +60,8 @@ namespace TestAPI.Migrations
                     b.Property<int>("PartnerID")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<int>("ReceiptStatus")
                         .HasColumnType("int");
-=======
-                    b.Property<bool>("ReceiptStatus")
-                        .HasColumnType("bit");
->>>>>>> origin
 
                     b.HasKey("Id");
 
@@ -131,14 +125,9 @@ namespace TestAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<< HEAD
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-=======
-                    b.Property<int>("Address")
-                        .HasColumnType("int");
->>>>>>> origin
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
