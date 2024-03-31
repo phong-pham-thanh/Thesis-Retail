@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace TestAPI.Data
 {
@@ -15,3 +15,4 @@ namespace TestAPI.Data
         public DbSet<GoodsIssue> GoodsIssue { get; set; }
     }
 }
+

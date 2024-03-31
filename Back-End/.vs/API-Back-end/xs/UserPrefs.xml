@@ -1,44 +1,18 @@
-﻿<Properties StartupConfiguration="{BDB6EC13-F492-4361-92F6-F04EEDDFCB79}|TestAPI">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+﻿<Properties>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.ItemProperties.API-Back-end PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="appsettings.json">
-    <Files>
-      <File FileName="Models/UserModel.cs" />
-      <File FileName="Models/ProductModel.cs" />
-      <File FileName="Data/CoreContext.cs" />
-      <File FileName="Data/Product.cs" />
-      <File FileName="Data/Users.cs" />
-      <File FileName="Data/GoodsIssue.cs" />
-      <File FileName="Data/GoodsReceipt.cs" />
-      <File FileName="Data/Partners.cs" />
-      <File FileName="Models/PartnerModel.cs" />
-      <File FileName="Mapper/IGoodsReceiptMapper.cs" />
-      <File FileName="Mapper/GoodsReceiptMapper.cs" />
-      <File FileName="Models/GoodsReceiptModel.cs" />
-      <File FileName="Repository/IGReceiptRepository.cs" />
-      <File FileName="Repository/IProductRepository.cs" />
-      <File FileName="Repository/IPartnerRepository.cs" />
-      <File FileName="Repository/UserRepository.cs" />
-      <File FileName="Repository/ProductRepository.cs" />
-      <File FileName="Mapper/IProductMapper.cs" />
-      <File FileName="appsettings.json" Line="10" Column="107" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="API-Back-end">
-            <Node name="API-Back-end">
-              <Node name="Models" expanded="True" />
-              <Node name="appsettings.json" selected="True" />
-            </Node>
-          </Node>
+          <Node name="API-Back-end" selected="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <DisabledProjects>
+    <String>API-Back-end.csproj</String>
+  </DisabledProjects>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints />
 </Properties>

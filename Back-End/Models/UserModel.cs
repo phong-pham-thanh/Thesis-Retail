@@ -1,4 +1,4 @@
-﻿namespace TestAPI.Models
+namespace TestAPI.Models
 {
     public class UserModel
     {
@@ -14,3 +14,4 @@
         
     }
 }
+
