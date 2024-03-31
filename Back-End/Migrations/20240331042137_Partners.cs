@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TestAPI.Migrations
 {
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.cs
     public partial class Partners : Migration
-=======
-    public partial class Partner_GoodsReceipt : Migration
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,7 +31,6 @@ namespace TestAPI.Migrations
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.CreateTable(
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.cs
                 name: "GoodsIssue",
                 columns: table => new
                 {
@@ -50,8 +45,6 @@ namespace TestAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-=======
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.cs
                 name: "GoodsReceipt",
                 columns: table => new
                 {
@@ -59,11 +52,7 @@ namespace TestAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ExportDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PartnerID = table.Column<int>(type: "int", nullable: false),
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.cs
                     ReceiptStatus = table.Column<int>(type: "int", nullable: false)
-=======
-                    ReceiptStatus = table.Column<bool>(type: "bit", nullable: false)
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.cs
                 },
                 constraints: table =>
                 {
@@ -88,12 +77,9 @@ namespace TestAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.cs
                 name: "GoodsIssue");
 
             migrationBuilder.DropTable(
-=======
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.cs
                 name: "GoodsReceipt");
 
             migrationBuilder.DropTable(

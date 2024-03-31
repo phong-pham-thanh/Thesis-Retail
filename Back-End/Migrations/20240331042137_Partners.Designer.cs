@@ -12,13 +12,8 @@ using TestAPI.Data;
 namespace TestAPI.Migrations
 {
     [DbContext(typeof(CoreContext))]
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.Designer.cs
     [Migration("20240331042137_Partners")]
     partial class Partners
-=======
-    [Migration("20240328171317_Partner_GoodsReceipt")]
-    partial class Partner_GoodsReceipt
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,7 +24,6 @@ namespace TestAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.Designer.cs
             modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
                 {
                     b.Property<int>("Id")
@@ -49,8 +43,6 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsIssue");
                 });
 
-=======
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.Designer.cs
             modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -65,13 +57,8 @@ namespace TestAPI.Migrations
                     b.Property<int>("PartnerID")
                         .HasColumnType("int");
 
-<<<<<<< HEAD:Back-End/Migrations/20240331042137_Partners.Designer.cs
                     b.Property<int>("ReceiptStatus")
                         .HasColumnType("int");
-=======
-                    b.Property<bool>("ReceiptStatus")
-                        .HasColumnType("bit");
->>>>>>> origin:Back-End/Migrations/20240328171317_Partner_GoodsReceipt.Designer.cs
 
                     b.HasKey("Id");
 

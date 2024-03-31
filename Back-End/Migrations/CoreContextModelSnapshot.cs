@@ -22,7 +22,6 @@ namespace TestAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-<<<<<<< HEAD
             modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
                 {
                     b.Property<int>("Id")
@@ -45,8 +44,6 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsIssue");
                 });
 
-=======
->>>>>>> origin
             modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -61,13 +58,8 @@ namespace TestAPI.Migrations
                     b.Property<int>("PartnerID")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<int>("ReceiptStatus")
                         .HasColumnType("int");
-=======
-                    b.Property<bool>("ReceiptStatus")
-                        .HasColumnType("bit");
->>>>>>> origin
 
                     b.HasKey("Id");
 
@@ -131,14 +123,9 @@ namespace TestAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<< HEAD
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-=======
-                    b.Property<int>("Address")
-                        .HasColumnType("int");
->>>>>>> origin
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
