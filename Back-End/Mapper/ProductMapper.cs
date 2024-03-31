@@ -38,5 +38,20 @@ namespace TestAPI.Mapper
             }
             return result;
         }
+
+        public Product ToEntity(Product efObject, ProductModel modelObject)
+        {
+            if (modelObject == null)
+            {
+                return null;
+            }
+            efObject.Id = modelObject.Id;
+            efObject.Name = modelObject.Name;
+            efObject.CategoryId = modelObject.CategoryId;
+            efObject.Category = modelObject.Category;
+            efObject.Status = modelObject.Status;
+            efObject.Description = modelObject.Description;
+            return efObject;
+        }
     }
 }

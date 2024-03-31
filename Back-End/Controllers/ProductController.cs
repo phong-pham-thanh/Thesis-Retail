@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using TestAPI.Models;
 using TestAPI.Repository;
 
@@ -28,6 +29,20 @@ namespace TestAPI.Controllers
         {
             ProductModel result = _productRepository.GetProductById(id);
             return result;
+        }
+
+        [HttpDelete]
+        [Route("deleteProductById/{id}")]
+        public bool DeleteProductById(int id)
+        {
+            return _productRepository.DeleteProdcutById(id);
+        }
+
+        [HttpPut]
+        [Route("updateProductById/{id}")]
+        public ProductModel Put(int id, [FromBody] ProductModel product)
+        {
+            return _productRepository.UpdateProductById(id, product);
         }
     }
 }
