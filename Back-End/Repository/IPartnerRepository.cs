@@ -1,7 +1,7 @@
-﻿using TestAPI.Data;
-using TestAPI.Models;
+﻿using APIBackEnd.Data;
+using APIBackEnd.Models;
 
-namespace TestAPI.Repository
+namespace APIBackEnd.Repository
 {
     public interface IPartnerRepository
     {

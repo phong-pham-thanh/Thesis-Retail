@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TestAPI.Migrations
+namespace APIBackEnd.Migrations
 {
     public partial class updateProductAndAddCategory : Migration
     {

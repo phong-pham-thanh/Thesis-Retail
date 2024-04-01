@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TestAPI.Data
+namespace APIBackEnd.Data
 {
     public class Categories
     {

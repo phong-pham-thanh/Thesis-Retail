@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TestAPI.Data.Enum;
+using APIBackEnd.Data.Enum;
 
-namespace TestAPI.Data
+namespace APIBackEnd.Data
 {
     public class GoodsReceipt //Phieu nhap kho
     {

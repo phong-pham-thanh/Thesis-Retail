@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TestAPI.Data
+namespace APIBackEnd.Data
 {
     [Table("Users")]
     public class Users

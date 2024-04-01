@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TestAPI.Data;
+using APIBackEnd.Data;
 
 #nullable disable
 
-namespace TestAPI.Migrations
+namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
     [Migration("20240331043458_GoodsReceipt_GoodsIssue")]
@@ -24,7 +24,7 @@ namespace TestAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsIssue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsIssue");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsReceipt", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +68,7 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsReceipt");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Partners", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Partners", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace TestAPI.Migrations
                     b.ToTable("Partners");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Product", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,7 +117,7 @@ namespace TestAPI.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Users", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

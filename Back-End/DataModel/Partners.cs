@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace TestAPI.Data
+namespace APIBackEnd.Data
 {
     public class Partners
     {

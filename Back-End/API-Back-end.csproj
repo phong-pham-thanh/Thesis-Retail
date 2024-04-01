@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'TestAPI' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'APIBackEnd' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
@@ -24,9 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Data\Enum\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Enum\" />
+    <None Remove="DataModel\Enum\" />
   </ItemGroup>
 </Project>

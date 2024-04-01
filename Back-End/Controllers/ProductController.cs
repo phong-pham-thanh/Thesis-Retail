@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using TestAPI.Models;
-using TestAPI.Repository;
+using APIBackEnd.Models;
+using APIBackEnd.Repository;
 
-namespace TestAPI.Controllers
+namespace APIBackEnd.Controllers
 {
     [Route("[controller]")]
     [ApiController]

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TestAPI.Data;
+using APIBackEnd.Data;
 
 #nullable disable
 
-namespace TestAPI.Migrations
+namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
     partial class CoreContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace TestAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("TestAPI.Data.Categories", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Categories", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace TestAPI.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsIssue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsIssue");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsReceipt", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace TestAPI.Migrations
                     b.ToTable("GoodsReceipt");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Partners", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Partners", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +108,7 @@ namespace TestAPI.Migrations
                     b.ToTable("Partners");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Product", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace TestAPI.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Users", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,9 +175,9 @@ namespace TestAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsReceipt", b =>
                 {
-                    b.HasOne("TestAPI.Data.Partners", "partners")
+                    b.HasOne("APIBackEnd.Data.Partners", "partners")
                         .WithMany()
                         .HasForeignKey("PartnersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -186,9 +186,9 @@ namespace TestAPI.Migrations
                     b.Navigation("partners");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.Product", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
-                    b.HasOne("TestAPI.Data.Categories", "Category")
+                    b.HasOne("APIBackEnd.Data.Categories", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

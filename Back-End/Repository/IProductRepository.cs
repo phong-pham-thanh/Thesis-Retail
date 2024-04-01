@@ -1,6 +1,6 @@
-﻿using TestAPI.Models;
+﻿using APIBackEnd.Models;
 
-namespace TestAPI.Repository
+namespace APIBackEnd.Repository
 {
     public interface IProductRepository
     {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TestAPI.Data;
-using TestAPI.Mapper;
-using TestAPI.Repository;
+using APIBackEnd.Data;
+using APIBackEnd.Mapper;
+using APIBackEnd.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
