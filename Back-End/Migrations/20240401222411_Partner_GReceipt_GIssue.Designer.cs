@@ -12,8 +12,8 @@ using TestAPI.Data;
 namespace TestAPI.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    [Migration("20240331042137_Partners")]
-    partial class Partners
+    [Migration("20240401222411_Partner_GReceipt_GIssue")]
+    partial class Partner_GReceipt_GIssue
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace TestAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IssueStatus")
                         .HasColumnType("int");
 
@@ -39,6 +42,8 @@ namespace TestAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PartnerId");
 
                     b.ToTable("GoodsIssue");
                 });
@@ -54,13 +59,15 @@ namespace TestAPI.Migrations
                     b.Property<DateTime>("ExportDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PartnerID")
+                    b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiptStatus")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PartnerId");
 
                     b.ToTable("GoodsReceipt");
                 });
@@ -122,8 +129,9 @@ namespace TestAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Address")
-                        .HasColumnType("int");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -150,6 +158,28 @@ namespace TestAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
+                {
+                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partners");
+                });
+
+            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+                {
+                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partners");
                 });
 #pragma warning restore 612, 618
         }

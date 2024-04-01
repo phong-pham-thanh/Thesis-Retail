@@ -9,7 +9,7 @@ namespace TestAPI.Data
         public GoodsReceiptModel() { }
         public int Id { get; set; }
         public DateTime ExportDate { get; set; }
-        public int PartnerID { get; set; }
+        public int PartnerId { get; set; }
         public Status ReceiptStatus { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace TestAPI.Mapper
             }
             GoodsReceiptModel modelObject = new GoodsReceiptModel();
             modelObject.Id = efObject.Id;
-            modelObject.PartnerID = efObject.PartnerID;
+            modelObject.PartnerId = efObject.PartnerId;
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ExportDate = efObject.ExportDate;
             return modelObject;
@@ -27,7 +27,7 @@ namespace TestAPI.Mapper
             {
                 GoodsReceiptModel modelObject = new GoodsReceiptModel();
                 modelObject.Id = item.Id;
-                modelObject.PartnerID = item.PartnerID;
+                modelObject.PartnerId = item.PartnerId;
                 modelObject.ReceiptStatus = item.ReceiptStatus;
                 modelObject.ExportDate = item.ExportDate;
                 result.Add(modelObject);

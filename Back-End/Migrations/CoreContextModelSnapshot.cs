@@ -41,6 +41,8 @@ namespace TestAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PartnerId");
+
                     b.ToTable("GoodsIssue");
                 });
 
@@ -55,13 +57,15 @@ namespace TestAPI.Migrations
                     b.Property<DateTime>("ExportDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PartnerID")
+                    b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiptStatus")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PartnerId");
 
                     b.ToTable("GoodsReceipt");
                 });
@@ -152,6 +156,28 @@ namespace TestAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
+                {
+                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partners");
+                });
+
+            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+                {
+                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partners");
                 });
 #pragma warning restore 612, 618
         }
