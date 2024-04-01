@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TestAPI.Data;
-using TestAPI.Models;
-using TestAPI.Repository;
+using APIBackEnd.Data;
+using APIBackEnd.Models;
+using APIBackEnd.Repository;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 
-namespace TestAPI.Controllers
+namespace APIBackEnd.Controllers
 {
 
     public class LoginModel

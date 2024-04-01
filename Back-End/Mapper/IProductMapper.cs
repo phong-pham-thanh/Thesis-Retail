@@ -1,11 +1,12 @@
-﻿using TestAPI.Data;
-using TestAPI.Models;
+﻿using APIBackEnd.Data;
+using APIBackEnd.Models;
 
-namespace TestAPI.Mapper
+namespace APIBackEnd.Mapper
 {
     public interface IProductMapper
     {
         public ProductModel ToModel(Product efObject);
+        public Product ToEntity(Product efObject, ProductModel modelObject);
         public List<ProductModel> ToModels(List<Product> efObject);
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TestAPI.Migrations
+namespace APIBackEnd.Migrations
 {
     public partial class Partner_GReceipt_GIssue : Migration
     {

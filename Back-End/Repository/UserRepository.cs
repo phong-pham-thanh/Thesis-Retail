@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using TestAPI.Data;
-using TestAPI.Mapper;
-using TestAPI.Models;
+using APIBackEnd.Data;
+using APIBackEnd.Mapper;
+using APIBackEnd.Models;
 
-namespace TestAPI.Repository
+namespace APIBackEnd.Repository
 {
     public class UserRepository : IUserRepository
     {

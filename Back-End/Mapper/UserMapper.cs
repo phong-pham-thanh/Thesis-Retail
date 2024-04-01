@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TestAPI.Data;
-using TestAPI.Models;
+using APIBackEnd.Data;
+using APIBackEnd.Models;
 
-namespace TestAPI.Mapper
+namespace APIBackEnd.Mapper
 {
     public class UserMapper : IUserMapper
     {

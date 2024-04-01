@@ -4,12 +4,14 @@ using APIBackEnd.Data.Enum;
 
 namespace APIBackEnd.Data
 {
-    public class GoodsReceiptModel //Phieu nhap kho
+    public class GoodsReceipt //Phieu nhap kho
     {
-        public GoodsReceiptModel() { }
+        [Key]
         public int Id { get; set; }
-        public DateTime ExportDate { get; set; }
         public int PartnerId { get; set; }
+        [ForeignKey("PartnerId")]
+        public Partners? Partners { get; set; }
+        public DateTime ExportDate { get; set; }
         public Status ReceiptStatus { get; set; }
     }
 }

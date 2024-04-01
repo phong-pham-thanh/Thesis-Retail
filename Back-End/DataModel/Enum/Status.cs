@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TestAPI.Data.Enum
+namespace APIBackEnd.Data.Enum
 {
 	public enum Status
 	{

@@ -12,8 +12,8 @@ using APIBackEnd.Data;
 namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    [Migration("20240401222411_Partner_GReceipt_GIssue")]
-    partial class Partner_GReceipt_GIssue
+    [Migration("20240331162228_updateProductAndAddCategory")]
+    partial class updateProductAndAddCategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,23 @@ namespace APIBackEnd.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("APIBackEnd.Data.Categories", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
 
             modelBuilder.Entity("APIBackEnd.Data.GoodsIssue", b =>
                 {
@@ -43,8 +60,6 @@ namespace APIBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartnerId");
-
                     b.ToTable("GoodsIssue");
                 });
 
@@ -59,7 +74,10 @@ namespace APIBackEnd.Migrations
                     b.Property<DateTime>("ExportDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PartnerId")
+                    b.Property<int>("PartnerID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PartnersId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiptStatus")
@@ -67,7 +85,7 @@ namespace APIBackEnd.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartnerId");
+                    b.HasIndex("PartnersId");
 
                     b.ToTable("GoodsReceipt");
                 });
@@ -100,23 +118,26 @@ namespace APIBackEnd.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("giaban")
-                        .HasColumnType("int");
-
-                    b.Property<int>("giavon")
-                        .HasColumnType("int");
-
-                    b.Property<int>("slnhap")
-                        .HasColumnType("int");
-
-                    b.Property<int>("tonkho")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -129,9 +150,8 @@ namespace APIBackEnd.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Address")
+                        .HasColumnType("int");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -160,26 +180,26 @@ namespace APIBackEnd.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsIssue", b =>
+            modelBuilder.Entity("APIBackEnd.Data.GoodsReceipt", b =>
                 {
-                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                    b.HasOne("APIBackEnd.Data.Partners", "partners")
                         .WithMany()
-                        .HasForeignKey("PartnerId")
+                        .HasForeignKey("PartnersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Partners");
+                    b.Navigation("partners");
                 });
 
-            modelBuilder.Entity("TestAPI.Data.GoodsReceipt", b =>
+            modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
-                    b.HasOne("TestAPI.Data.Partners", "Partners")
+                    b.HasOne("APIBackEnd.Data.Categories", "Category")
                         .WithMany()
-                        .HasForeignKey("PartnerId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Partners");
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

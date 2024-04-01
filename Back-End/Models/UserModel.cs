@@ -1,6 +1,6 @@
-using TestAPI.Data;
+using APIBackEnd.Data;
 
-namespace TestAPI.Models
+namespace APIBackEnd.Models
 {
     public class UserModel
     {

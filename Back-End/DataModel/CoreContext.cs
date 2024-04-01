@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TestAPI.Data
+namespace APIBackEnd.Data
 {
     public class CoreContext : DbContext
     {

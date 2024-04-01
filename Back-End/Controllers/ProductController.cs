@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestAPI.Models;
-using TestAPI.Repository;
+using System;
+using APIBackEnd.Models;
+using APIBackEnd.Repository;
 
-namespace TestAPI.Controllers
+namespace APIBackEnd.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -16,10 +17,32 @@ namespace TestAPI.Controllers
         }
 
         [HttpGet]
-        public List<ProductModel> GetAll()
+        public List<ProductModel> GetAllProduct()
         {
-            List<ProductModel> temp = _productRepository.GetAllProducts();
-            return temp;
+            List<ProductModel> result = _productRepository.GetAllProducts();
+            return result;
+        }
+
+        [Route("getProductById/{id}")]
+        [HttpGet]
+        public ProductModel GetProductById(int id)
+        {
+            ProductModel result = _productRepository.GetProductById(id);
+            return result;
+        }
+
+        [HttpDelete]
+        [Route("deleteProductById/{id}")]
+        public bool DeleteProductById(int id)
+        {
+            return _productRepository.DeleteProdcutById(id);
+        }
+
+        [HttpPut]
+        [Route("updateProductById/{id}")]
+        public ProductModel Put(int id, [FromBody] ProductModel product)
+        {
+            return _productRepository.UpdateProductById(id, product);
         }
     }
 }
