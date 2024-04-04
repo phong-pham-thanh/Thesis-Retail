@@ -34,5 +34,18 @@ namespace APIBackEnd.Mapper
             }
             return result;
         }
+
+        public void ToEntity(GoodsReceipt efObject, GoodsReceiptModel modelObject)
+        {
+            if (modelObject == null)
+            {
+                return;
+            }
+            efObject.Id = modelObject.Id;
+            efObject.PartnerID = modelObject.PartnerID;
+            efObject.ReceiptStatus = modelObject.ReceiptStatus;
+            efObject.ExportDate = modelObject.ExportDate;
+            return;
+        }
     }
 }

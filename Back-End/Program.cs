@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Repository;
+using APIBackend.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductMapper, ProductMapper>();
+builder.Services.AddScoped<IGoodsReceiptMapper, GoodsReceiptMapper>();
+builder.Services.AddScoped<IGoodReciptDetailMapper, GoodReciptDetailMapper>();
 
 builder.Services.AddCors(options =>
 {

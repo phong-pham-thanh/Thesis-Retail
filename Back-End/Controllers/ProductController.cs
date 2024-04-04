@@ -44,5 +44,12 @@ namespace APIBackEnd.Controllers
         {
             return _productRepository.UpdateProductById(id, product);
         }
+
+        [HttpPost]
+        [Route("addNewProduct")]
+        public ProductModel addNewProduct ([FromBody] ProductModel product)
+        {
+            return _productRepository.AddNewProduct(product);
+        }
     }
 }
