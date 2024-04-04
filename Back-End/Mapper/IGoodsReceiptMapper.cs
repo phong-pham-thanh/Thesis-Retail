@@ -7,5 +7,6 @@ namespace APIBackEnd.Mapper
     {
         public GoodsReceiptModel ToModel(GoodsReceipt efObject);
         public List<GoodsReceiptModel> ToModels(List<GoodsReceipt> efObject);
+        public void ToEntity(GoodsReceipt efObject, GoodsReceiptModel modelObject);
     }
 }

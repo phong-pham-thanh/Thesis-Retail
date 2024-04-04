@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using APIBackend.DataModel;
 using APIBackEnd.Data.Enum;
 
 namespace APIBackEnd.Data
@@ -13,5 +14,6 @@ namespace APIBackEnd.Data
         [ForeignKey("PartnersId")]
         public Partners partners {get; set;}
         public Status ReceiptStatus { get; set; }
+        public List<GoodReceiptDetails> ListGoodReciptDetails {get; set;}
     }
 }

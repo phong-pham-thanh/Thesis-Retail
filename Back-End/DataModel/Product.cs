@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using APIBackend.DataModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIBackEnd.Data
@@ -14,5 +15,6 @@ namespace APIBackEnd.Data
         public Categories Category { get; set; }
         public string Description { get; set; }
         public bool Status { get; set; }
+        public List<Inventories> ListInventories { get; set; }
     }
 }

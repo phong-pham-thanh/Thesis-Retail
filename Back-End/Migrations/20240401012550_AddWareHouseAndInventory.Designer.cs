@@ -4,6 +4,7 @@ using APIBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    partial class CoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240401012550_AddWareHouseAndInventory")]
+    partial class AddWareHouseAndInventory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,35 +177,6 @@ namespace APIBackEnd.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("APIBackend.DataModel.GoodReceiptDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("GoodReceiptId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PriceUnit")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GoodReceiptId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("GoodReceiptDetails");
-                });
-
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
                 {
                     b.Property<int>("Id")
@@ -276,29 +249,10 @@ namespace APIBackEnd.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("APIBackend.DataModel.GoodReceiptDetails", b =>
-                {
-                    b.HasOne("APIBackEnd.Data.GoodsReceipt", "GoodsReceipt")
-                        .WithMany("ListGoodReciptDetails")
-                        .HasForeignKey("GoodReceiptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APIBackEnd.Data.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GoodsReceipt");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
                 {
                     b.HasOne("APIBackEnd.Data.Product", "Product")
-                        .WithMany("ListInventories")
+                        .WithMany("Inventories")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -325,14 +279,9 @@ namespace APIBackEnd.Migrations
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("APIBackEnd.Data.GoodsReceipt", b =>
-                {
-                    b.Navigation("ListGoodReciptDetails");
-                });
-
             modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
-                    b.Navigation("ListInventories");
+                    b.Navigation("Inventories");
                 });
 
             modelBuilder.Entity("APIBackEnd.Data.Users", b =>

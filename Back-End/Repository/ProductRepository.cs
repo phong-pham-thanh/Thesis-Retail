@@ -49,6 +49,15 @@ namespace APIBackEnd.Repository
             _coreContext.SaveChanges();
             return _productMapper.ToModel(productDataBase);
         }
-        
+
+        public ProductModel AddNewProduct(ProductModel newProduct)
+        {
+            Product product = new Product();
+            _productMapper.ToEntity(product, newProduct);
+            _coreContext.Product.Add(product);
+            _coreContext.SaveChanges();
+            return newProduct;
+        }
+
     }
 }

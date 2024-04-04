@@ -1,3 +1,4 @@
+using APIBackend.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,7 @@ namespace APIBackEnd.Data
         public DateTime DateOnboard { get; set; }
         public Address Address { get; set; }
         public int Age { get; set; }
+        public List<WareHouses> WareHousesManaged { get; set; }
     }
     public enum Address
     {
