@@ -2,6 +2,7 @@
 using System;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
+using APIBackend.Service;
 
 namespace APIBackEnd.Controllers
 {
@@ -9,17 +10,17 @@ namespace APIBackEnd.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private IProductRepository _productRepository;
+        private IProductService _productService;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductService productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         [HttpGet]
         public List<ProductModel> GetAllProduct()
         {
-            List<ProductModel> result = _productRepository.GetAllProducts();
+            List<ProductModel> result = _productService.GetAllProducts();
             return result;
         }
 
@@ -27,7 +28,7 @@ namespace APIBackEnd.Controllers
         [HttpGet]
         public ProductModel GetProductById(int id)
         {
-            ProductModel result = _productRepository.GetProductById(id);
+            ProductModel result = _productService.GetProductById(id);
             return result;
         }
 
@@ -35,21 +36,21 @@ namespace APIBackEnd.Controllers
         [Route("deleteProductById/{id}")]
         public bool DeleteProductById(int id)
         {
-            return _productRepository.DeleteProdcutById(id);
+            return _productService.DeleteProdcutById(id);
         }
 
         [HttpPut]
         [Route("updateProductById/{id}")]
         public ProductModel Put(int id, [FromBody] ProductModel product)
         {
-            return _productRepository.UpdateProductById(id, product);
+            return _productService.UpdateProductById(id, product);
         }
 
         [HttpPost]
         [Route("addNewProduct")]
         public ProductModel addNewProduct ([FromBody] ProductModel product)
         {
-            return _productRepository.AddNewProduct(product);
+            return _productService.AddNewProduct(product);
         }
     }
 }

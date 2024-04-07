@@ -6,6 +6,10 @@ using APIBackEnd.Mapper;
 
 namespace APIBackend.Repository
 {
+    public interface IGoodReciptRepository
+    {
+        public bool AddGoodRecipt(GoodsReceipt goodsReceip);
+    }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
         private readonly CoreContext _coreContext;
@@ -21,7 +25,16 @@ namespace APIBackend.Repository
             _goodReciptDetailMapper = goodReciptDetailMapper;
         }
 
-        public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, int idWareHouse)
+        public bool AddGoodRecipt(GoodsReceipt goodsReceipt)
+        {
+            _coreContext.GoodsReceipt.Add(goodsReceipt);
+            _coreContext.SaveChanges();
+            return true;
+        }
+
+
+
+        public bool AddGoodReciptaaa(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, int idWareHouse)
         {
             GoodsReceipt goodsReceipt = new GoodsReceipt();
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
@@ -35,8 +48,6 @@ namespace APIBackend.Repository
 
             }
             _coreContext.SaveChanges();
-
-
 
             return true;
         }

@@ -5,6 +5,7 @@ using APIBackEnd.Repository;
 using APIBackend.Repository;
 using APIBackEnd.Data;
 using APIBackend.Models;
+using APIBackend.Service;
 
 namespace APIBackEnd.Controllers
 {
@@ -19,18 +20,18 @@ namespace APIBackEnd.Controllers
     [ApiController]
     public class GoodReciptController : ControllerBase
     {
-        private IGoodReciptRepository _goodReciptRepository;
+        private IGoodReciptService _goodReciptService;
 
-        public GoodReciptController(IGoodReciptRepository goodReciptRepository)
+        public GoodReciptController(IGoodReciptService goodReciptService)
         {
-            _goodReciptRepository = goodReciptRepository;
+            _goodReciptService = goodReciptService;
         }
 
         [HttpPost]
         [Route("addGoodRecipt")]
         public bool AddGoodRecipt([FromBody] paramAddNewGoodRecipt param)
         {
-            return _goodReciptRepository.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels, param.idWareHouse);
+            return _goodReciptService.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels, param.idWareHouse);
         }
     }
 }

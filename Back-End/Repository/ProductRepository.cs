@@ -5,6 +5,14 @@ using APIBackEnd.Models;
 
 namespace APIBackEnd.Repository
 {
+    public interface IProductRepository
+    {
+        public List<Product> GetAllProducts();
+        public ProductModel GetProductById(int id);
+        public Product AddNewProduct(ProductModel product);
+        public bool DeleteProdcutById(int id);
+        public Product UpdateProductById(int id, ProductModel product);
+    }
     public class ProductRepository : IProductRepository
     {
         private readonly CoreContext _coreContext;
@@ -16,14 +24,16 @@ namespace APIBackEnd.Repository
             _productMapper = productMapper;
         }
 
-        public List<ProductModel> GetAllProducts()
+        public List<Product> GetAllProducts()
         {
             List<Product> products = _coreContext.Product.ToList();
-            return _productMapper.ToModels(products);
+            return products;
         }
         public ProductModel GetProductById(int id)
         {
             Product product = _coreContext.Product.Where(p => p.Id == id).FirstOrDefault();
+            if (product == null) return null;
+
             return _productMapper.ToModel(product);
         }
         public bool DeleteProdcutById(int id)
@@ -38,25 +48,25 @@ namespace APIBackEnd.Repository
             return true;
         }
 
-        public ProductModel UpdateProductById(int id, ProductModel product)
+        public Product UpdateProductById(int id, ProductModel product)
         {
-            var productDataBase = _coreContext.Product.Find(id);
+            Product productDataBase = _coreContext.Product.Where(pr => pr.Id == id).FirstOrDefault();
             if (productDataBase == null)
             {
                 return null;
             }
             _productMapper.ToEntity(productDataBase, product);
             _coreContext.SaveChanges();
-            return _productMapper.ToModel(productDataBase);
+            return productDataBase;
         }
 
-        public ProductModel AddNewProduct(ProductModel newProduct)
+        public Product AddNewProduct(ProductModel newProduct)
         {
             Product product = new Product();
             _productMapper.ToEntity(product, newProduct);
             _coreContext.Product.Add(product);
             _coreContext.SaveChanges();
-            return newProduct;
+            return product;
         }
 
     }

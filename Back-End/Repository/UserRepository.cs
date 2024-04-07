@@ -6,6 +6,11 @@ using APIBackEnd.Models;
 
 namespace APIBackEnd.Repository
 {
+    public interface IUserRepository
+    {
+        public List<UserModel> GetAllUser();
+        public UserModel GetUserLogin(string username, string password);
+    }
     public class UserRepository : IUserRepository
     {
         private readonly CoreContext _coreContext;
