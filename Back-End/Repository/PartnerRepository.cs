@@ -4,6 +4,10 @@ using APIBackEnd.Models;
 
 namespace APIBackEnd.Repository
 {
+    public interface IPartnerRepository
+    {
+        public List<PartnerModel> GetAllPartner();
+    }
     public class PartnerRepository : IPartnerRepository
     {
         private readonly CoreContext _coreContext;
