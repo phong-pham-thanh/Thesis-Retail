@@ -7,13 +7,15 @@ using APIBackEnd.Data;
 using APIBackend.Models;
 using APIBackend.Service;
 
+
+
 namespace APIBackEnd.Controllers
 {
-    public struct paramAddNewGoodRecipt
+    public class paramAddNewGoodRecipt
     {
-        public GoodsReceiptModel goodsReceiptModel;
-        public List<GoodReceiptDetailModel> listGoodReceiptDetailModels;
-        public int idWareHouse;
+        public GoodsReceiptModel goodsReceiptModel { get; set; }
+        public List<GoodReceiptDetailModel> listGoodReceiptDetailModels { get; set; }
+        public int idWareHouse { get; set; }
     }
 
     [Route("[controller]")]

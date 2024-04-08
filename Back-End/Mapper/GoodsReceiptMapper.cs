@@ -20,7 +20,7 @@ namespace APIBackEnd.Mapper
             }
             GoodsReceiptModel modelObject = new GoodsReceiptModel();
             modelObject.Id = efObject.Id;
-            modelObject.PartnerID = efObject.PartnerID;
+            modelObject.PartnerID = efObject.PartnerId;
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ExportDate = efObject.ExportDate;
             return modelObject;
@@ -33,7 +33,7 @@ namespace APIBackEnd.Mapper
             {
                 GoodsReceiptModel modelObject = new GoodsReceiptModel();
                 modelObject.Id = item.Id;
-                modelObject.PartnerID = item.PartnerID;
+                modelObject.PartnerID = item.PartnerId;
                 modelObject.ReceiptStatus = item.ReceiptStatus;
                 modelObject.ExportDate = item.ExportDate;
                 result.Add(modelObject);
@@ -48,7 +48,7 @@ namespace APIBackEnd.Mapper
                 return;
             }
             efObject.Id = modelObject.Id;
-            efObject.PartnerID = modelObject.PartnerID;
+            efObject.PartnerId = modelObject.PartnerID;
             efObject.ReceiptStatus = modelObject.ReceiptStatus;
             efObject.ExportDate = modelObject.ExportDate;
             return;
