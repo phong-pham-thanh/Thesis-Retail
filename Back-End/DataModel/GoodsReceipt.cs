@@ -10,9 +10,9 @@ namespace APIBackEnd.Data
         [Key]
         public int Id { get; set; }
         public DateTime ExportDate { get; set; }
-        public int PartnerID { get; set; }
-        [ForeignKey("PartnersId")]
-        public Partners partners {get; set;}
+        public int PartnerId { get; set; }
+        [ForeignKey("PartnerId")]
+        public Partners Partner {get; set;}
         public Status ReceiptStatus { get; set; }
         public List<GoodReceiptDetails> ListGoodReciptDetails {get; set;}
     }
