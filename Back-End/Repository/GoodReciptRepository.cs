@@ -3,12 +3,14 @@ using APIBackend.Mapper;
 using APIBackend.Models;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIBackend.Repository
 {
     public interface IGoodReciptRepository
     {
         public bool AddGoodRecipt(GoodsReceipt goodsReceip);
+        public List<GoodsReceipt> GetAllGoodRecipts();
     }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
@@ -32,24 +34,12 @@ namespace APIBackend.Repository
             return true;
         }
 
-
-
-        public bool AddGoodReciptaaa(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, int idWareHouse)
+        public List<GoodsReceipt> GetAllGoodRecipts()
         {
-            GoodsReceipt goodsReceipt = new GoodsReceipt();
-            _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
-            _coreContext.GoodsReceipt.Add(goodsReceipt);
-
-            foreach(GoodReceiptDetailModel item in listGoodReceiptDetailModels)
-            {
-                GoodReceiptDetails goodReceiptDetails = new GoodReceiptDetails();
-                _goodReciptDetailMapper.ToEntity(goodReceiptDetails, item);
-                _coreContext.GoodReceiptDetails.Add(goodReceiptDetails);
-
-            }
-            _coreContext.SaveChanges();
-
-            return true;
+            List<GoodsReceipt> listGoodRecipt = new List<GoodsReceipt>();
+            listGoodRecipt = _coreContext.GoodsReceipt.Include(go => go.ListGoodReciptDetails).ToList();
+            return listGoodRecipt;
         }
     }
+
 }

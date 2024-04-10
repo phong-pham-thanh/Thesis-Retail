@@ -1,4 +1,5 @@
-﻿using APIBackEnd.Data;
+﻿using APIBackend.Mapper;
+using APIBackEnd.Data;
 using APIBackEnd.Models;
 
 namespace APIBackEnd.Mapper
@@ -11,7 +12,11 @@ namespace APIBackEnd.Mapper
     }
     public class GoodsReceiptMapper : IGoodsReceiptMapper
     {
-        public GoodsReceiptMapper() { }
+        private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
+        public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper) 
+        {
+            _goodReciptDetailMapper = goodReciptDetailMapper;
+        }
         public GoodsReceiptModel ToModel(GoodsReceipt efObject)
         {
             if (efObject == null)
@@ -23,6 +28,7 @@ namespace APIBackEnd.Mapper
             modelObject.PartnerID = efObject.PartnerId;
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ExportDate = efObject.ExportDate;
+            modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(efObject.ListGoodReciptDetails);
             return modelObject;
         }
 
@@ -36,6 +42,7 @@ namespace APIBackEnd.Mapper
                 modelObject.PartnerID = item.PartnerId;
                 modelObject.ReceiptStatus = item.ReceiptStatus;
                 modelObject.ExportDate = item.ExportDate;
+                modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(item.ListGoodReciptDetails);
                 result.Add(modelObject);
             }
             return result;

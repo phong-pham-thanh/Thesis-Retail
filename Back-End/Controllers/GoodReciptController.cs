@@ -28,6 +28,12 @@ namespace APIBackEnd.Controllers
         {
             _goodReciptService = goodReciptService;
         }
+        [HttpGet]
+        [Route("GetAllGoodRecipts")]
+        public List<GoodsReceiptModel> GetAllGoodRecipts()
+        {
+            return _goodReciptService.GetAllGoodRecipts();
+        }
 
         [HttpPost]
         [Route("addGoodRecipt")]

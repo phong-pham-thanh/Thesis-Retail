@@ -23,7 +23,7 @@ namespace APIBackend.Mapper
             modelObject.Id = efObject.Id;
             modelObject.Product = efObject.Product;
             modelObject.ProductId = efObject.ProductId;
-            modelObject.GoodsReceipt = efObject.GoodsReceipt;
+            //modelObject.GoodsReceipt = efObject.GoodsReceipt;
             modelObject.GoodReceiptId = efObject.GoodReceiptId;
             modelObject.Quantity = efObject.Quantity;
             modelObject.PriceUnit = efObject.PriceUnit;
@@ -39,7 +39,7 @@ namespace APIBackend.Mapper
                 modelObject.Id = item.Id;
                 modelObject.Product = item.Product;
                 modelObject.ProductId = item.ProductId;
-                modelObject.GoodsReceipt = item.GoodsReceipt;
+                //modelObject.GoodsReceipt = item.GoodsReceipt;
                 modelObject.GoodReceiptId = item.GoodReceiptId;
                 modelObject.Quantity = item.Quantity;
                 modelObject.PriceUnit = item.PriceUnit;
