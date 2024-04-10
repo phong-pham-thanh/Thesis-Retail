@@ -10,6 +10,7 @@ namespace APIBackend.Service
     public interface IGoodReciptService
     {
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, int idWareHouse);
+        public List<GoodsReceiptModel> GetAllGoodRecipts();
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -51,24 +52,13 @@ namespace APIBackend.Service
             //Update Inventory in ware house
 
 
-
-
-
-
-
-
-            //_coreContext.GoodsReceipt.Add(goodsReceipt);
-
-            //foreach (GoodReceiptDetailModel item in listGoodReceiptDetailModels)
-            //{
-            //    GoodReceiptDetails goodReceiptDetails = new GoodReceiptDetails();
-            //    _goodReciptDetailMapper.ToEntity(goodReceiptDetails, item);
-            //    _coreContext.GoodReceiptDetails.Add(goodReceiptDetails);
-
-            //}
-            //_coreContext.SaveChanges();
-
             return true;
+        }
+
+        public List<GoodsReceiptModel> GetAllGoodRecipts()
+        {
+            List<GoodsReceiptModel> listGoodRecipt = _goodReciptMapper.ToModels(_goodReciptRepository.GetAllGoodRecipts());
+            return listGoodRecipt;
         }
     }
 }
