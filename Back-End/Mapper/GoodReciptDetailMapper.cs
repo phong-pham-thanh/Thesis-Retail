@@ -32,6 +32,10 @@ namespace APIBackend.Mapper
 
         public List<GoodReceiptDetailModel> ToModels(List<GoodReceiptDetails> efObjects)
         {
+            if(efObjects == null || efObjects.Count == 0)
+            {
+                return null;
+            }
             List<GoodReceiptDetailModel> result = new List<GoodReceiptDetailModel>();
             foreach (GoodReceiptDetails item in efObjects)
             {

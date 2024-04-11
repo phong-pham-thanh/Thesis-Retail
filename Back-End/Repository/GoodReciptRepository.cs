@@ -9,7 +9,7 @@ namespace APIBackend.Repository
 {
     public interface IGoodReciptRepository
     {
-        public bool AddGoodRecipt(GoodsReceipt goodsReceip);
+        public GoodsReceipt AddGoodRecipt(GoodsReceipt goodsReceip);
         public List<GoodsReceipt> GetAllGoodRecipts();
     }
     public class GoodsReciptRepository : IGoodReciptRepository
@@ -27,11 +27,11 @@ namespace APIBackend.Repository
             _goodReciptDetailMapper = goodReciptDetailMapper;
         }
 
-        public bool AddGoodRecipt(GoodsReceipt goodsReceipt)
+        public GoodsReceipt AddGoodRecipt(GoodsReceipt goodsReceipt)
         {
             _coreContext.GoodsReceipt.Add(goodsReceipt);
             _coreContext.SaveChanges();
-            return true;
+            return goodsReceipt;
         }
 
         public List<GoodsReceipt> GetAllGoodRecipts()
