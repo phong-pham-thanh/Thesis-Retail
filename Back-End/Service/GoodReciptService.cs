@@ -19,18 +19,21 @@ namespace APIBackend.Service
         private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
         private readonly IGoodReciptRepository _goodReciptRepository;
         private readonly IGoodReciptDetailRepository _goodReciptDetailRepository;
+        private readonly IInventoryRepository _inventoryRepository;
 
         public GoodReciptService(IProductMapper productMapper, 
             IGoodsReceiptMapper goodReciptMapper, 
             IGoodReciptDetailMapper goodReciptDetailMapper, 
             IGoodReciptRepository goodReciptRepository,
-            IGoodReciptDetailRepository goodReciptDetailRepository)
+            IGoodReciptDetailRepository goodReciptDetailRepository,
+            IInventoryRepository inventoryRepository)
         {
             _productMapper = productMapper;
             _goodReciptMapper = goodReciptMapper;
             _goodReciptDetailMapper = goodReciptDetailMapper;
             _goodReciptRepository = goodReciptRepository;
             _goodReciptDetailRepository = goodReciptDetailRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, int idWareHouse)
@@ -49,10 +52,11 @@ namespace APIBackend.Service
                 _goodReciptDetailMapper.ToEntity(goodReciptDetails, goodReceiptDetailModel);
                 goodReciptDetails.GoodReceiptId = newGoodReciptModel.Id;
                 _goodReciptDetailRepository.AddGoodReciptDetails(goodReciptDetails);
+
+                //Update Inventory in ware house
+                _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, idWareHouse);
             }
-
-            //Update Inventory in ware house
-
+            
 
             return true;
         }

@@ -26,6 +26,7 @@ builder.Services.AddScoped<IGoodReciptRepository, GoodsReciptRepository>();
 builder.Services.AddScoped<IGoodReciptDetailRepository, GoodReciptDetailRepository>();
 builder.Services.AddScoped<IPartnerRepository, PartnerRepository>();
 builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 
 
 //Mapper
