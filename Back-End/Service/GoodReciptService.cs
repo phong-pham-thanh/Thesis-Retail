@@ -37,8 +37,9 @@ namespace APIBackend.Service
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
+            GoodsReceiptModel newGoodReciptModel = new GoodsReceiptModel();
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
-            _goodReciptRepository.AddGoodRecipt(goodsReceipt);
+            newGoodReciptModel = _goodReciptMapper.ToModel(_goodReciptRepository.AddGoodRecipt(goodsReceipt));
 
 
             //Add Good Recipt Details
@@ -46,6 +47,7 @@ namespace APIBackend.Service
             {
                 GoodReceiptDetails goodReciptDetails = new GoodReceiptDetails();
                 _goodReciptDetailMapper.ToEntity(goodReciptDetails, goodReceiptDetailModel);
+                goodReciptDetails.GoodReceiptId = newGoodReciptModel.Id;
                 _goodReciptDetailRepository.AddGoodReciptDetails(goodReciptDetails);
             }
 
