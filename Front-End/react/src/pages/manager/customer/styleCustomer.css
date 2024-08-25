@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+}
+
+main {
+    margin: 16px;
+}
+
+.filterField{
+    border-radius: 10px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    overflow: auto;
+    width: 300px;
+    height: fit-content;
+}
+.filterBox{
+border-radius: 10px;
+border: 1px solid var(--Secondary-Color, #28C2FF);
+background: #FFF;
+    display: flex;
+    flex-direction: column;
+    gap:0px;
+    overflow: auto;
+    width: 250px;
+    height: fit-content;
+}
+.filterBox-title{
+    /*background-color:rgb(120, 154, 172);*/
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: auto;
+    width: auto;
+    height: fit-content;
+
+    color: var(--Text-color, #000);
+text-align: center;
+font-family: Nunito;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+
+opacity: 0.5;
+
+}
+
+.filterBox-content{
+    padding: 1em;
+    padding-top: 0em;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: space-between;*/
+    overflow: auto;
+    width: auto;
+    height: fit-content;
+    text-align:left;
+}
+
+.product-container{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    /*background: rebeccapurple;*/
+    display: inline-flex;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.product-list{
+    width:80%
+}

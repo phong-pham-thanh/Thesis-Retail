@@ -1,0 +1,113 @@
+.navbar {
+    display: inline-flex;
+    align-items: flex-start;
+    position: fixed;
+    left: 0;
+    z-index: 99;
+    gap: 15px;
+    
+    color: var(--Category-Text-Color, rgba(3, 2, 41, 0.50));
+    font-family: Nunito;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    background-image: linear-gradient(0deg, #ffffff00 50%, #ffffff 50%);
+
+}
+
+.navbar__title {
+    margin-right: auto;
+    font-size: 150%;
+    padding: 12px 16px;
+}
+
+.navbar__item {
+    cursor: pointer;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    width: 120px;
+    height: 60px;
+    padding: 10px;
+    gap: 10px;
+}
+
+.navbar__item_active {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 120px;
+    height: 60px;
+    padding: 10px;
+    gap: 10px;
+
+    background: linear-gradient(180deg, #605BFF 0%, rgba(255, 255, 255, 0) 43%);
+    border-radius: 0px 5px 5px 0px;
+    transform: rotate(-0.39deg);
+}
+
+.navbar__submenu {
+    cursor: pointer;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+}
+
+.navbar__submenuitem {
+    cursor: pointer;
+    vertical-align: middle;
+    text-align:left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 0px 20px;
+    width: 140px;
+    height: 40px;
+    gap: 10px;
+    font-size: 14px;
+
+background: #FFFFFF;
+border-radius: 0px;
+
+}
+
+.navbar__submenuitem_active {
+ 
+box-sizing: border-box;
+
+display: flex;
+flex-direction: row;
+align-items: center;
+
+padding: 0px 15px;
+width: 155px;
+height: 40px;
+gap: 10px;
+
+border-left: 5px solid #28C2FF;
+border-radius: 0px;
+
+font-family: 'Nunito';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 22px;
+
+background: #FFFFFF;
+color: #28C2FF;
+transform: matrix(1, -0.01, 0.01, 1, 0, 0);
+
+}
+
+.navbar__submenubar {
+    position: inherit;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    width: 140px;
+    align-items: flex-start;
+}
