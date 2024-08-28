@@ -9,7 +9,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import CategoryIcon from '@mui/icons-material/Category';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'; import { ReactComponent as IconNhaphang } from '../../icon/menu-nhaphang.svg'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import PeopleIcon from '@mui/icons-material/People';
@@ -146,7 +146,7 @@ export default function NavBar() {
 
     return (
         <header className='navbar'>
-            <div className='navbar__title navbar__item'><GoogleIcon /></div>
+            <div className='navbar__title navbar__item'><SummarizeIcon /></div>
             {menuList.map((item) => (
                 <div className='navbar__submenu'>
                     <div className={item.status ? 'navbar__item_active' : 'navbar__item'}
