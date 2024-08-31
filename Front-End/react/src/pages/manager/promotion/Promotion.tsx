@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import './stylePromotion.css'
 import { Navigate, Link, Router, Route, Routes, useNavigate, BrowserRouter, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ReactComponent as Logo } from '../../../icon/appLogo.svg'
-import { ReactComponent as IconTongquan } from '../../../icon/menu-tongquan.svg'
-import { ReactComponent as IconHanghoa } from '../../../icon/menu-hanghoa.svg'
-import { ReactComponent as IconGiaodich } from '../../../icon/menu-giaodich.svg'
-import { ReactComponent as IconDoitac } from '../../../icon/menu-doitac.svg'
-import { ReactComponent as IconNV } from '../../../icon/menu-nhanvien.svg'
-import { ReactComponent as IconKhuyenmai } from '../../../icon/menu-khuyenmai.svg'
-import { ReactComponent as IconBaocao } from '../../../icon/menu-baocao.svg'
-import { ReactComponent as IconLogout } from '../../../icon/logout.svg'
+import Logo from '../../component/IconComponent/AppLogo'
+import IconTongquan from '../../component/IconComponent/IconTongquan'
+import IconHanghoa from '../../component/IconComponent/IconHanghoa'
+import IconGiaodich from '../../component/IconComponent/IconGiaodich'
+import IconDoitac from '../../component/IconComponent/IconDoitac'
+import IconNV from '../../component/IconComponent/IconNhanvien'
+import IconKhuyenmai from '../../component/IconComponent/IconKhuyenmai'
+import IconBaocao from '../../component/IconComponent/IconBaocao'
+import IconLogout from '../../component/IconComponent/IconLogout'
 
 import { Account } from '../../component/account';
-import  NavBar  from '../../component/menubar';
+import NavBar from '../../component/menubar';
 import { FilterBox } from '../../component/filterBox';
 
 import { Button, Table } from 'antd';
@@ -22,17 +22,17 @@ import ProductInformationPopupScreen from '../../component/popupEditProduct';
 
 interface DataType {
   key: React.Key;
+  "id": string;
+  "name": string;
+  "categoryId": string;
+  "category": {
     "id": string;
     "name": string;
-    "categoryId": string;
-    "category": {
-      "id": string;
-      "name": string;
-    },
-    "description": string;
-    "status": boolean;
-  }
-const emptydata:DataType ={
+  },
+  "description": string;
+  "status": boolean;
+}
+const emptydata: DataType = {
   key: "",
   "id": "0",
   "name": "",
@@ -44,7 +44,7 @@ const emptydata:DataType ={
   "description": "string",
   "status": true
 }
-let dataShow:DataType=emptydata;
+let dataShow: DataType = emptydata;
 
 
 const data: DataType[] = [];
@@ -52,7 +52,7 @@ for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
     id: String(i),
-    name: "Sản phẩm "+i,
+    name: "Sản phẩm " + i,
     "categoryId": "0",
     "category": {
       "id": "0",
@@ -94,9 +94,9 @@ export default function Promotion() {
       key: 'action',
       width: '112px',
       render: (_, record) => (
-              <Button size={"middle"} onClick={() => {dataShow=data[Number(record.id)];setIsChangeInformation(!isChangeInformation)}}>Sửa</Button>
+        <Button size={"middle"} onClick={() => { dataShow = data[Number(record.id)]; setIsChangeInformation(!isChangeInformation) }}>Sửa</Button>
       ),
-  },
+    },
   ];
 
   useEffect(() => {
@@ -132,20 +132,20 @@ export default function Promotion() {
   return (
     <div className='dashboard-container'>
       <ProductInformationPopupScreen
-                    isPopup={isChangeInformation}
-                    setPopup={setIsChangeInformation}
-                    data={dataShow}
-                    componentDisabled={componentDisabled}
-                    setComponentDisabled={setComponentDisabled}
-                />
+        isPopup={isChangeInformation}
+        setPopup={setIsChangeInformation}
+        data={dataShow}
+        componentDisabled={componentDisabled}
+        setComponentDisabled={setComponentDisabled}
+      />
       <div className='product-container'>
-      <div className='filterField'>
-        Lọc danh sách
+        <div className='filterField'>
+          Lọc danh sách
+        </div>
+        <div className='product-list'>
+          Nội dung Khuyến mãi
+        </div>
       </div>
-      <div className='product-list'>
-        Nội dung Khuyến mãi
-            </div>
-    </div>
     </div>
   );
 

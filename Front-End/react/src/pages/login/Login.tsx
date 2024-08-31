@@ -19,8 +19,8 @@ import {
 } from "./loginSlice";
 import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import image from "../../icon/Illustration.svg";
-import logo from "../../icon/appLogo.svg";
+import Illustration from "../component/IconComponent/Illustration"
+import Logo from "../component/IconComponent/AppLogo"
 /*
 import api_links from '../../utils/api_links';
 import handlePermission from '../../utils/permission_proccess'
@@ -96,7 +96,7 @@ export default function Login() {
   return (
     <div className="login">
       <div className="box-form">
-        <img src={logo} alt="" />
+        <Logo />
         <h2 className="title">Login</h2> <br />
         <Form
           layout="vertical"
@@ -170,13 +170,13 @@ export default function Login() {
           <div className="signup-account">
             <span>Don't have account yet?</span>
             <a className="signup-action" href="/register">
-                New Account
-              </a>
+              New Account
+            </a>
           </div>
         </Form>
       </div>
       <div className="right-content">
-        <img src={image} alt="image" className="image" />
+        <Illustration />
       </div>
     </div>
   );
