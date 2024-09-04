@@ -1,4 +1,5 @@
-﻿using APIBackEnd.Data;
+﻿using APIBackend.Mapper;
+using APIBackEnd.Data;
 using APIBackEnd.Models;
 
 namespace APIBackEnd.Mapper
@@ -11,7 +12,11 @@ namespace APIBackEnd.Mapper
     }
     public class ProductMapper : IProductMapper
     {
-        public ProductMapper() { }
+        private readonly ICategoryMapper _categoryMapper;
+        public ProductMapper(ICategoryMapper categoryMapper) 
+        {
+            _categoryMapper = categoryMapper;
+        }
         public ProductModel ToModel(Product efObject)
         {
             if(efObject == null)
@@ -22,7 +27,7 @@ namespace APIBackEnd.Mapper
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
             modelObject.CategoryId = efObject.CategoryId;
-            modelObject.Category = efObject.Category;
+            modelObject.Category = _categoryMapper.ToModel(efObject.Category);
             modelObject.Status = efObject.Status;
             modelObject.Description = efObject.Description;
             return modelObject;
@@ -37,7 +42,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Id = item.Id;
                 modelObject.Name = item.Name;
                 modelObject.CategoryId = item.CategoryId;
-                modelObject.Category = item.Category;
+                modelObject.Category = _categoryMapper.ToModel(item.Category);
                 modelObject.Status = item.Status;
                 modelObject.Description = item.Description;
                 result.Add(modelObject);
@@ -54,7 +59,7 @@ namespace APIBackEnd.Mapper
             efObject.Id = modelObject.Id;
             efObject.Name = modelObject.Name;
             efObject.CategoryId = modelObject.CategoryId;
-            efObject.Category = modelObject.Category;
+            _categoryMapper.ToEntity(efObject.Category, modelObject.Category);
             efObject.Status = modelObject.Status;
             efObject.Description = modelObject.Description;
             return efObject;

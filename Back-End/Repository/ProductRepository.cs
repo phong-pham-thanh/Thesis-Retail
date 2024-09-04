@@ -26,12 +26,12 @@ namespace APIBackEnd.Repository
 
         public List<Product> GetAllProducts()
         {
-            List<Product> products = _coreContext.Product.ToList();
+            List<Product> products = _coreContext.Product.Include(p => p.Category).ToList();
             return products;
         }
         public ProductModel GetProductById(int id)
         {
-            Product product = _coreContext.Product.Where(p => p.Id == id).FirstOrDefault();
+            Product product = _coreContext.Product.Where(p => p.Id == id).Include(p => p.Category).FirstOrDefault();
             if (product == null) return null;
 
             return _productMapper.ToModel(product);
