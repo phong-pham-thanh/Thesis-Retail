@@ -11,15 +11,15 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { ReactComponent as Logo } from "../../../icon/appLogo.svg";
-import { ReactComponent as IconTongquan } from "../../../icon/menu-tongquan.svg";
-import { ReactComponent as IconHanghoa } from "../../../icon/menu-hanghoa.svg";
-import { ReactComponent as IconGiaodich } from "../../../icon/menu-giaodich.svg";
-import { ReactComponent as IconDoitac } from "../../../icon/menu-doitac.svg";
-import { ReactComponent as IconNV } from "../../../icon/menu-nhanvien.svg";
-import { ReactComponent as IconKhuyenmai } from "../../../icon/menu-khuyenmai.svg";
-import { ReactComponent as IconBaocao } from "../../../icon/menu-baocao.svg";
-import { ReactComponent as IconLogout } from "../../../icon/logout.svg";
+import Logo from '../../component/IconComponent/AppLogo'
+import IconTongquan from "../../../icon/menu-tongquan.svg";
+import IconHanghoa from "../../../icon/menu-hanghoa.svg";
+import IconGiaodich from "../../../icon/menu-giaodich.svg";
+import IconDoitac from "../../../icon/menu-doitac.svg";
+import IconNV from "../../../icon/menu-nhanvien.svg";
+import IconKhuyenmai from "../../../icon/menu-khuyenmai.svg";
+import IconBaocao from "../../../icon/menu-baocao.svg";
+import IconLogout from "../../../icon/logout.svg";
 
 import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
@@ -33,17 +33,17 @@ import moment from "moment";
 
 interface DataType {
   key: React.Key;
+  "id": string;
+  "name": string;
+  "categoryId": string;
+  "category": {
     "id": string;
     "name": string;
-    "categoryId": string;
-    "category": {
-      "id": string;
-      "name": string;
-    },
-    "description": string;
-    "status": boolean;
-  }
-const emptydata:DataType ={
+  },
+  "description": string;
+  "status": boolean;
+}
+const emptydata: DataType = {
   key: "",
   "id": "0",
   "name": "",
@@ -184,7 +184,7 @@ export default function Report() {
     },
   ];
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   //useSelector, useNavigate
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);

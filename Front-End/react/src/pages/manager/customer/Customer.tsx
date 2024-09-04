@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './styleCustomer.css'
 import { Navigate, Link, Router, Route, Routes, useNavigate, BrowserRouter, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ReactComponent as Logo } from '../../../icon/appLogo.svg'
-import { ReactComponent as IconTongquan } from '../../../icon/menu-tongquan.svg'
-import { ReactComponent as IconHanghoa } from '../../../icon/menu-hanghoa.svg'
-import { ReactComponent as IconGiaodich } from '../../../icon/menu-giaodich.svg'
-import { ReactComponent as IconDoitac } from '../../../icon/menu-doitac.svg'
-import { ReactComponent as IconNV } from '../../../icon/menu-nhanvien.svg'
-import { ReactComponent as IconKhuyenmai } from '../../../icon/menu-khuyenmai.svg'
-import { ReactComponent as IconBaocao } from '../../../icon/menu-baocao.svg'
-import { ReactComponent as IconLogout } from '../../../icon/logout.svg'
+import Logo from '../../component/IconComponent/AppLogo'
+import IconTongquan from '../../component/IconComponent/IconTongquan'
+import IconHanghoa from '../../component/IconComponent/IconHanghoa'
+import IconGiaodich from '../../component/IconComponent/IconGiaodich'
+import IconDoitac from '../../component/IconComponent/IconDoitac'
+import IconNV from '../../component/IconComponent/IconNhanvien'
+import IconKhuyenmai from '../../component/IconComponent/IconKhuyenmai'
+import IconBaocao from '../../component/IconComponent/IconBaocao'
+import IconLogout from '../../component/IconComponent/IconLogout'
 
 import EditIcon from '@mui/icons-material/Edit';
 import ClearIcon from '@mui/icons-material/Clear';

@@ -11,15 +11,15 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { ReactComponent as Logo } from "../../../icon/appLogo.svg";
-import { ReactComponent as IconTongquan } from "../../../icon/menu-tongquan.svg";
-import { ReactComponent as IconHanghoa } from "../../../icon/menu-hanghoa.svg";
-import { ReactComponent as IconGiaodich } from "../../../icon/menu-giaodich.svg";
-import { ReactComponent as IconDoitac } from "../../../icon/menu-doitac.svg";
-import { ReactComponent as IconNV } from "../../../icon/menu-nhanvien.svg";
-import { ReactComponent as IconKhuyenmai } from "../../../icon/menu-khuyenmai.svg";
-import { ReactComponent as IconBaocao } from "../../../icon/menu-baocao.svg";
-import { ReactComponent as IconLogout } from "../../../icon/logout.svg";
+import Logo from "../../component/IconComponent/AppLogo"
+import IconTongquan from "../../../icon/menu-tongquan.svg";
+import IconHanghoa from "../../../icon/menu-hanghoa.svg";
+import IconGiaodich from "../../../icon/menu-giaodich.svg";
+import IconDoitac from "../../../icon/menu-doitac.svg";
+import IconNV from "../../../icon/menu-nhanvien.svg";
+import IconKhuyenmai from "../../../icon/menu-khuyenmai.svg";
+import IconBaocao from "../../../icon/menu-baocao.svg";
+import IconLogout from "../../../icon/logout.svg";
 
 import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
@@ -40,17 +40,17 @@ import {
 
 interface DataType {
   key: React.Key;
+  "id": string;
+  "name": string;
+  "categoryId": string;
+  "category": {
     "id": string;
     "name": string;
-    "categoryId": string;
-    "category": {
-      "id": string;
-      "name": string;
-    },
-    "description": string;
-    "status": boolean;
-  }
-const emptydata:DataType ={
+  },
+  "description": string;
+  "status": boolean;
+}
+const emptydata: DataType = {
   key: "",
   "id": "0",
   "name": "",
@@ -269,7 +269,7 @@ export default function Transaction() {
     },
   ];
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   //useSelector, useNavigate
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -385,9 +385,8 @@ export default function Transaction() {
                     onClick={() => {
                       setDataChoose(tran);
                     }}
-                    className={`${
-                      dataChoose?.code === tran.code && "tr-active"
-                    }`}
+                    className={`${dataChoose?.code === tran.code && "tr-active"
+                      }`}
                   >
                     <td className="table-body-code">{tran.code}</td>
                     <td className="table-body-time">{tran.time}</td>
@@ -444,7 +443,7 @@ export default function Transaction() {
         title={`Phiếu nhập kho${form.getFieldValue("code") ? ' - ' + form.getFieldValue("code") : ''}`}
         open={isShowModal === "create" || isShowModal === "edit"}
         onOk={() => setIsShowModal(undefined)}
-        onCancel={() => {setIsShowModal(undefined); form.resetFields()}}
+        onCancel={() => { setIsShowModal(undefined); form.resetFields() }}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <Button onClick={onFinish}>Lưu</Button>
@@ -458,64 +457,64 @@ export default function Transaction() {
         </div>
         <hr className="modal-line" />
         <div className="modal-content">
-        <div className="modal-box">
-          <Form form={form} onFinish={onFinish}>
-            <Form.Item
-              className="code"
-              label={"Mã nhập kho"}
-              name={"code"}
-            >
-              <Input disabled />
-            </Form.Item>
-            <Form.Item
-              className="time"
-              label={"Ngày nhập"}
-              name={"time"}
-            >
-              <Input disabled />
-            </Form.Item>
-            <Form.Item
-              className="trans"
-              label={"Nhà cung cấp"}
-              name={"trans"}
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              className="fee"
-              label={"Cần trả nhà cung cấp"}
-              name={"fee"}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              className="status"
-              label={"Trạng thái"}
-              name={"status"}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </div>
-        <div className="modal-products">
-          <table>
-            <thead>
-              <th className="code">Mã sản phẩm</th>
-              <th className="quantity">Số lượng</th>
-              <th className="name">Tên sản phẩm</th>
-            </thead>
-            <tbody>
-              {listProduct && listProduct.length > 0 && listProduct.map((product, index) => (
-                <tr key={index}>
-                  <td className="code">{product.code}</td>
-                  <td className="quantity">{product.quantity}</td>
-                  <td className="name">{product.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          <div className="modal-box">
+            <Form form={form} onFinish={onFinish}>
+              <Form.Item
+                className="code"
+                label={"Mã nhập kho"}
+                name={"code"}
+              >
+                <Input disabled />
+              </Form.Item>
+              <Form.Item
+                className="time"
+                label={"Ngày nhập"}
+                name={"time"}
+              >
+                <Input disabled />
+              </Form.Item>
+              <Form.Item
+                className="trans"
+                label={"Nhà cung cấp"}
+                name={"trans"}
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                className="fee"
+                label={"Cần trả nhà cung cấp"}
+                name={"fee"}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                className="status"
+                label={"Trạng thái"}
+                name={"status"}
+              >
+                <Input />
+              </Form.Item>
+            </Form>
+          </div>
+          <div className="modal-products">
+            <table>
+              <thead>
+                <th className="code">Mã sản phẩm</th>
+                <th className="quantity">Số lượng</th>
+                <th className="name">Tên sản phẩm</th>
+              </thead>
+              <tbody>
+                {listProduct && listProduct.length > 0 && listProduct.map((product, index) => (
+                  <tr key={index}>
+                    <td className="code">{product.code}</td>
+                    <td className="quantity">{product.quantity}</td>
+                    <td className="name">{product.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </Modal>
     </div>

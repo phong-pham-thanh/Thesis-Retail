@@ -4,12 +4,13 @@ import './styleMenubar.css'
 import { Navigate, Link, Router, Route, Routes, useNavigate, useLocation, BrowserRouter, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import GoogleIcon from '@mui/icons-material/Google';
+import Logo from '../component/IconComponent/AppLogo'
+
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import CategoryIcon from '@mui/icons-material/Category';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'; import { ReactComponent as IconNhaphang } from '../../icon/menu-nhaphang.svg'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import PeopleIcon from '@mui/icons-material/People';
@@ -18,6 +19,17 @@ import HailIcon from '@mui/icons-material/Hail';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import LogoutIcon from '@mui/icons-material/Logout';
+
+// import Logo from '../component/IconComponent/AppLogo'
+// import IconTongquan from '../component/IconComponent/IconTongquan'
+// import IconHanghoa from '../component/IconComponent/IconHanghoa'
+// import IconGiaodich from '../component/IconComponent/IconGiaodich'
+// import IconDoitac from '../component/IconComponent/IconDoitac'
+// import IconNV from '../component/IconComponent/IconNhanvien'
+// import IconKhuyenmai from '../component/IconComponent/IconKhuyenmai'
+// import IconBaocao from '../component/IconComponent/IconBaocao'
+// import IconLogout from '../component/IconComponent/IconLogout'
+
 
 import { Account } from './account';
 import { faDisplay } from '@fortawesome/free-solid-svg-icons';
@@ -146,7 +158,7 @@ export default function NavBar() {
 
     return (
         <header className='navbar'>
-            <div className='navbar__title navbar__item'><GoogleIcon /></div>
+            <div className='navbar__title navbar__item'><Logo /></div>
             {menuList.map((item) => (
                 <div className='navbar__submenu'>
                     <div className={item.status ? 'navbar__item_active' : 'navbar__item'}
