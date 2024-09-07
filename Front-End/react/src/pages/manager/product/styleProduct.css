@@ -1,77 +1,33 @@
-body {
-    margin: 0;
+.dashboard-container {
+  padding: 20px;
 }
 
-main {
-    margin: 16px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.filterField{
-    border-radius: 10px;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    gap:15px;
-    overflow: auto;
-    width: 300px;
-    height: fit-content;
-}
-.filterBox{
-border-radius: 10px;
-border: 1px solid var(--Secondary-Color, #28C2FF);
-background: #FFF;
-    display: flex;
-    flex-direction: column;
-    gap:0px;
-    overflow: auto;
-    width: 250px;
-    height: fit-content;
-}
-.filterBox-title{
-    /*background-color:rgb(120, 154, 172);*/
-    padding: 1em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    overflow: auto;
-    width: auto;
-    height: fit-content;
-
-    color: var(--Text-color, #000);
-text-align: center;
-font-family: Nunito;
-font-size: 18px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-
-opacity: 0.5;
-
+.header-buttons button {
+  margin-right: 10px;
 }
 
-.filterBox-content{
-    padding: 1em;
-    padding-top: 0em;
-    display: flex;
-    flex-direction: column;
-    /*justify-content: space-between;*/
-    overflow: auto;
-    width: auto;
-    height: fit-content;
-    text-align:left;
+.product-container {
+  display: flex;
+  gap: 10px;
 }
 
-.product-container{
-    display: flex;
-    align-items: center;
-    text-align: left;
-    /*background: rebeccapurple;*/
-    display: inline-flex;
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
+.filterField {
+  width: 20%;
 }
 
-.product-list{
-    width:80%
+.product-list {
+  width: 80%;
+  margin: 0; /* Remove any extra margin */
+  padding: 0; /* Remove any extra padding */
+}
+
+.product-list .ant-table {
+  margin: 0; /* Ensure no margin is added by the table */
+  padding: 0; /* Ensure no padding is added by the table */
 }

@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd'
 import React from 'react'
 import Illustration from "../component/IconComponent/Illustration"
-import Logo from '../component/IconComponent/AppLogo'
+import svgLogo from '../../icon/appLogo.svg'
 import './register.css'
 import CustomInput from '../component/searchBox'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ const Register = () => {
   return (
     <div className='register'>
       <Form className='form-signup' layout='vertical' onFinish={onFinish} form={form}>
-        <Logo />
+        <img src={svgLogo} alt="App Logo" />
         <h2 className='title'>Sign Up</h2>
         <Form.Item
           className="fullname"

@@ -1,19 +1,22 @@
 export type LoginState = {
-  "message": string | null,
-  "isSuccess": boolean,
-  "errors": {/*
+  message: string | null;
+  isSuccess: boolean;
+  errors:
+    | {
+        /*
           "Password": string[]|null;
           UserName: string[]|null;
           AccountInformation: string[]|null;
           ConfirmPassword:string[]|null;*/
-  } | string[] | null,
-  "token": string | undefined,
-  "userInformation"?: null, //UserInformationLoginState |
-  "customerInformation"?: null, //CustomerInformationLoginState |
-  "role": null, //RoleState |
-  "permission"?: undefined | string[] | null,
-  "errorServer"?: string
-
+      }
+    | string[]
+    | null;
+  token: string | undefined;
+  userInformation?: null; //UserInformationLoginState |
+  customerInformation?: null; //CustomerInformationLoginState |
+  role: null; //RoleState |
+  permission?: undefined | string[] | null;
+  errorServer?: string;
 };
 /*
 export type UserInformationLoginState = {
@@ -42,15 +45,15 @@ export type MenuState = {
 };*/
 
 export type ProductState = {
-  "id": string,
-  "name": string,
-  "categoryId": string,
-  "category": {
-    "id": string,
-    "name": string
-  },
-  "description": string,
-  "status": boolean,
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 };
 
 export type ProductListState = ProductState[];
@@ -85,10 +88,17 @@ export type GoodsReceipt = {
   parnersId: string;
 };
 
-export type GoodsReceiptDetails = [{
-  id: string;
-  goodsReceiptId: string;
-  productId: string;
-  priceUnit: string;
-  quantity: string;
-}];
+export type GoodsReceiptDetails = [
+  {
+    id: string;
+    goodsReceiptId: string;
+    productId: string;
+    priceUnit: string;
+    quantity: string;
+  }
+];
+
+export type CategoryType = {
+  id: number;
+  name: string;
+};

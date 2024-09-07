@@ -56,6 +56,12 @@ const api_links = {
             token: "",
             data: {}
         },
+    },
+    category: {
+        getAll:{
+            url: `${authUrl}/Category`,
+            method: "GET",
+        }
     }
 
 }

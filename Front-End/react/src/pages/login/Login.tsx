@@ -20,7 +20,7 @@ import {
 import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Illustration from "../component/IconComponent/Illustration"
-import Logo from "../component/IconComponent/AppLogo"
+import svgLogo from '../../icon/appLogo.svg'
 /*
 import api_links from '../../utils/api_links';
 import handlePermission from '../../utils/permission_proccess'
@@ -96,7 +96,7 @@ export default function Login() {
   return (
     <div className="login">
       <div className="box-form">
-        <Logo />
+        <img src={svgLogo} alt="App logo" />
         <h2 className="title">Login</h2> <br />
         <Form
           layout="vertical"
