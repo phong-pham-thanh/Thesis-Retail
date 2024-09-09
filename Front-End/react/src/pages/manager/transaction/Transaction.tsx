@@ -11,7 +11,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Logo from "../../component/IconComponent/AppLogo"
+import Logo from "../../component/IconComponent/AppLogo";
 import IconTongquan from "../../../icon/menu-tongquan.svg";
 import IconHanghoa from "../../../icon/menu-hanghoa.svg";
 import IconGiaodich from "../../../icon/menu-giaodich.svg";
@@ -35,33 +35,33 @@ import {
   UploadOutlined,
   PlusCircleOutlined,
   DeleteOutlined,
-  DownloadOutlined
+  DownloadOutlined,
 } from "@ant-design/icons";
 
 interface DataType {
   key: React.Key;
-  "id": string;
-  "name": string;
-  "categoryId": string;
-  "category": {
-    "id": string;
-    "name": string;
-  },
-  "description": string;
-  "status": boolean;
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 }
 const emptydata: DataType = {
   key: "",
-  "id": "0",
-  "name": "",
-  "categoryId": "0",
-  "category": {
-    "id": "0",
-    "name": ""
+  id: "0",
+  name: "",
+  categoryId: "0",
+  category: {
+    id: "0",
+    name: "",
   },
-  "description": "string",
-  "status": true
-}
+  description: "string",
+  status: true,
+};
 let dataShow: DataType = emptydata;
 
 const data: DataType[] = [];
@@ -70,13 +70,13 @@ for (let i = 0; i < 46; i++) {
     key: i,
     id: String(i),
     name: "Sản phẩm " + i,
-    "categoryId": "0",
-    "category": {
-      "id": "0",
-      "name": ""
+    categoryId: "0",
+    category: {
+      id: "0",
+      name: "",
     },
-    "description": "string",
-    "status": true
+    description: "string",
+    status: true,
   });
 }
 
@@ -91,7 +91,7 @@ interface IData {
 interface IProduct {
   code: string;
   quantity: string;
-  name: string
+  name: string;
 }
 
 const fakeData = [
@@ -206,24 +206,24 @@ const listProductsFake = [
   {
     code: "SP000001",
     quantity: "10",
-    name: "Mì gói Hảo Hảo"
+    name: "Mì gói Hảo Hảo",
   },
   {
     code: "SP000005",
     quantity: "13",
-    name: "Mì gói Indome"
+    name: "Mì gói Indome",
   },
   {
     code: "SP000015",
     quantity: "10",
-    name: "Sữa Vinanilk..."
+    name: "Sữa Vinanilk...",
   },
   {
     code: "SP000002",
     quantity: "08",
-    name: "Bún khô Meizan V..."
-  }
-]
+    name: "Bún khô Meizan V...",
+  },
+];
 
 export default function Transaction() {
   const columns: ColumnsType<DataType> = [
@@ -269,7 +269,7 @@ export default function Transaction() {
     },
   ];
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   //useSelector, useNavigate
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -286,7 +286,7 @@ export default function Transaction() {
   const [isShowModal, setIsShowModal] = useState<string>();
 
   //call api set data products on modal
-  const [listProduct, setListProduct] = useState<IProduct[]>(listProductsFake)
+  const [listProduct, setListProduct] = useState<IProduct[]>(listProductsFake);
 
   useEffect(() => {
     setDataTrans(fakeData.slice((page - 1) * size, page * size));
@@ -357,7 +357,11 @@ export default function Transaction() {
             <Button icon={<EditOutlined />} className="custom-button">
               Điều chỉnh
             </Button>
-            <Button icon={<PlusCircleOutlined />} className="custom-button" onClick={() => setIsShowModal("create")}>
+            <Button
+              icon={<PlusCircleOutlined />}
+              className="custom-button"
+              onClick={() => setIsShowModal("create")}
+            >
               Thêm mới
             </Button>
             <Button icon={<DownloadOutlined />} className="custom-button">
@@ -385,8 +389,9 @@ export default function Transaction() {
                     onClick={() => {
                       setDataChoose(tran);
                     }}
-                    className={`${dataChoose?.code === tran.code && "tr-active"
-                      }`}
+                    className={`${
+                      dataChoose?.code === tran.code && "tr-active"
+                    }`}
                   >
                     <td className="table-body-code">{tran.code}</td>
                     <td className="table-body-time">{tran.time}</td>
@@ -400,7 +405,7 @@ export default function Transaction() {
                           className="edit-button"
                           onClick={() => {
                             setIsShowModal("edit");
-                            form.setFieldsValue(tran)
+                            form.setFieldsValue(tran);
                           }}
                         >
                           Sửa
@@ -440,10 +445,15 @@ export default function Transaction() {
         <p>Bạn có chắc sẽ xoá nó không?</p>
       </Modal>
       <Modal
-        title={`Phiếu nhập kho${form.getFieldValue("code") ? ' - ' + form.getFieldValue("code") : ''}`}
+        title={`Phiếu nhập kho${
+          form.getFieldValue("code") ? " - " + form.getFieldValue("code") : ""
+        }`}
         open={isShowModal === "create" || isShowModal === "edit"}
         onOk={() => setIsShowModal(undefined)}
-        onCancel={() => { setIsShowModal(undefined); form.resetFields() }}
+        onCancel={() => {
+          setIsShowModal(undefined);
+          form.resetFields();
+        }}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <Button onClick={onFinish}>Lưu</Button>
@@ -459,18 +469,10 @@ export default function Transaction() {
         <div className="modal-content">
           <div className="modal-box">
             <Form form={form} onFinish={onFinish}>
-              <Form.Item
-                className="code"
-                label={"Mã nhập kho"}
-                name={"code"}
-              >
+              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
                 <Input disabled />
               </Form.Item>
-              <Form.Item
-                className="time"
-                label={"Ngày nhập"}
-                name={"time"}
-              >
+              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
                 <Input disabled />
               </Form.Item>
               <Form.Item
@@ -505,13 +507,15 @@ export default function Transaction() {
                 <th className="name">Tên sản phẩm</th>
               </thead>
               <tbody>
-                {listProduct && listProduct.length > 0 && listProduct.map((product, index) => (
-                  <tr key={index}>
-                    <td className="code">{product.code}</td>
-                    <td className="quantity">{product.quantity}</td>
-                    <td className="name">{product.name}</td>
-                  </tr>
-                ))}
+                {listProduct &&
+                  listProduct.length > 0 &&
+                  listProduct.map((product, index) => (
+                    <tr key={index}>
+                      <td className="code">{product.code}</td>
+                      <td className="quantity">{product.quantity}</td>
+                      <td className="name">{product.name}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

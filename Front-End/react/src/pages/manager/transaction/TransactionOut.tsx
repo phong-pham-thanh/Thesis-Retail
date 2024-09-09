@@ -40,28 +40,28 @@ import {
 
 interface DataType {
   key: React.Key;
-  "id": string;
-  "name": string;
-  "categoryId": string;
-  "category": {
-    "id": string;
-    "name": string;
-  },
-  "description": string;
-  "status": boolean;
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 }
 const emptydata: DataType = {
   key: "",
-  "id": "0",
-  "name": "",
-  "categoryId": "0",
-  "category": {
-    "id": "0",
-    "name": ""
+  id: "0",
+  name: "",
+  categoryId: "0",
+  category: {
+    id: "0",
+    name: "",
   },
-  "description": "string",
-  "status": true
-}
+  description: "string",
+  status: true,
+};
 let dataShow: DataType = emptydata;
 
 const data: DataType[] = [];
@@ -70,13 +70,13 @@ for (let i = 0; i < 46; i++) {
     key: i,
     id: String(i),
     name: "Sản phẩm " + i,
-    "categoryId": "0",
-    "category": {
-      "id": "0",
-      "name": ""
+    categoryId: "0",
+    category: {
+      id: "0",
+      name: "",
     },
-    "description": "string",
-    "status": true
+    description: "string",
+    status: true,
   });
 }
 
@@ -91,7 +91,7 @@ interface IData {
 interface IProduct {
   code: string;
   quantity: string;
-  name: string
+  name: string;
 }
 
 const fakeData = [
@@ -206,24 +206,24 @@ const listProductsFake = [
   {
     code: "SP000001",
     quantity: "10",
-    name: "Mì gói Hảo Hảo"
+    name: "Mì gói Hảo Hảo",
   },
   {
     code: "SP000005",
     quantity: "13",
-    name: "Mì gói Indome"
+    name: "Mì gói Indome",
   },
   {
     code: "SP000015",
     quantity: "10",
-    name: "Sữa Vinanilk..."
+    name: "Sữa Vinanilk...",
   },
   {
     code: "SP000002",
     quantity: "08",
-    name: "Bún khô Meizan V..."
-  }
-]
+    name: "Bún khô Meizan V...",
+  },
+];
 
 export default function Transaction() {
   const columns: ColumnsType<DataType> = [
@@ -269,7 +269,7 @@ export default function Transaction() {
     },
   ];
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   //useSelector, useNavigate
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -389,8 +389,9 @@ export default function Transaction() {
                     onClick={() => {
                       setDataChoose(tran);
                     }}
-                    className={`${dataChoose?.code === tran.code && "tr-active"
-                      }`}
+                    className={`${
+                      dataChoose?.code === tran.code && "tr-active"
+                    }`}
                   >
                     <td className="table-body-code">{tran.code}</td>
                     <td className="table-body-time">{tran.time}</td>
@@ -444,8 +445,9 @@ export default function Transaction() {
         <p>Bạn có chắc sẽ xoá nó không?</p>
       </Modal>
       <Modal
-        title={`Phiếu xuất kho${form.getFieldValue("code") ? " - " + form.getFieldValue("code") : ""
-          }`}
+        title={`Phiếu xuất kho${
+          form.getFieldValue("code") ? " - " + form.getFieldValue("code") : ""
+        }`}
         open={isShowModal === "create" || isShowModal === "edit"}
         onOk={() => setIsShowModal(undefined)}
         onCancel={() => {

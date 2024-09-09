@@ -10,13 +10,12 @@ import {
   message,
   Checkbox,
 } from "antd";
-import { useParams } from "react-router-dom";
 import fetch_Api from "../../app/api_fetch";
 import api_links from "../../app/api_links";
-import { ProductState, CategoryType } from "../../app/type.d"; // Assuming CategoryType is defined in type.d
+import { ProductState, CategoryType } from "../../app/type.d";
 
 const { Option } = Select;
-const { TextArea } = Input; // For the description text area
+const { TextArea } = Input;
 
 interface ProductInformationPopupScreenProps {
   isPopup: boolean;
@@ -25,6 +24,7 @@ interface ProductInformationPopupScreenProps {
   componentDisabled?: boolean;
   setComponentDisabled?: (value: boolean) => void;
   type?: string;
+  onSave?: () => void; // onSave callback after product is saved
 }
 
 export default function ProductInformationPopupScreen({
@@ -34,20 +34,20 @@ export default function ProductInformationPopupScreen({
   componentDisabled,
   setComponentDisabled,
   type,
+  onSave,
 }: ProductInformationPopupScreenProps) {
-  const { id } = useParams();
   const [form] = Form.useForm();
-  const [categories, setCategories] = useState<CategoryType[]>([]); // To hold the list of categories
-  const [loading, setLoading] = useState(false); // For loading state during the API request
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch categories from the API when the component mounts
+  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const api_get = api_links.category.getAll; // Assuming you have an endpoint for fetching all categories
+        const api_get = api_links.category.getAll;
         const response = await fetch_Api(api_get);
-        setCategories(response.data); // Update the categories state with API response
+        setCategories(response.data);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -58,136 +58,101 @@ export default function ProductInformationPopupScreen({
     fetchCategories();
   }, []);
 
+  // Set form values if editing a product
+  useEffect(() => {
+    if (type === "edit" && data) {
+      form.setFieldsValue({
+        ...data,
+        categoryId: data.category.id,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [data, type]);
+
+  // Close the modal and reset the form
   const handleCancel = () => {
     form.resetFields();
     setPopup(false);
   };
 
+  // Handle form submission (Create or Update)
   const handleOk = () => {
     form
       .validateFields()
-      .then((values) => {
-        if (type === "edit") {
-          const api_put = {
-            ...api_links.product.edit,
-            url: api_links.product.edit.url + data?.id,
-            data: values,
-          };
-          return fetch_Api(api_put);
-        } else {
-          const api_post = { ...api_links.product.createNew, data: values };
-          return fetch_Api(api_post);
+      .then(async (values) => {
+        setLoading(true);
+
+        try {
+          if (type === "edit" && data?.id) {
+            const api_put = {
+              ...api_links.product.edit(Number(data.id)),
+              data: values,
+            };
+            await fetch_Api(api_put);
+          } else if (type === "create") {
+            const api_post = {
+              ...api_links.product.createNew,
+              data: values,
+            };
+            await fetch_Api(api_post);
+          }
+
+          message.success(
+            `Product ${type === "edit" ? "updated" : "created"} successfully`
+          );
+          if (onSave) onSave(); // Trigger refresh or other action
+          handleCancel();
+        } catch (error) {
+          message.error("Failed to save product");
+        } finally {
+          setLoading(false);
         }
       })
-      .then(() => {
-        message.success("Product saved successfully");
-        setPopup(false);
-      })
-      .catch((err) => {
-        message.error("Failed to save product");
-      });
+      .catch(() => setLoading(false));
   };
 
   return (
     <Modal
-      title="Thông tin"
+      title={type === "edit" ? "Edit Product" : "Create Product"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
-        <Button onClick={handleCancel} type="default" key="back">
-          Huỷ
+        <Button key="cancel" onClick={handleCancel}>
+          Cancel
         </Button>,
-        <Button
-          onClick={handleOk}
-          type="primary"
-          htmlType="submit"
-          key="submit"
-        >
-          Lưu
+        <Button key="save" type="primary" loading={loading} onClick={handleOk}>
+          Save
         </Button>,
       ]}
     >
-      <Form form={form} labelAlign="left" labelCol={{ span: 6 }}>
-        <Row>
-          <Col span={24}>
-            <Form.Item
-              label="Tên hàng"
-              name="name"
-              rules={[
-                { required: true, message: "Please input the product name!" },
-              ]}
-              initialValue={data?.name}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item
-              label="Phân loại"
-              name="categoryId"
-              rules={[{ required: true, message: "Please select a category!" }]}
-              initialValue={data?.category?.id} // Assuming 'category.id' is the initial value
-            >
-              <Select placeholder="Chọn phân loại" loading={loading}>
-                {categories.map((category) => (
-                  <Option key={category.id} value={category.id}>
-                    {category.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item
-              label="Mô tả" // Description
-              name="description"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the product description!",
-                },
-              ]}
-              initialValue={data?.description}
-            >
-              <TextArea rows={4} placeholder="Enter product description" />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item
-              label="Trạng thái" // Status
-              name="status"
-              valuePropName="checked" // Checkbox checked property
-              initialValue={data?.status ?? true} // Default to true if not available
-            >
-              <Checkbox>Active</Checkbox>
-            </Form.Item>
-          </Col>
-
-          {/* <Col span={24}>
-            <Form.Item
-              label="Giá vốn"
-              name="giavon"
-              rules={[{ required: true, message: "Please input the cost price!" }]}
-              initialValue={data?.giavon}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item
-              label="Giá bán"
-              name="giaban"
-              rules={[{ required: true, message: "Please input the selling price!" }]}
-              initialValue={data?.giaban}
-            >
-              <Input />
-            </Form.Item>
-          </Col> */}
-        </Row>
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="name"
+          label="Product Name"
+          rules={[{ required: true, message: "Please enter product name" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="description" label="Description">
+          <TextArea />
+        </Form.Item>
+        <Form.Item
+          name="categoryId"
+          label="Category"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
+          <Select>
+            {categories.map((category) => (
+              <Option key={category.id} value={category.id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item name="status" valuePropName="checked">
+          <Checkbox>Active</Checkbox>
+        </Form.Item>
       </Form>
     </Modal>
   );
