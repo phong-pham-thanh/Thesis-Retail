@@ -18,7 +18,7 @@ namespace APIBackEnd.Data
         public DateTime DateOnboard { get; set; }
         public Address Address { get; set; }
         public int Age { get; set; }
-        public List<WareHouses> WareHousesManaged { get; set; }
+        public List<WareHouses>? WareHousesManaged { get; set; }
     }
     public enum Address
     {

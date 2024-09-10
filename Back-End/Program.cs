@@ -28,6 +28,7 @@ builder.Services.AddScoped<IPartnerRepository, PartnerRepository>();
 builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
 
 
 //Mapper
@@ -38,11 +39,14 @@ builder.Services.AddScoped<IGoodReciptDetailMapper, GoodReciptDetailMapper>();
 builder.Services.AddScoped<IGoodsIssueMapper, GoodsIssueMapper>();
 builder.Services.AddScoped<IPartnerMapper, PartnerMapper>();
 builder.Services.AddScoped<ICategoryMapper, CategoryMapper>();
+builder.Services.AddScoped<IWareHouseMapper, WareHouseMapper>();
+builder.Services.AddScoped<IInventoryMapper, InventoryMapper>();
 
 //Service
 builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IWareHouseService, WareHouseService>();
 
 
 

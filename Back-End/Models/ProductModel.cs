@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using APIBackend.DataModel;
 using APIBackend.Models;
 using APIBackEnd.Data;
 
@@ -13,6 +14,7 @@ namespace APIBackEnd.Models
         public CategoryModel? Category { get; set; }
         public string Description { get; set; }
         public bool Status { get; set; }
+        public List<InventoryModel> ListInventories { get; set; }
 
     }
 }
