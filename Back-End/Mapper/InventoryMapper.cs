@@ -28,6 +28,10 @@ namespace APIBackend.Mapper
 
         public List<InventoryModel> ToModels(List<Inventories> efObjects)
         {
+            if(efObjects == null)
+            {
+                return null;
+            }
             List<InventoryModel> result = new List<InventoryModel>();
             foreach (Inventories efObject in efObjects)
             {
