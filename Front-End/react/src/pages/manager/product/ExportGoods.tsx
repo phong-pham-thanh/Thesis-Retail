@@ -1,49 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import './styleProduct.css'
-import { Navigate, Link, Router, Route, Routes, useNavigate, BrowserRouter, Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import "./styleProduct.css";
+import {
+  Navigate,
+  Link,
+  Router,
+  Route,
+  Routes,
+  useNavigate,
+  BrowserRouter,
+  Outlet,
+} from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-import { Account } from '../../component/account';
-import NavBar from '../../component/menubar';
-import { FilterBox } from '../../component/filterBox';
-import EditIcon from '@mui/icons-material/Edit';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Button, Form, Input, Space, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import ProductInformationPopupScreen from '../../component/popupEditProduct';
-import api_links from '../../../app/api_links';
-import fetch_Api from '../../../app/api_fetch';
-import { GoodsReceipt, GoodsReceiptDetails } from '../../../app/type.d';
+import { Account } from "../../component/account";
+import NavBar from "../../component/menubar";
+import { FilterBox } from "../../component/filterBox";
+import EditIcon from "@mui/icons-material/Edit";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Button, Form, Input, Space, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import ProductInformationPopupScreen from "../../component/popupEditProduct";
+import api_links from "../../../app/api_links";
+import fetch_Api from "../../../app/api_fetch";
+import { GoodsReceipt, GoodsReceiptDetails } from "../../../app/type.d";
 //import axios from 'axios';
 
 interface DataType {
   key: React.Key;
-  "id": string;
-  "name": string;
-  "categoryId": string;
-  "category": {
-    "id": string;
-    "name": string;
-  },
-  "description": string;
-  "status": boolean;
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 }
 const emptydata: DataType = {
   key: "",
-  "id": "0",
-  "name": "",
-  "categoryId": "0",
-  "category": {
-    "id": "0",
-    "name": ""
+  id: "0",
+  name: "",
+  categoryId: "0",
+  category: {
+    id: "0",
+    name: "",
   },
-  "description": "string",
-  "status": true
-}
+  description: "string",
+  status: true,
+};
 interface ExportDataType {
-  info: GoodsReceipt,
-  list: GoodsReceiptDetails,
-  idWareHouse: string,
+  info: GoodsReceipt;
+  list: GoodsReceiptDetails;
+  idWareHouse: string;
 }
 
 let dataShow: DataType = emptydata;
@@ -65,30 +74,46 @@ for (let i = 0; i < 46; i++) {
 export default function ExportGoods() {
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Mã sản phẩm',
-      dataIndex: 'id',
+      title: "Mã sản phẩm",
+      dataIndex: "id",
     },
     {
-      title: 'Tên hàng',
-      dataIndex: 'name',
+      title: "Tên hàng",
+      dataIndex: "name",
     },
     {
-      title: 'Loại',
-      dataIndex: 'categoryId',
+      title: "Loại",
+      dataIndex: "categoryId",
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
+      title: "Mô tả",
+      dataIndex: "description",
     },
     {
-      title: '',
-      key: 'action',
-      width: '112px',
+      title: "",
+      key: "action",
+      width: "112px",
       render: (_, record) => (
         <Space size="small">
-          <Button size={"middle"} onClick={() => { dataShow = data[Number(record.id)]; setIsChangeInformation(!isChangeInformation) }}><EditIcon /></Button>
-          <Button size={"middle"} onClick={() => { console.log("Xóa : " + record.id) }}><ClearIcon /></Button>
-        </Space>),
+          <Button
+            size={"middle"}
+            onClick={() => {
+              dataShow = data[Number(record.id)];
+              setIsChangeInformation(!isChangeInformation);
+            }}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            size={"middle"}
+            onClick={() => {
+              console.log("Xóa : " + record.id);
+            }}
+          >
+            <ClearIcon />
+          </Button>
+        </Space>
+      ),
     },
   ];
 
@@ -99,14 +124,13 @@ export default function ExportGoods() {
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
     getAllBooking()
-      .then(res => {
+      .then((res) => {
         //setAllData(res.data);
         setProducts(res.data);
       })
       .catch((error) => {
         console.log(error);
-
-      })
+      });
   }, []);
   //useSelector, useNavigate
   const [formValues, setFormValue] = useState();
@@ -128,11 +152,11 @@ export default function ExportGoods() {
 
   const getAllBooking = () => {
     const api_link = api_links.product.getAll;
-    return fetch_Api(api_link)
-  }
+    return fetch_Api(api_link);
+  };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -146,19 +170,20 @@ export default function ExportGoods() {
     importData.push(record);
     setImportData(importData);
     console.log(importData);
-  }
+  };
   const postGoodsIssue = () => {
     const api_post = api_links.goodsIssue.createNew;
-    let newReceipt = //:ExportDataType
-    {
-      info: formValues,
-      list: importData,
-      idWareHouse: "0",
-    }
+    let newReceipt =
+      //:ExportDataType
+      {
+        info: formValues,
+        list: importData,
+        idWareHouse: "0",
+      };
     api_post.data = newReceipt;
     console.log(api_post);
-    return fetch_Api(api_post)
-  }
+    return fetch_Api(api_post);
+  };
 
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
@@ -175,7 +200,7 @@ export default function ExportGoods() {
         setComponentDisabled={setComponentDisabled}
       />
 
-      <div className='dashboard-container'>
+      <div className="dashboard-container">
         {/*<ProductInformationPopupScreen
                     isPopup={isChangeInformation}
                     setPopup={setIsChangeInformation}
@@ -183,21 +208,13 @@ export default function ExportGoods() {
                     componentDisabled={componentDisabled}
                     setComponentDisabled={setComponentDisabled}
   />*/}
-        <div className='product-container'>
-          <div className='filterField'>
+        <div className="product-container">
+          <div className="filterField">
             <Form form={form} onFinish={onFinish}>
-              <Form.Item
-                className="code"
-                label={"Mã nhập kho"}
-                name={"code"}
-              >
+              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
                 <Input />
               </Form.Item>
-              <Form.Item
-                className="time"
-                label={"Ngày nhập"}
-                name={"time"}
-              >
+              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
                 <Input />
               </Form.Item>
               <Form.Item
@@ -225,10 +242,12 @@ export default function ExportGoods() {
             </Form>
           </div>
 
-          <div className='filterField'>
+          <div className="filterField">
             <div style={{ marginBottom: 16 }}>
               <span style={{ marginLeft: 8 }}>
-                {hasSelected ? `Đã chọn ${selectedRowKeys.length} sản phẩm` : ''}
+                {hasSelected
+                  ? `Đã chọn ${selectedRowKeys.length} sản phẩm`
+                  : ""}
               </span>
             </div>
             <Table
@@ -241,19 +260,25 @@ export default function ExportGoods() {
             />
           </div>
 
-          <div className='product-list'>
+          <div className="product-list">
             Đơn nhập hàng
-            <Table rowSelection={rowSelection} columns={columns} dataSource={[...importData]} />
-            <Button type='primary' onClick={() => {
-              postGoodsIssue()
-            }}
-              style={{ backgroundColor: "#465d65" }}>
-              Thêm mới</Button>
+            <Table
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={[...importData]}
+            />
+            <Button
+              type="primary"
+              onClick={() => {
+                postGoodsIssue();
+              }}
+              style={{ backgroundColor: "#465d65" }}
+            >
+              Thêm mới
+            </Button>
           </div>
-
         </div>
       </div>
     </React.Fragment>
   );
-
 }

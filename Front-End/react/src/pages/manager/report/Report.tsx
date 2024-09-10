@@ -11,7 +11,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Logo from '../../component/IconComponent/AppLogo'
+import Logo from "../../component/IconComponent/AppLogo";
 import IconTongquan from "../../../icon/menu-tongquan.svg";
 import IconHanghoa from "../../../icon/menu-hanghoa.svg";
 import IconGiaodich from "../../../icon/menu-giaodich.svg";
@@ -33,28 +33,28 @@ import moment from "moment";
 
 interface DataType {
   key: React.Key;
-  "id": string;
-  "name": string;
-  "categoryId": string;
-  "category": {
-    "id": string;
-    "name": string;
-  },
-  "description": string;
-  "status": boolean;
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 }
 const emptydata: DataType = {
   key: "",
-  "id": "0",
-  "name": "",
-  "categoryId": "0",
-  "category": {
-    "id": "0",
-    "name": ""
+  id: "0",
+  name: "",
+  categoryId: "0",
+  category: {
+    id: "0",
+    name: "",
   },
-  "description": "string",
-  "status": true
-}
+  description: "string",
+  status: true,
+};
 let dataShow: DataType = emptydata;
 
 const data: DataType[] = [];
@@ -63,13 +63,13 @@ for (let i = 0; i < 46; i++) {
     key: i,
     id: String(i),
     name: "Sản phẩm " + i,
-    "categoryId": "0",
-    "category": {
-      "id": "0",
-      "name": ""
+    categoryId: "0",
+    category: {
+      id: "0",
+      name: "",
     },
-    "description": "string",
-    "status": true
+    description: "string",
+    status: true,
   });
 }
 
@@ -184,7 +184,7 @@ export default function Report() {
     },
   ];
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   //useSelector, useNavigate
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);

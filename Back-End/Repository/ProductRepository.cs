@@ -2,6 +2,7 @@
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
+using APIBackend.DataModel.DTO;
 
 namespace APIBackEnd.Repository
 {
@@ -9,9 +10,9 @@ namespace APIBackEnd.Repository
     {
         public List<Product> GetAllProducts();
         public ProductModel GetProductById(int id);
-        public Product AddNewProduct(ProductModel product);
+        public Product AddNewProduct(CreateProductDTO product);
         public bool DeleteProdcutById(int id);
-        public Product UpdateProductById(int id, ProductModel product);
+        public Product UpdateProductById(int id, UpdateProductDTO product);
     }
     public class ProductRepository : IProductRepository
     {
@@ -48,24 +49,32 @@ namespace APIBackEnd.Repository
             return true;
         }
 
-        public Product UpdateProductById(int id, ProductModel product)
+        public Product UpdateProductById(int id, UpdateProductDTO product)
         {
             Product productDataBase = _coreContext.Product.Where(pr => pr.Id == id).FirstOrDefault();
             if (productDataBase == null)
             {
                 return null;
             }
-            _productMapper.ToEntity(productDataBase, product);
+            productDataBase.Status = product.Status;
+            productDataBase.Name = product.Name;
+            productDataBase.CategoryId = product.CategoryId;
+            productDataBase.Description = product.Description;
+
             _coreContext.SaveChanges();
             return productDataBase;
         }
 
-        public Product AddNewProduct(ProductModel newProduct)
+        public Product AddNewProduct(CreateProductDTO newProduct)
         {
             Product product = new Product();
-            _productMapper.ToEntity(product, newProduct);
+            product.Name= newProduct.Name;
+            product.CategoryId = newProduct.CategoryId;
+            product.Description = newProduct.Description;
+            product.Status = newProduct.Status;
+
             _coreContext.Product.Add(product);
-            _coreContext.SaveChanges();
+            _coreContext.SaveChanges(true);
             return product;
         }
 
