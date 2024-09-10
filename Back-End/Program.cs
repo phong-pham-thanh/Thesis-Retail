@@ -47,6 +47,7 @@ builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IWareHouseService, WareHouseService>();
+builder.Services.AddScoped<IPartnerService, PartnerService>();
 
 
 

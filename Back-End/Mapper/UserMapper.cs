@@ -6,13 +6,13 @@ namespace APIBackEnd.Mapper
 {
     public interface IUserMapper
     {
-        public UserModel ToModel(Users efObject);
+        public UserModel? ToModel(Users efObject);
         public List<UserModel> ToModels(List<Users> efObject);
     }
     public class UserMapper : IUserMapper
     {
         public UserMapper() { }
-        public UserModel ToModel(Users efObject)
+        public UserModel? ToModel(Users efObject)
         {
             if(efObject == null)
             {
