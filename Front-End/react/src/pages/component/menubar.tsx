@@ -3,6 +3,7 @@ import './component.css'
 import './styleMenubar.css'
 import { Navigate, Link, Router, Route, Routes, useNavigate, useLocation, BrowserRouter, Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import Cookies from 'universal-cookie';
 
 import Logo from '../component/IconComponent/AppLogo'
 
@@ -66,6 +67,7 @@ type menuState = menuItemState[];/*
 export default function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
+    const cookies = new Cookies();
 
     const menuList: menuState = [
         {
@@ -103,7 +105,7 @@ export default function NavBar() {
                 {
                     title: 'Nhập hàng',
                     icon: <IosShareIcon />,
-                    path: 'giaodich/nhaphang',
+                    path: '/nhap-hang',
                     status: location.pathname.includes('nhaphang'),
                 },
                 {
@@ -191,10 +193,14 @@ export default function NavBar() {
                 <div className='infor'>
                     {/*<h5>Tuan Nguyen</h5>
 <h6>Free Account</h6>*/}
-                    <div>Tuan Nguyen</div>
-                    <div>Free Account</div>
+                    <div>{cookies.get("user")?.name??"Anonymous"}</div>
+                    <div>{cookies.get("user")?.branch??"No Branch"}</div>
                 </div>
-                <LogoutIcon />
+                <LogoutIcon  onClick={() => {
+                                        //cookies.set("user",null);
+                                        cookies.remove("user",{ path: '/' });
+                                        navigate("/login");
+                                    }}/>
             </div>
         </header>
     );

@@ -1,4 +1,5 @@
 export type LoginState = {
+  
   "message": string | null,
   "isSuccess": boolean,
   "errors": {/*
@@ -15,6 +16,17 @@ export type LoginState = {
   "errorServer"?: string
 
 };
+
+export type UserState = {
+  "id": string | number ,
+  "name": string,
+  "username": string,
+  "password": string | null,
+  "branch": string,
+  "address": string,
+  "dateOnboard": string,
+  "age": string | number
+}
 /*
 export type UserInformationLoginState = {
   "id": string,
@@ -82,13 +94,13 @@ export type GoodsReceipt = {
   exportDate: string;
   partnerId: string;
   receiptStatus: string;
-  parnersId: string;
+  //parnersId: string;
 };
 
-export type GoodsReceiptDetails = [{
-  id: string;
-  goodsReceiptId: string;
+export type GoodsReceiptDetails = {
+  //id: string;
+  goodReceiptId: string;
   productId: string;
   priceUnit: string;
   quantity: string;
-}];
+};

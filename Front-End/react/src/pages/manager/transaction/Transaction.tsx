@@ -520,3 +520,26 @@ export default function Transaction() {
     </div>
   );
 }
+
+/*{
+  "goodsReceiptModel": {
+      "PartnerID": 2,
+      "Status": 0,
+      "ListGoodReciptDetailsModel":[]
+  },
+  "listGoodReceiptDetailModels": [
+      {
+          "GoodReceiptId": 4,
+          "ProductId": 3,
+          "PriceUnit": 200,
+          "Quantity": 20
+      },
+      {
+          "GoodReceiptId": 4,
+          "ProductId": 3,
+          "PriceUnit": 200,
+          "Quantity": 20
+      }
+  ],
+  "idWareHouse": 3
+}*/

@@ -56,8 +56,23 @@ const api_links = {
             token: "",
             data: {}
         },
-    }
+    },
 
+    user: {
+        //GET ALL
+        getAll: {
+            url: `${authUrl}/User`,
+            method: "GET",
+        },
+
+        //POST FOR LOGIN
+        login: {
+            url: `${authUrl}/User/login`,
+            method: "POST",
+            data: {},
+        },
+
+    }
 }
 
 export default api_links

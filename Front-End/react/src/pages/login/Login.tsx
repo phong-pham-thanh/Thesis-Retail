@@ -21,10 +21,14 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Illustration from "../component/IconComponent/Illustration"
 import Logo from "../component/IconComponent/AppLogo"
+import Cookies from 'universal-cookie';
+import api_links from "../../app/api_links";
+import fetch_Api from "../../app/api_fetch";
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+
 /*
 import api_links from '../../utils/api_links';
 import handlePermission from '../../utils/permission_proccess'
-import Cookies from 'universal-cookie';
 import { log } from 'console';
 import { unescapeLeadingUnderscores } from 'typescript';*/
 //import PulseLoader from "react-spinners/PulseLoader";
@@ -46,7 +50,7 @@ export default function Login() {
   //variable
 
   const dispatch = useDispatch();
-
+  const cookies = new Cookies();
   const location = useLocation();
   const checked = location.pathname;
   const navigate = useNavigate();
@@ -59,11 +63,41 @@ export default function Login() {
 
   useEffect(() => {
     document.title = "Đăng nhập";
-    if (0) {
-      navigate("/dashboard/khach-hang");
+    if (cookies.get("user") !== undefined) {
+      navigate("/quan-ly");
       //return
     }
   }, []);
+
+  const getLoginInfor0 = (data) => {
+    const api_link = api_links.user.login;
+    api_link.data=data;
+    return fetch_Api(api_link)
+  }
+  const getLoginInfor = async function (data): Promise<AxiosResponse> {
+    
+    const config: AxiosRequestConfig = {
+        headers: {
+        },
+        url: api_links.user.login.url,
+        method: api_links.user.login.method,
+        data: data,
+    }
+    try {
+        const response: AxiosResponse = await axios(config);
+        //console.log(response)
+        cookies.set("user", response.data, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
+
+        return response
+    } catch (error: any) {
+        if (error.response) {
+            const errorMessage = error.response.data;
+            throw errorMessage
+        } else {
+            throw new Error(`Lỗi khi đưa yêu cầu: ${error}`)
+        }
+    }
+}
 
   const errorMessage = () => {
     if (errorMessage2) {
@@ -77,7 +111,11 @@ export default function Login() {
 
   const onFinish = (values: any) => {
     //dispatch(login({ "AccountInformation": values.username, "UserName": values.username, "Password": values.password, "link": loginLink }))
+    const response= getLoginInfor(values);
+
+    console.log(response);
     navigate("/quan-ly");
+
   };
 
   //check token existed
@@ -85,9 +123,8 @@ export default function Login() {
     //cookies.set("token", storeCookieData, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
   }
 
-  if (0) {
-    //cookies.get("token")?.token !== undefined) {
-    navigate("/dashboard/khach-hang");
+  if (cookies.get("user") !== undefined) {
+    navigate("/quan-ly");
     //return
   }
 
@@ -108,7 +145,7 @@ export default function Login() {
           <Form.Item
             className="email"
             label={"Email Address"}
-            name={"email"}
+            name={"username"}
             required
           >
             <Input />
@@ -136,7 +173,8 @@ export default function Login() {
               className="login-form-button"
             >
               {isSuccess ? (
-                <FontAwesomeIcon className="circle-loading" icon={faSpinner} />
+                <FontAwesomeIcon className="circle-loading" icon={faSpinner} 
+                onClick={()=>onFinish}/>
               ) : (
                 "Log in"
               )}

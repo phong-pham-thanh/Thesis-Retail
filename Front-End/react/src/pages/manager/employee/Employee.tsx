@@ -8,7 +8,7 @@ import { Account } from '../../component/account';
 import NavBar from '../../component/menubar';
 import { FilterBox } from '../../component/filterBox';
 
-import { Button, Space, Table } from 'antd';
+import { Button, Col, Row, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { randomFill } from 'crypto';
 import EmployeeInformationPopupScreen from '../../component/popupEditEmployee';
@@ -123,7 +123,21 @@ export default function Employee() {
           <FilterBox title={"Chức danh"} type={"role"} />
         </div>
         <div className='product-list'>
-          <Button type='primary' onClick={() => { dataShow = emptydata; setIsChangeInformation(!isChangeInformation) }} style={{ backgroundColor: "#465d65" }}>Thêm mới</Button>
+          <div className='btnTable'>
+          <Button type='primary'
+          onClick={() => { 
+            dataShow = emptydata; 
+            setIsChangeInformation(!isChangeInformation) }} 
+            //style={{ backgroundColor: "#465d65" }}
+            >Thêm mới</Button>
+
+          <Button danger type='primary'
+          onClick={() => { 
+            dataShow = emptydata; 
+            setIsChangeInformation(!isChangeInformation) }} 
+            
+            >Xóa</Button>
+            </div>
           <div style={{ marginBottom: 16 }}>
             <span style={{ marginLeft: 8 }}>
               {hasSelected ? `Đã chọn ${selectedRowKeys.length} nhân viên` : ''}
