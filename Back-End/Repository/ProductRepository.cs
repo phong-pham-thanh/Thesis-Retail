@@ -27,7 +27,7 @@ namespace APIBackEnd.Repository
 
         public List<Product> GetAllProducts()
         {
-            List<Product> products = _coreContext.Product.Include(p => p.Category).ToList();
+            List<Product> products = _coreContext.Product.Include(p => p.Category).Include(p => p.ListInventories).ToList();
             return products;
         }
         public ProductModel GetProductById(int id)

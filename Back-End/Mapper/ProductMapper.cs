@@ -13,9 +13,11 @@ namespace APIBackEnd.Mapper
     public class ProductMapper : IProductMapper
     {
         private readonly ICategoryMapper _categoryMapper;
-        public ProductMapper(ICategoryMapper categoryMapper) 
+        private readonly IInventoryMapper _inventoryMapper;
+        public ProductMapper(ICategoryMapper categoryMapper, IInventoryMapper inventoryMapper) 
         {
             _categoryMapper = categoryMapper;
+            _inventoryMapper = inventoryMapper;
         }
         public ProductModel ToModel(Product efObject)
         {
@@ -28,6 +30,7 @@ namespace APIBackEnd.Mapper
             modelObject.Name = efObject.Name;
             modelObject.CategoryId = efObject.CategoryId;
             modelObject.Category = _categoryMapper.ToModel(efObject.Category);
+            modelObject.ListInventories = _inventoryMapper.ToModels(efObject.ListInventories);
             modelObject.Status = efObject.Status;
             modelObject.Description = efObject.Description;
             return modelObject;
@@ -43,6 +46,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Name = item.Name;
                 modelObject.CategoryId = item.CategoryId;
                 modelObject.Category = _categoryMapper.ToModel(item.Category);
+                modelObject.ListInventories = _inventoryMapper.ToModels(item.ListInventories);
                 modelObject.Status = item.Status;
                 modelObject.Description = item.Description;
                 result.Add(modelObject);

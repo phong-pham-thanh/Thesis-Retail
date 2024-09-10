@@ -674,6 +674,7 @@ FodyWeavers.xsd
 
 # compiled output
 /dist
+/Front-End/react/dist
 /tmp
 /out-tsc
 

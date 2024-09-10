@@ -1,4 +1,6 @@
 ﻿using APIBackend.DataModel;
+using APIBackend.Mapper;
+using APIBackend.Models;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 
@@ -7,13 +9,16 @@ namespace APIBackend.Repository
     public interface IInventoryRepository
     {
         public bool UpdateInventory(int idProduct, int Quantity, int idWareHouse);
+        public List<InventoryModel> GetInventoriesByProductId(int idProduct);
     }
     public class InventoryRepository : IInventoryRepository
     {
         private readonly CoreContext _coreContext;
-        public InventoryRepository(CoreContext _context) 
+        private readonly IInventoryMapper _inventoryMapper;
+        public InventoryRepository(CoreContext _context, IInventoryMapper inventoryMapper) 
         {
             _coreContext = _context;
+            _inventoryMapper = inventoryMapper;
         }
         public bool UpdateInventory(int idProduct, int Quantity, int idWareHouse)
         {
@@ -32,6 +37,11 @@ namespace APIBackend.Repository
             }
             _coreContext.SaveChanges();
             return true;
+        }
+
+        public List<InventoryModel> GetInventoriesByProductId(int idProduct)
+        {
+            return _inventoryMapper.ToModels(_coreContext.Inventories.Where(i => i.ProductId == idProduct).ToList());
         }
     }
 }
