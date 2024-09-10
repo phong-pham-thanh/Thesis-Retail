@@ -11,7 +11,7 @@ namespace APIBackend.DataModel
         public int ManagerId { get; set; }
         [ForeignKey("ManagerId")]
         public Users? Manager { get; set; }
-        public Address Address { get; set; }
+        public string? Address { get; set; }
         public bool Status { get; set; }
         public List<Inventories>? Inventories { get; set; }
     }
