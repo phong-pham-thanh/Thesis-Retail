@@ -26,6 +26,7 @@ import api_links from "../../app/api_links";
 import fetch_Api from "../../app/api_fetch";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import svgLogo from '../../icon/appLogo.svg'
 /*
 import api_links from '../../utils/api_links';
 import handlePermission from '../../utils/permission_proccess'
@@ -133,7 +134,7 @@ export default function Login() {
   return (
     <div className="login">
       <div className="box-form">
-        <Logo />
+        <img src={svgLogo} alt="App logo" />
         <h2 className="title">Login</h2> <br />
         <Form
           layout="vertical"

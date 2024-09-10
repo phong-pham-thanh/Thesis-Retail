@@ -1,0 +1,33 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-buttons button {
+  margin-right: 10px;
+}
+
+.product-container {
+  display: flex;
+  gap: 10px;
+}
+
+.filterField {
+  width: 20%;
+}
+
+.product-list {
+  width: 80%;
+  margin: 0; /* Remove any extra margin */
+  padding: 0; /* Remove any extra padding */
+}
+
+.product-list .ant-table {
+  margin: 0; /* Ensure no margin is added by the table */
+  padding: 0; /* Ensure no padding is added by the table */
+}

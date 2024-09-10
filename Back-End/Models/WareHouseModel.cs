@@ -1,15 +1,13 @@
 ﻿using APIBackEnd.Data;
-using System.ComponentModel.DataAnnotations;
+using APIBackend.DataModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APIBackend.DataModel
+namespace APIBackend.Models
 {
-    public class WareHouses
+    public class WareHouseModel
     {
-        [Key]
         public int Id { get; set; }
         public int ManagerId { get; set; }
-        [ForeignKey("ManagerId")]
         public Users? Manager { get; set; }
         public string? Address { get; set; }
         public bool Status { get; set; }

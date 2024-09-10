@@ -3,6 +3,7 @@ using System;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackend.Service;
+using APIBackend.DataModel.DTO;
 
 namespace APIBackEnd.Controllers
 {
@@ -41,14 +42,14 @@ namespace APIBackEnd.Controllers
 
         [HttpPut]
         [Route("updateProductById/{id}")]
-        public ProductModel Put(int id, [FromBody] ProductModel product)
+        public ProductModel Put(int id, [FromBody] UpdateProductDTO product)
         {
             return _productService.UpdateProductById(id, product);
         }
 
         [HttpPost]
         [Route("addNewProduct")]
-        public ProductModel addNewProduct ([FromBody] ProductModel product)
+        public ProductModel addNewProduct ([FromBody] CreateProductDTO product)
         {
             return _productService.AddNewProduct(product);
         }

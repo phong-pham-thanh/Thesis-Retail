@@ -3,32 +3,37 @@ const authUrl = "https://localhost:7030";
 
 const api_links = {
     product: {
-        //GET ALL
+        // GET ALL PRODUCTS
         getAll: {
             url: `${authUrl}/Product`,
             method: "GET",
         },
-        //GET BY ID
-        getById: {
-            url: `${authUrl}/Product`,
-            method: "GET",
-        },
 
-        //POST
+        // GET PRODUCT BY ID
+        getById: (productId: number) => ({
+            url: `${authUrl}/Product/getProductById/${productId}`,
+            method: "GET",
+        }),
+
+        // CREATE NEW PRODUCT
         createNew: {
-            url: `${authUrl}/Product`,
+            url: `${authUrl}/Product/addNewProduct`,
             method: "POST",
             data: {},
         },
 
-        ////////////////////// ELSE //////////////////////
-        edit: {
-            url: `${authUrl}api/Product/`,
+        // EDIT PRODUCT
+        edit: (productId: number) => ({
+            url: `${authUrl}/Product/updateProductById/${productId}`,
             method: "PUT",
-            //token: "",
-            data: {}
-        },
+            data: {}, // This will be populated with the product data to update
+        }),
 
+        // DELETE PRODUCT
+        delete: (productId: number) => ({
+            url: `${authUrl}/Product/deleteProductById/${productId}`,
+            method: "DELETE",
+        }),
     },
     goodsIssue: {
         //GET ALL
@@ -56,6 +61,12 @@ const api_links = {
             token: "",
             data: {}
         },
+    },
+    category: {
+        getAll:{
+            url: `${authUrl}/Category`,
+            method: "GET",
+        }
     },
 
     user: {

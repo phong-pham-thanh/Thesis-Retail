@@ -1,45 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import './styleProduct.css'
-import { Navigate, Link, Router, Route, Routes, useNavigate, BrowserRouter, Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import "./styleProduct.css";
+import {
+  Navigate,
+  Link,
+  Router,
+  Route,
+  Routes,
+  useNavigate,
+  BrowserRouter,
+  Outlet,
+} from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-import { Account } from '../../component/account';
-import NavBar from '../../component/menubar';
-import { FilterBox } from '../../component/filterBox';
-import EditIcon from '@mui/icons-material/Edit';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Button, Form, Input, Space, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import ProductInformationPopupScreen from '../../component/popupEditProduct';
-import api_links from '../../../app/api_links';
-import fetch_Api from '../../../app/api_fetch';
-import { GoodsReceipt, GoodsReceiptDetails } from '../../../app/type.d';
+import { Account } from "../../component/account";
+import NavBar from "../../component/menubar";
+import { FilterBox } from "../../component/filterBox";
+import EditIcon from "@mui/icons-material/Edit";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Button, Form, Input, Space, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import ProductInformationPopupScreen from "../../component/popupEditProduct";
+import api_links from "../../../app/api_links";
+import fetch_Api from "../../../app/api_fetch";
+import { GoodsReceipt, GoodsReceiptDetails } from "../../../app/type.d";
 //import axios from 'axios';
 
 interface DataType {
   key: React.Key;
-  "id": string;
-  "name": string;
-  "categoryId": string;
-  "category": {
-    "id": string;
-    "name": string;
-  },
-  "description": string;
-  "status": boolean;
+  id: string;
+  name: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  status: boolean;
 }
 const emptydata: DataType = {
   key: "",
-  "id": "0",
-  "name": "",
-  "categoryId": "0",
-  "category": {
-    "id": "0",
-    "name": ""
+  id: "0",
+  name: "",
+  categoryId: "0",
+  category: {
+    id: "0",
+    name: "",
   },
-  "description": "string",
-  "status": true
-}
+  description: "string",
+  status: true,
+};
 interface ExportDataType {
   goodsReceiptModel: GoodsReceipt,
   listGoodReceiptDetailModels: GoodsReceiptDetails[],
@@ -65,25 +74,25 @@ for (let i = 0; i < 46; i++) {
 export default function ExportGoods() {
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Mã sản phẩm',
-      dataIndex: 'id',
+      title: "Mã sản phẩm",
+      dataIndex: "id",
     },
     {
-      title: 'Tên hàng',
-      dataIndex: 'name',
+      title: "Tên hàng",
+      dataIndex: "name",
     },
     {
-      title: 'Loại',
-      dataIndex: 'categoryId',
+      title: "Loại",
+      dataIndex: "categoryId",
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
+      title: "Mô tả",
+      dataIndex: "description",
     },
     {
-      title: '',
-      key: 'action',
-      width: '112px',
+      title: "",
+      key: "action",
+      width: "112px",
       render: (_, record) => (
         <Space size="small">
           <Button size={"middle"} onClick={() => {
@@ -138,14 +147,13 @@ export default function ExportGoods() {
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
     getAllBooking()
-      .then(res => {
+      .then((res) => {
         //setAllData(res.data);
         setProducts(res.data);
       })
       .catch((error) => {
         console.log(error);
-
-      })
+      });
   }, []);
 
   //useSelector, useNavigate
@@ -168,17 +176,17 @@ export default function ExportGoods() {
 
   const getAllBooking = () => {
     const api_link = api_links.product.getAll;
-    return fetch_Api(api_link)
-  }
+    return fetch_Api(api_link);
+  };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const handleTableRowClick = (record : string) => {
     importData.push({
-      "goodReceiptId": "0",
+      "goodsReceiptId": "0",
       "productId": record,
       "priceUnit": "",
       "quantity": "1"
@@ -190,8 +198,8 @@ export default function ExportGoods() {
     const api_post = api_links.goodsIssue.createNew;
     api_post.data = postData;
     console.log(api_post);
-    return fetch_Api(api_post)
-  }
+    return fetch_Api(api_post);
+  };
 
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
@@ -204,13 +212,13 @@ export default function ExportGoods() {
       },
       listGoodReceiptDetailModels: [
         {
-            "goodReceiptId": "4",
+            "goodsReceiptId": "4",
             "productId": "3",
             "priceUnit": "200",
             "quantity": "20"
         },
         {
-          "goodReceiptId": "4",
+          "goodsReceiptId": "4",
           "productId": "3",
           "priceUnit": "200",
           "quantity": "20"
@@ -232,7 +240,7 @@ export default function ExportGoods() {
         setComponentDisabled={setComponentDisabled}
       />
 
-      <div className='dashboard-container'>
+      <div className="dashboard-container">
         {/*<ProductInformationPopupScreen
                     isPopup={isChangeInformation}
                     setPopup={setIsChangeInformation}
@@ -240,8 +248,8 @@ export default function ExportGoods() {
                     componentDisabled={componentDisabled}
                     setComponentDisabled={setComponentDisabled}
   />*/}
-        <div className='product-container'>
-          <div className='filterField'>
+        <div className="product-container">
+          <div className="filterField">
             <Form form={form} onFinish={onFinish}>
 
           <Form.Item
@@ -290,10 +298,8 @@ export default function ExportGoods() {
             <Table columns={exportColumns} dataSource={[...importData]} />
 
           </div>
-
         </div>
       </div>
     </React.Fragment>
   );
-
 }

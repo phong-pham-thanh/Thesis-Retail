@@ -1,142 +1,159 @@
-import { useDispatch, useSelector } from "react-redux";
-//import './popupscreen.css'
-import { Button, Checkbox, Col, Form, Input, Modal, Row, Upload, message } from "antd";
-import React, { FormEvent, useEffect, useState } from "react";
-
-import { Rule } from 'antd/lib/form';
-
-import { PlusOutlined } from "@ant-design/icons";
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-import { useParams } from "react-router-dom";
-//import axios from "axios";
-import { ProductState } from "../../app/type.d"
-import api_links from "../../app/api_links";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  message,
+  Checkbox,
+} from "antd";
 import fetch_Api from "../../app/api_fetch";
+import api_links from "../../app/api_links";
+import { ProductState, CategoryType } from "../../app/type.d";
 
-interface DataType {
-    key: React.Key;
-    Id: string;
-    name: string;
-    giavon: string;
-    giaban: string;
-    slnhap: number;
-    tonkho: number;
-};
+const { Option } = Select;
+const { TextArea } = Input;
 
-export default function ProductInformationPopupScreen({ isPopup, setPopup, data, componentDisabled, setComponentDisabled, type }: { isPopup?: boolean, setPopup?: any, data?: ProductState, componentDisabled?: boolean, setComponentDisabled?: any, type?: string }) {
-    const { id } = useParams();
-    // watch value in form
-    const [form] = Form.useForm();
-    const [checkForm] = Form.useForm();
-    const formData = new FormData();
-    //const [componentDisabled, setComponentDisabled] = useState(data?.isBlocked );
-    //var componentDisabled = data?.isBlocked ?? false;
-    //get data
-    //const data = cookies.get("token")?.information
+interface ProductInformationPopupScreenProps {
+  isPopup: boolean;
+  setPopup: (value: boolean) => void;
+  data?: ProductState;
+  componentDisabled?: boolean;
+  setComponentDisabled?: (value: boolean) => void;
+  type?: string;
+  onSave?: () => void; // onSave callback after product is saved
+}
 
-    const handleCancel = () => {
-        form.resetFields();
-        checkForm.resetFields();
-        setPopup(false);
+export default function ProductInformationPopupScreen({
+  isPopup,
+  setPopup,
+  data,
+  componentDisabled,
+  setComponentDisabled,
+  type,
+  onSave,
+}: ProductInformationPopupScreenProps) {
+  const [form] = Form.useForm();
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const api_get = api_links.category.getAll;
+        const response = await fetch_Api(api_get);
+        setCategories(response.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        message.error("Failed to load categories");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Set form values if editing a product
+  useEffect(() => {
+    if (type === "edit" && data) {
+      form.setFieldsValue({
+        ...data,
+        categoryId: data.category.id,
+      });
+    } else {
+      form.resetFields();
     }
+  }, [data, type]);
 
+  // Close the modal and reset the form
+  const handleCancel = () => {
+    form.resetFields();
+    setPopup(false);
+  };
 
+  // Handle form submission (Create or Update)
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then(async (values) => {
+        setLoading(true);
 
-    const handleOk = () => {
-        type == "edit" ?
-            form
-                .validateFields()
-                .then((values) => {
-                    const api_put = api_links.product.edit;
-                    api_put.url=api_put.url+data?.id;
-                    api_put.data=values;
-                    return fetch_Api(api_put)
-                })
-            : 
-            form
-                .validateFields()
-                .then((values) => {
-                    const api_post = api_links.product.createNew;
-                    api_post.data=values;
-                    return fetch_Api(api_post)
-                })
-    }
+        try {
+          if (type === "edit" && data?.id) {
+            const api_put = {
+              ...api_links.product.edit(Number(data.id)),
+              data: values,
+            };
+            await fetch_Api(api_put);
+          } else if (type === "create") {
+            const api_post = {
+              ...api_links.product.createNew,
+              data: values,
+            };
+            await fetch_Api(api_post);
+          }
 
-    return (
-        <Modal
-            title="Thông tin"
-            open={isPopup}
-            onCancel={handleCancel}
-            footer={[
-                <Button onClick={handleCancel} type="default" key="back">
-                    Huỷ
-                </Button>,
-                <Button onClick={handleOk} type="primary" htmlType="submit" key="submit">
-                    Lưu
-                </Button>
-            ]}
+          message.success(
+            `Product ${type === "edit" ? "updated" : "created"} successfully`
+          );
+          if (onSave) onSave(); // Trigger refresh or other action
+          handleCancel();
+        } catch (error) {
+          message.error("Failed to save product");
+        } finally {
+          setLoading(false);
+        }
+      })
+      .catch(() => setLoading(false));
+  };
+
+  return (
+    <Modal
+      title={type === "edit" ? "Edit Product" : "Create Product"}
+      open={isPopup}
+      onCancel={handleCancel}
+      footer={[
+        <Button key="cancel" onClick={handleCancel}>
+          Cancel
+        </Button>,
+        <Button key="save" type="primary" loading={loading} onClick={handleOk}>
+          Save
+        </Button>,
+      ]}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="name"
+          label="Product Name"
+          rules={[{ required: true, message: "Please enter product name" }]}
         >
-            <Form
-                form={form}
-                disabled={componentDisabled}
-                labelAlign="left"
-                labelCol={{ span: 6 }}
-            >
-                <Row>
-                    <Col span={24}>
-                        <Form.Item
-                            label="Tên"
-                            name="name"
-                            rules={[{ required: true, message: 'Please input your name!' }]}
-                            initialValue={data?.name}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
-                        <Form.Item
-                            label="Phân loại"
-                            name="phanloai"
-                            //rules={[{ required: true, message: 'Please input your phone number!' }]}
-                            initialValue={data?.category?.name}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    {/*<Col span={24}>
-                        <Form.Item
-                            label="SL nhập"
-                            name="slnhap"
-                            //rules={[{ required: true, message: 'Please input your phone number!' }]}
-                            initialValue={data?.slnhap}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Form.Item
-                            label="Giá vốn"
-                            name="giavon"
-                            //rules={[{ required: true, message: 'Please input your email!' }]}
-                            initialValue={data?.giavon}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={24}>
-                        <Form.Item
-                            label="Giá bán"
-                            name="giaban"
-                            //rules={[{ required: true, message: 'Please input this!' }]}
-                            initialValue={data?.giaban}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>*/}
-                </Row>
-            </Form>
-        </Modal >
-    )
+          <Input />
+        </Form.Item>
+        <Form.Item name="description" label="Description">
+          <TextArea />
+        </Form.Item>
+        <Form.Item
+          name="categoryId"
+          label="Category"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
+          <Select>
+            {categories.map((category) => (
+              <Option key={category.id} value={category.id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item name="status" valuePropName="checked">
+          <Checkbox>Active</Checkbox>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 }

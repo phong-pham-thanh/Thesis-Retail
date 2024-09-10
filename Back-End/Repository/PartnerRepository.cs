@@ -6,7 +6,7 @@ namespace APIBackEnd.Repository
 {
     public interface IPartnerRepository
     {
-        public List<PartnerModel> GetAllPartner();
+        public List<PartnerModel> GetAll();
     }
     public class PartnerRepository : IPartnerRepository
     {
@@ -19,7 +19,7 @@ namespace APIBackEnd.Repository
             _partnerMapper = partnerMapper;
         }
 
-        public List<PartnerModel> GetAllPartner()
+        public List<PartnerModel> GetAll()
         {
             List<Partners> partners = _coreContext.Partners.ToList();
             return _partnerMapper.ToModels(partners);
