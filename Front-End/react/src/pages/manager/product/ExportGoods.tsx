@@ -50,9 +50,9 @@ const emptydata: DataType = {
   status: true,
 };
 interface ExportDataType {
-  info: GoodsReceipt;
-  list: GoodsReceiptDetails;
-  idWareHouse: string;
+  goodsReceiptModel: GoodsReceipt,
+  listGoodReceiptDetailModels: GoodsReceiptDetails[],
+  idWareHouse: string,
 }
 
 let dataShow: DataType = emptydata;
@@ -95,31 +95,54 @@ export default function ExportGoods() {
       width: "112px",
       render: (_, record) => (
         <Space size="small">
-          <Button
-            size={"middle"}
-            onClick={() => {
-              dataShow = data[Number(record.id)];
-              setIsChangeInformation(!isChangeInformation);
-            }}
-          >
-            <EditIcon />
-          </Button>
-          <Button
-            size={"middle"}
-            onClick={() => {
-              console.log("Xóa : " + record.id);
-            }}
-          >
-            <ClearIcon />
-          </Button>
-        </Space>
-      ),
+          <Button size={"middle"} onClick={() => {
+            handleTableRowClick(record.id)}}>+</Button>
+        </Space>),
     },
+  ];
+  const exportColumns: ColumnsType<GoodsReceiptDetails> = [
+    {
+      title: 'Mã sản phẩm',
+      dataIndex: 'productId',
+    },
+    {
+      title: 'Tên hàng',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Đơn giá',
+      dataIndex: 'priceUnit',
+      render: (_, record) => (
+        <Space size="small">
+          <Input/> 
+        </Space>),
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      render: (_, record) => (
+        <Space size="small">
+          <Button size={"small"} onClick={() => {
+            record.quantity=String(Number(record.quantity)-1)}}>-</Button>
+            {record.quantity}
+            <Button size={"small"} onClick={() => {
+            record.quantity=String(Number(record.quantity)+1)}}>+</Button>
+        </Space>),
+    },
+    {
+      title: 'Thành tiền',
+      dataIndex: 'subTotal',
+      render: (_, record) => (
+        <Space size="small">
+          {Number(record.priceUnit)*Number(record.quantity)}
+        </Space>),
+    },
+
   ];
 
   const [form] = Form.useForm();
   const [data, setProducts] = useState([]);
-  const [importData, setImportData] = useState<DataType[]>([emptydata]);
+  const [importData, setImportData] = useState<GoodsReceiptDetails[]>([]);
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
@@ -132,6 +155,7 @@ export default function ExportGoods() {
         console.log(error);
       });
   }, []);
+
   //useSelector, useNavigate
   const [formValues, setFormValue] = useState();
 
@@ -160,34 +184,50 @@ export default function ExportGoods() {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-
-  const handleTableRowClick = (record: DataType) => {
-    importData.push(record);
+  const handleTableRowClick = (record : string) => {
+    importData.push({
+      "goodsReceiptId": "0",
+      "productId": record,
+      "priceUnit": "",
+      "quantity": "1"
+    });
     setImportData(importData);
     console.log(importData);
-  };
-  const postGoodsIssue = () => {
+  }
+  const postGoodsIssue = (postData:ExportDataType) => {
     const api_post = api_links.goodsIssue.createNew;
-    let newReceipt =
-      //:ExportDataType
-      {
-        info: formValues,
-        list: importData,
-        idWareHouse: "0",
-      };
-    api_post.data = newReceipt;
+    api_post.data = postData;
     console.log(api_post);
     return fetch_Api(api_post);
   };
 
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
-    console.log(form.getFieldsValue());
+    const postData:ExportDataType={
+      goodsReceiptModel: {
+        id: "0",
+        exportDate: form.getFieldValue("exportDate"),
+        partnerId: form.getFieldValue("partnerId"),
+        receiptStatus: "2"
+      },
+      listGoodReceiptDetailModels: [
+        {
+            "goodsReceiptId": "4",
+            "productId": "3",
+            "priceUnit": "200",
+            "quantity": "20"
+        },
+        {
+          "goodsReceiptId": "4",
+          "productId": "3",
+          "priceUnit": "200",
+          "quantity": "20"
+        }
+    ],
+      idWareHouse: form.getFieldValue("idWareHouse")
+    }
+        console.log(postData);
+
   };
 
   return (
@@ -211,71 +251,52 @@ export default function ExportGoods() {
         <div className="product-container">
           <div className="filterField">
             <Form form={form} onFinish={onFinish}>
-              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
-                <Input />
-              </Form.Item>
-              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
+
+          <Form.Item
+                className="idWareHouse"
+                label={"Nhập đến kho"}
+                name={"idWareHouse"}
+              >
                 <Input />
               </Form.Item>
               <Form.Item
-                className="trans"
+                className="exportDate"
+                label={"Ngày nhập"}
+                name={"exportDate"}
+              >
+                <Input />
+              </Form.Item >
+              <Form.Item
+                className="partnerId"
                 label={"Nhà cung cấp"}
-                name={"trans"}
+                name={"partnerId"}
                 rules={[{ required: true }]}
               >
                 <Input />
               </Form.Item>
-              <Form.Item
-                className="fee"
-                label={"Cần trả nhà cung cấp"}
-                name={"fee"}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                className="status"
-                label={"Trạng thái"}
-                name={"status"}
-              >
-                <Input />
-              </Form.Item>
-            </Form>
+             
+              <Button type='primary' onClick={() => {
+              onFinish();//postGoodsIssue()
+            }}
+              style={{ backgroundColor: "#465d65" }}>
+              Thêm mới</Button>            </Form>
           </div>
 
-          <div className="filterField">
-            <div style={{ marginBottom: 16 }}>
-              <span style={{ marginLeft: 8 }}>
-                {hasSelected
-                  ? `Đã chọn ${selectedRowKeys.length} sản phẩm`
-                  : ""}
-              </span>
-            </div>
+          <div className='filterField'>
+
             <Table
-              rowSelection={rowSelection}
               columns={columns}
               dataSource={data}
-              onRow={(record) => ({
-                onClick: () => handleTableRowClick(record),
-              })}
+              /*onRow={(record) => ({
+                onClick: () => handleTableRowClick(record.id),
+              })}*/
             />
           </div>
 
-          <div className="product-list">
+          <div className='export-list'>
             Đơn nhập hàng
-            <Table
-              rowSelection={rowSelection}
-              columns={columns}
-              dataSource={[...importData]}
-            />
-            <Button
-              type="primary"
-              onClick={() => {
-                postGoodsIssue();
-              }}
-              style={{ backgroundColor: "#465d65" }}
-            >
-              Thêm mới
-            </Button>
+            <Table columns={exportColumns} dataSource={[...importData]} />
+
           </div>
         </div>
       </div>

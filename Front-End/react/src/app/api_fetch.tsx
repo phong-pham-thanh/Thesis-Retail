@@ -23,6 +23,7 @@ const fetch_Api = async function (params: Api): Promise<AxiosResponse> {
     }
     try {
         const response: AxiosResponse = await axios(config);
+        //console.log(response)
         return response
     } catch (error: any) {
         if (error.response) {

@@ -214,12 +214,13 @@ export default function Product() {
             <FilterBox title={"Tổng bán"} type={"amount"} />
             <FilterBox title={"Số lượng"} type={"num"} />
           </div>
-          <div className="product-list">
-            <div>
-              <span>
-                {hasSelected
-                  ? `Đã chọn ${selectedRowKeys.length} sản phẩm`
-                  : ""}
+          <div className='product-list'>
+            <div className='btnAdd'>
+              <Button type='primary' onClick={() => { const dataShow = emptydata; setIsChangeInformation(!isChangeInformation) }} style={{ backgroundColor: "#465d65" }}>Thêm mới</Button>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <span style={{ marginLeft: 8 }}>
+                {hasSelected ? `Đã chọn ${selectedRowKeys.length} sản phẩm` : ''}
               </span>
             </div>
             <Table
