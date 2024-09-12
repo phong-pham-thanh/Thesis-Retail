@@ -83,6 +83,12 @@ const api_links = {
             data: {},
         },
 
+    },
+    warehouse:{
+        getAll:{
+            url: `${authUrl}/Warehouse`,
+            method: "GET"
+        }
     }
 }
 

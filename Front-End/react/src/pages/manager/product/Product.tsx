@@ -13,6 +13,14 @@ import CustomButton from "../../component/CustomeButton";
 import AlertDialog from "../../component/AlertDialog";
 import { UploadFile } from "@mui/icons-material";
 import message from "antd/lib/message";
+import { WarehouseFilter } from "./WarehouseFilter";
+
+interface InventoryType {
+  id: number;
+  productId: number;
+  wareHouseId: number;
+  quantity: number;
+}
 
 interface DataType {
   key: React.Key;
@@ -25,7 +33,9 @@ interface DataType {
   };
   description: string;
   status: boolean;
+  listInventories: InventoryType[];
 }
+
 const emptydata: DataType = {
   key: "",
   id: "0",
@@ -37,55 +47,18 @@ const emptydata: DataType = {
   },
   description: "string",
   status: true,
+  listInventories: [],
 };
 
 export default function Product() {
-  const columns: ColumnsType<DataType> = [
-    {
-      title: "Mã sản phẩm",
-      dataIndex: "id",
-    },
-    {
-      title: "Tên hàng",
-      dataIndex: "name",
-    },
-    {
-      title: "Loại",
-      dataIndex: "categoryId",
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
-    },
-    {
-      title: "",
-      key: "action",
-      width: "112px",
-      render: (_, record) => (
-        <Space size="small">
-          <Button
-            size={"middle"}
-            onClick={() => {
-              handleEdit(record); // Use the handler to edit the product
-            }}
-          >
-            <EditIcon />
-          </Button>
-          <Button
-            size={"middle"}
-            onClick={() => showDeleteDialog(record)} // Use the handler to show delete confirmation
-          >
-            <ClearIcon />
-          </Button>
-        </Space>
-      ),
-    },
-  ];
-
   const [data, setProducts] = useState<DataType[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<DataType[]>([]); // State for filtered products
   const [popupData, setPopupData] = useState<DataType>(emptydata); // State to store the selected product data
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState<number | null>(
+    null
+  ); // Track selected warehouse
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -111,6 +84,21 @@ export default function Product() {
   useEffect(() => {
     getAllProducts();
   }, [refresh]);
+
+  // Function to filter products based on selected warehouse (Chi nhánh)
+  const filterProductsByWarehouse = (warehouseId: number) => {
+    setSelectedWarehouseId(warehouseId); // Set the selected warehouse ID
+    const filtered = data.filter((product) =>
+      product.listInventories.some(
+        (inventory) => inventory.wareHouseId === warehouseId
+      )
+    );
+    setFilteredProducts(filtered);
+  };
+
+  const handleWarehouseChange = (value: number) => {
+    filterProductsByWarehouse(value); // Filter products based on the selected warehouse
+  };
 
   const handleEdit = (record: DataType) => {
     setPopupData(record); // Set the selected product data
@@ -156,7 +144,6 @@ export default function Product() {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -165,9 +152,63 @@ export default function Product() {
     onChange: onSelectChange,
   };
 
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Mã sản phẩm",
+      dataIndex: "id",
+    },
+    {
+      title: "Tên hàng",
+      dataIndex: "name",
+    },
+    {
+      title: "Loại",
+      dataIndex: ["category", "name"], // Show category name instead of categoryId
+    },
+    {
+      title: "Số lượng",
+      key: "quantity",
+      render: (record: DataType) => {
+        // Display the quantity in the selected warehouse
+        const inventory = record.listInventories.find(
+          (inv) => inv.wareHouseId === selectedWarehouseId
+        );
+        return inventory ? inventory.quantity : "N/A"; // Show quantity or 'N/A' if not found
+      },
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "description",
+    },
+    {
+      title: "",
+      key: "action",
+      width: "112px",
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            size={"middle"}
+            onClick={() => {
+              handleEdit(record); // Use the handler to edit the product
+            }}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            size={"middle"}
+            onClick={() => showDeleteDialog(record)} // Use the handler to show delete confirmation
+          >
+            <ClearIcon />
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
   const hasSelected = selectedRowKeys.length > 0;
 
   if (loading) return <h1>Loading ...</h1>;
+
   return (
     <React.Fragment>
       <ProductInformationPopupScreen
@@ -210,17 +251,29 @@ export default function Product() {
         </div>
         <div className="product-container">
           <div className="filterField">
-            <FilterBox title={"Chi nhánh"} type={"store"} />
+            <WarehouseFilter onSelect={handleWarehouseChange} />
+
             <FilterBox title={"Tổng bán"} type={"amount"} />
             <FilterBox title={"Số lượng"} type={"num"} />
           </div>
-          <div className='product-list'>
-            <div className='btnAdd'>
-              <Button type='primary' onClick={() => { const dataShow = emptydata; setIsChangeInformation(!isChangeInformation) }} style={{ backgroundColor: "#465d65" }}>Thêm mới</Button>
+          <div className="product-list">
+            <div className="btnAdd">
+              <Button
+                type="primary"
+                onClick={() => {
+                  const dataShow = emptydata;
+                  setIsChangeInformation(!isChangeInformation);
+                }}
+                style={{ backgroundColor: "#465d65" }}
+              >
+                Thêm mới
+              </Button>
             </div>
             <div style={{ marginBottom: 16 }}>
               <span style={{ marginLeft: 8 }}>
-                {hasSelected ? `Đã chọn ${selectedRowKeys.length} sản phẩm` : ''}
+                {hasSelected
+                  ? `Đã chọn ${selectedRowKeys.length} sản phẩm`
+                  : ""}
               </span>
             </div>
             <Table
