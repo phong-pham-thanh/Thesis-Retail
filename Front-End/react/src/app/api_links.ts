@@ -49,7 +49,7 @@ const api_links = {
 
         //POST
         createNew: {
-            url: `${authUrl}/GoodRecipt`,
+            url: `${authUrl}/GoodRecipt/addGoodRecipt`,
             method: "POST",
             data: {},
         },

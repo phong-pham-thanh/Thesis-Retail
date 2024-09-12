@@ -95,7 +95,9 @@ export type GoodsReceipt = {
   id: string;
   exportDate: string;
   partnerId: string;
-  receiptStatus: string;
+  receiptStatus: number;
+  ListGoodReciptDetailsModel:[]
+
   //parnersId: string;
 };
 
@@ -104,8 +106,8 @@ export type GoodsReceiptDetails =
     //id: string;
     goodsReceiptId: string;
     productId: string;
-    priceUnit: string;
-    quantity: string;
+    priceUnit: number;
+    quantity: number;
   };
 
 export type CategoryType = {

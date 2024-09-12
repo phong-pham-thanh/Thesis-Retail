@@ -105,7 +105,7 @@ export default function NavBar() {
                 {
                     title: 'Nhập hàng',
                     icon: <IosShareIcon />,
-                    path: '/nhap-hang',
+                    path: 'nhap-hang',
                     status: location.pathname.includes('nhaphang'),
                 },
                 {
