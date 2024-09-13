@@ -114,3 +114,20 @@ export type CategoryType = {
   id: number;
   name: string;
 };
+
+export type PartnerState = 
+  {
+    id: number|string,
+    name: string,
+    totalSale: number,
+  };
+
+export type WarehouseState = 
+  {
+    id: number|string,
+    managerId: number|string,
+    manager: null,
+    address: string,
+    status: boolean,
+    inventories: null
+  };

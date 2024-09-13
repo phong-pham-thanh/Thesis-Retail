@@ -35,6 +35,7 @@ const api_links = {
             method: "DELETE",
         }),
     },
+
     goodsIssue: {
         //GET ALL
         getAll: {
@@ -62,6 +63,7 @@ const api_links = {
             data: {}
         },
     },
+
     category: {
         getAll:{
             url: `${authUrl}/Category`,
@@ -83,7 +85,21 @@ const api_links = {
             data: {},
         },
 
-    }
+    },
+
+    partner:{
+        getAll:{
+            url: `${authUrl}/Partner`,
+            method: "GET",
+        }
+    },
+
+    warehouse:{
+        getAll:{
+            url: `${authUrl}/WareHouse`,
+            method: "GET",
+        }
+    },
 }
 
 export default api_links

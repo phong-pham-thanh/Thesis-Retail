@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
+import { message} from 'antd';
 //import Cookies from 'universal-cookie';
 
 interface Api {
@@ -8,6 +9,8 @@ interface Api {
     token?: string,
     data?: any
 }
+
+//const [messageApi, contextHolder] = message.useMessage();
 
 const fetch_Api = async function (params: Api): Promise<AxiosResponse> {
     //const cookies = new Cookies()
@@ -24,7 +27,12 @@ const fetch_Api = async function (params: Api): Promise<AxiosResponse> {
     try {
         const response: AxiosResponse = await axios(config);
         //console.log(response)
-        return response
+        params.method==="GET"?
+        console.log("GET success!"):
+        
+        console.log("POST success!");
+        //message.success("Success!");
+        return response;
     } catch (error: any) {
         if (error.response) {
             const errorMessage = error.response.data;
