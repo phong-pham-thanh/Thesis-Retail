@@ -88,6 +88,8 @@ export default function Login() {
         const response: AxiosResponse = await axios(config);
         if (response.status==200){
         cookies.set("user", response.data, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
+        navigate("/quan-ly");
+
         }
         return response
     } catch (error: any) {

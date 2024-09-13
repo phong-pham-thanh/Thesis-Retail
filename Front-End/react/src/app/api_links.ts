@@ -39,7 +39,7 @@ const api_links = {
     goodsIssue: {
         //GET ALL
         getAll: {
-            url: `${authUrl}/GoodRecipt`,
+            url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
             method: "GET",
         },
         //GET BY ID

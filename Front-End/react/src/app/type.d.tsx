@@ -103,7 +103,7 @@ export type GoodsReceipt = {
 
 export type GoodsReceiptDetails = 
   {
-    //id: string;
+    id?: string;
     goodsReceiptId: string;
     productId: string;
     priceUnit: number;
@@ -130,4 +130,12 @@ export type WarehouseState =
     address: string,
     status: boolean,
     inventories: null
+  };
+
+  export type GoodReceiptDataType = {
+    id: String|Number,
+    exportDate: String|Date,
+    partnerID: String|Number,
+    receiptStatus: String|Number,
+    listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
   };
