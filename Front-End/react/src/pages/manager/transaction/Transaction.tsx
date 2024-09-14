@@ -288,7 +288,7 @@ export default function Transaction() {
   const [isShowModal, setIsShowModal] = useState<string>();
 
   //call api set data products on modal
-  const [listProduct, setListProduct] = useState<IProduct[]>(listProductsFake);
+  const [listProduct, setListProduct] = useState<GoodsReceiptDetails[]>();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -403,6 +403,7 @@ export default function Transaction() {
                           onClick={() => {
                             setIsShowModal("edit");
                             form.setFieldsValue(tran);
+                            setListProduct(form.getFieldValue("listGoodReciptDetailsModel"))
                           }}
                         >
                           Sửa
@@ -440,9 +441,11 @@ export default function Transaction() {
       >
         <p>Bạn có chắc sẽ xoá nó không?</p>
       </Modal>
+
+{/*//////////// EDIT MODAL//////*/}
       <Modal
         title={`Phiếu nhập kho${
-          form.getFieldValue("code") ? " - " + form.getFieldValue("code") : ""
+          form.getFieldValue("id") ? " - " + form.getFieldValue("id") : ""
         }`}
         open={isShowModal === "create" || isShowModal === "edit"}
         onOk={() => setIsShowModal(undefined)}
@@ -466,10 +469,10 @@ export default function Transaction() {
           <div className="modal-box">
             <Form form={form} onFinish={onFinish}>
               <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
-                <Input disabled />
+                {form.getFieldValue("id")}
               </Form.Item>
               <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
-                <Input disabled />
+              {form.getFieldValue("exportDate")}
               </Form.Item>
               <Form.Item
                 className="trans"
@@ -477,21 +480,14 @@ export default function Transaction() {
                 name={"trans"}
                 rules={[{ required: true }]}
               >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                className="fee"
-                label={"Cần trả nhà cung cấp"}
-                name={"fee"}
-              >
-                <Input />
+                {form.getFieldValue("partnerID")}
               </Form.Item>
               <Form.Item
                 className="status"
                 label={"Trạng thái"}
                 name={"status"}
               >
-                <Input />
+                {form.getFieldValue("receiptStatus")}
               </Form.Item>
             </Form>
           </div>
@@ -500,16 +496,16 @@ export default function Transaction() {
               <thead>
                 <th className="code">Mã sản phẩm</th>
                 <th className="quantity">Số lượng</th>
-                <th className="name">Tên sản phẩm</th>
+                <th className="name">Đơn giá</th>
               </thead>
               <tbody>
-                {listProduct &&
+                {form.getFieldValue("listGoodReciptDetailsModel") &&
                   listProduct.length > 0 &&
                   listProduct.map((product, index) => (
                     <tr key={index}>
-                      <td className="code">{product.code}</td>
+                      <td className="code">{product.productId}</td>
                       <td className="quantity">{product.quantity}</td>
-                      <td className="name">{product.name}</td>
+                      <td className="priceUnit">{product.priceUnit}</td>
                     </tr>
                   ))}
               </tbody>
