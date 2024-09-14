@@ -373,7 +373,6 @@ export default function Transaction() {
               <th className="table-header-code">Mã nhập hàng</th>
               <th className="table-header-time">Thời gian</th>
               <th className="table-header-trans">Nhà cung cấp</th>
-              <th className="table-header-fee">Cần trả nhà cung cấp</th>
               <th className="table-header-status">Trạng thái</th>
               <th className="table-header-action"></th>
             </thead>
@@ -393,7 +392,6 @@ export default function Transaction() {
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time">{tran.exportDate}</td>
                     <td className="table-body-trans">{tran.partnerID}</td>
-                    <td className="table-body-fee">.</td>
                     <td className="table-body-status">{proccessStatus(Number(tran.receiptStatus))}</td>
                     {dataChoose?.id === tran.id && (
                       <td className="table-body-action">
