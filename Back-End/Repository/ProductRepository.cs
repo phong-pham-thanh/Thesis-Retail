@@ -2,7 +2,6 @@
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
-using APIBackend.DataModel.DTO;
 
 namespace APIBackEnd.Repository
 {
@@ -10,9 +9,9 @@ namespace APIBackEnd.Repository
     {
         public List<Product> GetAllProducts();
         public ProductModel GetProductById(int id);
-        public Product AddNewProduct(CreateProductDTO product);
+        public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
-        public Product UpdateProductById(int id, UpdateProductDTO product);
+        public ProductModel UpdateProductById(int id, ProductModel product);
     }
     public class ProductRepository : IProductRepository
     {
@@ -49,33 +48,26 @@ namespace APIBackEnd.Repository
             return true;
         }
 
-        public Product UpdateProductById(int id, UpdateProductDTO product)
+        public ProductModel UpdateProductById(int id, ProductModel product)
         {
             Product productDataBase = _coreContext.Product.Where(pr => pr.Id == id).FirstOrDefault();
             if (productDataBase == null)
             {
                 return null;
             }
-            productDataBase.Status = product.Status;
-            productDataBase.Name = product.Name;
-            productDataBase.CategoryId = product.CategoryId;
-            productDataBase.Description = product.Description;
-
+            _productMapper.ToEntity(productDataBase, product);
+            productDataBase.Id = id;
             _coreContext.SaveChanges();
-            return productDataBase;
+            return _productMapper.ToModel(productDataBase);
         }
 
-        public Product AddNewProduct(CreateProductDTO newProduct)
+        public ProductModel AddNewProduct(ProductModel newProduct)
         {
             Product product = new Product();
-            product.Name= newProduct.Name;
-            product.CategoryId = newProduct.CategoryId;
-            product.Description = newProduct.Description;
-            product.Status = newProduct.Status;
-
+            _productMapper.ToEntity(product, newProduct);
             _coreContext.Product.Add(product);
             _coreContext.SaveChanges(true);
-            return product;
+            return _productMapper.ToModel(product);
         }
 
     }
