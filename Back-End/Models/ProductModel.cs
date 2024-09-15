@@ -14,7 +14,7 @@ namespace APIBackEnd.Models
         public CategoryModel? Category { get; set; }
         public string Description { get; set; }
         public bool Status { get; set; }
-        public List<InventoryModel> ListInventories { get; set; }
+        public List<InventoryModel>? ListInventories { get; set; }
 
     }
 }
