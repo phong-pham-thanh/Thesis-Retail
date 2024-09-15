@@ -4,6 +4,7 @@ using APIBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    partial class CoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240915133454_AddGoodExportAndCustomer")]
+    partial class AddGoodExportAndCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,9 +264,12 @@ namespace APIBackEnd.Migrations
                     b.Property<int>("ExportStatus")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PartnerId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("PartnerId");
 
                     b.ToTable("GoodsExports");
                 });
@@ -344,7 +349,7 @@ namespace APIBackEnd.Migrations
             modelBuilder.Entity("APIBackend.DataModel.GoodExportDetails", b =>
                 {
                     b.HasOne("APIBackend.DataModel.GoodsExport", "GoodsExport")
-                        .WithMany("ListGoodExportDetails")
+                        .WithMany("ListGoodReciptDetails")
                         .HasForeignKey("GoodExportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -383,9 +388,7 @@ namespace APIBackEnd.Migrations
                 {
                     b.HasOne("APIBackEnd.Data.Customers", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartnerId");
 
                     b.Navigation("Customer");
                 });
@@ -437,7 +440,7 @@ namespace APIBackEnd.Migrations
 
             modelBuilder.Entity("APIBackend.DataModel.GoodsExport", b =>
                 {
-                    b.Navigation("ListGoodExportDetails");
+                    b.Navigation("ListGoodReciptDetails");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
