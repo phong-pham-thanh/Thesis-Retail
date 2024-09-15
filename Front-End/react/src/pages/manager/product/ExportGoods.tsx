@@ -206,7 +206,7 @@ export default function ExportGoods() {
     const postData:ExportDataType={
       goodsReceiptModel: {
         id: "0",
-        exportDate: form.getFieldValue("exportDate"),
+        importDate: form.getFieldValue("importDate"),
         partnerId: form.getFieldValue("partnerId"),
         receiptStatus: "2"
       },
@@ -260,9 +260,9 @@ export default function ExportGoods() {
                 <Input />
               </Form.Item>
               <Form.Item
-                className="exportDate"
+                className="importDate"
                 label={"Ngày nhập"}
-                name={"exportDate"}
+                name={"importDate"}
               >
                 <Input />
               </Form.Item >
