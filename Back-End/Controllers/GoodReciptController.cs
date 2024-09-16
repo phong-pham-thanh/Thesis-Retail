@@ -35,6 +35,13 @@ namespace APIBackEnd.Controllers
             return _goodReciptService.GetAllGoodRecipts();
         }
 
+        [HttpGet]
+        [Route("getGoodReciptBydId/{id}")]
+        public GoodsReceiptModel GetGoodReciptById(int id)
+        {
+            return _goodReciptService.GetGoodReciptById(id);
+        }
+
         [HttpPost]
         [Route("addGoodRecipt")]
         public bool AddGoodRecipt([FromBody] paramAddNewGoodRecipt param)
