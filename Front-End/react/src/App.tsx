@@ -34,11 +34,8 @@ function App() {
               <Route path="/quan-ly/hanghoa" element={<Product />} />
               <Route path="/quan-ly/nhap-hang" element={<ExportGoods />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
-              <Route path="/quan-ly/giaodich/nhap" element={<Transaction />} />
-              <Route
-                path="/quan-ly/giaodich/xuat"
-                element={<TransactionOut />}
-              />
+              <Route path="/quan-ly/nhap" element={<Transaction />} />
+              <Route path="/quan-ly/giaodich/xuat" element={<TransactionOut />}/>
               <Route path="/quan-ly/doitac" element={<Customer />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />

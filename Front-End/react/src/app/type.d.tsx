@@ -95,20 +95,47 @@ export type GoodsReceipt = {
   id: string;
   importDate: string;
   partnerId: string;
-  receiptStatus: string;
+  receiptStatus: number;
+  ListGoodReciptDetailsModel:[]
+
   //parnersId: string;
 };
 
 export type GoodsReceiptDetails = 
   {
-    //id: string;
+    id?: string;
     goodsReceiptId: string;
     productId: string;
-    priceUnit: string;
-    quantity: string;
+    priceUnit: number;
+    quantity: number;
   };
 
 export type CategoryType = {
   id: number;
   name: string;
 };
+
+export type PartnerState = 
+  {
+    id: number|string,
+    name: string,
+    totalSale: number,
+  };
+
+export type WarehouseState = 
+  {
+    id: number|string,
+    managerId: number|string,
+    manager: null,
+    address: string,
+    status: boolean,
+    inventories: null
+  };
+
+  export type GoodReceiptDataType = {
+    id: String|Number,
+    exportDate: String|Date,
+    partnerID: String|Number,
+    receiptStatus: String|Number,
+    listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
+  };
