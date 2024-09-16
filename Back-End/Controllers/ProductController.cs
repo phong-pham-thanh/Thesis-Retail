@@ -48,7 +48,7 @@ namespace APIBackEnd.Controllers
 
         [HttpPost]
         [Route("addNewProduct")]
-        public ProductModel addNewProduct ([FromBody] ProductModel product)
+        public ProductModel AddNewProduct ([FromBody] ProductModel product)
         {
             return _productService.AddNewProduct(product);
         }
