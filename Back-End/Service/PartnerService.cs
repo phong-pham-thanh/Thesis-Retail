@@ -9,6 +9,9 @@ namespace APIBackend.Service
     public interface IPartnerService
     {
         public List<PartnerModel> GetAll();
+        public PartnerModel GetById(int id);
+        public PartnerModel AddNewPartner(PartnerModel PartnerModel);
+        public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel);
 
     }
     public class PartnerService : IPartnerService
@@ -21,6 +24,21 @@ namespace APIBackend.Service
         public List<PartnerModel> GetAll()
         {
             return _partnerRepository.GetAll();
+        }
+
+        public PartnerModel GetById(int id)
+        {
+            return _partnerRepository.GetById(id);
+        }
+
+        public PartnerModel AddNewPartner(PartnerModel PartnerModel)
+        {
+            return _partnerRepository.AddNewPartner(PartnerModel);
+        }
+
+        public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel)
+        {
+            return _partnerRepository.UpdatePartner(id, PartnerModel);
         }
     }
 }
