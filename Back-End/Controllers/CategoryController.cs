@@ -23,18 +23,31 @@ namespace APIBackend.Controllers
             return _categoryService.GetAll();
         }
 
+        [HttpGet]
+        [Route("getCategoryById")]
+        public CategoryModel GetById(int id)
+        {
+            return _categoryService.GetById(id);
+        }
+
         [HttpPost]
         [Route("addNewCategory")]
         public CategoryModel AddNewCategory([FromBody] CategoryModel category)
         {
+            //{
+            //    "name": "string"
+            //}
             return _categoryService.AddNewCategory(category);
         }
 
         [HttpPut]
         [Route("updateCategoryById/{id}")]
-        public CategoryModel Put(int id, [FromBody] CategoryModel product)
+        public CategoryModel Put(int id, [FromBody] CategoryModel category)
         {
-            return _categoryService.UpdateCategory(id, product);
+            //{
+            //    "name": "string"
+            //}
+            return _categoryService.UpdateCategory(id, category);
         }
     }
 }

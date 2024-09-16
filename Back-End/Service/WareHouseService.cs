@@ -6,6 +6,9 @@ namespace APIBackend.Service
     public interface IWareHouseService
     {
         public List<WareHouseModel> GetAll();
+        public WareHouseModel GetById(int id);
+        public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel);
+        public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel);
     }
     public class WareHouseService : IWareHouseService
     {
@@ -18,6 +21,21 @@ namespace APIBackend.Service
         public List<WareHouseModel> GetAll()
         {
             return _wareHouseRepository.GetAll();
+        }
+
+        public WareHouseModel GetById(int id)
+        {
+            return _wareHouseRepository.GetById(id);
+        }
+
+        public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel)
+        {
+            return _wareHouseRepository.AddNewWareHouse(WareHouseModel);
+        }
+
+        public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel)
+        {
+            return _wareHouseRepository.UpdateWareHouse(id, WareHouseModel);
         }
     }
 }

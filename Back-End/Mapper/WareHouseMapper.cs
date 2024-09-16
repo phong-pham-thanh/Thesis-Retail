@@ -9,6 +9,7 @@ namespace APIBackend.Mapper
     {
         public WareHouseModel ToModel(WareHouses efObject);
         public List<WareHouseModel> ToModels(List<WareHouses> efObjects);
+        public void ToEntity(WareHouses efObject, WareHouseModel domObject);
 
     }
 
@@ -45,6 +46,14 @@ namespace APIBackend.Mapper
                 result.Add(modelObject);
             }
             return result;
+        }
+
+        public void ToEntity(WareHouses efObject, WareHouseModel domObject)
+        {
+            if(domObject == null) return;
+            efObject.ManagerId = domObject.ManagerId;
+            efObject.Address = domObject.Address;
+            efObject.Status = domObject.Status;
         }
     }
 }
