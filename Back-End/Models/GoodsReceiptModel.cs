@@ -10,6 +10,7 @@ namespace APIBackEnd.Data
         public int Id { get; set; }
         public DateTime ImportDate { get; set; }
         public int PartnerID { get; set; }
+        public PartnerModel? Partner { get; set; }
         public Status ReceiptStatus { get; set; }
         public List<GoodReceiptDetailModel>? ListGoodReciptDetailsModel { get; set; }
     }

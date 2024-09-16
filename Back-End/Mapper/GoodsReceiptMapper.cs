@@ -13,9 +13,13 @@ namespace APIBackEnd.Mapper
     public class GoodsReceiptMapper : IGoodsReceiptMapper
     {
         private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
-        public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper) 
+        private readonly IPartnerMapper _partnerMapper;
+        public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper,
+            IPartnerMapper partnerMapper
+            ) 
         {
             _goodReciptDetailMapper = goodReciptDetailMapper;
+            _partnerMapper = partnerMapper;
         }
         public GoodsReceiptModel? ToModel(GoodsReceipt efObject)
         {
@@ -26,6 +30,7 @@ namespace APIBackEnd.Mapper
             GoodsReceiptModel modelObject = new GoodsReceiptModel();
             modelObject.Id = efObject.Id;
             modelObject.PartnerID = efObject.PartnerId;
+            modelObject.Partner = _partnerMapper.ToModel(efObject.Partner);
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ImportDate = efObject.ImportDate;
             modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(efObject.ListGoodReciptDetails);

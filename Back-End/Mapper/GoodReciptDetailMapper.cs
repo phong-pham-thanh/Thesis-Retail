@@ -21,9 +21,8 @@ namespace APIBackend.Mapper
             }
             GoodReceiptDetailModel modelObject = new GoodReceiptDetailModel();
             modelObject.Id = efObject.Id;
-            // modelObject.Product = efObject.Product;
+             //modelObject.Product = efObject.Product;
             modelObject.ProductId = efObject.ProductId;
-            //modelObject.GoodsReceipt = efObject.GoodsReceipt;
             modelObject.GoodReceiptId = efObject.GoodReceiptId;
             modelObject.Quantity = efObject.Quantity;
             modelObject.PriceUnit = efObject.PriceUnit;
