@@ -20,5 +20,26 @@ namespace APIBackend.Controllers
         {
             return _partnerService.GetAll();
         }
+
+        [HttpGet]
+        [Route("getPartnerById")]
+        public PartnerModel GetById(int id)
+        {
+            return _partnerService.GetById(id);
+        }
+
+        [HttpPost]
+        [Route("addNewPartner")]
+        public PartnerModel AddNewPartner([FromBody] PartnerModel partner)
+        {
+            return _partnerService.AddNewPartner(partner);
+        }
+
+        [HttpPut]
+        [Route("updatePartnerById/{id}")]
+        public PartnerModel Put(int id, [FromBody] PartnerModel partner)
+        {
+            return _partnerService.UpdatePartner(id, partner);
+        }
     }
 }

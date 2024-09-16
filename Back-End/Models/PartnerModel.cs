@@ -8,6 +8,6 @@ namespace APIBackEnd.Data
         public PartnerModel() { }
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TotalSale { get; set; }
+        public int? TotalSale { get; set; }
     }
 }

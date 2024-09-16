@@ -7,6 +7,7 @@ namespace APIBackEnd.Mapper
     {
         public PartnerModel ToModel(Partners efObject);
         public List<PartnerModel> ToModels(List<Partners> efObject);
+        public void ToEntity(Partners efObject, PartnerModel domObject);
     }
     public class PartnerMapper : IPartnerMapper
     {
@@ -36,6 +37,13 @@ namespace APIBackEnd.Mapper
                 result.Add(modelObject);
             }
             return result;
+        }
+
+        public void ToEntity(Partners efObject, PartnerModel domObject)
+        {
+            if(domObject == null) return;
+            efObject.Name = domObject.Name;
+            efObject.TotalSale = domObject.TotalSale;
         }
     }
 }
