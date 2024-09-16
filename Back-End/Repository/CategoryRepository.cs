@@ -9,6 +9,7 @@ namespace APIBackend.Repository
     public interface ICategoryRepository
     {
         public List<CategoryModel> GetAll();
+        public CategoryModel GetById(int id);
         public CategoryModel AddNewCategory(CategoryModel categoryModel);
         public CategoryModel UpdateCategory(int id, CategoryModel categoryModel);
     }
@@ -27,6 +28,11 @@ namespace APIBackend.Repository
         {
             List<CategoryModel> result = _categoryMapper.ToModels(_coreContext.Categories.ToList());
             return result;
+        }
+
+        public CategoryModel GetById(int id)
+        {
+            return _categoryMapper.ToModel(_coreContext.Categories.Where(ca => ca.Id == id).FirstOrDefault());
         }
 
         public CategoryModel AddNewCategory(CategoryModel categoryModel)
