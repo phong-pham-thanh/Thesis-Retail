@@ -6,14 +6,14 @@ namespace APIBackend.Mapper
 {
     public interface IGoodReciptDetailMapper
     {
-        public GoodReceiptDetailModel ToModel(GoodReceiptDetails efObject);
-        public List<GoodReceiptDetailModel> ToModels(List<GoodReceiptDetails> efObjects);
+        public GoodReceiptDetailModel? ToModel(GoodReceiptDetails efObject);
+        public List<GoodReceiptDetailModel>? ToModels(List<GoodReceiptDetails>? efObjects);
         public void ToEntity(GoodReceiptDetails efObject, GoodReceiptDetailModel modelObject);
     }
     public class GoodReciptDetailMapper : IGoodReciptDetailMapper
     {
         public GoodReciptDetailMapper() { }
-        public GoodReceiptDetailModel ToModel(GoodReceiptDetails efObject)
+        public GoodReceiptDetailModel? ToModel(GoodReceiptDetails efObject)
         {
             if (efObject == null)
             {
@@ -21,7 +21,7 @@ namespace APIBackend.Mapper
             }
             GoodReceiptDetailModel modelObject = new GoodReceiptDetailModel();
             modelObject.Id = efObject.Id;
-            modelObject.Product = efObject.Product;
+            // modelObject.Product = efObject.Product;
             modelObject.ProductId = efObject.ProductId;
             //modelObject.GoodsReceipt = efObject.GoodsReceipt;
             modelObject.GoodReceiptId = efObject.GoodReceiptId;
@@ -30,7 +30,7 @@ namespace APIBackend.Mapper
             return modelObject;
         }
 
-        public List<GoodReceiptDetailModel> ToModels(List<GoodReceiptDetails> efObjects)
+        public List<GoodReceiptDetailModel>? ToModels(List<GoodReceiptDetails>? efObjects)
         {
             if(efObjects == null || efObjects.Count == 0)
             {
@@ -41,9 +41,8 @@ namespace APIBackend.Mapper
             {
                 GoodReceiptDetailModel modelObject = new GoodReceiptDetailModel();
                 modelObject.Id = item.Id;
-                modelObject.Product = item.Product;
+                // modelObject.Product = item.Product;
                 modelObject.ProductId = item.ProductId;
-                //modelObject.GoodsReceipt = item.GoodsReceipt;
                 modelObject.GoodReceiptId = item.GoodReceiptId;
                 modelObject.Quantity = item.Quantity;
                 modelObject.PriceUnit = item.PriceUnit;

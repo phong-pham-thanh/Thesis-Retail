@@ -54,7 +54,7 @@ namespace APIBackend.Service
                 _goodReciptDetailRepository.AddGoodReciptDetails(goodReciptDetails);
 
                 //Update Inventory in ware house
-                _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, idWareHouse);
+                _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, idWareHouse, true);
             }
             
 

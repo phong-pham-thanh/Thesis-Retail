@@ -1,5 +1,4 @@
-﻿using APIBackend.DataModel.DTO;
-using APIBackend.Repository;
+﻿using APIBackend.Repository;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
@@ -11,9 +10,9 @@ namespace APIBackend.Service
     {
         public List<ProductModel> GetAllProducts();
         public ProductModel GetProductById(int id);
-        public ProductModel AddNewProduct(CreateProductDTO product);
+        public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
-        public ProductModel UpdateProductById(int id, UpdateProductDTO product);
+        public ProductModel UpdateProductById(int id, ProductModel product);
     }
     public class ProductService : IProductService
     {
@@ -48,14 +47,14 @@ namespace APIBackend.Service
             return _productRepository.DeleteProdcutById(id);
         }
 
-        public ProductModel UpdateProductById(int id, UpdateProductDTO product)
+        public ProductModel UpdateProductById(int id, ProductModel product)
         {
-            return _productMapper.ToModel(_productRepository.UpdateProductById(id, product));
+            return _productRepository.UpdateProductById(id, product);
         }
 
-        public ProductModel AddNewProduct(CreateProductDTO newProduct)
+        public ProductModel AddNewProduct(ProductModel newProduct)
         {
-            return _productMapper.ToModel(_productRepository.AddNewProduct(newProduct));
+            return _productRepository.AddNewProduct(newProduct);
         }
     }
 }

@@ -93,7 +93,7 @@ export type CustomerListState = CustomerState[];
 
 export type GoodsReceipt = {
   id: string;
-  exportDate: string;
+  importDate: string;
   partnerId: string;
   receiptStatus: number;
   ListGoodReciptDetailsModel:[]

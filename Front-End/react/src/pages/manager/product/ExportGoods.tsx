@@ -288,7 +288,7 @@ export default function ExportGoods() {
     const postData: ExportDataType = {
       goodsReceiptModel: {
         id: "0",
-        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         partnerId: form.getFieldValue("partnerId"),
         receiptStatus: 1,
         ListGoodReciptDetailsModel: []
