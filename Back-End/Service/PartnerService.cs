@@ -12,6 +12,7 @@ namespace APIBackend.Service
         public PartnerModel GetById(int id);
         public PartnerModel AddNewPartner(PartnerModel PartnerModel);
         public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel);
+        public List<PartnerModel> GetBySearchName(string query);
 
     }
     public class PartnerService : IPartnerService
@@ -39,6 +40,11 @@ namespace APIBackend.Service
         public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel)
         {
             return _partnerRepository.UpdatePartner(id, PartnerModel);
+        }
+
+        public List<PartnerModel> GetBySearchName(string query)
+        {
+            return _partnerRepository.GetBySearchName(query);
         }
     }
 }

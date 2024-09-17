@@ -49,5 +49,12 @@ namespace APIBackend.Controllers
             //}
             return _categoryService.UpdateCategory(id, category);
         }
+
+        [HttpGet]
+        [Route("getCategoryBySearchName")]
+        public List<CategoryModel> GetBySearchName(string query)
+        {
+            return _categoryService.GetBySearchName(query);
+        }
     }
 }

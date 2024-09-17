@@ -10,6 +10,7 @@ namespace APIBackend.Service
         public CategoryModel GetById(int id);
         public CategoryModel AddNewCategory(CategoryModel categoryModel);
         public CategoryModel UpdateCategory(int id, CategoryModel categoryModel);
+        public List<CategoryModel> GetBySearchName(string query);
     }
     public class CategoryService : ICategoryService
     {
@@ -39,5 +40,9 @@ namespace APIBackend.Service
             return _categoryRepository.UpdateCategory(id, categoryModel);
         }
 
+        public List<CategoryModel> GetBySearchName(string query)
+        {
+            return _categoryRepository.GetBySearchName(query);
+        }
     }
 }

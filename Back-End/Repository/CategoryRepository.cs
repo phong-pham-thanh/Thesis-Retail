@@ -12,6 +12,7 @@ namespace APIBackend.Repository
         public CategoryModel GetById(int id);
         public CategoryModel AddNewCategory(CategoryModel categoryModel);
         public CategoryModel UpdateCategory(int id, CategoryModel categoryModel);
+        public List<CategoryModel> GetBySearchName(string query);
     }
     public class CategoryRepository : ICategoryRepository
     {
@@ -54,6 +55,11 @@ namespace APIBackend.Repository
             categoryDataBase.Id = id;
             _coreContext.SaveChanges();
             return _categoryMapper.ToModel(categoryDataBase);
+        }
+
+        public List<CategoryModel> GetBySearchName(string query)
+        {
+            return _categoryMapper.ToModels(_coreContext.Categories.Where(ca => ca.Name.ToLower().Contains(query.ToLower())).ToList());
         }
 
     }
