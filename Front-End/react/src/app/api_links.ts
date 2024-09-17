@@ -35,10 +35,11 @@ const api_links = {
             method: "DELETE",
         }),
     },
+
     goodsIssue: {
         //GET ALL
         getAll: {
-            url: `${authUrl}/GoodRecipt`,
+            url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
             method: "GET",
         },
         //GET BY ID
@@ -49,7 +50,7 @@ const api_links = {
 
         //POST
         createNew: {
-            url: `${authUrl}/GoodRecipt`,
+            url: `${authUrl}/GoodRecipt/addGoodRecipt`,
             method: "POST",
             data: {},
         },
@@ -62,6 +63,7 @@ const api_links = {
             data: {}
         },
     },
+
     category: {
         getAll:{
             url: `${authUrl}/Category`,
@@ -84,12 +86,20 @@ const api_links = {
         },
 
     },
+
+    partner:{
+        getAll:{
+            url: `${authUrl}/Partner`,
+            method: "GET",
+        }
+    },
+
     warehouse:{
         getAll:{
-            url: `${authUrl}/Warehouse`,
-            method: "GET"
+            url: `${authUrl}/WareHouse`,
+            method: "GET",
         }
-    }
+    },
 }
 
 export default api_links

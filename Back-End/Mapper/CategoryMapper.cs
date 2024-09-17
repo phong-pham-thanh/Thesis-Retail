@@ -8,7 +8,7 @@ namespace APIBackend.Mapper
     {
         public CategoryModel ToModel(Categories efObject);
         public List<CategoryModel> ToModels(List<Categories> efObjects);
-        public Categories ToEntity(Categories efObject, CategoryModel modelObject);
+        public void ToEntity(Categories efObject, CategoryModel modelObject);
 
     }
     public class CategoryMapper : ICategoryMapper
@@ -38,15 +38,14 @@ namespace APIBackend.Mapper
             return result;
         }
 
-        public Categories ToEntity(Categories efObject, CategoryModel modelObject)
+        public void ToEntity(Categories efObject, CategoryModel modelObject)
         {
             if (modelObject == null)
             {
-                return null;
+                return;
             }
-            efObject.Id = modelObject.Id;
             efObject.Name = modelObject.Name;
-            return efObject;
+            return;
         }
     }
 }

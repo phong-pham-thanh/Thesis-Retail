@@ -63,7 +63,6 @@ namespace APIBackEnd.Mapper
             efObject.Id = modelObject.Id;
             efObject.Name = modelObject.Name;
             efObject.CategoryId = modelObject.CategoryId;
-            _categoryMapper.ToEntity(efObject.Category, modelObject.Category);
             efObject.Status = modelObject.Status;
             efObject.Description = modelObject.Description;
             return efObject;

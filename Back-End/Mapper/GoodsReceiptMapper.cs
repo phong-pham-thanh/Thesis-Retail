@@ -6,18 +6,22 @@ namespace APIBackEnd.Mapper
 {
     public interface IGoodsReceiptMapper
     {
-        public GoodsReceiptModel ToModel(GoodsReceipt efObject);
+        public GoodsReceiptModel? ToModel(GoodsReceipt efObject);
         public List<GoodsReceiptModel> ToModels(List<GoodsReceipt> efObject);
         public void ToEntity(GoodsReceipt efObject, GoodsReceiptModel modelObject);
     }
     public class GoodsReceiptMapper : IGoodsReceiptMapper
     {
         private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
-        public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper) 
+        private readonly IPartnerMapper _partnerMapper;
+        public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper,
+            IPartnerMapper partnerMapper
+            ) 
         {
             _goodReciptDetailMapper = goodReciptDetailMapper;
+            _partnerMapper = partnerMapper;
         }
-        public GoodsReceiptModel ToModel(GoodsReceipt efObject)
+        public GoodsReceiptModel? ToModel(GoodsReceipt efObject)
         {
             if (efObject == null)
             {
@@ -26,8 +30,9 @@ namespace APIBackEnd.Mapper
             GoodsReceiptModel modelObject = new GoodsReceiptModel();
             modelObject.Id = efObject.Id;
             modelObject.PartnerID = efObject.PartnerId;
+            modelObject.Partner = _partnerMapper.ToModel(efObject.Partner);
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
-            modelObject.ExportDate = efObject.ExportDate;
+            modelObject.ImportDate = efObject.ImportDate;
             modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(efObject.ListGoodReciptDetails);
             return modelObject;
         }
@@ -41,7 +46,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Id = item.Id;
                 modelObject.PartnerID = item.PartnerId;
                 modelObject.ReceiptStatus = item.ReceiptStatus;
-                modelObject.ExportDate = item.ExportDate;
+                modelObject.ImportDate = item.ImportDate;
                 modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(item.ListGoodReciptDetails);
                 result.Add(modelObject);
             }
@@ -57,7 +62,7 @@ namespace APIBackEnd.Mapper
             efObject.Id = modelObject.Id;
             efObject.PartnerId = modelObject.PartnerID;
             efObject.ReceiptStatus = modelObject.ReceiptStatus;
-            efObject.ExportDate = modelObject.ExportDate;
+            efObject.ImportDate = modelObject.ImportDate;
             return;
         }
     }

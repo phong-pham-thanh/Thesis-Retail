@@ -11,6 +11,7 @@ namespace APIBackend.Repository
     {
         public GoodsReceipt AddGoodRecipt(GoodsReceipt goodsReceip);
         public List<GoodsReceipt> GetAllGoodRecipts();
+        public GoodsReceiptModel? GetGoodReciptById(int id);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
@@ -39,6 +40,14 @@ namespace APIBackend.Repository
             List<GoodsReceipt> listGoodRecipt = new List<GoodsReceipt>();
             listGoodRecipt = _coreContext.GoodsReceipt.Include(go => go.ListGoodReciptDetails).ToList();
             return listGoodRecipt;
+        }
+        public GoodsReceiptModel? GetGoodReciptById(int id)
+        {
+            GoodsReceipt? goodsReceipt = _coreContext.GoodsReceipt.Where(g => g.Id == id)
+                                                                .Include(go => go.ListGoodReciptDetails)
+                                                                .Include(go => go.Partner)
+                                                                .FirstOrDefault();
+            return _goodReciptMapper.ToModel(goodsReceipt);
         }
     }
 

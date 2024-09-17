@@ -3,11 +3,10 @@
 
 namespace APIBackEnd.Data
 {
-    public class PartnerModel
+    public class Customers
     {
-        public PartnerModel() { }
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? TotalSale { get; set; }
     }
 }
