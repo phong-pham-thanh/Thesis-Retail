@@ -41,5 +41,12 @@ namespace APIBackend.Controllers
         {
             return _customerService.UpdateCustomer(id, Customer);
         }
+
+        [HttpGet]
+        [Route("getCustomerBySearchName")]
+        public List<CustomerModel> GetBySearchName(string query)
+        {
+            return _customerService.GetBySearchName(query);
+        }
     }
 }

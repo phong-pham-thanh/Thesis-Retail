@@ -10,6 +10,7 @@ namespace APIBackEnd.Repository
         public PartnerModel GetById(int id);
         public PartnerModel AddNewPartner(PartnerModel PartnerModel);
         public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel);
+        public List<PartnerModel> GetBySearchName(string query);
     }
     public class PartnerRepository : IPartnerRepository
     {
@@ -52,6 +53,11 @@ namespace APIBackEnd.Repository
             PartnerDataBase.Id = id;
             _coreContext.SaveChanges();
             return _partnerMapper.ToModel(PartnerDataBase);
+        }
+        
+        public List<PartnerModel> GetBySearchName(string query)
+        {
+            return _partnerMapper.ToModels(_coreContext.Partners.Where(ca => ca.Name.ToLower().Contains(query.ToLower())).ToList());
         }
     }
 }

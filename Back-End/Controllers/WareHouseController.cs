@@ -50,5 +50,12 @@ namespace APIBackend.Controllers
             //}
             return _wareHouseService.UpdateWareHouse(id, wareHouse);
         }
+
+        [HttpGet]
+        [Route("getWareHouseBySearchName")]
+        public List<WareHouseModel> GetBySearchName(string query)
+        {
+            return _wareHouseService.GetBySearchName(query);
+        }
     }
 }

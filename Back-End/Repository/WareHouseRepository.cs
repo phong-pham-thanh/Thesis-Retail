@@ -12,6 +12,7 @@ namespace APIBackend.Repository
         public WareHouseModel GetById(int id);
         public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel);
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel);
+        public List<WareHouseModel> GetBySearchName(string query);
 
     }
     public class WareHouseRepository : IWareHouseRepository
@@ -56,6 +57,11 @@ namespace APIBackend.Repository
             WareHouseDataBase.Id = id;
             _coreContext.SaveChanges();
             return _wareHouseMapper.ToModel(WareHouseDataBase);
+        }
+        
+        public List<WareHouseModel> GetBySearchName(string query)
+        {
+            return _wareHouseMapper.ToModels(_coreContext.WareHouses.Where(ca => ca.Address.ToLower().Contains(query.ToLower())).ToList());
         }
     }
 }

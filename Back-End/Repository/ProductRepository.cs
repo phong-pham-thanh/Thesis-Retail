@@ -12,6 +12,7 @@ namespace APIBackEnd.Repository
         public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
         public ProductModel UpdateProductById(int id, ProductModel product);
+        public List<ProductModel> GetBySearchName(string query);
     }
     public class ProductRepository : IProductRepository
     {
@@ -68,6 +69,11 @@ namespace APIBackEnd.Repository
             _coreContext.Product.Add(product);
             _coreContext.SaveChanges(true);
             return _productMapper.ToModel(product);
+        }
+        
+        public List<ProductModel> GetBySearchName(string query)
+        {
+            return _productMapper.ToModels(_coreContext.Product.Include(p => p.Category).Include(p => p.ListInventories).Where(ca => ca.Name.ToLower().Contains(query.ToLower())).ToList());
         }
 
     }
