@@ -33,6 +33,7 @@ namespace APIBackEnd.Mapper
             modelObject.Partner = _partnerMapper.ToModel(efObject.Partner);
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ImportDate = efObject.ImportDate;
+            modelObject.TotalAmount = efObject.TotalAmount;
             modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(efObject.ListGoodReciptDetails);
             return modelObject;
         }
@@ -47,6 +48,8 @@ namespace APIBackEnd.Mapper
                 modelObject.PartnerID = item.PartnerId;
                 modelObject.ReceiptStatus = item.ReceiptStatus;
                 modelObject.ImportDate = item.ImportDate;
+                modelObject.TotalAmount = item.TotalAmount;
+                modelObject.Partner = _partnerMapper.ToModel(item.Partner);
                 modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(item.ListGoodReciptDetails);
                 result.Add(modelObject);
             }
@@ -63,6 +66,7 @@ namespace APIBackEnd.Mapper
             efObject.PartnerId = modelObject.PartnerID;
             efObject.ReceiptStatus = modelObject.ReceiptStatus;
             efObject.ImportDate = modelObject.ImportDate;
+            efObject.TotalAmount = modelObject.TotalAmount;
             return;
         }
     }

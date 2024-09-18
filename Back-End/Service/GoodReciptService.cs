@@ -45,9 +45,15 @@ namespace APIBackend.Service
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
-            GoodsReceiptModel newGoodReciptModel = new GoodsReceiptModel();
+            int totalAmount = 0;
+            foreach(GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
+            {
+                totalAmount += goodReceiptDetailModel.PriceUnit * goodReceiptDetailModel.Quantity;
+            }
+            goodsReceiptModel.TotalAmount = totalAmount;
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
-            newGoodReciptModel = _goodReciptMapper.ToModel(_goodReciptRepository.AddGoodRecipt(goodsReceipt));
+
+            GoodsReceiptModel newGoodReciptModel = _goodReciptMapper.ToModel(_goodReciptRepository.AddGoodRecipt(goodsReceipt));
 
 
             //Add Good Recipt Details
@@ -68,8 +74,7 @@ namespace APIBackend.Service
 
         public List<GoodsReceiptModel> GetAllGoodRecipts()
         {
-            List<GoodsReceiptModel> listGoodRecipt = _goodReciptMapper.ToModels(_goodReciptRepository.GetAllGoodRecipts());
-            return listGoodRecipt;
+            return _goodReciptRepository.GetAllGoodRecipts();
         }
 
         public GoodsReceiptModel? GetGoodReciptById(int id)
