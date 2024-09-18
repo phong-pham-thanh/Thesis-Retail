@@ -22,6 +22,7 @@ import Report from "./pages/manager/report/Report";
 import Register from "./pages/register/Register";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import CategoryPage from "./pages/manager/category/CategoryPage";
 function App() {
   return (
     <Provider store={store}>
@@ -32,10 +33,14 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/quan-ly" element={<Manager />}>
               <Route path="/quan-ly/hanghoa" element={<Product />} />
+              <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
               <Route path="/quan-ly/nhap-hang" element={<ExportGoods />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
               <Route path="/quan-ly/nhap" element={<Transaction />} />
-              <Route path="/quan-ly/giaodich/xuat" element={<TransactionOut />}/>
+              <Route
+                path="/quan-ly/giaodich/xuat"
+                element={<TransactionOut />}
+              />
               <Route path="/quan-ly/doitac" element={<Customer />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />
