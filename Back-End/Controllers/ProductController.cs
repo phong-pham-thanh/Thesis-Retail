@@ -52,5 +52,12 @@ namespace APIBackEnd.Controllers
         {
             return _productService.AddNewProduct(product);
         }
+        
+        [HttpGet]
+        [Route("getProductBySearchName")]
+        public List<ProductModel> GetBySearchName(string query)
+        {
+            return _productService.GetBySearchName(query);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace APIBackend.Service
         public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
         public ProductModel UpdateProductById(int id, ProductModel product);
+        public List<ProductModel> GetBySearchName(string query);
     }
     public class ProductService : IProductService
     {
@@ -31,10 +32,6 @@ namespace APIBackend.Service
         public List<ProductModel> GetAllProducts()
         {
             List<ProductModel> result = _productMapper.ToModels(_productRepository.GetAllProducts());
-            //foreach (ProductModel product in result)
-            //{
-            //    product.listInventories = _inventoryRepository.GetInventoriesByProductId(product.Id);
-            //}
             return result;
         }
 
@@ -55,6 +52,11 @@ namespace APIBackend.Service
         public ProductModel AddNewProduct(ProductModel newProduct)
         {
             return _productRepository.AddNewProduct(newProduct);
+        }
+
+        public List<ProductModel> GetBySearchName(string query)
+        {
+            return _productRepository.GetBySearchName(query);
         }
     }
 }

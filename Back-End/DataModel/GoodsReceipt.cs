@@ -15,5 +15,6 @@ namespace APIBackEnd.Data
         public Partners? Partner {get; set;}
         public Status ReceiptStatus { get; set; }
         public List<GoodReceiptDetails>? ListGoodReciptDetails {get; set;}
+        public long? TotalAmount { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace APIBackEnd.Repository
         public CustomerModel GetById(int id);
         public CustomerModel AddNewCustomer(CustomerModel CustomerModel);
         public CustomerModel UpdateCustomer(int id, CustomerModel CustomerModel);
+        public List<CustomerModel> GetBySearchName(string query);
     }
     public class CustomerRepository : ICustomerRepository
     {
@@ -54,6 +55,11 @@ namespace APIBackEnd.Repository
             CustomerDataBase.Id = id;
             _coreContext.SaveChanges();
             return _customerMapper.ToModel(CustomerDataBase);
+        }
+        
+        public List<CustomerModel> GetBySearchName(string query)
+        {
+            return _customerMapper.ToModels(_coreContext.Customers.Where(ca => ca.Name.ToLower().Contains(query.ToLower())).ToList());
         }
     }
 }

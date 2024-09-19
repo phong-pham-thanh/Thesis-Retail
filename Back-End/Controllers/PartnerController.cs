@@ -41,5 +41,12 @@ namespace APIBackend.Controllers
         {
             return _partnerService.UpdatePartner(id, partner);
         }
+
+        [HttpGet]
+        [Route("getPartnerBySearchName")]
+        public List<PartnerModel> GetBySearchName(string query)
+        {
+            return _partnerService.GetBySearchName(query);
+        }
     }
 }

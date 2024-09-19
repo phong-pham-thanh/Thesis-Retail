@@ -10,7 +10,7 @@ namespace APIBackend.Repository
     public interface IGoodReciptRepository
     {
         public GoodsReceipt AddGoodRecipt(GoodsReceipt goodsReceip);
-        public List<GoodsReceipt> GetAllGoodRecipts();
+        public List<GoodsReceiptModel> GetAllGoodRecipts();
         public GoodsReceiptModel? GetGoodReciptById(int id);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
@@ -35,10 +35,13 @@ namespace APIBackend.Repository
             return goodsReceipt;
         }
 
-        public List<GoodsReceipt> GetAllGoodRecipts()
+        public List<GoodsReceiptModel> GetAllGoodRecipts()
         {
-            List<GoodsReceipt> listGoodRecipt = new List<GoodsReceipt>();
-            listGoodRecipt = _coreContext.GoodsReceipt.Include(go => go.ListGoodReciptDetails).ToList();
+            List<GoodsReceiptModel> listGoodRecipt = new List<GoodsReceiptModel>();
+            listGoodRecipt = _goodReciptMapper.ToModels(_coreContext.GoodsReceipt
+                                                        .Include(go => go.ListGoodReciptDetails)
+                                                        .Include(go => go.Partner)
+                                                        .ToList());
             return listGoodRecipt;
         }
         public GoodsReceiptModel? GetGoodReciptById(int id)

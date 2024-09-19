@@ -9,6 +9,7 @@ namespace APIBackend.Service
         public WareHouseModel GetById(int id);
         public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel);
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel);
+        public List<WareHouseModel> GetBySearchName(string query);
     }
     public class WareHouseService : IWareHouseService
     {
@@ -36,6 +37,11 @@ namespace APIBackend.Service
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel)
         {
             return _wareHouseRepository.UpdateWareHouse(id, WareHouseModel);
+        }
+
+        public List<WareHouseModel> GetBySearchName(string query)
+        {
+            return _wareHouseRepository.GetBySearchName(query);
         }
     }
 }

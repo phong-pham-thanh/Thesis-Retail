@@ -12,6 +12,7 @@ namespace APIBackend.Service
         public CustomerModel GetById(int id);
         public CustomerModel AddNewCustomer(CustomerModel CustomerModel);
         public CustomerModel UpdateCustomer(int id, CustomerModel CustomerModel);
+        public List<CustomerModel> GetBySearchName(string query);
 
     }
 
@@ -40,6 +41,11 @@ namespace APIBackend.Service
         public CustomerModel UpdateCustomer(int id, CustomerModel CustomerModel)
         {
             return _customerRepository.UpdateCustomer(id, CustomerModel);
+        }
+
+        public List<CustomerModel> GetBySearchName(string query)
+        {
+            return _customerRepository.GetBySearchName(query);
         }
     }
 }
