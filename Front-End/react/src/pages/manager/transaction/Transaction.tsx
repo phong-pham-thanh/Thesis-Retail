@@ -37,242 +37,49 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodsReceiptDetails } from "../../../app/type.d";
+import { GoodReceiptDataType, GoodsReceiptDetails, GoodReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
+import ImportReceiptDetail from "./popupDetail";
 
-interface DataType {
-  key: React.Key;
-  id: string;
-  name: string;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  description: string;
-  status: boolean;
-}
-const emptydata: DataType = {
-  key: "",
-  id: "0",
-  name: "",
-  categoryId: "0",
-  category: {
-    id: "0",
-    name: "",
+const emptydata:GoodReceiptDetailDataType={
+  "id": 0,
+  "importDate": "01/01/1970",
+  "partnerID": 0,
+  "partner": {
+    "id": 0,
+    "name": "",
+    "totalSale": 0
   },
-  description: "string",
-  status: true,
-};
-let dataShow: DataType = emptydata;
-
-const data: DataType[] = [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    id: String(i),
-    name: "Sản phẩm " + i,
-    categoryId: "0",
-    category: {
-      id: "0",
-      name: "",
-    },
-    description: "string",
-    status: true,
-  });
-}
-
-interface IData {
-  code: string;
-  time: string;
-  trans: string;
-  fee: number;
-  status: string;
-}
-
-interface IProduct {
-  code: string;
-  quantity: string;
-  name: string;
-}
-
-const fakeData = [
-  {
-    code: "PN000038",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000037",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000036",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000035",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000034",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000033",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000032",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000031",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000030",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000029",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000028",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000027",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000026",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000025",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-  {
-    code: "PN000024",
-    time: "10/11/2023",
-    trans: "Công ty Hoàng Gia",
-    fee: 0,
-    status: "Đã nhập hàng",
-  },
-];
-
-const listProductsFake = [
-  {
-    code: "SP000001",
-    quantity: "10",
-    name: "Mì gói Hảo Hảo",
-  },
-  {
-    code: "SP000005",
-    quantity: "13",
-    name: "Mì gói Indome",
-  },
-  {
-    code: "SP000015",
-    quantity: "10",
-    name: "Sữa Vinanilk...",
-  },
-  {
-    code: "SP000002",
-    quantity: "08",
-    name: "Bún khô Meizan V...",
-  },
-];
+  "receiptStatus": 0,
+  "listGoodReciptDetailsModel": [
+    {
+      "id": 0,
+      "goodReceiptId": 0,
+      "goodsReceipt": null,
+      "productId": 0,
+      "product": {
+        "id": 0,
+        "name": "",
+        "categoryId": 0,
+        "category": {
+          "id": 0,
+          "name": ""
+        },
+        "description": "",
+        "status": true,
+        "listInventories": null
+      },
+      "priceUnit": 0,
+      "quantity": 0
+    }]
+  }
 
 export default function Transaction() {
-  const columns: ColumnsType<DataType> = [
-    {
-      title: "Mã sản phẩm",
-      dataIndex: "Id",
-    },
-    {
-      title: "Tên hàng",
-      dataIndex: "name",
-    },
-    {
-      title: "Giá vốn",
-      dataIndex: "giavon",
-    },
-    {
-      title: "Giá bán",
-      dataIndex: "giaban",
-    },
-    {
-      title: "SL nhập",
-      dataIndex: "slnhap",
-    },
-    {
-      title: "Tồn kho",
-      dataIndex: "tonkho",
-    },
-    {
-      title: "",
-      key: "action",
-      width: "112px",
-      render: (_, record) => (
-        <Button
-          size={"middle"}
-          onClick={() => {
-            dataShow = data[Number(record.id)];
-            setIsChangeInformation(!isChangeInformation);
-          }}
-        >
-          Sửa
-        </Button>
-      ),
-    },
-  ];
+  
   //useSelector, useNavigate
-  const [goodReceiptData, setGoodReciptData] = useState<GoodReceiptDataType[]>([]);
+  const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
+  const [goodReceiptData, setGoodReciptData] = useState<GoodReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -280,12 +87,12 @@ export default function Transaction() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
   //call api set data nhập kho
-  const [dataTrans, setDataTrans] = useState<IData[]>([]);
   const [page, setPage] = useState<number>(1);
   const size = 7;
 
+  const [IDChoose, setIDChoose] = useState<string>();
   const [dataChoose, setDataChoose] = useState<GoodReceiptDataType>();
-  const [isShowModal, setIsShowModal] = useState<string>();
+  const [showModal, setShowModal] = useState<string>();
 
   //call api set data products on modal
   const [listProduct, setListProduct] = useState<GoodsReceiptDetails[]>();
@@ -293,42 +100,76 @@ export default function Transaction() {
 
   useEffect(() => {
     getAllGoodReceipt()
-    .then((res) => {
-      setGoodReciptData(res.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((res) => {
+        setImportReciptData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    setDataTrans(fakeData.slice((page - 1) * size, page * size));
+    //setDataTrans(fakeData.slice((page - 1) * size, page * size));
   }, [page]);
-  
+
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.getAll;
     return fetch_Api(api_link);
   };
 
-  const proccessStatus =(status: Number)=>{
+  const getGoodReceiptByID = (ID:string) => {
+    const api_link = api_links.goodsIssue.getById;
+    const words1 = api_link.url.split('/');
+words1.pop();words1.push(ID);
+const strCopy1 = words1.join('/');
+    api_link.url=strCopy1;
+    return fetch_Api(api_link);
+  };
+
+  const proccessStatus = (status: Number) => {
     switch (status) {
       case 0:
-        
-        return <Tag color="success">success</Tag>
 
-        case 1:
-          return <Tag color="success">success</Tag>
+        return <Tag color="success">Hoàn thành/Hủy</Tag>
+
+      case 1:
+        return <Tag color="success">Hoàn thành</Tag>
 
         break;
-        case 2:
-          return  <Tag color="processing">processing</Tag>
+      case 2:
+        return <Tag color="processing">Đang xử lý</Tag>
 
         break;
       default:
         break;
     }
-    return ;
-    
+    return;
+
   }
 
+  const proccessDate = (dateString: String) => {
+    const date = new Date(dateString.toLocaleString());
+    const hour=date.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2});
+    const min=date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
+    const timeString=hour+":"+min;
+    const formatter = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const formattedDate = formatter.format(date);
+    const newDateString ="";
+    //return formattedDate;
+    return (<div>{timeString}<br/>{formattedDate}</div>);
+  }
+
+const handleEdit =(ID:string)=>{
+  getGoodReceiptByID(ID)
+      .then((res) => {
+        setGoodReciptData(res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        setGoodReciptData(emptydata);
+        console.log(error);
+      });
+
+    setShowModal("edit");
+}
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -344,111 +185,17 @@ export default function Transaction() {
     console.log(form.getFieldsValue());
   };
 
+
+ //////////// EDIT MODAL//////////
+  const ImportReceiptDetail=(ID: string, isShowModal?: boolean, setIsShowModal?: any)=>{
   return (
     <div className="product-container">
-        <div className="filterField">
-          <div className="title">Phiếu nhập kho</div>
-        </div>
-        <div className="product-list transaction-list">
-          <div className="header-action">
-            <Button icon={<EditOutlined />} className="custom-button">
-              Điều chỉnh
-            </Button>
-            <Button
-              icon={<PlusCircleOutlined />}
-              className="custom-button"
-              onClick={() => setIsShowModal("create")}
-            >
-              Thêm mới
-            </Button>
-            <Button icon={<DownloadOutlined />} className="custom-button">
-              Nhập File
-            </Button>
-            <Button icon={<UploadOutlined />} className="custom-button">
-              Xuất File
-            </Button>
-          </div>
-          <table className="table">
-            <thead className="table-header">
-              <th className="table-header-code">Mã nhập hàng</th>
-              <th className="table-header-time">Thời gian</th>
-              <th className="table-header-trans">Nhà cung cấp</th>
-              <th className="table-header-status">Trạng thái</th>
-              <th className="table-header-action"></th>
-            </thead>
-            <tbody className="table-body">
-              {goodReceiptData &&
-                goodReceiptData.length > 0 &&
-                goodReceiptData.map((tran) => (
-                  <tr
-                    key={Number(tran.id)}
-                    onClick={() => {
-                      setDataChoose(tran);
-                    }}
-                    className={`${
-                      dataChoose?.id === tran.id && "tr-active"
-                    }`}
-                  >
-                    <td className="table-body-code">{tran.id}</td>
-                    <td className="table-body-time">{tran.exportDate}</td>
-                    <td className="table-body-trans">{tran.partnerID}</td>
-                    <td className="table-body-status">{proccessStatus(Number(tran.receiptStatus))}</td>
-                    {dataChoose?.id === tran.id && (
-                      <td className="table-body-action">
-                        <Button
-                          icon={<EditOutlined />}
-                          className="edit-button"
-                          onClick={() => {
-                            setIsShowModal("edit");
-                            form.setFieldsValue(tran);
-                            setListProduct(form.getFieldValue("listGoodReciptDetailsModel"))
-                          }}
-                        >
-                          Sửa
-                        </Button>
-                        <Button
-                          icon={<DeleteOutlined />}
-                          className="delete-button"
-                          onClick={() => {
-                            setIsShowModal("delete");
-                          }}
-                        >
-                          Xoá
-                        </Button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="custom-pagination">
-            <Pagination
-              current={page}
-              total={fakeData.length}
-              onChange={(page) => setPage(page)}
-            />
-          </div>
-        </div>
-        <Modal
-        title="Xoá"
-        open={isShowModal === "delete"}
-        onOk={() => setIsShowModal(undefined)}
-        onCancel={() => setIsShowModal(undefined)}
-        okText="Xác nhận"
-        cancelText="Huỷ"
-      >
-        <p>Bạn có chắc sẽ xoá nó không?</p>
-      </Modal>
-
-{/*//////////// EDIT MODAL//////*/}
       <Modal
-        title={`Phiếu nhập kho${
-          form.getFieldValue("id") ? " - " + form.getFieldValue("id") : ""
-        }`}
-        open={isShowModal === "create" || isShowModal === "edit"}
-        onOk={() => setIsShowModal(undefined)}
+        title={`Phiếu nhập kho${" - " + goodReceiptData.id}`}
+        open={isShowModal}
+        onOk={() => setShowModal(undefined)}
         onCancel={() => {
-          setIsShowModal(undefined);
+          setShowModal(undefined);
           form.resetFields();
         }}
         footer={(_, { OkBtn, CancelBtn }) => (
@@ -460,17 +207,17 @@ export default function Transaction() {
       >
         <div className="modal-header">
           <div className="modal-info">Thông tin</div>
-          <div className="modal-desc">Nhập đến kho hiện tại</div>
+          {/*<div className="modal-desc">Nhập đến kho hiện tại</div>*/}
         </div>
         <hr className="modal-line" />
         <div className="modal-content">
           <div className="modal-box">
             <Form form={form} onFinish={onFinish}>
               <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
-                {form.getFieldValue("id")}
+                {goodReceiptData.id}
               </Form.Item>
               <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
-              {form.getFieldValue("exportDate")}
+                {proccessDate(goodReceiptData.importDate)}
               </Form.Item>
               <Form.Item
                 className="trans"
@@ -478,14 +225,14 @@ export default function Transaction() {
                 name={"trans"}
                 rules={[{ required: true }]}
               >
-                {form.getFieldValue("partnerID")}
+                {goodReceiptData.partner.name}
               </Form.Item>
               <Form.Item
                 className="status"
                 label={"Trạng thái"}
                 name={"status"}
               >
-                {form.getFieldValue("receiptStatus")}
+                {proccessStatus(goodReceiptData.receiptStatus)}
               </Form.Item>
             </Form>
           </div>
@@ -497,11 +244,11 @@ export default function Transaction() {
                 <th className="name">Đơn giá</th>
               </thead>
               <tbody>
-                {form.getFieldValue("listGoodReciptDetailsModel") &&
-                  listProduct.length > 0 &&
-                  listProduct.map((product, index) => (
+                {goodReceiptData.listGoodReciptDetailsModel &&
+                  goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
+                  goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
                     <tr key={index}>
-                      <td className="code">{product.productId}</td>
+                      <td className="name">{product.productId}-{product.product.name?product.product.name:""}</td>
                       <td className="quantity">{product.quantity}</td>
                       <td className="priceUnit">{product.priceUnit}</td>
                     </tr>
@@ -511,8 +258,191 @@ export default function Transaction() {
           </div>
         </div>
       </Modal>
+
       
-    {/*<React.Fragment>
+    </div>
+  );}
+
+
+  return (
+    <React.Fragment>
+    {ImportReceiptDetail(
+        IDChoose,
+        goodReceiptData && showModal==="edit")}
+      <div className="product-container">
+      
+      <div className="filterField">
+        <div className="title">Phiếu nhập kho</div>
+      </div>
+      <div className="product-list transaction-list">
+        <div className="header-action">
+          <Button icon={<EditOutlined />} className="custom-button">
+            Điều chỉnh
+          </Button>
+          <Button
+            icon={<PlusCircleOutlined />}
+            className="custom-button"
+            onClick={() => setShowModal("create")}
+          >
+            Thêm mới
+          </Button>
+          <Button icon={<DownloadOutlined />} className="custom-button">
+            Nhập File
+          </Button>
+          <Button icon={<UploadOutlined />} className="custom-button">
+            Xuất File
+          </Button>
+        </div>
+        <table className="table">
+          <thead className="table-header">
+            <th className="table-header-code">Mã nhập hàng</th>
+            <th className="table-header-time">Thời gian</th>
+            <th className="table-header-trans">Nhà cung cấp</th>
+            <th className="table-header-status">Trạng thái</th>
+            <th className="table-header-action"></th>
+          </thead>
+          <tbody className="table-body">
+            {importReceiptData &&
+              importReceiptData.length > 0 &&
+              importReceiptData.map((tran) => (
+                <tr
+                  key={Number(tran.id)}
+                  onClick={() => {
+                    setDataChoose(tran);
+                    setIDChoose(String(tran.id));
+                  }}
+                  className={`${dataChoose?.id === tran.id && "tr-active"
+                    }`}
+                >
+                  <td className="table-body-code">{tran.id}</td>
+                  <td className="table-body-time">{proccessDate(tran.importDate.toLocaleString())}</td>
+                  <td className="table-body-trans">{tran.partnerID}</td>
+                  <td className="table-body-status">{proccessStatus(Number(tran.receiptStatus))}</td>
+                  {dataChoose?.id === tran.id && (
+                    <td className="table-body-action">
+                      <Button
+                        icon={<EditOutlined />}
+                        className="edit-button"
+                        onClick={() => {
+                          handleEdit(String(tran.id));
+                          setShowModal("edit");
+                          form.setFieldsValue(tran);
+                          
+                          setListProduct(form.getFieldValue("listGoodReciptDetailsModel"))
+                        }}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        icon={<DeleteOutlined />}
+                        className="delete-button"
+                        onClick={() => {
+                          setShowModal("delete");
+                        }}
+                      >
+                        Xoá
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div className="custom-pagination">
+          <Pagination
+            current={page}
+            //total={fakeData.length}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
+      </div>
+      <Modal
+        title="Xoá"
+        open={showModal === "delete"}
+        onOk={() => setShowModal(undefined)}
+        onCancel={() => setShowModal(undefined)}
+        okText="Xác nhận"
+        cancelText="Huỷ"
+      >
+        <p>Bạn có chắc sẽ xoá nó không?</p>
+      </Modal>
+      </div>
+      </React.Fragment>
+      
+  );
+}
+
+      {/*//////////// EDIT MODAL//////
+      <Modal
+        title={`Phiếu nhập kho`}//${goodReceiptData?.id?? " - " + goodReceiptData.id}
+        open={showModal==="edit"}
+        onOk={() => setShowModal(undefined)}
+        onCancel={() => {
+          setShowModal(undefined);
+          form.resetFields();
+        }}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <Button onClick={onFinish}>Lưu</Button>
+          </>
+        )}
+        className="modal-create-trans"
+      >
+        <div className="modal-header">
+          <div className="modal-info">Thông tin</div>
+          {/*<div className="modal-desc">Nhập đến kho hiện tại</div>}
+        </div>
+        <hr className="modal-line" />
+        <div className="modal-content">
+          <div className="modal-box">
+            <Form form={form} onFinish={onFinish}>
+              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
+                {goodReceiptData?.id}
+              </Form.Item>
+              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
+                {goodReceiptData?proccessDate(goodReceiptData?.importDate):""}
+              </Form.Item>
+              <Form.Item
+                className="trans"
+                label={"Nhà cung cấp"}
+                name={"trans"}
+                rules={[{ required: true }]}
+              >
+                {goodReceiptData?.partner?.name}
+              </Form.Item>
+              <Form.Item
+                className="status"
+                label={"Trạng thái"}
+                name={"status"}
+              >
+                {goodReceiptData??proccessStatus(Number(goodReceiptData?.receiptStatus))}
+              </Form.Item>
+            </Form>
+          </div>
+          <div className="modal-products">
+            <table>
+              <thead>
+                <th className="code">Mã sản phẩm</th>
+                <th className="quantity">Số lượng</th>
+                <th className="name">Đơn giá</th>
+              </thead>
+              <tbody>
+                {goodReceiptData?.listGoodReciptDetailsModel &&
+                  goodReceiptData?.listGoodReciptDetailsModel.length > 0 &&
+                  goodReceiptData?.listGoodReciptDetailsModel.map((product, index) => (
+                    <tr key={index}>
+                      <td className="name">{product.productId}-{product.product.name?product.product.name:""}</td>
+                      <td className="quantity">{product.quantity}</td>
+                      <td className="priceUnit">{product.priceUnit}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Modal>
+*/}
+      {/*<React.Fragment>
 
       <ProductInformationPopupScreen
         isPopup={isChangeInformation}
@@ -556,7 +486,7 @@ export default function Transaction() {
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
-              onClick={() => setIsShowModal("create")}
+              onClick={() => setShowModal("create")}
             >
               Thêm mới
             </Button>
@@ -600,7 +530,7 @@ export default function Transaction() {
                           icon={<EditOutlined />}
                           className="edit-button"
                           onClick={() => {
-                            setIsShowModal("edit");
+                            setShowModal("edit");
                             form.setFieldsValue(tran);
                           }}
                         >
@@ -610,7 +540,7 @@ export default function Transaction() {
                           icon={<DeleteOutlined />}
                           className="delete-button"
                           onClick={() => {
-                            setIsShowModal("delete");
+                            setShowModal("delete");
                           }}
                         >
                           Xoá
@@ -632,9 +562,9 @@ export default function Transaction() {
       </div>
       <Modal
         title="Xoá"
-        open={isShowModal === "delete"}
-        onOk={() => setIsShowModal(undefined)}
-        onCancel={() => setIsShowModal(undefined)}
+        open={showModal === "delete"}
+        onOk={() => setShowModal(undefined)}
+        onCancel={() => setShowModal(undefined)}
         okText="Xác nhận"
         cancelText="Huỷ"
       >
@@ -644,10 +574,10 @@ export default function Transaction() {
         title={`Phiếu nhập kho${
           form.getFieldValue("code") ? " - " + form.getFieldValue("code") : ""
         }`}
-        open={isShowModal === "create" || isShowModal === "edit"}
-        onOk={() => setIsShowModal(undefined)}
+        open={showModal === "create" || showModal === "edit"}
+        onOk={() => setShowModal(undefined)}
         onCancel={() => {
-          setIsShowModal(undefined);
+          setShowModal(undefined);
           form.resetFields();
         }}
         footer={(_, { OkBtn, CancelBtn }) => (
@@ -719,9 +649,6 @@ export default function Transaction() {
       </Modal>
     </div>
     </React.Fragment>*/}
-</div>
-  );
-}
 
 /*{
   "goodsReceiptModel": {

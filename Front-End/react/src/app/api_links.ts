@@ -44,7 +44,7 @@ const api_links = {
         },
         //GET BY ID
         getById: {
-            url: `${authUrl}/GoodRecipt`,
+            url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
             method: "GET",
         },
 

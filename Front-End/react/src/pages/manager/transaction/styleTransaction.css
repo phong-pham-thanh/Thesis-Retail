@@ -1,0 +1,308 @@
+body {
+    margin: 0;
+}
+
+main {
+    margin: 16px;
+}
+
+.filterField{
+    border-radius: 10px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    overflow: auto;
+    width: 300px;
+    height: fit-content;
+}
+.filterBox{
+border-radius: 10px;
+border: 1px solid var(--Secondary-Color, #28C2FF);
+background: #FFF;
+    display: flex;
+    flex-direction: column;
+    gap:0px;
+    overflow: auto;
+    width: 100%;
+    height: fit-content;
+}
+.filterBox-title{
+    /*background-color:rgb(120, 154, 172);*/
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: auto;
+    width: auto;
+    height: fit-content;
+
+    color: var(--Text-color, #000);
+text-align: center;
+font-family: Nunito;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+
+opacity: 0.5;
+
+}
+
+.filterBox-content{
+    padding: 1em;
+    padding-top: 0em;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: space-between;*/
+    overflow: auto;
+    width: auto;
+    height: fit-content;
+    text-align:left;
+}
+
+.product-container{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    /*background: rebeccapurple;*/
+    display: inline-flex;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.product-list{
+    width:80%;
+}
+
+.transaction-list {
+    padding: 1em 7em 1em 1em;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.header-action {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 20px;
+}
+
+.transaction-list .custom-button {
+    background: #28C2FF;
+    color: #ffffff;
+    width: 150px;
+    height: 40px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table-header {
+    border: 3px solid #605BFF;
+}
+
+.table-header th {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    height: 60px;
+}
+
+.table-body tr {
+    font-size: 14px;
+    font-weight: 400;
+    color: #030229;
+    height: 60px;
+}
+
+.table-body .tr-active {
+    border: 3px solid #28C2FF;
+    border-radius: 10px;
+}
+
+.table-header-code {
+    width: 13%;
+    text-align: right;
+}
+
+.table-header-time {
+    width: 17%;
+    text-align: right;
+}
+
+.table-header-trans {
+    width: 25%;
+    text-align: center;
+}
+
+.table-header-fee {
+    width: 20%;
+    text-align: right;
+}
+
+.table-header-status {
+    width: 15%;
+    text-align: center;
+}
+
+.table-header-action {
+    width: 10%;
+    text-align: center;
+}
+
+.table-body-code {
+    width: 13%;
+    text-align: right;
+}
+
+.table-body-time {
+    width: 17%;
+    text-align: right;
+}
+
+.table-body-trans {
+    width: 25%;
+    text-align: center;
+}
+
+.table-body-fee {
+    width: 20%;
+    text-align: right;
+}
+
+.table-body-status {
+    width: 15%;
+    text-align: center;
+}
+
+.table-body-action {
+    width: 10%;
+    text-align: center;
+}
+
+.table-body-action button {
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-body-action .edit-button {
+    background-color: #19EF42;
+    color: #ffffff;
+}
+
+.table-body-action .delete-button {
+    background-color: #D11A2A;
+    color: #ffffff;
+}
+
+.table-body-action .edit-button:hover {
+    background: #19EF42 !important;
+    color: #ffffff !important;
+}
+
+.table-body-action .delete-button:hover {
+    background: #D11A2A !important;
+    color: #ffffff !important;
+}
+
+.custom-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.modal-create-trans {
+    width: 1000px !important;
+}
+
+.modal-create-trans .ant-modal-title {
+   font-size: 18px;
+   font-weight: 700;
+}
+
+.modal-create-trans .modal-header {
+    display: flex;
+    font-weight: 700;
+}
+
+.modal-create-trans .modal-header .modal-info {
+    border: 1px solid #05060F;
+    padding: 5px 25px 5px 5px;
+    width: fit-content;
+}
+
+.modal-create-trans .modal-header .modal-desc {
+    border: 1px solid #05060F;
+    padding: 5px;
+    width: fit-content;
+    border-left: unset;
+}
+
+.modal-create-trans hr {
+    border-top: 1px dotted #000000;
+}
+
+.modal-create-trans .modal-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.modal-create-trans .modal-box {
+    margin-top: 25px;
+    width: 50%;
+    padding: 0px 15px;
+}
+
+.modal-create-trans .modal-products {
+    width: 50%;
+    padding: 0px 15px;
+}
+
+.modal-create-trans .ant-form-item label {
+    width: 200px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.modal-create-trans .ant-form-item input {
+    border: unset !important;
+    border-bottom: 1px solid #000000 !important;
+    border-radius: unset !important;
+    box-shadow: unset;
+    text-align: right;
+}
+
+.modal-create-trans .ant-modal-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-create-trans .ant-modal-footer button {
+    width: 400px;
+    height: 40px;
+    background-color: #28C2FF;
+    color: #ffffff;
+}
+
+.modal-create-trans .modal-products table {
+    width: 100%;
+}
+
+.modal-create-trans .modal-products table .code, .quantity, .name {
+    text-align: left;
+    padding: 10px;
+}

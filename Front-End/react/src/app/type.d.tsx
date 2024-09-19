@@ -91,24 +91,7 @@ export type CustomerState = {
 
 export type CustomerListState = CustomerState[];
 
-export type GoodsReceipt = {
-  id: string;
-  importDate: string;
-  partnerId: string;
-  receiptStatus: number;
-  ListGoodReciptDetailsModel:[]
 
-  //parnersId: string;
-};
-
-export type GoodsReceiptDetails = 
-  {
-    id?: string;
-    goodsReceiptId: string;
-    productId: string;
-    priceUnit: number;
-    quantity: number;
-  };
 
 export type CategoryType = {
   id: number;
@@ -132,10 +115,67 @@ export type WarehouseState =
     inventories: null
   };
 
-  export type GoodReceiptDataType = {
-    id: String|Number,
-    exportDate: String|Date,
-    partnerID: String|Number,
-    receiptStatus: String|Number,
-    listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
+export type GoodsReceipt = {
+  id: string;
+  importDate: string;
+  partnerId: string;
+  receiptStatus: number;
+  ListGoodReciptDetailsModel:[]
+
+  //parnersId: string;
+};
+
+export type GoodsReceiptDetails = 
+  {
+    id?: string;
+    goodsReceiptId: string;
+    productId: string;
+    priceUnit: number;
+    quantity: number;
   };
+
+  export type GoodReceiptDataType = {
+    id: string|number,
+    importDate: string|Date,
+    partnerID: string|number,
+    receiptStatus: string|number,
+    listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
+    partner?: {
+      id: number,
+      name: string,
+      totalSale: number
+    },
+  };
+
+  export type GoodReceiptDetailDataType = {
+    id: number,
+    importDate: string,
+    partnerID: number,
+    partner: {
+      id: number,
+      name: string,
+      totalSale: number
+    },
+    receiptStatus: number,
+    listGoodReciptDetailsModel: [
+      {
+        id: number,
+        goodReceiptId: number,
+        goodsReceipt: null,
+        productId: number,
+        product: {
+          id: number,
+          name: string,
+          categoryId: number,
+          category: {
+            id: number,
+            name: string
+          },
+          description: string,
+          status: boolean,
+          listInventories: null
+        },
+        priceUnit: number,
+        quantity: number
+      }]
+    }
