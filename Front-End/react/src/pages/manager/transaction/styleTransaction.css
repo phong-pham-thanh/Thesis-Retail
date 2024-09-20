@@ -63,17 +63,34 @@ opacity: 0.5;
 
 .product-container{
     display: flex;
-    align-items: center;
     text-align: left;
-    /*background: rebeccapurple;*/
+    /*align-items: center;
+    background: rebeccapurple;
     display: inline-flex;
     display: flex;
     align-items: flex-start;
-    gap: 15px;
+    gap: 15px;*/
+}
+
+.receipt-container{
+    width:70%;
+    display: flex;
+    align-items: left;
+    text-align: left;
+    flex-direction: column;
+    /*gap: 15px;*/
 }
 
 .product-list{
-    width:80%;
+    width:50%;
+    /*display: flex;*/
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.export-list{
+    width:100%;
+
 }
 
 .transaction-list {
@@ -306,3 +323,16 @@ opacity: 0.5;
     text-align: left;
     padding: 10px;
 }
+
+.product-table{
+    border-color: brown;
+}
+
+.product-cell{
+    width: '23%';
+    text-align: center;
+    background-color: aquamarine;  
+padding: '15px';
+border-radius: '5px';
+margin: '2px';
+  }

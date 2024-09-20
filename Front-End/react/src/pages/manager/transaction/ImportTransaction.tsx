@@ -37,15 +37,15 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodsReceiptDetails, GoodReceiptDetailDataType } from "../../../app/type.d";
+import { GoodReceiptDataType, GoodsReceiptDetails, GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import ImportReceiptDetail from "./popupDetail";
 
-const emptydata:GoodReceiptDetailDataType={
+const emptydata:GoodImportReceiptDetailDataType={
   "id": 0,
   "importDate": "01/01/1970",
   "partnerID": 0,
+  "totalAmount": 0,
   "partner": {
     "id": 0,
     "name": "",
@@ -75,11 +75,12 @@ const emptydata:GoodReceiptDetailDataType={
     }]
   }
 
-export default function Transaction() {
-  
+export default function ImportTransaction() {
+  const navigate = useNavigate();
+
   //useSelector, useNavigate
   const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
-  const [goodReceiptData, setGoodReciptData] = useState<GoodReceiptDetailDataType>(emptydata);
+  const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -128,7 +129,7 @@ const strCopy1 = words1.join('/');
     switch (status) {
       case 0:
 
-        return <Tag color="success">Hoàn thành/Hủy</Tag>
+        return <Tag color="error">Đã hủy</Tag>
 
       case 1:
         return <Tag color="success">Hoàn thành</Tag>
@@ -223,7 +224,6 @@ const handleEdit =(ID:string)=>{
                 className="trans"
                 label={"Nhà cung cấp"}
                 name={"trans"}
-                rules={[{ required: true }]}
               >
                 {goodReceiptData.partner.name}
               </Form.Item>
@@ -237,9 +237,10 @@ const handleEdit =(ID:string)=>{
             </Form>
           </div>
           <div className="modal-products">
+          <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
             <table>
               <thead>
-                <th className="code">Mã sản phẩm</th>
+                <th className="code">Tên sản phẩm</th>
                 <th className="quantity">Số lượng</th>
                 <th className="name">Đơn giá</th>
               </thead>
@@ -248,9 +249,9 @@ const handleEdit =(ID:string)=>{
                   goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
                   goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
                     <tr key={index}>
-                      <td className="name">{product.productId}-{product.product.name?product.product.name:""}</td>
+                      <td className="name">{product.product.name?product.product.name:""}</td>
                       <td className="quantity">{product.quantity}</td>
-                      <td className="priceUnit">{product.priceUnit}</td>
+                      <td className="priceUnit">{product.priceUnit.toLocaleString()}</td>
                     </tr>
                   ))}
               </tbody>
@@ -282,7 +283,8 @@ const handleEdit =(ID:string)=>{
           <Button
             icon={<PlusCircleOutlined />}
             className="custom-button"
-            onClick={() => setShowModal("create")}
+            onClick={() => //setShowModal("create")
+              navigate("tao-moi")}
           >
             Thêm mới
           </Button>
@@ -298,6 +300,7 @@ const handleEdit =(ID:string)=>{
             <th className="table-header-code">Mã nhập hàng</th>
             <th className="table-header-time">Thời gian</th>
             <th className="table-header-trans">Nhà cung cấp</th>
+            <th className="table-header-total">Tổng tiền</th>
             <th className="table-header-status">Trạng thái</th>
             <th className="table-header-action"></th>
           </thead>
@@ -316,8 +319,9 @@ const handleEdit =(ID:string)=>{
                 >
                   <td className="table-body-code">{tran.id}</td>
                   <td className="table-body-time">{proccessDate(tran.importDate.toLocaleString())}</td>
-                  <td className="table-body-trans">{tran.partnerID}</td>
-                  <td className="table-body-status">{proccessStatus(Number(tran.receiptStatus))}</td>
+                  <td className="table-body-trans">{tran.partner.name}</td>
+                  <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
+                  <td className="table-body-status">{proccessStatus(tran.receiptStatus)}</td>
                   {dataChoose?.id === tran.id && (
                     <td className="table-body-action">
                       <Button
