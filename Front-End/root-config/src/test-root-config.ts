@@ -1,9 +1,9 @@
 import { registerApplication, start, LifeCycles } from "single-spa";
 
 registerApplication({
-  name: 'welcome',
-  app: () => System.import<LifeCycles>('welcome'),
-  activeWhen: ['/welcome'],
+  name: 'retail',
+  app: () => System.import<LifeCycles>('retail'),
+  activeWhen: ['/retail'],
 });
 
 registerApplication({
