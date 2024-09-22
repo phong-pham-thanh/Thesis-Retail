@@ -7,12 +7,13 @@ namespace APIBackEnd.Repository
 {
     public interface IProductRepository
     {
-        public List<Product> GetAllProducts();
+        public List<ProductModel> GetAllProducts();
         public ProductModel GetProductById(int id);
         public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
         public ProductModel UpdateProductById(int id, ProductModel product);
         public List<ProductModel> GetBySearchName(string query);
+        public List<ProductModel> GetByCategoryId(int cateId);
     }
     public class ProductRepository : IProductRepository
     {
@@ -25,10 +26,10 @@ namespace APIBackEnd.Repository
             _productMapper = productMapper;
         }
 
-        public List<Product> GetAllProducts()
+        public List<ProductModel> GetAllProducts()
         {
             List<Product> products = _coreContext.Product.Include(p => p.Category).Include(p => p.ListInventories).ToList();
-            return products;
+            return _productMapper.ToModels(products);
         }
         public ProductModel GetProductById(int id)
         {
@@ -76,5 +77,9 @@ namespace APIBackEnd.Repository
             return _productMapper.ToModels(_coreContext.Product.Include(p => p.Category).Include(p => p.ListInventories).Where(ca => ca.Name.ToLower().Contains(query.ToLower())).ToList());
         }
 
+        public List<ProductModel> GetByCategoryId(int cateId)
+        {
+            return _productMapper.ToModels(_coreContext.Product.Include(p => p.Category).Include(p => p.ListInventories).Where(p => p.CategoryId == cateId).ToList());
+        }
     }
 }

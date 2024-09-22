@@ -59,5 +59,12 @@ namespace APIBackEnd.Controllers
         {
             return _productService.GetBySearchName(query);
         }
+
+        [Route("getProductByCategoryId/{cateId}")]
+        [HttpGet]
+        public List<ProductModel> getProductByCategoryId(int cateId)
+        {
+            return _productService.GetByCategoryId(cateId);
+        }
     }
 }
