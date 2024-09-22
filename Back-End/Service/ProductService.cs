@@ -14,6 +14,7 @@ namespace APIBackend.Service
         public bool DeleteProdcutById(int id);
         public ProductModel UpdateProductById(int id, ProductModel product);
         public List<ProductModel> GetBySearchName(string query);
+        public List<ProductModel> GetByCategoryId(int cateId);
     }
     public class ProductService : IProductService
     {
@@ -31,7 +32,7 @@ namespace APIBackend.Service
 
         public List<ProductModel> GetAllProducts()
         {
-            List<ProductModel> result = _productMapper.ToModels(_productRepository.GetAllProducts());
+            List<ProductModel> result = _productRepository.GetAllProducts();
             return result;
         }
 
@@ -57,6 +58,11 @@ namespace APIBackend.Service
         public List<ProductModel> GetBySearchName(string query)
         {
             return _productRepository.GetBySearchName(query);
+        }
+
+        public List<ProductModel> GetByCategoryId(int cateId)
+        {
+            return _productRepository.GetByCategoryId(cateId);
         }
     }
 }
