@@ -13,15 +13,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
-builder.Services.AddCors(option => option.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-builder.Services.AddDbContext<CoreContext>( option => option.UseSqlServer(builder.Configuration.GetConnectionString("CoreContext")));
-//Repository
+builder.Services.AddDbContext<CoreContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("CoreContext")));
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:9000") // Allow your React app's origin
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IGoodReciptRepository, GoodsReciptRepository>();
@@ -35,8 +45,7 @@ builder.Services.AddScoped<IGoodExportRepository, GoodExportRepository>();
 builder.Services.AddScoped<IGoodExportDetailRepository, GoodExportDetailRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
-
-//Mapper
+// Mapper
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProductMapper, ProductMapper>();
 builder.Services.AddScoped<IGoodsReceiptMapper, GoodsReceiptMapper>();
@@ -50,7 +59,7 @@ builder.Services.AddScoped<IGoodExportDetailMapper, GoodExportDetailMapper>();
 builder.Services.AddScoped<IGoodsExportMapper, GoodsExportMapper>();
 builder.Services.AddScoped<ICustomerMapper, CustomerMapper>();
 
-//Service
+// Service
 builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -59,45 +68,9 @@ builder.Services.AddScoped<IPartnerService, PartnerService>();
 builder.Services.AddScoped<IGoodExportService, GoodExportService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:9000")
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
-});
-
-
 var app = builder.Build();
 
-
-
+// Exception handling
 app.UseExceptionHandler(builder =>
 {
     builder.Run(async context =>
@@ -137,26 +110,19 @@ app.UseExceptionHandler(builder =>
                 problemDetails.Detail = "An unexpected error occurred. Please try again later.";
             }
 
-            // Thiết lập mã trạng thái HTTP
             context.Response.StatusCode = problemDetails.Status ?? 500;
             context.Response.ContentType = "application/problem+json";
 
-            // Trả về ProblemDetails dưới dạng JSON
             await context.Response.WriteAsJsonAsync(problemDetails);
         }
     });
 });
 
-
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
 
+// Use CORS after routing but before authorization or session
+app.UseCors();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -164,9 +130,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
-app.UseCors();
 app.Run();
