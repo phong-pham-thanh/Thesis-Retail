@@ -1,10 +1,12 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Repository;
 using APIBackend.Mapper;
 using APIBackend.Service;
 using APIBackend.Repository;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +95,66 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+
+
+app.UseExceptionHandler(builder =>
+{
+    builder.Run(async context =>
+    {
+        var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (errorFeature != null)
+        {
+            var exception = errorFeature.Error;
+            ProblemDetails problemDetails = new ProblemDetails
+            {
+                Instance = context.Request.Path,
+                Title = "An error occurred while processing your request."
+            };
+
+            if (exception is ArgumentNullException)
+            {
+                problemDetails.Status = 400; // Bad Request
+                problemDetails.Title = "Bad Request";
+                problemDetails.Detail = exception.Message;
+            }
+            else if (exception is InvalidOperationException)
+            {
+                problemDetails.Status = 409; // Conflict
+                problemDetails.Title = "Conflict";
+                problemDetails.Detail = exception.Message;
+            }
+            else if (exception is KeyNotFoundException)
+            {
+                problemDetails.Status = 404; // Not Found
+                problemDetails.Title = "Not Found";
+                problemDetails.Detail = exception.Message;
+            }
+            else
+            {
+                problemDetails.Status = 500; // Internal Server Error
+                problemDetails.Title = "Internal Server Error";
+                problemDetails.Detail = "An unexpected error occurred. Please try again later.";
+            }
+
+            // Thiết lập mã trạng thái HTTP
+            context.Response.StatusCode = problemDetails.Status ?? 500;
+            context.Response.ContentType = "application/problem+json";
+
+            // Trả về ProblemDetails dưới dạng JSON
+            await context.Response.WriteAsJsonAsync(problemDetails);
+        }
+    });
+});
+
+
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

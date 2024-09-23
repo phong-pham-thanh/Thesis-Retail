@@ -18,6 +18,7 @@ namespace APIBackend.Service
 
     public class CustomerService : ICustomerService
     {
+        private readonly CoreContext _coreContext;
         private readonly ICustomerRepository _customerRepository;
         public CustomerService(ICustomerRepository customerRepository) 
         {
@@ -33,14 +34,16 @@ namespace APIBackend.Service
             return _customerRepository.GetById(id);
         }
 
-        public CustomerModel AddNewCustomer(CustomerModel CustomerModel)
+        public CustomerModel AddNewCustomer(CustomerModel customerModel)
         {
-            return _customerRepository.AddNewCustomer(CustomerModel);
+            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel);
+            return _customerRepository.AddNewCustomer(customerModel);
         }
 
-        public CustomerModel UpdateCustomer(int id, CustomerModel CustomerModel)
+        public CustomerModel UpdateCustomer(int id, CustomerModel customerModel)
         {
-            return _customerRepository.UpdateCustomer(id, CustomerModel);
+            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel, id: id);
+            return _customerRepository.UpdateCustomer(id, customerModel);
         }
 
         public List<CustomerModel> GetBySearchName(string query)

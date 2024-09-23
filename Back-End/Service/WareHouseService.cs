@@ -1,5 +1,6 @@
 ﻿using APIBackend.Models;
 using APIBackend.Repository;
+using APIBackEnd.Data;
 
 namespace APIBackend.Service
 {
@@ -29,14 +30,16 @@ namespace APIBackend.Service
             return _wareHouseRepository.GetById(id);
         }
 
-        public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel)
+        public WareHouseModel AddNewWareHouse(WareHouseModel wareHouseModel)
         {
-            return _wareHouseRepository.AddNewWareHouse(WareHouseModel);
+            Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: null, columnName: "Address");
+            return _wareHouseRepository.AddNewWareHouse(wareHouseModel);
         }
 
-        public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel)
+        public WareHouseModel UpdateWareHouse(int id, WareHouseModel wareHouseModel)
         {
-            return _wareHouseRepository.UpdateWareHouse(id, WareHouseModel);
+            Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: id, columnName: "Address");
+            return _wareHouseRepository.UpdateWareHouse(id, wareHouseModel);
         }
 
         public List<WareHouseModel> GetBySearchName(string query)
