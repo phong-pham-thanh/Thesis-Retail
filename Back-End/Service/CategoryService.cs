@@ -1,5 +1,6 @@
 ﻿using APIBackend.Models;
 using APIBackend.Repository;
+using APIBackEnd.Data;
 using APIBackEnd.Models;
 
 namespace APIBackend.Service
@@ -32,11 +33,13 @@ namespace APIBackend.Service
 
         public CategoryModel AddNewCategory(CategoryModel categoryModel)
         {
+            Utilities.ValidateDuplicate<CategoryModel>(_categoryRepository.GetAll(), categoryModel);
             return _categoryRepository.AddNewCategory(categoryModel);
         }
 
         public CategoryModel UpdateCategory(int id, CategoryModel categoryModel)
         {
+            Utilities.ValidateDuplicate<CategoryModel>(_categoryRepository.GetAll(), categoryModel, id: id);
             return _categoryRepository.UpdateCategory(id, categoryModel);
         }
 
