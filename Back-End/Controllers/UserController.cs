@@ -41,10 +41,10 @@ namespace APIBackEnd.Controllers
             string password = data.password;
 
             UserModel userResult = _userRerpository.GetUserLogin(username, password);
-            if(userResult != null)
-            {
-                HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
-            }
+            //if(userResult != null)
+            //{
+            //    HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
+            //}
             return userResult;
         }
 

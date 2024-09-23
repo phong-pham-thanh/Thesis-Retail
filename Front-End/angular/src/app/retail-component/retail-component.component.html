@@ -21,18 +21,18 @@
     <main class="main-content">
         <section class="invoice-section">
             <!-- Each product in the invoice -->
-            <ng-container *ngFor="let item of allProductInBill">
+            <ng-container *ngFor="let item of currentBill.billDetails">
                 <div class="invoice-item">
-                    <span>{{item.id}}</span>
-                    <span>{{item.name}}</span>
+                    <span>{{item?.product?.id}}</span>
+                    <span>{{item?.product?.name}}</span>
                     <div class="quantity-control">
-                        <button>-</button>
-                        <input type="number" value="1">
-                        <button>+</button>
+                        <button (click)="changeQuantity(item, false)">-</button>
+                        <input type="number" value="{{item?.quantity}}">
+                        <button (click)="changeQuantity(item, true)">+</button>
                     </div>
                     <span>10,000</span>
-                    <!-- <input type="text" class="discount-input" placeholder="Giảm giá"> -->
-                    <button class="delete-item">Xóa</button>
+                    <input type="text" class="discount-input" placeholder="Giảm giá">
+                    <button class="delete-item" (click)="removeItem(item)">Xóa</button>
                 </div>
             </ng-container>
         </section>
@@ -47,6 +47,17 @@
                 </div>
             <!-- Add more products here -->
             </ng-container>
+
+            <!-- <p>Restricted size, no rotation:</p>
+            <ngb-pagination
+            [collectionSize]="data.length"
+            #numPagesExp1
+            [(page)]="currentPage"
+            [maxSize]="5"
+            [boundaryLinks]="true"
+            ></ngb-pagination>
+
+            <pre><span class="float-md-left">Page: {{ currentPage }} / {{ numPagesExp1.pageCount }}</span></pre> -->
         </section>
     </main>
 
