@@ -20,15 +20,15 @@ export type LoginState = {
 };
 
 export type UserState = {
-  "id": string | number ,
-  "name": string,
-  "username": string,
-  "password": string | null,
-  "branch": string,
-  "address": string,
-  "dateOnboard": string,
-  "age": string | number
-}
+  id: string | number;
+  name: string;
+  username: string;
+  password: string | null;
+  branch: string;
+  address: string;
+  dateOnboard: string;
+  age: string | number;
+};
 /*
 export type UserInformationLoginState = {
   "id": string,
@@ -66,6 +66,10 @@ export type ProductState = {
   description: string;
   status: boolean;
 };
+export type CategoryState = {
+  id: string;
+  name: string;
+};
 
 export type ProductListState = ProductState[];
 
@@ -96,46 +100,43 @@ export type GoodsReceipt = {
   importDate: string;
   partnerId: string;
   receiptStatus: number;
-  ListGoodReciptDetailsModel:[]
+  ListGoodReciptDetailsModel: [];
 
   //parnersId: string;
 };
 
-export type GoodsReceiptDetails = 
-  {
-    id?: string;
-    goodsReceiptId: string;
-    productId: string;
-    priceUnit: number;
-    quantity: number;
-  };
+export type GoodsReceiptDetails = {
+  id?: string;
+  goodsReceiptId: string;
+  productId: string;
+  priceUnit: number;
+  quantity: number;
+};
 
 export type CategoryType = {
-  id: number;
+  id: string;
   name: string;
 };
 
-export type PartnerState = 
-  {
-    id: number|string,
-    name: string,
-    totalSale: number,
-  };
+export type PartnerState = {
+  id: number | string;
+  name: string;
+  totalSale: number;
+};
 
-export type WarehouseState = 
-  {
-    id: number|string,
-    managerId: number|string,
-    manager: null,
-    address: string,
-    status: boolean,
-    inventories: null
-  };
+export type WarehouseState = {
+  id: number | string;
+  managerId: number | string;
+  manager: null;
+  address: string;
+  status: boolean;
+  inventories: null;
+};
 
-  export type GoodReceiptDataType = {
-    id: String|Number,
-    exportDate: String|Date,
-    partnerID: String|Number,
-    receiptStatus: String|Number,
-    listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
-  };
+export type GoodReceiptDataType = {
+  id: String | Number;
+  exportDate: String | Date;
+  partnerID: String | Number;
+  receiptStatus: String | Number;
+  listGoodReciptDetailsModel: GoodsReceiptDetails[] | null;
+};
