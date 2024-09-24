@@ -16,7 +16,7 @@ interface CategoryType {
 }
 
 const emptydata: CategoryType = {
-  id: "",
+  id: "0",
   name: "",
 };
 
