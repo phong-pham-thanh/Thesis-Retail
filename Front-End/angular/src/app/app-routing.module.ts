@@ -9,7 +9,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  providers: [{provide: APP_BASE_HREF, useValue: '/retail'}],
+  providers: [{provide: APP_BASE_HREF, useValue: '/quan-ly/retail'}],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
