@@ -37,9 +37,16 @@ namespace APIBackEnd.Controllers
             return _goodExportService.GetAllGoodExports();
         }
 
+        [HttpGet]
+        [Route("getGoodExportById/{id}")]
+        public GoodsExportModel GetGoodExportById(int id)
+        {
+            return _goodExportService.GetGoodExportById(id);
+        }
+
         [HttpPost]
-        [Route("addGoodRecipt")]
-        public bool AddGoodRecipt([FromBody] paramAddNewGoodExport param)
+        [Route("addGoodExport")]
+        public bool AddGoodExport([FromBody] paramAddNewGoodExport param)
         {
             //Template
             /*

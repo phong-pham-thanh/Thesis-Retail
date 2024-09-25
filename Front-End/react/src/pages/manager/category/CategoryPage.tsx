@@ -1,31 +1,40 @@
 import React, { useEffect, useState } from "react";
 import "./styleCategory.css";
 import { Button, Input, Space, Table } from "antd";
-//import { DownOutlined } from "@ant-design/icons";
-//import { Button, Dropdown, Menu } from "antd";
-import fetch_Api from "../../../app/api_fetch";
-import api_links from "../../../app/api_links";
-import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
+import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomButton from "../../component/CustomeButton";
+import fetch_Api from "../../../app/api_fetch";
+import api_links from "../../../app/api_links";
+import CategoryInformationPopupScreen from "./PopUpCategoryInformation";
+import AlertDialog from "../../component/AlertDialog"; // Import alert dialog for delete confirmation
+import message from "antd/lib/message"; // AntD message for notifications
 
 interface CategoryType {
-  id: number;
+  id: string;
   name: string;
-  // children?: CategoryType[];
 }
+
+const emptydata: CategoryType = {
+  id: "0",
+  name: "",
+};
 
 export default function CategoryPage() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [filteredCategories, setFilteredCategories] = useState<CategoryType[]>(
     []
-  ); // State for filtered categories
-  const [searchTerm, setSearchTerm] = useState<string>(""); // Track search input
+  );
+  const [popupData, setPopupData] = useState<CategoryType>(emptydata);
+  const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
-  //   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
-  //     null
-  //   ); // Track selected dropdown category
-  const [timeoutId, setTimeoutId] = useState<number | undefined>(); // Timeout for debouncing search
+  const [refresh, setRefresh] = useState(false); // State to refetch data
+  const [isAlertVisible, setIsAlertVisible] = useState(false); // For alert dialog visibility
+  const [categoryToDelete, setCategoryToDelete] = useState<CategoryType | null>(
+    null
+  ); // Category selected for deletion
+  const [searchTerm, setSearchTerm] = useState<string>(""); // For handling search input
+  const [timeoutId, setTimeoutId] = useState<number | undefined>();
 
   const getCategories = () => {
     setLoading(true);
@@ -33,7 +42,7 @@ export default function CategoryPage() {
     return fetch_Api(api_link)
       .then((res) => {
         setCategories(res.data);
-        setFilteredCategories(res.data); // Set filtered categories initially to all
+        setFilteredCategories(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -44,7 +53,7 @@ export default function CategoryPage() {
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [refresh]);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -57,22 +66,54 @@ export default function CategoryPage() {
         );
         setFilteredCategories(filtered);
       } else {
-        setFilteredCategories(categories); // Reset
+        setFilteredCategories(categories); // Reset to original list if no search term
       }
-    }, 2000); // 2second await
+    }, 2000); // Delay for search (2 seconds)
 
     setTimeoutId(newTimeoutId);
   };
 
-  //   const handleSelectCategory = (category: CategoryType) => {
-  //     setSelectedCategory(category); // Select the wrapper category
-  //     const filtered = categories.filter(
-  //       (cat) =>
-  //         cat.id === category.id ||
-  //         (category.children &&
-  //           category.children.some((child) => child.id === cat.id))
-  //     );
-  //     setFilteredCategories(filtered);
+  const handleEditCategory = (category: CategoryType) => {
+    setPopupData(category); // Set selected category data for popup
+    setIsChangeInformation(true); // Trigger popup for editing
+  };
+
+  const handleAddNewCategory = () => {
+    setPopupData(emptydata); // Reset form for adding a new category
+    setIsChangeInformation(true); // Trigger popup
+  };
+
+  const showDeleteDialog = (category: CategoryType) => {
+    setCategoryToDelete(category); // Store the category to be deleted
+    setIsAlertVisible(true); // Show alert dialog
+  };
+
+  //   const handleConfirmDelete = () => {
+  //     if (categoryToDelete) {
+  //       // Simulate API call for deletion
+  //       const api_delete = {
+  //         ...api_links.category.delete(Number(categoryToDelete.id)),
+  //       };
+  //       fetch_Api(api_delete)
+  //         .then(() => {
+  //           setRefresh(!refresh); // Trigger refetch after deletion
+  //           setIsAlertVisible(false); // Close the alert dialog
+  //           setCategoryToDelete(null); // Reset category to delete
+  //           message.success(
+  //             `Category: ${categoryToDelete.name} deleted successfully.`
+  //           );
+  //         })
+  //         .catch((error) => {
+  //           console.log("Failed to delete:", error);
+  //           setIsAlertVisible(false); // Close alert dialog
+  //           setCategoryToDelete(null); // Reset category to delete
+  //         });
+  //     }
+  //   };
+
+  //   const handleCancelDelete = () => {
+  //     setIsAlertVisible(false); // Close the alert dialog without doing anything
+  //     setCategoryToDelete(null); // Reset the category to be deleted
   //   };
 
   const columns = [
@@ -92,94 +133,78 @@ export default function CategoryPage() {
       render: (text: any, record: CategoryType) => (
         <Space size="middle">
           <Button
-            type="primary"
+            size={"middle"}
             icon={<EditOutlined />}
-            onClick={() => handleEditCategory(record.id)}
-          ></Button>
+            onClick={() => handleEditCategory(record)}
+          />
           <Button
-            type="primary"
+            size={"middle"}
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleRemoveCategory(record.id)}
-          ></Button>
+            onClick={() => showDeleteDialog(record)}
+          />
         </Space>
       ),
     },
   ];
 
-  const handleEditCategory = (id: number) => {
-    console.log(`Edit category with id: ${id}`);
-  };
-
-  const handleRemoveCategory = (id: number) => {
-    console.log(`Remove category with id: ${id}`);
-  };
-
-  const handleAddNewCategory = () => {
-    console.log("Add new category");
-  };
-
-  //   const menu = (
-  //     <Menu>
-  //       {categories.map((category) => (
-  //         <Menu.Item
-  //           key={category.id}
-  //           onClick={() => handleSelectCategory(category)}
-  //         >
-  //           {category.name}
-  //         </Menu.Item>
-  //       ))}
-  //     </Menu>
-  //   );
+  if (loading) return <h1>Loading ...</h1>;
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h2>Danh mục hàng hóa</h2>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <CustomButton
-            text="Thêm mới"
-            icon={<AddCircleIcon />}
-            onClick={handleAddNewCategory} // Trigger the add new functionality
-            backgroundColor="#28C2FF"
-            color="#fff"
-          />
-        </div>
-      </div>
-      <div className="category-container">
-        {/* Left Sidebar for Search Filter */}
-        <div className="filter-container">
-          <div className="search-bar">
-            <h3>Tìm kiếm</h3>
-            <Input
-              placeholder="Tìm kiếm danh mục"
-              value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
-              allowClear
+    <React.Fragment>
+      <CategoryInformationPopupScreen
+        isPopup={isChangeInformation}
+        setPopup={setIsChangeInformation}
+        data={popupData} // Pass the category data to the popup
+        type={popupData.id === "0" ? "create" : "edit"} // Check if it's a new category or edit
+        onSave={() => setRefresh(!refresh)} // Trigger refresh after adding/editing a category
+      />
+      {/* <AlertDialog
+        title="Xác nhận xóa"
+        visible={isAlertVisible}
+        onConfirm={handleConfirmDelete} // Proceed with deletion if confirmed
+        onCancel={handleCancelDelete} // Cancel deletion
+        message="Bạn có muốn xóa danh mục này ?"
+      /> */}
+      <div className="dashboard-container">
+        <div className="header">
+          <h2>Danh mục hàng hóa</h2>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+          >
+            <CustomButton
+              text="Thêm mới"
+              icon={<AddCircleIcon />}
+              onClick={handleAddNewCategory} // Trigger the add new functionality
+              backgroundColor="#28C2FF"
+              color="#fff"
             />
           </div>
-          {/* <div className="dropdown-filter">
-                <Dropdown overlay={menu}>
-                  <Button>
-                    {selectedCategory
-                      ? selectedCategory.name
-                      : "Select Category"}{" "}
-                    <DownOutlined />
-                  </Button>
-                </Dropdown>
-              </div> */}
         </div>
-
-        {/* Right Content (Table) */}
-        <div className="content-container">
-          <Table
-            columns={columns}
-            dataSource={filteredCategories}
-            loading={loading}
-            rowKey="id"
-          />
+        <div className="category-container">
+          {/* Left Sidebar for Search */}
+          <div className="filter-container">
+            <div className="search-bar">
+              <h3>Tìm kiếm</h3>
+              <Input
+                placeholder="Tìm kiếm danh mục"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                allowClear
+              />
+            </div>
+          </div>
+          {/* Right Content (Table) */}
+          <div className="content-container">
+            <Table
+              columns={columns}
+              dataSource={filteredCategories}
+              loading={loading}
+              rowKey="id"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

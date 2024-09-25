@@ -14,9 +14,11 @@ namespace APIBackEnd.Mapper
     public class GoodsExportMapper : IGoodsExportMapper
     {
         private readonly IGoodExportDetailMapper _goodExportDetailMapper;
-        public GoodsExportMapper(IGoodExportDetailMapper goodExportDetailMapper) 
+        private readonly ICustomerMapper _customerMapper;
+        public GoodsExportMapper(IGoodExportDetailMapper goodExportDetailMapper, ICustomerMapper customerMapper) 
         {
             _goodExportDetailMapper = goodExportDetailMapper;
+            _customerMapper = customerMapper;
         }
         public GoodsExportModel? ToModel(GoodsExport efObject)
         {
@@ -27,6 +29,7 @@ namespace APIBackEnd.Mapper
             GoodsExportModel modelObject = new GoodsExportModel();
             modelObject.Id = efObject.Id;
             modelObject.CustomerId = efObject.CustomerId;
+            modelObject.Customer = _customerMapper.ToModel(efObject.Customer);
             modelObject.ExportStatus = efObject.ExportStatus;
             modelObject.ExportDate = efObject.ExportDate;
             modelObject.ListGoodExportDetailsModel = _goodExportDetailMapper.ToModels(efObject.ListGoodExportDetails);
@@ -43,6 +46,7 @@ namespace APIBackEnd.Mapper
                 modelObject.CustomerId = item.CustomerId;
                 modelObject.ExportStatus = item.ExportStatus;
                 modelObject.ExportDate = item.ExportDate;
+                modelObject.Customer = _customerMapper.ToModel(item.Customer);
                 modelObject.ListGoodExportDetailsModel = _goodExportDetailMapper.ToModels(item.ListGoodExportDetails);
                 result.Add(modelObject);
             }

@@ -20,15 +20,15 @@ export type LoginState = {
 };
 
 export type UserState = {
-  "id": string | number,
-  "name": string,
-  "username": string,
-  "password": string | null,
-  "branch": string,
-  "address": string,
-  "dateOnboard": string,
-  "age": string | number
-}
+  id: string | number;
+  name: string;
+  username: string;
+  password: string | null;
+  branch: string;
+  address: string;
+  dateOnboard: string;
+  age: string | number;
+};
 /*
 export type UserInformationLoginState = {
   "id": string,
@@ -66,6 +66,10 @@ export type ProductState = {
   description: string;
   status: boolean;
 };
+export type CategoryState = {
+  id: string;
+  name: string;
+};
 
 export type ProductListState = ProductState[];
 
@@ -92,9 +96,8 @@ export type CustomerState = {
 export type CustomerListState = CustomerState[];
 
 
-
 export type CategoryType = {
-  id: number;
+  id: string;
   name: string;
 };
 

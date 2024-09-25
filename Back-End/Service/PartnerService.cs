@@ -32,14 +32,16 @@ namespace APIBackend.Service
             return _partnerRepository.GetById(id);
         }
 
-        public PartnerModel AddNewPartner(PartnerModel PartnerModel)
+        public PartnerModel AddNewPartner(PartnerModel partnerModel)
         {
-            return _partnerRepository.AddNewPartner(PartnerModel);
+            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel);
+            return _partnerRepository.AddNewPartner(partnerModel);
         }
 
-        public PartnerModel UpdatePartner(int id, PartnerModel PartnerModel)
+        public PartnerModel UpdatePartner(int id, PartnerModel partnerModel)
         {
-            return _partnerRepository.UpdatePartner(id, PartnerModel);
+            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel, id: id);
+            return _partnerRepository.UpdatePartner(id, partnerModel);
         }
 
         public List<PartnerModel> GetBySearchName(string query)

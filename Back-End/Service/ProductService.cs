@@ -3,6 +3,7 @@ using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
+using System.Net.Http;
 
 namespace APIBackend.Service
 {
@@ -14,16 +15,15 @@ namespace APIBackend.Service
         public bool DeleteProdcutById(int id);
         public ProductModel UpdateProductById(int id, ProductModel product);
         public List<ProductModel> GetBySearchName(string query);
+        public List<ProductModel> GetByCategoryId(int cateId);
     }
     public class ProductService : IProductService
     {
-        private readonly CoreContext _coreContext;
         private readonly IProductMapper _productMapper;
         private readonly IProductRepository _productRepository;
         private readonly IInventoryRepository _inventoryRepository;
-        public ProductService(CoreContext _context, IProductMapper productMapper, IProductRepository productRepository, IInventoryRepository inventoryRepository)
+        public ProductService(IProductMapper productMapper, IProductRepository productRepository, IInventoryRepository inventoryRepository)
         {
-            _coreContext = _context;
             _productMapper = productMapper;
             _productRepository = productRepository;
             _inventoryRepository = inventoryRepository;
@@ -31,7 +31,7 @@ namespace APIBackend.Service
 
         public List<ProductModel> GetAllProducts()
         {
-            List<ProductModel> result = _productMapper.ToModels(_productRepository.GetAllProducts());
+            List<ProductModel> result = _productRepository.GetAllProducts();
             return result;
         }
 
@@ -46,17 +46,24 @@ namespace APIBackend.Service
 
         public ProductModel UpdateProductById(int id, ProductModel product)
         {
+            Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), product, id: id);
             return _productRepository.UpdateProductById(id, product);
         }
 
         public ProductModel AddNewProduct(ProductModel newProduct)
         {
+            Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), newProduct);
             return _productRepository.AddNewProduct(newProduct);
         }
 
         public List<ProductModel> GetBySearchName(string query)
         {
             return _productRepository.GetBySearchName(query);
+        }
+
+        public List<ProductModel> GetByCategoryId(int cateId)
+        {
+            return _productRepository.GetByCategoryId(cateId);
         }
     }
 }
