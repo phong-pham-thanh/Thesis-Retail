@@ -27,7 +27,7 @@ import CategoryPage from "./pages/manager/category/CategoryPage";
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename="/bkrm">
+      <BrowserRouter basename="/">
         <div className="App">
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -40,9 +40,10 @@ function App() {
               <Route path="/quan-ly/nhap-hang/tao-moi" element={<NewImportGoods />} />
               <Route path="/quan-ly/xuat-hang" element={<ExportTransaction />} />
               <Route path="/quan-ly/xuat-hang/tao-moi" element={<NewExportGoods />} />
-              <Route path="/quan-ly/doitac" element={<Customer />} />
+              <Route path="/quan-ly/khachhang" element={<Customer />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />
+              <Route path="/quan-ly/retail" />
             </Route>
           </Routes>
         </div>

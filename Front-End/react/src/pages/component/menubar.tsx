@@ -85,13 +85,13 @@ export default function NavBar() {
                 {
                     title: 'Kiểm kho',
                     icon: <FactCheckIcon />,
-                    path: 'hanghoa/kiemkho',
+                    path: 'hanghoa',
                     status: location.pathname.includes('kiemkho'),
                 },
                 {
                     title: 'Danh mục',
                     icon: <CategoryIcon />,
-                    path: 'hanghoa/danhmuc',
+                    path: 'danhmuc',
                     status: location.pathname.includes('danhmuc'),
                 },
             ],
@@ -125,7 +125,7 @@ export default function NavBar() {
                 {
                     title: 'Khách hàng',
                     icon: <PeopleIcon />,
-                    path: 'doitac/khachhang',
+                    path: 'khachhang',
                     status: location.pathname.includes('khachhang'),
                 },
                 {
@@ -153,6 +153,13 @@ export default function NavBar() {
             icon: <SummarizeIcon />,
             path: 'baocao',
             status: location.pathname.includes('baocao'),
+        }
+        ,
+        {
+            title: 'Bán hàng',
+            icon: <SummarizeIcon />,
+            path: 'retail',
+            status: location.pathname.includes('retail'),
         }
     ]
 
