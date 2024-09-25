@@ -85,13 +85,13 @@ export default function NavBar() {
                 {
                     title: 'Kiểm kho',
                     icon: <FactCheckIcon />,
-                    path: 'hanghoa/kiemkho',
+                    path: 'hanghoa',
                     status: location.pathname.includes('kiemkho'),
                 },
                 {
                     title: 'Danh mục',
                     icon: <CategoryIcon />,
-                    path: 'hanghoa/danhmuc',
+                    path: 'danhmuc',
                     status: location.pathname.includes('danhmuc'),
                 },
             ],
@@ -106,13 +106,13 @@ export default function NavBar() {
                     title: 'Nhập hàng',
                     icon: <IosShareIcon />,
                     path: 'nhap-hang',
-                    status: location.pathname.includes('nhaphang'),
+                    status: location.pathname.includes('nhap-hang'),
                 },
                 {
                     title: 'Xuất hàng',
                     icon: <IosShareIcon />,
-                    path: 'giaodich/xuathang',
-                    status: location.pathname.includes('xuathang'),
+                    path: 'xuat-hang',
+                    status: location.pathname.includes('xuat-hang'),
                 },
             ],
         },
@@ -125,7 +125,7 @@ export default function NavBar() {
                 {
                     title: 'Khách hàng',
                     icon: <PeopleIcon />,
-                    path: 'doitac/khachhang',
+                    path: 'khachhang',
                     status: location.pathname.includes('khachhang'),
                 },
                 {
@@ -153,6 +153,13 @@ export default function NavBar() {
             icon: <SummarizeIcon />,
             path: 'baocao',
             status: location.pathname.includes('baocao'),
+        }
+        ,
+        {
+            title: 'Bán hàng',
+            icon: <SummarizeIcon />,
+            path: 'retail',
+            status: location.pathname.includes('retail'),
         }
     ]
 
