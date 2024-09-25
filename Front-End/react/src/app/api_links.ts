@@ -38,6 +38,7 @@ const api_links = {
 
     goodsIssue: {
         //GET ALL
+        import:{
         getAll: {
             url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
             method: "GET",
@@ -62,6 +63,33 @@ const api_links = {
             token: "",
             data: {}
         },
+    },
+    export:{
+        getAll: {
+            url: `${authUrl}/GoodExport/GetAllGoodExports`,
+            method: "GET",
+        },
+        //GET BY ID
+        getById: {
+            url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
+            method: "GET",
+        },
+
+        //POST
+        createNew: {
+            url: `${authUrl}/GoodExport/addGoodRecipt`,
+            method: "POST",
+            data: {},
+        },
+
+        ////////////////////// ELSE //////////////////////
+        edit: {
+            url: `${authUrl}api/Product`,
+            method: "PUT",
+            token: "",
+            data: {}
+        },
+    },
     },
 
     category: {

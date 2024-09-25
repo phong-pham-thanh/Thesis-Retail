@@ -125,14 +125,27 @@ export type GoodsReceipt = {
   //parnersId: string;
 };
 
-export type GoodsReceiptDetails =
-  {
-    id?: string;
-    goodsReceiptId: string;
-    productId: string;
-    priceUnit: number;
-    quantity: number;
-  };
+export type ListGoodReciptDetailsModel =
+{
+  id: number,
+  goodReceiptId: number,
+  goodsReceipt: null,
+  productId: number,
+  product: {
+    id: number,
+    name: string,
+    categoryId: number,
+    category: {
+      id: number,
+      name: string
+    },
+    description: string,
+    status: boolean,
+    listInventories: null
+  }|null,
+  priceUnit: number,
+  quantity: number
+};
 
 export type GoodReceiptDataType = GoodImportReceiptDetailDataType;
 /*{
@@ -193,7 +206,7 @@ export type GoodExportReceiptDetailDataType = {
   },
   receiptStatus: number,
   totalAmount: number | null,
-  listGoodReciptDetailsModel: [
+  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[]/*[
     {
       id: number,
       goodReceiptId: number,
@@ -213,5 +226,5 @@ export type GoodExportReceiptDetailDataType = {
       },
       priceUnit: number,
       quantity: number
-    }]
+    }]*/
 }

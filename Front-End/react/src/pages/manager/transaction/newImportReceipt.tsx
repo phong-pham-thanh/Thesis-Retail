@@ -23,7 +23,7 @@ import type { GetProps } from 'antd';
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { CategoryType, GoodsReceipt, GoodsReceiptDetails, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
 //import axios from 'axios';
 
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -44,13 +44,13 @@ interface ExportProductTableState {
 
 interface ExportDataType {
   goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: GoodsReceiptDetails[],
+  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
   idWareHouse: string,
 }
 
 interface ExportDataType {
   goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: GoodsReceiptDetails[],
+  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
   idWareHouse: string,
 }
 
@@ -154,7 +154,7 @@ export default function ImportGoods() {
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
-  const [tempListGoodReceiptDetailModels, setTempList] = useState<GoodsReceiptDetails[]>([]);
+  const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
 
@@ -285,7 +285,7 @@ export default function ImportGoods() {
   }
 
   const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.createNew;
+    const api_post = api_links.goodsIssue.import.createNew;
     api_post.data = postData;
     return fetch_Api(api_post);
   };
@@ -294,10 +294,29 @@ export default function ImportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-        "goodsReceiptId": "",
-        "productId": item.productId,
+       /* "goodsReceiptId": "",
+        "productId": Number(item.productId),
         "priceUnit": item.priceUnit,
-        "quantity": item.quantity
+        "quantity": item.quantity,*/
+          id: 0,
+          goodReceiptId: 0,
+          goodsReceipt: null,
+          productId: Number(item.productId),
+          product: null,
+          /*{
+            id: Number(item.productId),
+            name: "",
+            categoryId: 0,
+            category: {
+              id: 0,
+              name: ""
+            },
+            description: "",
+            status: 0,
+            listInventories: null
+          },*/
+          priceUnit: item.priceUnit,
+          quantity: item.quantity
       })
     })
     const event = new Date();

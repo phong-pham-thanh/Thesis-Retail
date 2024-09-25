@@ -37,7 +37,7 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodsReceiptDetails, GoodImportReceiptDetailDataType } from "../../../app/type.d";
+import { GoodReceiptDataType, GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 
@@ -96,7 +96,6 @@ export default function ImportTransaction() {
   const [showModal, setShowModal] = useState<string>();
 
   //call api set data products on modal
-  const [listProduct, setListProduct] = useState<GoodsReceiptDetails[]>();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -112,12 +111,12 @@ export default function ImportTransaction() {
   }, [page]);
 
   const getAllGoodReceipt = () => {
-    const api_link = api_links.goodsIssue.getAll;
+    const api_link = api_links.goodsIssue.import.getAll;
     return fetch_Api(api_link);
   };
 
   const getGoodReceiptByID = (ID:string) => {
-    const api_link = api_links.goodsIssue.getById;
+    const api_link = api_links.goodsIssue.import.getById;
     const words1 = api_link.url.split('/');
 words1.pop();words1.push(ID);
 const strCopy1 = words1.join('/');
@@ -332,7 +331,6 @@ const handleEdit =(ID:string)=>{
                           setShowModal("edit");
                           form.setFieldsValue(tran);
                           
-                          setListProduct(form.getFieldValue("listGoodReciptDetailsModel"))
                         }}
                       >
                         Sửa

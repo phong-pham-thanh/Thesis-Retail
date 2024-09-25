@@ -22,7 +22,7 @@ import type { ColumnsType } from "antd/es/table";
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { GoodsReceipt, GoodsReceiptDetails, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
+import { GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
 //import axios from 'axios';
 
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -41,13 +41,13 @@ interface ExportProductTableState {
 
 interface ExportDataType {
   goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: GoodsReceiptDetails[],
+  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
   idWareHouse: string,
 }
 
 interface ExportDataType {
   goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: GoodsReceiptDetails[],
+  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
   idWareHouse: string,
 }
 
@@ -155,7 +155,7 @@ export default function ExportGoods() {
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
-  const [tempListGoodReceiptDetailModels, setTempList] = useState<GoodsReceiptDetails[]>([]);
+  const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
@@ -270,7 +270,7 @@ export default function ExportGoods() {
   }
 
   const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.createNew;
+    const api_post = api_links.goodsIssue.export.createNew;
     api_post.data = postData;
     return fetch_Api(api_post);
   };
@@ -279,10 +279,13 @@ export default function ExportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-        "goodsReceiptId": "",
-        "productId": item.productId,
-        "priceUnit": item.priceUnit,
-        "quantity": item.quantity
+        id: 0,
+        goodReceiptId: 0,
+        goodsReceipt: null,
+        productId: Number(item.productId),
+        product: null,
+        priceUnit: item.priceUnit,
+        quantity: item.quantity
       })
     })
     const event = new Date();

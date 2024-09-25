@@ -37,16 +37,16 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodsReceiptDetails, GoodImportReceiptDetailDataType } from "../../../app/type.d";
+import {  ListGoodReciptDetailsModel, GoodExportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 
-const emptydata:GoodImportReceiptDetailDataType={
+const emptydata:GoodExportReceiptDetailDataType={
   "id": 0,
-  "importDate": "01/01/1970",
+  "exportDate": "01/01/1970",
   "totalAmount": 0,
-  "partnerID": 0,
-  "partner": {
+  "customerID": 0,
+  "customer": {
     "id": 0,
     "name": "",
     "totalSale": 0
@@ -78,8 +78,8 @@ const emptydata:GoodImportReceiptDetailDataType={
 export default function ExportTransaction() {
   
   //useSelector, useNavigate
-  const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
-  const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
+  const [exportReceiptData, setExportReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
+  const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -91,17 +91,17 @@ export default function ExportTransaction() {
   const size = 7;
 
   const [IDChoose, setIDChoose] = useState<string>();
-  const [dataChoose, setDataChoose] = useState<GoodReceiptDataType>();
+  const [dataChoose, setDataChoose] = useState<GoodExportReceiptDetailDataType>();
   const [showModal, setShowModal] = useState<string>();
 
   //call api set data products on modal
-  const [listProduct, setListProduct] = useState<GoodsReceiptDetails[]>();
+  const [listProduct, setListProduct] = useState<ListGoodReciptDetailsModel[]>();
   const [form] = Form.useForm();
 
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        setImportReciptData(res.data);
+        setExportReciptData(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -111,12 +111,12 @@ export default function ExportTransaction() {
   }, [page]);
 
   const getAllGoodReceipt = () => {
-    const api_link = api_links.goodsIssue.getAll;
+    const api_link = api_links.goodsIssue.export.getAll;
     return fetch_Api(api_link);
   };
 
   const getGoodReceiptByID = (ID:string) => {
-    const api_link = api_links.goodsIssue.getById;
+    const api_link = api_links.goodsIssue.export.getById;
     const words1 = api_link.url.split('/');
 words1.pop();words1.push(ID);
 const strCopy1 = words1.join('/');
@@ -157,8 +157,8 @@ const strCopy1 = words1.join('/');
     return (<div>{timeString}<br/>{formattedDate}</div>);
   }
 
-const handleEdit =(ID:string)=>{
-  getGoodReceiptByID(ID)
+const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
+  /*getGoodReceiptByID(ID)
       .then((res) => {
         setGoodReciptData(res.data);
         console.log(res.data);
@@ -166,8 +166,8 @@ const handleEdit =(ID:string)=>{
       .catch((error) => {
         setGoodReciptData(emptydata);
         console.log(error);
-      });
-
+      });*/
+      setGoodReciptData(p);
     setShowModal("edit");
 }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -187,7 +187,7 @@ const handleEdit =(ID:string)=>{
 
 
  //////////// EDIT MODAL//////////
-  const ImportReceiptDetail=(ID: string, isShowModal?: boolean, setIsShowModal?: any)=>{
+  const ExportReceiptDetail=(ID: string, isShowModal?: boolean, setIsShowModal?: any)=>{
   return (
     <div className="product-container">
       <Modal
@@ -217,7 +217,7 @@ const handleEdit =(ID:string)=>{
                 {goodReceiptData.id}
               </Form.Item>
               <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
-                {proccessDate(goodReceiptData.importDate)}
+                {proccessDate(goodReceiptData.exportDate)}
               </Form.Item>
               <Form.Item
                 className="trans"
@@ -225,7 +225,7 @@ const handleEdit =(ID:string)=>{
                 name={"trans"}
                 rules={[{ required: true }]}
               >
-                {goodReceiptData.partner.name}
+                {goodReceiptData.customerID}
               </Form.Item>
               <Form.Item
                 className="status"
@@ -267,7 +267,7 @@ const handleEdit =(ID:string)=>{
 
   return (
     <React.Fragment>
-    {ImportReceiptDetail(
+    {ExportReceiptDetail(
         IDChoose,
         goodReceiptData && showModal==="edit")}
       <div className="product-container">
@@ -304,9 +304,9 @@ const handleEdit =(ID:string)=>{
             <th className="table-header-action"></th>
           </thead>
           <tbody className="table-body">
-            {importReceiptData &&
-              importReceiptData.length > 0 &&
-              importReceiptData.map((tran) => (
+            {exportReceiptData &&
+              exportReceiptData.length > 0 &&
+              exportReceiptData.map((tran) => (
                 <tr
                   key={Number(tran.id)}
                   onClick={() => {
@@ -317,8 +317,8 @@ const handleEdit =(ID:string)=>{
                     }`}
                 >
                   <td className="table-body-code">{tran.id}</td>
-                  <td className="table-body-time">{proccessDate(tran.importDate.toLocaleString())}</td>
-                  <td className="table-body-trans">{tran.partner.name}</td>
+                  <td className="table-body-time">{proccessDate(tran.exportDate.toLocaleString())}</td>
+                  <td className="table-body-trans">{tran.customerID}</td>
                   <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                   <td className="table-body-status">{proccessStatus(tran.receiptStatus)}</td>
                   {dataChoose?.id === tran.id && (
@@ -327,7 +327,7 @@ const handleEdit =(ID:string)=>{
                         icon={<EditOutlined />}
                         className="edit-button"
                         onClick={() => {
-                          handleEdit(String(tran.id));
+                          handleEdit(String(tran.id),tran);
                           setShowModal("edit");
                           form.setFieldsValue(tran);
                           

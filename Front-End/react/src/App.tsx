@@ -11,6 +11,7 @@ import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
 import NewImportGoods from "./pages/manager/transaction/newImportReceipt";
+import NewExportGoods from "./pages/manager/transaction/newExportReceipt";
 import Employee from "./pages/manager/employee/Employee";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import ImportTransaction from "./pages/manager/transaction/ImportTransaction";
@@ -37,10 +38,8 @@ function App() {
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
               <Route path="/quan-ly/nhap-hang" element={<ImportTransaction />} />
               <Route path="/quan-ly/nhap-hang/tao-moi" element={<NewImportGoods />} />
-              <Route
-                path="/quan-ly/giaodich/xuat"
-                element={<ExportTransaction />}
-              />
+              <Route path="/quan-ly/xuat-hang" element={<ExportTransaction />} />
+              <Route path="/quan-ly/xuat-hang/tao-moi" element={<NewExportGoods />} />
               <Route path="/quan-ly/doitac" element={<Customer />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />

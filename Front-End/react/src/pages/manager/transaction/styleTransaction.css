@@ -78,7 +78,7 @@ opacity: 0.5;
     align-items: left;
     text-align: left;
     flex-direction: column;
-    /*gap: 15px;*/
+    gap: 15px;
 }
 
 .product-list{
