@@ -10,11 +10,12 @@ import {
 import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
-import ExportGoods from "./pages/manager/product/ExportGoods";
+import NewImportGoods from "./pages/manager/transaction/newImportReceipt";
+import NewExportGoods from "./pages/manager/transaction/newExportReceipt";
 import Employee from "./pages/manager/employee/Employee";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
-import Transaction from "./pages/manager/transaction/Transaction";
-import TransactionOut from "./pages/manager/transaction/TransactionOut";
+import ImportTransaction from "./pages/manager/transaction/ImportTransaction";
+import ExportTransaction from "./pages/manager/transaction/ExportTransaction";
 import Supplier from "./pages/manager/supplier/Supplier";
 import Customer from "./pages/manager/customer/Customer";
 import Promotion from "./pages/manager/promotion/Promotion";
@@ -34,13 +35,11 @@ function App() {
             <Route path="/quan-ly" element={<Manager />}>
               <Route path="/quan-ly/hanghoa" element={<Product />} />
               <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
-              <Route path="/quan-ly/nhap-hang" element={<ExportGoods />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
-              <Route path="/quan-ly/nhap" element={<Transaction />} />
-              <Route
-                path="/quan-ly/giaodich/xuat"
-                element={<TransactionOut />}
-              />
+              <Route path="/quan-ly/nhap-hang" element={<ImportTransaction />} />
+              <Route path="/quan-ly/nhap-hang/tao-moi" element={<NewImportGoods />} />
+              <Route path="/quan-ly/xuat-hang" element={<ExportTransaction />} />
+              <Route path="/quan-ly/xuat-hang/tao-moi" element={<NewExportGoods />} />
               <Route path="/quan-ly/doitac" element={<Customer />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />

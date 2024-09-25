@@ -7,7 +7,33 @@ const api_links = {
       url: `${authUrl}/Product`,
       method: "GET",
     },
+/*
+    goodsIssue: {
+        //GET ALL
+        getAll: {
+            url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
+            method: "GET",
+        },
+        //GET BY ID
+        getById: {
+            url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
+            method: "GET",
+        },
 
+        //POST
+        createNew: {
+            url: `${authUrl}/GoodRecipt/addGoodRecipt`,
+            method: "POST",
+            data: {},
+        },
+
+        ////////////////////// ELSE //////////////////////
+        edit: {
+            url: `${authUrl}api/Product`,
+            method: "PUT",
+            token: "",
+            data: {}
+        },*/
     // GET PRODUCT BY ID
     getById: (productId: number) => ({
       url: `${authUrl}/Product/getProductById/${productId}`,
@@ -36,22 +62,51 @@ const api_links = {
   },
 
   goodsIssue: {
-    //GET ALL
-    getAll: {
-      url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
-      method: "GET",
-    },
-    //GET BY ID
-    getById: {
-      url: `${authUrl}/GoodRecipt`,
-      method: "GET",
-    },
 
-    //POST
-    createNew: {
-      url: `${authUrl}/GoodRecipt/addGoodRecipt`,
-      method: "POST",
-      data: {},
+    import: {
+      //GET ALL
+      getAll: {
+        url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
+        method: "GET",
+      },
+      //GET BY ID
+      getById: {
+        url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
+        method: "GET",
+      },
+
+      //POST
+      createNew: {
+        url: `${authUrl}/GoodRecipt/addGoodRecipt`,
+        method: "POST",
+        data: {},
+      },
+    },
+    export: {
+      getAll: {
+        url: `${authUrl}/GoodExport/GetAllGoodExports`,
+        method: "GET",
+      },
+      //GET BY ID
+      getById: {
+        url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
+        method: "GET",
+      },
+
+      //POST
+      createNew: {
+        url: `${authUrl}/GoodExport/addGoodRecipt`,
+        method: "POST",
+        data: {},
+      },
+
+      ////////////////////// ELSE //////////////////////
+      edit: {
+        url: `${authUrl}api/Product`,
+        method: "PUT",
+        token: "",
+        data: {}
+      },
     },
 
     ////////////////////// ELSE //////////////////////
