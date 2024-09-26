@@ -20,7 +20,7 @@ const layoutEngine = constructLayoutEngine({ routes, applications });
 registerApplication({
   name: '@test/angular',
   app: () => System.import<LifeCycles>('@test/angular'),
-  activeWhen: ['/quan-ly/retail'],
+  activeWhen: ['/'],
 });
 
 registerApplication({
