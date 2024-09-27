@@ -448,7 +448,7 @@ export default function ImportGoods() {
           </div>
         </div>
 
-        <div className='product-list'>
+        <div className='newtransaction-product-table'>
         <Row>
             <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
               <Select

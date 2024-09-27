@@ -89,7 +89,7 @@ const api_links = {
       },
       //GET BY ID
       getById: {
-        url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
+        url: `${authUrl}/GoodExport/getGoodExportById/`,
         method: "GET",
       },
 

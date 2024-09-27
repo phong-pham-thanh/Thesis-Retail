@@ -207,9 +207,9 @@ export type GoodExportReceiptDetailDataType = {
     name: string,
     totalSale: number
   },
-  receiptStatus: number,
+  exportStatus: number,
   totalAmount: number | null,
-  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[]/*[
+  listGoodExportDetailsModel: ListGoodReciptDetailsModel[]/*[
     {
       id: number,
       goodReceiptId: number,

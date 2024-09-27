@@ -81,11 +81,12 @@ opacity: 0.5;
     gap: 15px;
 }
 
-.product-list{
-    width:50%;
-    /*display: flex;*/
+.newtransaction-product-table{
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    gap: 20px;
+
 }
 
 .export-list{

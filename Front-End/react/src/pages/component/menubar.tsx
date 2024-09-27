@@ -100,7 +100,7 @@ export default function NavBar() {
             title: 'Giao dịch',
             icon: <ReceiptLongIcon />,
             path: 'giaodich',
-            status: location.pathname.includes('giaodich'),
+            status: location.pathname.includes('xuat-hang')||location.pathname.includes('nhap-hang'),
             subNav: [
                 {
                     title: 'Nhập hàng',
@@ -176,6 +176,7 @@ export default function NavBar() {
                             {item.subNav?.map((subItem) => (
                                 <div className={subItem.status ? 'navbar__submenuitem_active' : 'navbar__submenuitem'}
                                     onClick={() => {
+                                        setNameShowSubmenubar("");
                                         navigate(subItem.path)
                                     }}>
                                     {subItem.icon} {subItem.title}

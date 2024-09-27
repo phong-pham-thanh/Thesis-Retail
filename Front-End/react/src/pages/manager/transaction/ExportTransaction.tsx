@@ -51,8 +51,8 @@ const emptydata:GoodExportReceiptDetailDataType={
     "name": "",
     "totalSale": 0
   },
-  "receiptStatus": 0,
-  "listGoodReciptDetailsModel": [
+  "exportStatus": 0,
+  "listGoodExportDetailsModel": [
     {
       "id": 0,
       "goodReceiptId": 0,
@@ -76,6 +76,7 @@ const emptydata:GoodExportReceiptDetailDataType={
   }
 
 export default function ExportTransaction() {
+  const navigate = useNavigate();
   
   //useSelector, useNavigate
   const [exportReceiptData, setExportReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
@@ -86,7 +87,7 @@ export default function ExportTransaction() {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
-  //call api set data nhập kho
+  //call api set data xuất kho
   const [page, setPage] = useState<number>(1);
   const size = 7;
 
@@ -121,6 +122,7 @@ export default function ExportTransaction() {
 words1.pop();words1.push(ID);
 const strCopy1 = words1.join('/');
     api_link.url=strCopy1;
+    console.log(api_link);
     return fetch_Api(api_link);
   };
 
@@ -157,8 +159,8 @@ const strCopy1 = words1.join('/');
     return (<div>{timeString}<br/>{formattedDate}</div>);
   }
 
-const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
-  /*getGoodReceiptByID(ID)
+const handleEdit =(ID:string)=>{
+  getGoodReceiptByID(ID)
       .then((res) => {
         setGoodReciptData(res.data);
         console.log(res.data);
@@ -166,8 +168,7 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
       .catch((error) => {
         setGoodReciptData(emptydata);
         console.log(error);
-      });*/
-      setGoodReciptData(p);
+      });
     setShowModal("edit");
 }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -191,7 +192,7 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
   return (
     <div className="product-container">
       <Modal
-        title={`Phiếu nhập kho${" - " + goodReceiptData.id}`}
+        title={`Phiếu xuất kho${" - " + goodReceiptData.id}`}
         open={isShowModal}
         onOk={() => setShowModal(undefined)}
         onCancel={() => {
@@ -207,37 +208,37 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
       >
         <div className="modal-header">
           <div className="modal-info">Thông tin</div>
-          {/*<div className="modal-desc">Nhập đến kho hiện tại</div>*/}
+          {/*<div className="modal-desc">xuất đến kho hiện tại</div>*/}
         </div>
         <hr className="modal-line" />
         <div className="modal-content">
           <div className="modal-box">
             <Form form={form} onFinish={onFinish}>
-              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
+              <Form.Item className="code" label={"Mã xuất kho"} name={"code"}>
                 {goodReceiptData.id}
               </Form.Item>
-              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
+              <Form.Item className="time" label={"Ngày xuất"} name={"time"}>
                 {proccessDate(goodReceiptData.exportDate)}
               </Form.Item>
               <Form.Item
                 className="trans"
-                label={"Nhà cung cấp"}
+                label={"Khách hàng"}
                 name={"trans"}
                 rules={[{ required: true }]}
               >
-                {goodReceiptData.customerID}
+                {goodReceiptData.customer.name}
               </Form.Item>
               <Form.Item
                 className="status"
                 label={"Trạng thái"}
                 name={"status"}
               >
-                {proccessStatus(goodReceiptData.receiptStatus)}
+                {proccessStatus(goodReceiptData.exportStatus)}
               </Form.Item>
             </Form>
           </div>
           <div className="modal-products">
-          <h4>Tổng cộng: {goodReceiptData.totalAmount.toLocaleString()}</h4>
+          <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
             <table>
               <thead>
                 <th className="code">Tên sản phẩm</th>
@@ -245,13 +246,13 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
                 <th className="name">Đơn giá</th>
               </thead>
               <tbody>
-                {goodReceiptData.listGoodReciptDetailsModel &&
-                  goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
-                  goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
+                {goodReceiptData.listGoodExportDetailsModel &&
+                  goodReceiptData.listGoodExportDetailsModel.length > 0 &&
+                  goodReceiptData.listGoodExportDetailsModel.map((product, index) => (
                     <tr key={index}>
                       <td className="name">{product.product.name?product.product.name:""}</td>
                       <td className="quantity">{product.quantity}</td>
-                      <td className="priceUnit">{product.priceUnit.toLocaleString()}</td>
+                      <td className="priceUnit">{product.priceUnit?.toLocaleString()}</td>
                     </tr>
                   ))}
               </tbody>
@@ -273,9 +274,9 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
       <div className="product-container">
       
       <div className="filterField">
-        <div className="title">Phiếu nhập kho</div>
+        <div className="title">Phiếu xuất kho</div>
       </div>
-      <div className="product-list transaction-list">
+      <div className="transaction-list">
         <div className="header-action">
           <Button icon={<EditOutlined />} className="custom-button">
             Điều chỉnh
@@ -283,8 +284,8 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
           <Button
             icon={<PlusCircleOutlined />}
             className="custom-button"
-            onClick={() => setShowModal("create")}
-          >
+            onClick={() => //setShowModal("create")
+              navigate("tao-moi")}          >
             Thêm mới
           </Button>
           <Button icon={<DownloadOutlined />} className="custom-button">
@@ -296,9 +297,9 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
         </div>
         <table className="table">
           <thead className="table-header">
-            <th className="table-header-code">Mã nhập hàng</th>
+            <th className="table-header-code">Mã xuất hàng</th>
             <th className="table-header-time">Thời gian</th>
-            <th className="table-header-trans">Nhà cung cấp</th>
+            <th className="table-header-trans">Khách hàng</th>
             <th className="table-header-total">Tổng tiền</th>
             <th className="table-header-status">Trạng thái</th>
             <th className="table-header-action"></th>
@@ -318,16 +319,16 @@ const handleEdit =(ID:string,p:GoodExportReceiptDetailDataType)=>{
                 >
                   <td className="table-body-code">{tran.id}</td>
                   <td className="table-body-time">{proccessDate(tran.exportDate.toLocaleString())}</td>
-                  <td className="table-body-trans">{tran.customerID}</td>
+                  <td className="table-body-trans">{tran.customer.name}</td>
                   <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
-                  <td className="table-body-status">{proccessStatus(tran.receiptStatus)}</td>
+                  <td className="table-body-status">{proccessStatus(tran.exportStatus)}</td>
                   {dataChoose?.id === tran.id && (
                     <td className="table-body-action">
                       <Button
                         icon={<EditOutlined />}
                         className="edit-button"
                         onClick={() => {
-                          handleEdit(String(tran.id),tran);
+                          handleEdit(String(tran.id));
                           setShowModal("edit");
                           form.setFieldsValue(tran);
                           

@@ -17,18 +17,21 @@ import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 import EditIcon from "@mui/icons-material/Edit";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Button, DatePicker, Form, Input, InputNumber, message, Select, Space, Table } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import type { GetProps } from 'antd';
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
 //import axios from 'axios';
 
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import Search from "antd/lib/input/Search";
 
 const Option = Select.Option;
+type SearchProps = GetProps<typeof Input.Search>;
 
 interface ExportProductTableState {
   //"goodsReceiptId": "0",
@@ -51,19 +54,14 @@ interface ExportDataType {
   idWareHouse: string,
 }
 
-/*
-const data: DataType[] = [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    Id: String(i),
-    name: "Sản phẩm "+i,
-    giavon: '100.000',
-    giaban: '500.000',
-    slnhap: 50,
-    tonkho: 20,
-  });
-}*/
+const gridStyle: React.CSSProperties = {
+  width: '24%',
+  textAlign: 'center',
+  backgroundColor: 'aquamarine',
+  padding: '15px',
+  borderRadius: '5px',
+  margin: '2px',
+};
 
 export default function ExportGoods() {
 
@@ -151,12 +149,14 @@ export default function ExportGoods() {
   ];
 
   const [form] = Form.useForm();
-  const [allProducts, setProducts] = useState([]);
+  const [allProducts, setProducts] = useState<ProductState[]>([]);
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
+  const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
+  const [totalQty, setTotalQty] = useState(0);
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
@@ -177,6 +177,13 @@ export default function ExportGoods() {
     getAllWarehouse()
       .then((res) => {
         setAllWarehouses(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    getAllCategory()
+      .then((res) => {
+        setAllCategory(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -212,6 +219,10 @@ export default function ExportGoods() {
   };
   const getAllWarehouse = () => {
     const api_link = api_links.warehouse.getAll;
+    return fetch_Api(api_link);
+  };
+  const getAllCategory = () => {
+    const api_link = api_links.category.getAll;
     return fetch_Api(api_link);
   };
 
@@ -263,10 +274,14 @@ export default function ExportGoods() {
   }
 
   const updateTotal = () => {
-    let sum=0;        
-    exportTableData.map((d) => 
-      sum=sum+d.subTotal)
-    setTotal(sum);
+    let sumT = 0;
+    let sumQ = 0;
+    exportTableData.map((d) => {
+      sumT = sumT + d.subTotal;
+      sumQ = sumQ + d.quantity;
+    })
+    setTotal(sumT);
+    setTotalQty(sumQ);
   }
 
   const postGoodsIssue = (postData: ExportDataType) => {
@@ -279,13 +294,29 @@ export default function ExportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-        id: 0,
-        goodReceiptId: 0,
-        goodsReceipt: null,
-        productId: Number(item.productId),
-        product: null,
-        priceUnit: item.priceUnit,
-        quantity: item.quantity
+       /* "goodsReceiptId": "",
+        "productId": Number(item.productId),
+        "priceUnit": item.priceUnit,
+        "quantity": item.quantity,*/
+          id: 0,
+          goodReceiptId: 0,
+          goodsReceipt: null,
+          productId: Number(item.productId),
+          product: null,
+          /*{
+            id: Number(item.productId),
+            name: "",
+            categoryId: 0,
+            category: {
+              id: 0,
+              name: ""
+            },
+            description: "",
+            status: 0,
+            listInventories: null
+          },*/
+          priceUnit: item.priceUnit,
+          quantity: item.quantity
       })
     })
     const event = new Date();
@@ -308,100 +339,146 @@ export default function ExportGoods() {
 
   };
 
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
   return (
     <div className="dashboard-container">
 
       <div className="product-container">
-        <div className="filterField">
+        <div className="receipt-container">
+          Đơn nhập hàng
           <Form form={form}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            //labelCol={{ span: 8 }}
+            wrapperCol={{ span: 20 }}
             onFinish={onFinish}
           >
-
-            <Form.Item
-              className="idWareHouse"
-              label={"Nhập đến kho"}
-              name={"idWareHouse"}
-              rules={[{
-                required: true,
-                message: 'Không để trống',
-              }]}
-            >
-              <Select
-                showSearch
-                placeholder="Chọn kho"
-                optionFilterProp="label"
+            <Space size={"large"} ><Row>
+              <Col span={8}>
+                <Form.Item
+                  className="idWareHouse"
+                  label={"Nhập đến kho"}
+                  name={"idWareHouse"}
+                  layout="vertical"
+                  rules={[{
+                    required: true,
+                    message: 'Không để trống',
+                  }]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Chọn kho"
+                    optionFilterProp="label"
+                  >
+                    {allWarehouses?.map((d) => {
+                      return (
+                        <Option value={d.id}>{d.address}</Option>
+                      )
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col><Col span={8}>
+                <Form.Item
+                  className="exportDate"
+                  label={"Ngày nhập"}
+                  name={"exportDate"}
+                  layout="vertical"
+                  rules={[{
+                    required: true,
+                    message: 'Không để trống',
+                  }]}
+                >
+                  <DatePicker
+                    showTime
+                    disabledDate={(current) => { return current.valueOf() > Date.now() }}
+                  />
+                </Form.Item >
+              </Col><Col span={8}><Form.Item
+                className="partnerId"
+                label={"Nhà cung cấp"}
+                name={"partnerId"}
+                layout="vertical"
+                rules={[{
+                  required: true,
+                  message: 'Không để trống',
+                }]}
               >
-                {allWarehouses?.map((d) => {
-                  return (
-                    <Option value={d.id}>{d.address}</Option>
-                  )
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              className="exportDate"
-              label={"Ngày nhập"}
-              name={"exportDate"}
-              rules={[{
-                required: true,
-                message: 'Không để trống',
-              }]}
-            >
-              <DatePicker
-                showTime
-                disabledDate={(current) => { return current.valueOf() > Date.now() }}
-              />
-            </Form.Item >
-            <Form.Item
-              className="partnerId"
-              label={"Nhà cung cấp"}
-              name={"partnerId"}
-              rules={[{
-                required: true,
-                message: 'Không để trống',
-              }]}
-            >
+                <Select
+                  showSearch
+                  placeholder="Chọn nhà cung cấp"
+                  optionFilterProp="label"
+                >
+                  {allPartners?.map((d) => {
+                    return (
+                      <Option value={d.id}>{d.name}</Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              </Col></Row>
+              <Row>
+                <Button type='primary' onClick={() => {
+                  onFinish();//postGoodsIssue()
+                }}
+                  style={{ backgroundColor: "#465d65" }}>
+                  Thêm mới</Button>
+              </Row></Space>
+          </Form>
+
+
+
+          <div className='export-list'>
+           
+            <Table
+              columns={exportColumns}
+              dataSource={[...exportTableData]}
+              sticky={true}
+              summary={() => (
+                <Table.Summary fixed>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}><h4>Tổng cộng:</h4></Table.Summary.Cell>
+                    <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={3}></Table.Summary.Cell>
+                    <Table.Summary.Cell index={4}>{totalQty}</Table.Summary.Cell>
+                    <Table.Summary.Cell index={5}>{total.toLocaleString()}</Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              )} />
+
+          </div>
+        </div>
+
+        <div className='newtransaction-product-table'>
+        <Row>
+            <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
               <Select
                 showSearch
                 placeholder="Chọn nhà cung cấp"
                 optionFilterProp="label"
               >
-                {allPartners?.map((d) => {
-                  return (
-                    <Option value={d.id}>{d.name}</Option>
-                  )
-                })}
-              </Select>
-            </Form.Item>
-
-            <Button type='primary' onClick={() => {
-              onFinish();//postGoodsIssue()
-            }}
-              style={{ backgroundColor: "#465d65" }}>
-              Thêm mới</Button>
-          </Form>
-          <h4>Tổng cộng: {total.toLocaleString()}</h4>
-        </div>
-
-        <div className='filterField'>
-
-          <Table
+                <Option value={0}>Tất cả</Option>
+                {allCategory?.map((d) => {
+                return (
+                  <Option value={d.id}>{d.name}</Option>
+                )
+              })}</Select>
+            </Row>
+          {/*<Table
             columns={productColumns}
-            dataSource={allProducts}
-          /*onRow={(record) => ({
+            /*dataSource={allProducts}
+          onRow={(record) => ({
             onClick: () => handleTableRowClick(record.id),
-          })}*/
-          />
+          })}*\/
+          />*/}
+          <Card className="product-table" title="All">
+            {allProducts?.map((p) =>
+              <Card.Grid className="product-cell" style={gridStyle}
+                onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+          </Card>
         </div>
 
-        <div className='export-list'>
-          Đơn nhập hàng
-          <Table columns={exportColumns} dataSource={[...exportTableData]} />
 
-        </div>
       </div>
-    </div>
+    </div >
   );
 }
