@@ -2,6 +2,7 @@
 using APIBackend.Mapper;
 using APIBackend.Models;
 using APIBackEnd.Data;
+using APIBackEnd.Data.Enum;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace APIBackend.Repository
         public GoodsExport AddGoodExport(GoodsExport goodsExport);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
+        public GoodsExportModel AcceptGoodExport(int id);
     }
     public class GoodExportRepository : IGoodExportRepository
     {
@@ -51,5 +53,20 @@ namespace APIBackend.Repository
                                             .Include(go => go.ListGoodExportDetails).ToList();
             return _goodExportMapper.ToModels(listGoodExports);
         }
+
+        public GoodsExportModel AcceptGoodExport(int id)
+        {
+            GoodsExport efObject = _coreContext.GoodsExports.Where(x => x.Id == id).Include(x => x.ListGoodExportDetails).FirstOrDefault();
+
+            if(efObject == null)
+            {
+                throw new ArgumentException("Good Export not found");
+            }
+            efObject.ExportStatus = Status.Success;
+            _coreContext.SaveChanges();
+
+            return _goodExportMapper.ToModel(efObject);
+        }
+
     }
 }

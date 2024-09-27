@@ -4,6 +4,7 @@ using APIBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    partial class CoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240927011331_AddColumnWareHouseId")]
+    partial class AddColumnWareHouseId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,8 +104,6 @@ namespace APIBackEnd.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PartnerId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("GoodsReceipt");
                 });
@@ -267,8 +267,6 @@ namespace APIBackEnd.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("WareHouseId");
-
                     b.ToTable("GoodsExports");
                 });
 
@@ -330,15 +328,7 @@ namespace APIBackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
-                        .WithMany("GoodsReceipts")
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Partner");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("APIBackEnd.Data.Product", b =>
@@ -398,15 +388,7 @@ namespace APIBackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
-                        .WithMany("GoodsExports")
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
@@ -461,10 +443,6 @@ namespace APIBackEnd.Migrations
 
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
-                    b.Navigation("GoodsExports");
-
-                    b.Navigation("GoodsReceipts");
-
                     b.Navigation("Inventories");
                 });
 #pragma warning restore 612, 618
