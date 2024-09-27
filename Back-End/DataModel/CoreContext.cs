@@ -21,6 +21,7 @@ namespace APIBackEnd.Data
         public DbSet<Customers> Customers { get; set; }
         public DbSet<GoodsExport> GoodsExports { get; set; }
         public DbSet<GoodExportDetails> GoodExportDetails { get; set; }
+        public DbSet<PriceProduct> PriceProduct { get; set; }
     }
 }
 

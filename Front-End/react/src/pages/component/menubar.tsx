@@ -161,6 +161,13 @@ export default function NavBar() {
             path: 'retail',
             status: location.pathname.includes('retail'),
         }
+        ,
+        {
+            title: 'Quản lý giá',
+            icon: <SummarizeIcon />,
+            path: 'price-management',
+            status: location.pathname.includes('price-management'),
+        }
     ]
 
     const [nameShowSubmenubar, setNameShowSubmenubar] = useState("");

@@ -44,6 +44,7 @@ builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
 builder.Services.AddScoped<IGoodExportRepository, GoodExportRepository>();
 builder.Services.AddScoped<IGoodExportDetailRepository, GoodExportDetailRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IPriceProductRepository, PriceProductRepository>();
 
 // Mapper
 builder.Services.AddScoped<IUserMapper, UserMapper>();
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IInventoryMapper, InventoryMapper>();
 builder.Services.AddScoped<IGoodExportDetailMapper, GoodExportDetailMapper>();
 builder.Services.AddScoped<IGoodsExportMapper, GoodsExportMapper>();
 builder.Services.AddScoped<ICustomerMapper, CustomerMapper>();
+builder.Services.AddScoped<IPriceProductMapper, PriceProductMapper>();
 
 // Service
 builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
@@ -67,6 +69,7 @@ builder.Services.AddScoped<IWareHouseService, WareHouseService>();
 builder.Services.AddScoped<IPartnerService, PartnerService>();
 builder.Services.AddScoped<IGoodExportService, GoodExportService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IPriceProductService, PriceProductService>();
 
 var app = builder.Build();
 

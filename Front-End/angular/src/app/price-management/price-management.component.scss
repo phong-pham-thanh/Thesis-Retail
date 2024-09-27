@@ -1,0 +1,38 @@
+.table-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  table {
+    width: 100%;
+    margin-bottom: 16px;
+    /* Ghi đè style cho các ô dữ liệu */
+    ::ng-deep .mat-cell {
+      text-align: center !important;  /* Căn giữa văn bản trong các ô dữ liệu */
+    }
+  }
+
+  /* Căn chỉnh cho paginator */
+  mat-paginator {
+    align-self: flex-end;
+  }
+
+  /* Style cho các trạng thái */
+  .success {
+    color: green;
+    font-weight: bold;
+  }
+
+  .cancelled {
+    color: red;
+    font-weight: bold;
+  }
+}
+
+.table-header-price{
+  font-weight: bold !important;  /* Làm cho chữ header đậm */
+  text-align: center !important;  /* Căn giữa văn bản trong header */
+  font-weight: bold !important;  /* Làm cho chữ header đậm */
+  font-size: large;
+}
