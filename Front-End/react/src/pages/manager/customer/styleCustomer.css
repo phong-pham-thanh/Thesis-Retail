@@ -1,0 +1,44 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.header {
+  padding-bottom: 20px;
+}
+
+.customer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.filter-container {
+  width: 250px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.content-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.add-button {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
