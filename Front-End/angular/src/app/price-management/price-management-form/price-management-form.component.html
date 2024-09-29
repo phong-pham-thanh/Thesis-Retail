@@ -1,0 +1,54 @@
+<h2 class="form-title">Quản lý giá sản phẩm</h2>
+
+<!-- <form (ngSubmit)="onSubmit()" class="form-price-management"> -->
+<form (ngSubmit)="onSubmit(priceForm)" #priceForm="ngForm" class="form-price-management">
+
+  <div class="form-group" [ngClass]="{'has-error': priceForm.submitted && !productName.valid}">
+    <label for="productName" class="form-label">Tên sản phẩm:</label>
+    <ng-select 
+      class="form-control form-select"
+      [items]="allProducts" 
+      bindLabel="name" 
+      bindValue="id" 
+      [(ngModel)]="formData.productId" 
+      name="productName" 
+      #productName="ngModel" 
+      required>
+    </ng-select>
+    <div *ngIf="priceForm.submitted && !productName.valid" class="error-message">
+      Vui lòng chọn tên sản phẩm
+    </div>
+  </div>
+
+  <div class="form-group" [ngClass]="{'has-error': priceForm.submitted && !price.valid}">
+    <label for="price" class="form-label">Giá áp dụng:</label>
+    <input type="number" id="price" class="form-control" [(ngModel)]="formData.price" name="price" #price="ngModel" required placeholder="Nhập giá áp dụng" />
+    <div *ngIf="priceForm.submitted && !price.valid" class="error-message">
+      Vui lòng nhập giá áp dụng
+    </div>
+  </div>
+
+  <div class="form-group" [ngClass]="{'has-error': priceForm.submitted && !startDate.valid}">
+    <label for="startDate" class="form-label">Ngày bắt đầu:</label>
+    <input type="date" id="startDate" class="form-control" [(ngModel)]="formData.startDate" name="startDate" #startDate="ngModel" required />
+    <div *ngIf="priceForm.submitted && !startDate.valid" class="error-message">
+      Vui lòng chọn ngày bắt đầu
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="endDate" class="form-label">Ngày kết thúc:</label>
+    <input type="date" id="endDate" class="form-control" [(ngModel)]="formData.endDate" name="endDate" />
+  </div>
+
+  <div class="form-group form-checkbox">
+    <label for="active" class="form-label-checkbox">Còn hiệu lực:</label>
+    <input type="checkbox" id="active" class="form-checkbox-control" [(ngModel)]="formData.active" name="active" />
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <button type="button" class="btn btn-secondary" (click)="onClose()">Đóng</button>
+  </div>
+
+</form>

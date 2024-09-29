@@ -1,0 +1,87 @@
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { State } from './price-state/price.state';
+import * as priceProductActions from './price-state/price.actions';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { PriceProduct } from '../model/price.model';
+import * as pricePRoductSelector from './price-state/price.reducer';
+import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
+import { PriceManagementFormComponent } from './price-management-form/price-management-form.component';  // Import the component
+
+@Component({
+  selector: 'app-price-management',
+  templateUrl: './price-management.component.html',
+  styleUrls: ['./price-management.component.scss']
+})
+export class PriceManagementComponent implements OnInit, AfterViewInit {
+
+  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
+  dataSource = new MatTableDataSource<PriceProduct>();
+  allPriceProduct: PriceProduct[];
+
+
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(protected store: Store<State>,
+    private dialog: MatDialog
+  ) {
+    this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
+  }
+
+  ngOnInit() {
+    this.store.pipe(select(pricePRoductSelector.getIsLoaded),
+      filter(loaded => loaded === true),
+      mergeMap(_ => 
+        this.store.pipe(select(pricePRoductSelector.getAllPriceProduct),
+        map(result => {
+          this.allPriceProduct = result; 
+          this.dataSource = new MatTableDataSource<PriceProduct>(this.allPriceProduct);
+          this.dataSource.paginator = this.paginator; 
+          this.dataSource.sort = this.sort;
+        }))
+      )
+    ).subscribe();
+  }
+
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  addNew() {
+    const dialogRef = this.dialog.open(PriceManagementFormComponent, {
+      width: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+
+  editPrice(priceProduct: PriceProduct) {
+    const dialogRef = this.dialog.open(PriceManagementFormComponent, {
+      width: '800px',
+      data: priceProduct,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+
+  deletePrice(priceProduct: PriceProduct){
+    this.store.dispatch(new priceProductActions.DeletePriceProduct(priceProduct));
+    
+    this.store.pipe(select(pricePRoductSelector.getIsLoading),
+      filter(x => x === false),
+      map(_ =>
+        this.store.dispatch(new priceProductActions.LoadAllPriceProduct())
+      ), take(1)).subscribe();
+  }
+}
