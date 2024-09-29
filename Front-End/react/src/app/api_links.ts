@@ -159,6 +159,21 @@ const api_links = {
       url: `${authUrl}/Partner`,
       method: "GET",
     },
+    edit: (id: number) => ({
+      url: `${authUrl}/Partner/updatePartnerById/${id}`,
+      method: "PUT",
+      data: {},
+    }),
+    create: {
+      url: `${authUrl}/Partner/addNewPartner`,
+      method: "POST",
+      data: {},
+    },
+    search: (name: string) => ({
+      url: `${authUrl}/Partner/getPartnerBySearchName`,
+      method: "GET",
+      data: { name },
+    }),
   },
 
   customer: {
