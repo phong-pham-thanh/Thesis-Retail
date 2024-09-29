@@ -105,6 +105,30 @@ export function priceReducer(state = initialState, action: EntityMemberActions):
                 isLoaded: true,
                 error: action.payload
             };
+        
+        case PriceProductActionTypes.DeletePriceProduct:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case PriceProductActionTypes.DeletePriceProductSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: ''
+            };
+        
+        case PriceProductActionTypes.DeletePriceProductFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
         default:
           return state;
         }
