@@ -10,8 +10,10 @@ namespace APIBackEnd.Models
         public int Id { get; set; }
         public DateTime ExportDate { get; set; }
         public int CustomerId { get; set; }
+        public int WareHouseId { get; set; }
         public Status ExportStatus { get; set; }
         public List<GoodExportDetailModel>? ListGoodExportDetailsModel { get; set; }
         public CustomerModel? Customer { get; set; }
+        public WareHouseModel WareHouse { get; set; }
     }
 }

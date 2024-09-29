@@ -13,6 +13,9 @@ namespace APIBackend.DataModel
         public int CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public Customers? Customer { get; set; }
+        public int WareHouseId { get; set; }
+        [ForeignKey("WareHouseId")]
+        public WareHouses? WareHouse { get; set; }
         public Status ExportStatus { get; set; }
         public List<GoodExportDetails>? ListGoodExportDetails { get; set; }
     }
