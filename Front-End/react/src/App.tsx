@@ -7,6 +7,9 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+
 import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
@@ -21,9 +24,8 @@ import CustomerPage from "./pages/manager/customer/CustomerPage";
 import Promotion from "./pages/manager/promotion/Promotion";
 import Report from "./pages/manager/report/Report";
 import Register from "./pages/register/Register";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
 import CategoryPage from "./pages/manager/category/CategoryPage";
+import PartnerPage from "./pages/manager/partner/PartnerPage";
 function App() {
   return (
     <Provider store={store}>
@@ -53,6 +55,7 @@ function App() {
                 element={<NewExportGoods />}
               />
               <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
+              <Route path="/quan-ly/doitac" element={<PartnerPage />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />
               <Route path="/quan-ly/retail" />
