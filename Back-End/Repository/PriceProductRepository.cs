@@ -10,6 +10,8 @@ namespace APIBackend.Repository
     {
         public List<PriceProductModel> GetAll();
         public PriceProductModel AddNew(PriceProductModel domObject);
+        public PriceProductModel Update(int id, PriceProductModel domObject);
+        public bool Delete(int id);
     }
     public class PriceProductRepository : IPriceProductRepository
     {
@@ -37,6 +39,29 @@ namespace APIBackend.Repository
             return _priceProductMapper.ToModel(efobject);
         }
 
+        public PriceProductModel Update(int id, PriceProductModel domObject)
+        {
+            PriceProduct efobject =_coreContext.PriceProduct.Where(p => p.Id == id).FirstOrDefault();
+            if(efobject == null)
+            {
+                return null;
+            }
+            _priceProductMapper.ToEntity(efobject, domObject);
+            efobject.Id = id;
+            _coreContext.SaveChanges(true);
+            return _priceProductMapper.ToModel(efobject);
+        }
 
+        public bool Delete(int id)
+        {
+            PriceProduct priceProduct = _coreContext.PriceProduct.Where(x =>x.Id == id).FirstOrDefault();
+            if (priceProduct == null)
+            {
+                return false;
+            }
+            _coreContext.PriceProduct.Remove(priceProduct);
+            _coreContext.SaveChanges();
+            return true;
+        }
     }
 }

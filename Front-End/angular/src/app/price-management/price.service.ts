@@ -9,14 +9,31 @@ import { PriceProduct } from '../model/price.model';
 
 export class PriceProductService {
 
-    protected baseUrl: string;
+    protected loadAll: string;
+    protected addNew: string;
+    protected update: string;
+    protected delete: string;
   
     constructor(protected http: HttpClient) {
-        this.baseUrl = "https://localhost:7030/PriceProduct"
+        this.loadAll = "https://localhost:7030/PriceProduct"
+        this.addNew = "https://localhost:7030/PriceProduct/addNew"
+        this.update = "https://localhost:7030/PriceProduct/update"
+        this.delete = "https://localhost:7030/PriceProduct/delete"
     }
 
     getAllPriceProduct(): Observable<PriceProduct[]> {
-        return this.http.get<PriceProduct[]>(this.baseUrl);
+        return this.http.get<PriceProduct[]>(this.loadAll);
     }
-  
+
+    addNewItem(newItem: PriceProduct): Observable<PriceProduct> {
+        return this.http.post<PriceProduct>(this.addNew, newItem);
+    }
+    
+    updateItem(newItem: PriceProduct): Observable<PriceProduct> {
+        return this.http.put<PriceProduct>(this.update + '/' + newItem.id, newItem);
+    }
+    
+    deleteItem(newItem: PriceProduct): Observable<boolean> {
+        return this.http.delete<boolean>(this.delete + '/' + newItem.id);
+    }
 }

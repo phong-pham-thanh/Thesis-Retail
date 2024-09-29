@@ -57,6 +57,54 @@ export function priceReducer(state = initialState, action: EntityMemberActions):
                 isLoaded: true,
                 error: action.payload
             };
+    
+        case PriceProductActionTypes.AddNewPriceProduct:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case PriceProductActionTypes.AddNewPriceProductSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: ''
+            };
+        
+        case PriceProductActionTypes.AddNewPriceProductFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
+    
+        case PriceProductActionTypes.UpdatePriceProduct:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case PriceProductActionTypes.UpdatePriceProductSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: ''
+            };
+        
+        case PriceProductActionTypes.UpdatePriceProductFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
         default:
           return state;
         }

@@ -8,6 +8,8 @@ import { MatSort } from '@angular/material/sort';
 import { PriceProduct } from '../model/price.model';
 import * as pricePRoductSelector from './price-state/price.reducer';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
+import { PriceManagementFormComponent } from './price-management-form/price-management-form.component';  // Import the component
 
 @Component({
   selector: 'app-price-management',
@@ -15,30 +17,8 @@ import { filter, map, mergeMap, take } from 'rxjs/operators';
   styleUrls: ['./price-management.component.scss']
 })
 export class PriceManagementComponent implements OnInit, AfterViewInit {
-  
-  ELEMENT_DATA = [
-    // {id: 1, price: 100.000, startDate: '2022-12-01', endDate: '2022-12-31', status: 'Hoàn thành'},
-    // {id: 2, price: 200.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 300.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 400.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 500.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 600.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 700.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 800.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 900.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1000.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1100.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1200.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1300.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1400.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1500.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1600.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1700.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // {id: 2, price: 1800.000, startDate: '2023-01-01', endDate: '2023-01-15', status: 'Đã hủy'},
-    // Các dòng dữ liệu khác...
-  ];
 
-  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'status'];
+  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
   dataSource = new MatTableDataSource<PriceProduct>();
   allPriceProduct: PriceProduct[];
 
@@ -47,7 +27,9 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(protected store: Store<State>) {
+  constructor(protected store: Store<State>,
+    private dialog: MatDialog
+  ) {
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
   }
 
@@ -59,8 +41,10 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
         map(result => {
           this.allPriceProduct = result; 
           this.dataSource = new MatTableDataSource<PriceProduct>(this.allPriceProduct);
+          this.dataSource.paginator = this.paginator; 
+          this.dataSource.sort = this.sort;
         }))
-      ), take(1)
+      )
     ).subscribe();
   }
 
@@ -70,17 +54,34 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
+  addNew() {
+    const dialogRef = this.dialog.open(PriceManagementFormComponent, {
+      width: '800px',
+    });
 
-  setUpTable(allPriceProduct: PriceProduct[]){
-    // allPriceProduct.forEach(item => {
-    //   this.ELEMENT_DATA.push({
-    //     id: item.id,
-    //     productId: item.productId,
-    //     product: item.product,
-    //     startDate: item.startDate,
-    //     endDate: item.endDate,
-    //     status: item.EndDate,
-    //   })
-    // })
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+
+  editPrice(priceProduct: PriceProduct) {
+    const dialogRef = this.dialog.open(PriceManagementFormComponent, {
+      width: '800px',
+      data: priceProduct,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+
+  deletePrice(priceProduct: PriceProduct){
+    this.store.dispatch(new priceProductActions.DeletePriceProduct(priceProduct));
+    
+    this.store.pipe(select(pricePRoductSelector.getIsLoading),
+      filter(x => x === false),
+      map(_ =>
+        this.store.dispatch(new priceProductActions.LoadAllPriceProduct())
+      ), take(1)).subscribe();
   }
 }

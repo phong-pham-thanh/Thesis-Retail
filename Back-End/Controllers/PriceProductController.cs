@@ -24,10 +24,24 @@ namespace APIBackend.Controllers
         }
 
         [HttpPost]
-        [Route("addNewPriceProduct")]
+        [Route("addNew")]
         public PriceProductModel AddNewPriceProduct([FromBody] PriceProductModel item)
         {
             return _priceProductService.AddNew(item);
+        }
+
+        [HttpPut]
+        [Route("update/{id}")]
+        public PriceProductModel Update(int id, [FromBody] PriceProductModel item)
+        {
+            return _priceProductService.Update(id, item);
+        }
+
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public bool Delete(int id)
+        {
+            return _priceProductService.Delete(id);
         }
     }
 }
