@@ -35,7 +35,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/quan-ly" element={<Manager />}>
-              <Route path="/quan-ly/hanghoa" element={<Product />} />
+              <Route path="/quan-ly/kiemkho" element={<Product />} />
               <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
               <Route
@@ -55,7 +55,7 @@ function App() {
                 element={<NewExportGoods />}
               />
               <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
-              <Route path="/quan-ly/doitac" element={<PartnerPage />} />
+              <Route path="/quan-ly/nhacungcap" element={<PartnerPage />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />
               <Route path="/quan-ly/retail" />
