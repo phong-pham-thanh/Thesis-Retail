@@ -1,0 +1,62 @@
+<div class="header-container">
+  <h1>Quản lý giá</h1>
+  <button class="add-new-button" (click)="addNew()">Thêm mới</button>
+</div>
+<div class="table-container">
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+  <ng-container matColumnDef="productName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Tên sản phẩm </div></th>
+    <td mat-cell *matCellDef="let element"> {{element.product?.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Giá áp dụng </div></th>
+    <td mat-cell *matCellDef="let element">{{element.price}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="startDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Thời gian bắt đầu </div> </th>
+    <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="endDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Thời gian kết thúc </div> </th>
+    <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="active">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Trạng thái </div> </th>
+    <td mat-cell *matCellDef="let element"> {{element.active}} </td>
+  </ng-container>
+
+  <!-- Cột context menu -->
+  <ng-container matColumnDef="context">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="editPrice(element)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+
+        <button mat-menu-item (click)="deletePrice(element)">
+          <mat-icon>Delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <!-- Header row -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <!-- Data rows -->
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<!-- Paginator -->
+<mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+</div>

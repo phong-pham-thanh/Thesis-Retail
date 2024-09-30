@@ -7,7 +7,7 @@ const api_links = {
       url: `${authUrl}/Product`,
       method: "GET",
     },
-/*
+    /*
     goodsIssue: {
         //GET ALL
         getAll: {
@@ -62,7 +62,6 @@ const api_links = {
   },
 
   goodsIssue: {
-
     import: {
       //GET ALL
       getAll: {
@@ -105,7 +104,7 @@ const api_links = {
         url: `${authUrl}api/Product`,
         method: "PUT",
         token: "",
-        data: {}
+        data: {},
       },
     },
 
@@ -167,6 +166,43 @@ const api_links = {
       url: `${authUrl}/Partner`,
       method: "GET",
     },
+    edit: (id: number) => ({
+      url: `${authUrl}/Partner/updatePartnerById/${id}`,
+      method: "PUT",
+      data: {},
+    }),
+    create: {
+      url: `${authUrl}/Partner/addNewPartner`,
+      method: "POST",
+      data: {},
+    },
+    search: (name: string) => ({
+      url: `${authUrl}/Partner/getPartnerBySearchName`,
+      method: "GET",
+      data: { name },
+    }),
+  },
+
+  customer: {
+    getAll: {
+      url: `${authUrl}/Customer`,
+      method: "GET",
+    },
+    edit: (id: number) => ({
+      url: `${authUrl}/Customer/updateCustomerById/${id}`,
+      method: "PUT",
+      data: {},
+    }),
+    create: {
+      url: `${authUrl}/Customer/addNewCustomer`,
+      method: "POST",
+      data: {},
+    },
+    search: (name: string) => ({
+      url: `${authUrl}/Customer/getCustomerBySearchName`,
+      method: "GET",
+      data: { name },
+    }),
   },
 
   warehouse: {

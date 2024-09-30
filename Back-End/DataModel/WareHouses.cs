@@ -14,5 +14,7 @@ namespace APIBackend.DataModel
         public string? Address { get; set; }
         public bool Status { get; set; }
         public List<Inventories>? Inventories { get; set; }
+        public List<GoodsExport>? GoodsExports { get; set; }
+        public List<GoodsReceipt>? GoodsReceipts { get; set; }
     }
 }

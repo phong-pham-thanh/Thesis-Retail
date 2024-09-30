@@ -6,6 +6,7 @@ using APIBackend.DataModel;
 using APIBackend.Repository;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
+using APIBackEnd.Data.Enum;
 
 namespace APIBackend.Service
 {
@@ -14,6 +15,7 @@ namespace APIBackend.Service
         public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
+        public GoodsExportModel AcceptGoodExport(int id);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -46,6 +48,8 @@ namespace APIBackend.Service
         {
             //Add good Export
             GoodsExport goodsExport = new GoodsExport();
+            goodsExportModel.ExportStatus = Status.Process;
+            goodsExportModel.WareHouseId = idWareHouse;
             _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
             GoodsExportModel newGoodExportModel = _goodExportMapper.ToModel(_goodExportRepository.AddGoodExport(goodsExport));
 
@@ -57,12 +61,7 @@ namespace APIBackend.Service
                 _goodExportDetailMapper.ToEntity(goodExportDetails, goodExportDetailModel);
                 goodExportDetails.GoodExportId = newGoodExportModel.Id;
                 _goodExportDetailRepository.AddGoodExportDetails(goodExportDetails);
-
-                //Update Inventory in ware house
-                _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, idWareHouse, false);
             }
-            
-
             return true;
         }
 
@@ -81,5 +80,18 @@ namespace APIBackend.Service
             List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
             return listGoodExport;
         }
+
+        public GoodsExportModel AcceptGoodExport(int id)
+        {
+            GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id); 
+            // Add Good Export Details
+            foreach(var goodExportDetailModel in result.ListGoodExportDetailsModel)
+            {
+                _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, result.WareHouseId, false);
+            }
+
+            return result;
+        }
+
     }
 }

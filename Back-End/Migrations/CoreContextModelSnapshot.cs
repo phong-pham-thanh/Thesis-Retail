@@ -31,7 +31,6 @@ namespace APIBackEnd.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -48,7 +47,9 @@ namespace APIBackEnd.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -98,9 +99,14 @@ namespace APIBackEnd.Migrations
                     b.Property<long?>("TotalAmount")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PartnerId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("GoodsReceipt");
                 });
@@ -114,7 +120,9 @@ namespace APIBackEnd.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TotalSale")
@@ -137,11 +145,9 @@ namespace APIBackEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -163,29 +169,24 @@ namespace APIBackEnd.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
                     b.Property<string>("Branch")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOnboard")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -265,9 +266,14 @@ namespace APIBackEnd.Migrations
                     b.Property<int>("ExportStatus")
                         .HasColumnType("int");
 
+                    b.Property<int>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("GoodsExports");
                 });
@@ -296,6 +302,36 @@ namespace APIBackEnd.Migrations
                     b.HasIndex("WareHouseId");
 
                     b.ToTable("Inventories");
+                });
+
+            modelBuilder.Entity("APIBackend.DataModel.PriceProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("PriceProduct");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
@@ -330,7 +366,15 @@ namespace APIBackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
+                        .WithMany("GoodsReceipts")
+                        .HasForeignKey("WareHouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Partner");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("APIBackEnd.Data.Product", b =>
@@ -390,7 +434,15 @@ namespace APIBackEnd.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
+                        .WithMany("GoodsExports")
+                        .HasForeignKey("WareHouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
@@ -412,6 +464,17 @@ namespace APIBackEnd.Migrations
                     b.Navigation("WareHouse");
                 });
 
+            modelBuilder.Entity("APIBackend.DataModel.PriceProduct", b =>
+                {
+                    b.HasOne("APIBackEnd.Data.Product", "Product")
+                        .WithMany("ListPrices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
                     b.HasOne("APIBackEnd.Data.Users", "Manager")
@@ -431,6 +494,8 @@ namespace APIBackEnd.Migrations
             modelBuilder.Entity("APIBackEnd.Data.Product", b =>
                 {
                     b.Navigation("ListInventories");
+
+                    b.Navigation("ListPrices");
                 });
 
             modelBuilder.Entity("APIBackEnd.Data.Users", b =>
@@ -445,6 +510,10 @@ namespace APIBackEnd.Migrations
 
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
+                    b.Navigation("GoodsExports");
+
+                    b.Navigation("GoodsReceipts");
+
                     b.Navigation("Inventories");
                 });
 #pragma warning restore 612, 618

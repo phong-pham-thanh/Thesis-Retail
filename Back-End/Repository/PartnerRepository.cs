@@ -34,10 +34,10 @@ namespace APIBackEnd.Repository
             return _partnerMapper.ToModel(_coreContext.Partners.Where(w => w.Id == id).FirstOrDefault());
         }
 
-        public PartnerModel AddNewPartner(PartnerModel PartnerModel)
+        public PartnerModel AddNewPartner(PartnerModel partnerModel)
         {
             Partners efobject = new Partners();
-            _partnerMapper.ToEntity(efobject, PartnerModel);
+            _partnerMapper.ToEntity(efobject, partnerModel);
             _coreContext.Partners.Add(efobject);
             _coreContext.SaveChanges(true);
             return _partnerMapper.ToModel(efobject);

@@ -73,5 +73,13 @@ namespace APIBackEnd.Controllers
             */
             return _goodExportService.AddGoodExport(param.goodsExportModel, param.listGoodExportDetailModels, param.idWareHouse);
         }
+
+        [HttpPost]
+        [Route("acceptGoodExport")]
+        public GoodsExportModel AcceptGoodExport([FromBody] int id)
+        {
+            
+            return _goodExportService.AcceptGoodExport(id);
+        }
     }
 }

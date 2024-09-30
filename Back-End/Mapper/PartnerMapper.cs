@@ -22,6 +22,7 @@ namespace APIBackEnd.Mapper
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
             modelObject.TotalSale = efObject.TotalSale;
+            modelObject.PhoneNumber = efObject.PhoneNumber;
             return modelObject;
         }
 
@@ -34,6 +35,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Id = item.Id;
                 modelObject.Name = item.Name;
                 modelObject.TotalSale = item.TotalSale;
+                modelObject.PhoneNumber = item.PhoneNumber;
                 result.Add(modelObject);
             }
             return result;
@@ -44,6 +46,7 @@ namespace APIBackEnd.Mapper
             if(domObject == null) return;
             efObject.Name = domObject.Name;
             efObject.TotalSale = domObject.TotalSale;
+            efObject.PhoneNumber = domObject.PhoneNumber;
         }
     }
 }

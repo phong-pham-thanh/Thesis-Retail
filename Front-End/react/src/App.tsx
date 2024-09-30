@@ -7,6 +7,9 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+
 import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
@@ -17,17 +20,16 @@ import Dashboard from "./pages/manager/dashboard/Dashboard";
 import ImportTransaction from "./pages/manager/transaction/ImportTransaction";
 import ExportTransaction from "./pages/manager/transaction/ExportTransaction";
 import Supplier from "./pages/manager/supplier/Supplier";
-import Customer from "./pages/manager/customer/Customer";
+import CustomerPage from "./pages/manager/customer/CustomerPage";
 import Promotion from "./pages/manager/promotion/Promotion";
 import Report from "./pages/manager/report/Report";
 import Register from "./pages/register/Register";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
 import CategoryPage from "./pages/manager/category/CategoryPage";
+import PartnerPage from "./pages/manager/partner/PartnerPage";
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename="/bkrm">
+      <BrowserRouter basename="/">
         <div className="App">
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -36,13 +38,28 @@ function App() {
               <Route path="/quan-ly/hanghoa" element={<Product />} />
               <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
-              <Route path="/quan-ly/nhap-hang" element={<ImportTransaction />} />
-              <Route path="/quan-ly/nhap-hang/tao-moi" element={<NewImportGoods />} />
-              <Route path="/quan-ly/xuat-hang" element={<ExportTransaction />} />
-              <Route path="/quan-ly/xuat-hang/tao-moi" element={<NewExportGoods />} />
-              <Route path="/quan-ly/doitac" element={<Customer />} />
+              <Route
+                path="/quan-ly/nhap-hang"
+                element={<ImportTransaction />}
+              />
+              <Route
+                path="/quan-ly/nhap-hang/tao-moi"
+                element={<NewImportGoods />}
+              />
+              <Route
+                path="/quan-ly/xuat-hang"
+                element={<ExportTransaction />}
+              />
+              <Route
+                path="/quan-ly/xuat-hang/tao-moi"
+                element={<NewExportGoods />}
+              />
+              <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
+              <Route path="/quan-ly/doitac" element={<PartnerPage />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" element={<Report />} />
+              <Route path="/quan-ly/retail" />
+              <Route path="/quan-ly/price-management" />
             </Route>
           </Routes>
         </div>

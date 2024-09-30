@@ -15,10 +15,15 @@ namespace APIBackEnd.Mapper
     {
         private readonly IGoodExportDetailMapper _goodExportDetailMapper;
         private readonly ICustomerMapper _customerMapper;
-        public GoodsExportMapper(IGoodExportDetailMapper goodExportDetailMapper, ICustomerMapper customerMapper) 
+        private readonly IWareHouseMapper _warehouseMapper;
+        public GoodsExportMapper(
+            IGoodExportDetailMapper goodExportDetailMapper, 
+            ICustomerMapper customerMapper,
+            IWareHouseMapper wareHouseMapper) 
         {
             _goodExportDetailMapper = goodExportDetailMapper;
             _customerMapper = customerMapper;
+            _warehouseMapper = wareHouseMapper;
         }
         public GoodsExportModel? ToModel(GoodsExport efObject)
         {
@@ -29,7 +34,9 @@ namespace APIBackEnd.Mapper
             GoodsExportModel modelObject = new GoodsExportModel();
             modelObject.Id = efObject.Id;
             modelObject.CustomerId = efObject.CustomerId;
+            modelObject.WareHouseId = efObject.WareHouseId;
             modelObject.Customer = _customerMapper.ToModel(efObject.Customer);
+            modelObject.WareHouse = _warehouseMapper.ToModel(efObject.WareHouse);
             modelObject.ExportStatus = efObject.ExportStatus;
             modelObject.ExportDate = efObject.ExportDate;
             modelObject.ListGoodExportDetailsModel = _goodExportDetailMapper.ToModels(efObject.ListGoodExportDetails);
@@ -44,9 +51,11 @@ namespace APIBackEnd.Mapper
                 GoodsExportModel modelObject = new GoodsExportModel();
                 modelObject.Id = item.Id;
                 modelObject.CustomerId = item.CustomerId;
+                modelObject.WareHouseId = item.WareHouseId;
                 modelObject.ExportStatus = item.ExportStatus;
                 modelObject.ExportDate = item.ExportDate;
                 modelObject.Customer = _customerMapper.ToModel(item.Customer);
+                modelObject.WareHouse = _warehouseMapper.ToModel(item.WareHouse);
                 modelObject.ListGoodExportDetailsModel = _goodExportDetailMapper.ToModels(item.ListGoodExportDetails);
                 result.Add(modelObject);
             }
@@ -61,6 +70,7 @@ namespace APIBackEnd.Mapper
             }
             efObject.Id = modelObject.Id;
             efObject.CustomerId = modelObject.CustomerId;
+            efObject.WareHouseId = modelObject.WareHouseId;
             efObject.ExportStatus = modelObject.ExportStatus;
             efObject.ExportDate = modelObject.ExportDate;
             return;

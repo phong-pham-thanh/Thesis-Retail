@@ -65,7 +65,7 @@ export default function Login() {
   useEffect(() => {
     document.title = "Đăng nhập";
     if (cookies.get("user") !== undefined) {
-      navigate("/quan-ly");
+      navigate("/quan-ly/hanghoa");
       //return
     }
   }, []);
