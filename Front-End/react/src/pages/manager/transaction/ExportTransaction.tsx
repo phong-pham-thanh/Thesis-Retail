@@ -276,7 +276,7 @@ const handleEdit =(ID:string)=>{
       <div className="filterField">
         <div className="title">Phiếu xuất kho</div>
       </div>
-      <div className="transaction-list">
+      <div className="product-list transaction-list">
         <div className="header-action">
           <Button icon={<EditOutlined />} className="custom-button">
             Điều chỉnh

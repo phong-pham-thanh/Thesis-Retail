@@ -23,7 +23,7 @@ import type { GetProps } from 'antd';
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, CustomerState, ProductState, WarehouseState } from "../../../app/type.d";
 //import axios from 'axios';
 
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -43,14 +43,8 @@ interface ExportProductTableState {
 };
 
 interface ExportDataType {
-  goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
-  idWareHouse: string,
-}
-
-interface ExportDataType {
-  goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
+  goodsExportModel: GoodsReceipt,
+  listGoodExportDetailsModel: ListGoodReciptDetailsModel[],
   idWareHouse: string,
 }
 
@@ -150,7 +144,7 @@ export default function ExportGoods() {
 
   const [form] = Form.useForm();
   const [allProducts, setProducts] = useState<ProductState[]>([]);
-  const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
+  const [allCustomers, setAllCustomers] = useState<CustomerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
@@ -167,9 +161,9 @@ export default function ExportGoods() {
       .catch((error) => {
         console.log(error);
       });
-    getAllPartner()
+    getAllCustomer()
       .then((res) => {
-        setAllPartners(res.data);
+        setAllCustomers(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -213,8 +207,8 @@ export default function ExportGoods() {
     const api_link = api_links.product.getAll;
     return fetch_Api(api_link);
   };
-  const getAllPartner = () => {
-    const api_link = api_links.partner.getAll;
+  const getAllCustomer = () => {
+    const api_link = api_links.customer.getAll;
     return fetch_Api(api_link);
   };
   const getAllWarehouse = () => {
@@ -299,8 +293,8 @@ export default function ExportGoods() {
         "priceUnit": item.priceUnit,
         "quantity": item.quantity,*/
           id: 0,
-          goodReceiptId: 0,
-          goodsReceipt: null,
+          goodExportId: 0,
+          goodExport: null,
           productId: Number(item.productId),
           product: null,
           /*{
@@ -315,20 +309,20 @@ export default function ExportGoods() {
             status: 0,
             listInventories: null
           },*/
-          priceUnit: item.priceUnit,
+          //priceUnit: item.priceUnit,
           quantity: item.quantity
       })
     })
     const event = new Date();
     const postData: ExportDataType = {
-      goodsReceiptModel: {
+      goodsExportModel: {
         id: "0",
-        importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        partnerId: form.getFieldValue("partnerId"),
-        receiptStatus: 1,
-        ListGoodReciptDetailsModel: []
+        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        customerId: form.getFieldValue("customerId"),
+        exportStatus: 1,
+        listGoodExportDetailsModel: []
       },
-      listGoodReceiptDetailModels: tempListGoodReceiptDetailModels,
+      listGoodExportDetailsModel: tempListGoodReceiptDetailModels,
       idWareHouse: form.getFieldValue("idWareHouse")
     }
 
@@ -346,7 +340,7 @@ export default function ExportGoods() {
 
       <div className="product-container">
         <div className="receipt-container">
-          Đơn nhập hàng
+          Đơn xuất hàng
           <Form form={form}
             //labelCol={{ span: 8 }}
             wrapperCol={{ span: 20 }}
@@ -356,7 +350,7 @@ export default function ExportGoods() {
               <Col span={8}>
                 <Form.Item
                   className="idWareHouse"
-                  label={"Nhập đến kho"}
+                  label={"Xuất đến kho"}
                   name={"idWareHouse"}
                   layout="vertical"
                   rules={[{
@@ -379,7 +373,7 @@ export default function ExportGoods() {
               </Col><Col span={8}>
                 <Form.Item
                   className="exportDate"
-                  label={"Ngày nhập"}
+                  label={"Ngày xuất"}
                   name={"exportDate"}
                   layout="vertical"
                   rules={[{
@@ -393,9 +387,9 @@ export default function ExportGoods() {
                   />
                 </Form.Item >
               </Col><Col span={8}><Form.Item
-                className="partnerId"
-                label={"Nhà cung cấp"}
-                name={"partnerId"}
+                className="customerId"
+                label={"Khách hàng"}
+                name={"customerId"}
                 layout="vertical"
                 rules={[{
                   required: true,
@@ -404,10 +398,10 @@ export default function ExportGoods() {
               >
                 <Select
                   showSearch
-                  placeholder="Chọn nhà cung cấp"
+                  placeholder="Chọn khách hàng"
                   optionFilterProp="label"
                 >
-                  {allPartners?.map((d) => {
+                  {allCustomers?.map((d) => {
                     return (
                       <Option value={d.id}>{d.name}</Option>
                     )

@@ -85,12 +85,8 @@ export type EmployeeState = {
 export type EmployeeListState = EmployeeState[];
 
 export type CustomerState = {
-  cusId: string;
-  cusName: string;
-  phone: string;
-  gender: string;
-  email: string;
-  tongchitieu: string;
+  id: string;
+  name: string;
 };
 
 export type CustomerListState = CustomerState[];
@@ -120,10 +116,14 @@ export type WarehouseState =
 
 export type GoodsReceipt = {
   id: string;
-  importDate: string;
-  partnerId: string;
-  receiptStatus: number;
-  ListGoodReciptDetailsModel: []
+  importDate?: string;
+  exportDate?: string;
+  partnerId?: string;
+  customerId?: string;
+  receiptStatus?: number;
+  exportStatus?: number;
+  ListGoodReciptDetailsModel?: [];
+  listGoodExportDetailsModel?: [];
 
   //parnersId: string;
 };
@@ -131,8 +131,10 @@ export type GoodsReceipt = {
 export type ListGoodReciptDetailsModel =
 {
   id: number,
-  goodReceiptId: number,
-  goodsReceipt: null,
+  goodReceiptId?: number,
+  goodExportId?: number,
+  goodsReceipt?: null,
+  goodExport?: null,
   productId: number,
   product: {
     id: number,
@@ -146,7 +148,7 @@ export type ListGoodReciptDetailsModel =
     status: boolean,
     listInventories: null
   }|null,
-  priceUnit: number,
+  priceUnit?: number,
   quantity: number
 };
 

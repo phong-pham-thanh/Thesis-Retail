@@ -48,12 +48,6 @@ interface ExportDataType {
   idWareHouse: string,
 }
 
-interface ExportDataType {
-  goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
-  idWareHouse: string,
-}
-
 const gridStyle: React.CSSProperties = {
   width: '24%',
   textAlign: 'center',

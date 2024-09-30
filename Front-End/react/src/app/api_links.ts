@@ -155,6 +155,13 @@ const api_links = {
     },
   },
 
+  customer: {
+    getAll: {
+      url: `${authUrl}/Customer`,
+      method: "GET",
+    },
+  },
+  
   partner: {
     getAll: {
       url: `${authUrl}/Partner`,
