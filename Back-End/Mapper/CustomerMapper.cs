@@ -22,6 +22,7 @@ namespace APIBackend.Mapper
             CustomerModel modelObject = new CustomerModel();
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
+            modelObject.PhoneNumber = efObject.PhoneNumber;
             return modelObject;
         }
 
@@ -33,6 +34,7 @@ namespace APIBackend.Mapper
                 CustomerModel modelObject = new CustomerModel();
                 modelObject.Id = item.Id;
                 modelObject.Name = item.Name;
+                modelObject.PhoneNumber = item.PhoneNumber;
                 result.Add(modelObject);
             }
             return result;
@@ -45,6 +47,7 @@ namespace APIBackend.Mapper
                 return;
             }
             efObject.Name = modelObject.Name;
+            efObject.PhoneNumber = modelObject.PhoneNumber;
             return;
         }
     }
