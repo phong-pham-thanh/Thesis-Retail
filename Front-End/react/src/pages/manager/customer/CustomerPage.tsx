@@ -13,11 +13,13 @@ import message from "antd/lib/message";
 interface UserType {
   id: string;
   name: string;
+  phoneNumber: string;
 }
 
 const emptydata: UserType = {
   id: "0",
   name: "",
+  phoneNumber: "",
 };
 
 export default function UserPage() {
@@ -94,6 +96,11 @@ export default function UserPage() {
       title: "Customer Name",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Phone number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
       title: "",

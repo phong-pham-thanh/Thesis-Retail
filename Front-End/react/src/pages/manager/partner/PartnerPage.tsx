@@ -6,19 +6,21 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomButton from "../../component/CustomeButton";
 import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
-import PartnerInformationPopupForm from "./PartnerInformationPopupForm"; 
+import PartnerInformationPopupForm from "./PartnerInformationPopupForm";
 import AlertDialog from "../../component/AlertDialog";
 
 interface PartnerType {
   id: string;
   name: string;
   totalSale: string;
+  phoneNumber: string;
 }
 
 const emptydata: PartnerType = {
   id: "0",
   name: "",
   totalSale: "0", // Initialize with 0 total sale
+  phoneNumber: "",
 };
 
 export default function PartnerPage() {
@@ -102,6 +104,11 @@ export default function PartnerPage() {
       title: "Total Sale",
       dataIndex: "totalSale",
       key: "totalSale",
+    },
+    {
+      title: "Phone number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
       title: "",
