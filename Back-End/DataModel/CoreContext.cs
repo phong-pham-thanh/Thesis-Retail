@@ -22,6 +22,31 @@ namespace APIBackEnd.Data
         public DbSet<GoodsExport> GoodsExports { get; set; }
         public DbSet<GoodExportDetails> GoodExportDetails { get; set; }
         public DbSet<PriceProduct> PriceProduct { get; set; }
+        public DbSet<Bill> Bill { get; set; }
+        public DbSet<BillDetails> BillDetails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Bill>()
+                .HasOne(b => b.Customer)
+                .WithMany(c => c.ListBill)
+                .HasForeignKey(b => b.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Bill>()
+                .HasOne(b => b.WareHouse)
+                .WithMany(w => w.ListBill)
+                .HasForeignKey(b => b.WareHouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Bill>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.ListBill)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
 

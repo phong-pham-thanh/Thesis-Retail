@@ -12,7 +12,7 @@ namespace APIBackend.Service
 {
     public interface IGoodExportService
     {
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse);
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
@@ -44,11 +44,20 @@ namespace APIBackend.Service
             _productRepository = productRepository;
         }
 
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse)
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept)
         {
             //Add good Export
             GoodsExport goodsExport = new GoodsExport();
-            goodsExportModel.ExportStatus = Status.Process;
+
+            if(!autoAccept)
+            {
+                goodsExportModel.ExportStatus = Status.Process;
+            }
+            else
+            {
+                goodsExportModel.ExportStatus = Status.Success;
+            }
+
             goodsExportModel.WareHouseId = idWareHouse;
             _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
             GoodsExportModel newGoodExportModel = _goodExportMapper.ToModel(_goodExportRepository.AddGoodExport(goodsExport));
@@ -61,6 +70,12 @@ namespace APIBackend.Service
                 _goodExportDetailMapper.ToEntity(goodExportDetails, goodExportDetailModel);
                 goodExportDetails.GoodExportId = newGoodExportModel.Id;
                 _goodExportDetailRepository.AddGoodExportDetails(goodExportDetails);
+            }
+
+            if(autoAccept)
+            {
+                GoodsExportModel newGoodExportModelWithFullDetails = _goodExportRepository.GetGoodExportById(newGoodExportModel.Id);
+                UpdateInventoryForGoodExport(newGoodExportModelWithFullDetails);
             }
             return true;
         }
@@ -83,14 +98,17 @@ namespace APIBackend.Service
 
         public GoodsExportModel AcceptGoodExport(int id)
         {
-            GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id); 
-            // Add Good Export Details
-            foreach(var goodExportDetailModel in result.ListGoodExportDetailsModel)
-            {
-                _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, result.WareHouseId, false);
-            }
-
+            GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id);
+            UpdateInventoryForGoodExport(result);
             return result;
+        }
+
+        public void UpdateInventoryForGoodExport(GoodsExportModel currentGoodExport)
+        {
+            foreach(var goodExportDetailModel in currentGoodExport.ListGoodExportDetailsModel)
+            {
+                _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, currentGoodExport.WareHouseId, false);
+            }
         }
 
     }

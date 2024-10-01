@@ -71,7 +71,7 @@ namespace APIBackEnd.Controllers
                 "idWareHouse": 1
             }
             */
-            return _goodExportService.AddGoodExport(param.goodsExportModel, param.listGoodExportDetailModels, param.idWareHouse);
+            return _goodExportService.AddGoodExport(param.goodsExportModel, param.listGoodExportDetailModels, param.idWareHouse, autoAccept: false);
         }
 
         [HttpPost]
