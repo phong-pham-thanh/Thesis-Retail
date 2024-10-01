@@ -4,7 +4,7 @@ import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 /* NgRx */
 import { Action } from '@ngrx/store';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { ProductService } from '../retail-component/product.service';
+import { ProductService } from '../services/product.service';
 import * as productAction from './product.actions'
 
 @Injectable()

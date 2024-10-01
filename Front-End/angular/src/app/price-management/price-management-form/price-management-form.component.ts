@@ -29,7 +29,7 @@ export class PriceManagementFormComponent  implements OnInit{
   };
   constructor(
     protected store: Store<State>,
-    @Inject(MAT_DIALOG_DATA) public data: PriceProduct,  // Inject dữ liệu vào
+    @Inject(MAT_DIALOG_DATA) public data: PriceProduct,
     public dialogRef: MatDialogRef<PriceManagementFormComponent>) 
   {
     this.store.dispatch(new productActions.LoadAllProduct());

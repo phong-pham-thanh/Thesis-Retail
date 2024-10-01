@@ -1,0 +1,66 @@
+<div class="dialog-overlay">
+    <div class="dialog-box">
+      <div class="header">
+        <div class="customer-info">
+          <span class="customer-name" *ngIf="currentCustomer">{{currentCustomer?.name}}</span>
+          <span class="customer-name" *ngIf="!currentCustomer">Khách lẻ</span>
+          <span class="icon">👤</span>
+          <span class="date-time">{{currentDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <button class="close-btn" (click)="onClose()">✖</button>
+      </div>
+  
+      <div class="body">
+        <h2>Khách lẻ</h2>
+        <div class="info-row">
+          <span class="label">Tổng tiền hàng</span>
+          <span class="value">12</span>
+          <span class="price">{{totalAmountBill  | currency:'VND':'symbol':'1.0-0' }}</span>
+        </div>
+        <!-- <div class="info-row">
+          <span class="label">Giảm giá</span>
+          <span class="value">0</span>
+        </div> -->
+        <div class="info-row highlighted">
+          <span class="label">Khách cần trả</span>
+          <span class="value price">{{totalAmountBill  | currency:'VND':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Khách thanh toán</span>
+          <input type="text"
+            mask="separator.0"
+            thousandSeparator=","  
+            (input)="caculateChange()" 
+            [(ngModel)]="customerPay" 
+            class="value-input"/>
+        </div>
+        
+        <div class="info-row">
+            <span class="label">Tiền thừa trả khách</span>
+            <span class="value">{{changeAmount  | currency:'VND':'symbol':'1.0-0' }}</span>
+          </div>
+      </div>
+  
+      <!-- <div class="payment-method">
+        <input type="radio" id="cash" name="payment" checked>
+        <label for="cash">Tiền mặt</label>
+        <input type="radio" id="transfer" name="payment">
+        <label for="transfer">Chuyển khoản</label>
+        <input type="radio" id="card" name="payment">
+        <label for="card">Thẻ</label>
+        <input type="radio" id="wallet" name="payment">
+        <label for="wallet">Ví</label>
+        <button class="more-options">⋮</button>
+      </div> -->
+  
+      <div class="quick-amounts">
+        <button class="amount-btn" (click)="applyQuickAmounts()">{{totalAmountBill  | currency:'VND':'symbol':'1.0-0' }}</button>
+      </div>
+  
+      <div class="actions">
+        <button class="cancel-btn" (click)="onClose()">Hủy</button>
+        <button class="complete-btn">Thanh Toán</button>
+      </div>
+    </div>
+  </div>
+  

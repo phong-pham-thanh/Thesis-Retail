@@ -1,56 +1,56 @@
 /* NgRx */
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ProductState } from './product.state';
-import { ProductActions, ProductActionTypes } from './product.actions';
+import { CustomerState } from './customer.state';
+import { CustomerActions, CustomerActionTypes } from './customer.actions';
 
-const initialState: ProductState = {
+const initialState: CustomerState = {
     needRefreshBrowseList: false,
-    allProduct: [],
+    allCustomer: [],
     isLoading: false,
     isLoaded: false,
     isSaving: false,
     error: '',
 };
 
-const getProductFeatureState = createFeatureSelector<ProductState>('product');
+const getCustomerFeatureState = createFeatureSelector<CustomerState>('customer');
 
-export const getAllProduct = createSelector(
-    getProductFeatureState,
-    state => state.allProduct
+export const getAllCustomer = createSelector(
+    getCustomerFeatureState,
+    state => state.allCustomer
 );
 
 
 export const getIsLoading = createSelector(
-    getProductFeatureState,
+    getCustomerFeatureState,
     state => state.isLoading
 );
 
 
 export const getIsLoaded= createSelector(
-    getProductFeatureState,
+    getCustomerFeatureState,
     state => state.isLoaded
 );
 
 // Reducer function
-export function productReducer(state = initialState, action: ProductActions): ProductState {
+export function customerReducer(state = initialState, action: CustomerActions): CustomerState {
     switch (action.type) {
-        case ProductActionTypes.LoadAllProduct:
+        case CustomerActionTypes.LoadAllCustomer:
             return {
                 ...state,
                 needRefreshBrowseList: false,
                 isLoading: true
             };
 
-        case ProductActionTypes.LoadAllProductSuccess:
+        case CustomerActionTypes.LoadAllCustomerSuccess:
             return {
                 ...state,
-                allProduct: action.payload,
+                allCustomer: action.payload,
                 isLoading: false,
                 isLoaded: true,
                 error: ''
             };
         
-        case ProductActionTypes.LoadAllProductFail:
+        case CustomerActionTypes.LoadAllCustomerFail:
             return {
                 ...state,
                 isLoading: false,

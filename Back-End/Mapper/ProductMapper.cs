@@ -14,10 +14,15 @@ namespace APIBackEnd.Mapper
     {
         private readonly ICategoryMapper _categoryMapper;
         private readonly IInventoryMapper _inventoryMapper;
-        public ProductMapper(ICategoryMapper categoryMapper, IInventoryMapper inventoryMapper) 
+        private readonly IPriceProductMapper _priceProductMapper;
+        public ProductMapper(
+            ICategoryMapper categoryMapper, 
+            IInventoryMapper inventoryMapper,
+            IPriceProductMapper priceProductMapper) 
         {
             _categoryMapper = categoryMapper;
             _inventoryMapper = inventoryMapper;
+            _priceProductMapper = priceProductMapper;
         }
         public ProductModel ToModel(Product efObject)
         {
@@ -31,6 +36,7 @@ namespace APIBackEnd.Mapper
             modelObject.CategoryId = efObject.CategoryId;
             modelObject.Category = _categoryMapper.ToModel(efObject.Category);
             modelObject.ListInventories = _inventoryMapper.ToModels(efObject.ListInventories);
+            modelObject.ListPrices = _priceProductMapper.ToModels(efObject.ListPrices);
             modelObject.Status = efObject.Status;
             modelObject.Description = efObject.Description;
             return modelObject;
@@ -47,6 +53,7 @@ namespace APIBackEnd.Mapper
                 modelObject.CategoryId = item.CategoryId;
                 modelObject.Category = _categoryMapper.ToModel(item.Category);
                 modelObject.ListInventories = _inventoryMapper.ToModels(item.ListInventories);
+                modelObject.ListPrices = _priceProductMapper.ToModels(item.ListPrices);
                 modelObject.Status = item.Status;
                 modelObject.Description = item.Description;
                 result.Add(modelObject);

@@ -27,6 +27,6 @@ export class LoadAllProductFail implements Action {
     constructor(public payload: string) { }
 }
 
-export type EntityMemberActions = LoadAllProduct
+export type ProductActions = LoadAllProduct
   | LoadAllProductSuccess
   | LoadAllProductFail
