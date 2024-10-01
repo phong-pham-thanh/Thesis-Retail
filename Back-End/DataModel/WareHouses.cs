@@ -16,5 +16,6 @@ namespace APIBackend.DataModel
         public List<Inventories>? Inventories { get; set; }
         public List<GoodsExport>? GoodsExports { get; set; }
         public List<GoodsReceipt>? GoodsReceipts { get; set; }
+        public List<Bill>? ListBill { get; set; }
     }
 }
