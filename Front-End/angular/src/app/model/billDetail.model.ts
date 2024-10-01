@@ -4,4 +4,6 @@ export class BillDetails{
     product: Product;
     quantity: number;
     billId: number;
+    price?: number;
+    haveDefaultPrice?: boolean
 }

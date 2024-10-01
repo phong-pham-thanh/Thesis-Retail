@@ -8,45 +8,52 @@
 <body>
     <header class="header">
         <div class="search-bar">
-            <input type="text" placeholder="Tìm khách hàng">
+            <input type="text">
         </div>
         <div class="invoice-tabs">
             <button class="tab active">Hóa đơn 1</button>
         </div>
         <div class="user-profile">
-            <span>Nguyễn Văn A</span>
+            <ng-select 
+                [items]="allCustomer" 
+                bindLabel="name" 
+                [(ngModel)]="currentCustomer" 
+                name="customerName" 
+                #customerName="ngModel">
+            </ng-select>
         </div>
     </header>
     
     <main class="main-content">
         <section class="invoice-section">
-            <!-- Each product in the invoice -->
-            <ng-container *ngFor="let item of allProductInBill">
+            <ng-container *ngFor="let item of currentBill.billDetails">
                 <div class="invoice-item">
-                    <span>{{item.id}}</span>
-                    <span>{{item.name}}</span>
+                    <span>{{item?.product?.id}}</span>
+                    <span>{{item?.product?.name}}</span>
                     <div class="quantity-control">
-                        <button>-</button>
-                        <input type="number" value="1">
-                        <button>+</button>
+                        <button (click)="changeQuantity(item, false)">-</button>
+                        <input type="number" [(ngModel)]="item.quantity">
+                        <button (click)="changeQuantity(item, true)">+</button>
                     </div>
-                    <span>10,000</span>
-                    <!-- <input type="text" class="discount-input" placeholder="Giảm giá"> -->
-                    <button class="delete-item">Xóa</button>
+                    <div class="price-container">
+                        <span *ngIf="item.haveDefaultPrice">{{item.price | currency:'VND':'symbol':'1.0-0' }}</span>
+                        <input *ngIf="!item.haveDefaultPrice" type="text"  mask="separator.0" thousandSeparator=","  placeholder="Nhập giá" [(ngModel)]="item.price" (input)="onPriceChange(item)">
+                    </div>
+                    <button class="delete-item" (click)="removeItem(item)">Xóa</button>
                 </div>
             </ng-container>
         </section>
         
         <section class="product-list">
-            <ng-container *ngFor="let item of allProduct">
+            <ng-container *ngFor="let item of allProduct | paginate: { itemsPerPage: 9, currentPage: currentPage }">
                 <div class="product-item">
                     <img src="{{imageUrl}}" alt="{{item.name}}" width="70" height="70">
                     <span class="product-name">{{item.name}}</span>
-                    <span class="product-price">10,000</span>
+                    <span class="product-price">{{getPriceProduct(item)}}</span>
                     <button class="add-to-cart" (click)="addProductToBill(item)">+</button>
                 </div>
-            <!-- Add more products here -->
             </ng-container>
+            <pagination-controls (pageChange)="currentPage = $event" class="float-right"></pagination-controls>
         </section>
     </main>
 
@@ -55,9 +62,9 @@
             <input type="text" placeholder="Ghi chú đơn hàng">
         </div>
         <div class="total-summary">
-            <span>Tổng tiền hàng: 20,000</span>
+            <span>Tổng tiền hàng: {{totalAmountBill  | currency:'VND':'symbol':'1.0-0' }}</span>
         </div>
-        <button class="payment-btn">Thanh toán</button>
+        <button class="payment-btn" (click)="openPaymentDialog()">Thanh toán</button>
     </footer>
 
     <script src="scripts.js"></script>

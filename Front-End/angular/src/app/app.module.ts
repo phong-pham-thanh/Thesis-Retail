@@ -18,21 +18,28 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { CookieService } from 'ngx-cookie-service';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { priceReducer } from './price-management/price-state/price.reducer';
 import { productReducer } from './product-state/product.reducer';
-import { PriceProductEffects } from './price-management/price-state/price.effects';
-import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component'; // Đảm bảo bạn có reducers
 import { ProductEffects } from './product-state/product.effects';
+import { CustomerEffects } from './customer-state/customer.effects';
+import { customerReducer } from './customer-state/customer.reducer';
+import { PriceProductEffects } from './price-management/price-state/price.effects';
+import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component';
+import { RetailPaymentComponentComponent } from './retail-component/retail-payment-component/retail-payment-component.component'; // Đảm bảo bạn có reducers
 
 @NgModule({
   declarations: [
     AppComponent,
     RetailComponentComponent,
     PriceManagementComponent,
-    PriceManagementFormComponent
+    PriceManagementFormComponent,
+    RetailPaymentComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +56,8 @@ import { ProductEffects } from './product-state/product.effects';
     FormsModule,
     MatMenuModule,
     MatIconModule,
+    NgxPaginationModule,
+    NgxMaskDirective,
     BrowserAnimationsModule,
     EffectsModule.forRoot([]),
 
@@ -61,9 +70,18 @@ import { ProductEffects } from './product-state/product.effects';
     StoreModule.forFeature('product', productReducer),
     StoreModule.forRoot(productReducer),
     EffectsModule.forRoot([ProductEffects]),
-    EffectsModule.forFeature([ProductEffects])
+    EffectsModule.forFeature([ProductEffects]),
+
+
+    StoreModule.forFeature('customer', customerReducer),
+    StoreModule.forRoot(customerReducer),
+    EffectsModule.forRoot([CustomerEffects]),
+    EffectsModule.forFeature([CustomerEffects])
   ],
-  providers: [],
+  providers: [
+    provideNgxMask(),
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
