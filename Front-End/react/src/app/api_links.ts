@@ -7,33 +7,7 @@ const api_links = {
       url: `${authUrl}/Product`,
       method: "GET",
     },
-    /*
-    goodsIssue: {
-        //GET ALL
-        getAll: {
-            url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
-            method: "GET",
-        },
-        //GET BY ID
-        getById: {
-            url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
-            method: "GET",
-        },
-
-        //POST
-        createNew: {
-            url: `${authUrl}/GoodRecipt/addGoodRecipt`,
-            method: "POST",
-            data: {},
-        },
-
-        ////////////////////// ELSE //////////////////////
-        edit: {
-            url: `${authUrl}api/Product`,
-            method: "PUT",
-            token: "",
-            data: {}
-        },*/
+    
     // GET PRODUCT BY ID
     getById: (productId: number) => ({
       url: `${authUrl}/Product/getProductById/${productId}`,
@@ -94,7 +68,7 @@ const api_links = {
 
       //POST
       createNew: {
-        url: `${authUrl}/GoodExport/addGoodRecipt`,
+        url: `${authUrl}/GoodExport/addGoodExport`,
         method: "POST",
         data: {},
       },
@@ -154,13 +128,6 @@ const api_links = {
     },
   },
 
-  customer: {
-    getAll: {
-      url: `${authUrl}/Customer`,
-      method: "GET",
-    },
-  },
-  
   partner: {
     getAll: {
       url: `${authUrl}/Partner`,

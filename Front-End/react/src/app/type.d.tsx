@@ -123,7 +123,7 @@ export type GoodsReceipt = {
   receiptStatus?: number;
   exportStatus?: number;
   ListGoodReciptDetailsModel?: [];
-  listGoodExportDetailsModel?: [];
+  listGoodExportDetailModels?: [];
 
   //parnersId: string;
 };
@@ -211,7 +211,8 @@ export type GoodExportReceiptDetailDataType = {
   },
   exportStatus: number,
   totalAmount: number | null,
-  listGoodExportDetailsModel: ListGoodReciptDetailsModel[]/*[
+  listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
+  listGoodExportDetailModels: ListGoodReciptDetailsModel[]/*[
     {
       id: number,
       goodReceiptId: number,

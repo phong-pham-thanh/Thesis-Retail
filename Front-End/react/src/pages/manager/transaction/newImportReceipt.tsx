@@ -58,6 +58,7 @@ const gridStyle: React.CSSProperties = {
 };
 
 export default function ImportGoods() {
+  const navigate = useNavigate();
 
   const productColumns: ColumnsType<ProductState> = [
     {
@@ -144,6 +145,7 @@ export default function ImportGoods() {
 
   const [form] = Form.useForm();
   const [allProducts, setProducts] = useState<ProductState[]>([]);
+  const [filteredProducts, setFilterProducts] = useState<ProductState[]>([]);
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
@@ -288,10 +290,6 @@ export default function ImportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-       /* "goodsReceiptId": "",
-        "productId": Number(item.productId),
-        "priceUnit": item.priceUnit,
-        "quantity": item.quantity,*/
           id: 0,
           goodReceiptId: 0,
           goodsReceipt: null,
@@ -327,14 +325,24 @@ export default function ImportGoods() {
     }
 
     console.log(postData);
-    if (postGoodsIssue(postData))
-      message.success("Success!");
-    else console.log(0);
-
+    postGoodsIssue(postData)
+    .then((res) => {
+      message.success("Tạo thành công");
+      navigate(-1);
+    })
+    .catch((error) => {
+      message.error("Tạo thất bại");
+    });
+    
   };
 
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-
+  
+  const handleFilterProductTable = (value: string | number) => {
+    if (value == 0) setFilterProducts(allProducts);
+    else setFilterProducts(allProducts.filter((p)=>p.categoryId==value));
+  };
+ 
   return (
     <div className="dashboard-container">
 
@@ -444,11 +452,13 @@ export default function ImportGoods() {
 
         <div className='newtransaction-product-table'>
         <Row>
-            <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+        <Search placeholder="input search text" onSearch={onSearch} style={{ width: "50%" }} />
               <Select
                 showSearch
-                placeholder="Chọn nhà cung cấp"
+                placeholder="Phân loại"
                 optionFilterProp="label"
+                style={{ width: '50%' }}
+                onChange={handleFilterProductTable}
               >
                 <Option value={0}>Tất cả</Option>
                 {allCategory?.map((d) => {
@@ -465,7 +475,7 @@ export default function ImportGoods() {
           })}*\/
           />*/}
           <Card className="product-table" title="All">
-            {allProducts?.map((p) =>
+            {filteredProducts?.map((p) =>
               <Card.Grid className="product-cell" style={gridStyle}
                 onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
           </Card>

@@ -40,6 +40,7 @@ import {
 import {  ListGoodReciptDetailsModel, GoodExportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
+import { ProcessDate, ProcessStatus } from "../../../app/processFunction"
 
 const emptydata:GoodExportReceiptDetailDataType={
   "id": 0,
@@ -52,7 +53,7 @@ const emptydata:GoodExportReceiptDetailDataType={
     "totalSale": 0
   },
   "exportStatus": 0,
-  "listGoodExportDetailsModel": [
+  "listGoodExportDetailModels": [
     {
       "id": 0,
       "goodReceiptId": 0,
@@ -126,39 +127,6 @@ const strCopy1 = words1.join('/');
     return fetch_Api(api_link);
   };
 
-  const proccessStatus = (status: Number) => {
-    switch (status) {
-      case 0:
-
-        return <Tag color="error">Đã hủy</Tag>
-
-      case 1:
-        return <Tag color="success">Hoàn thành</Tag>
-
-        break;
-      case 2:
-        return <Tag color="processing">Đang xử lý</Tag>
-
-        break;
-      default:
-        break;
-    }
-    return;
-
-  }
-
-  const proccessDate = (dateString: String) => {
-    const date = new Date(dateString.toLocaleString());
-    const hour=date.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2});
-    const min=date.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2});
-    const timeString=hour+":"+min;
-    const formatter = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const formattedDate = formatter.format(date);
-    const newDateString ="";
-    //return formattedDate;
-    return (<div>{timeString}<br/>{formattedDate}</div>);
-  }
-
 const handleEdit =(ID:string)=>{
   getGoodReceiptByID(ID)
       .then((res) => {
@@ -218,7 +186,7 @@ const handleEdit =(ID:string)=>{
                 {goodReceiptData.id}
               </Form.Item>
               <Form.Item className="time" label={"Ngày xuất"} name={"time"}>
-                {proccessDate(goodReceiptData.exportDate)}
+              <ProcessDate dateString={goodReceiptData.exportDate}/>
               </Form.Item>
               <Form.Item
                 className="trans"
@@ -233,7 +201,7 @@ const handleEdit =(ID:string)=>{
                 label={"Trạng thái"}
                 name={"status"}
               >
-                {proccessStatus(goodReceiptData.exportStatus)}
+                <ProcessStatus status={goodReceiptData.exportStatus}/>
               </Form.Item>
             </Form>
           </div>
@@ -318,10 +286,10 @@ const handleEdit =(ID:string)=>{
                     }`}
                 >
                   <td className="table-body-code">{tran.id}</td>
-                  <td className="table-body-time">{proccessDate(tran.exportDate.toLocaleString())}</td>
+                  <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()}/></td>
                   <td className="table-body-trans">{tran.customer.name}</td>
                   <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
-                  <td className="table-body-status">{proccessStatus(tran.exportStatus)}</td>
+                  <td className="table-body-status"><ProcessStatus status={tran.exportStatus}/></td>
                   {dataChoose?.id === tran.id && (
                     <td className="table-body-action">
                       <Button
