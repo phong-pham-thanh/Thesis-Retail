@@ -25,7 +25,7 @@ import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 
-import { Button, Form, Input, Modal, Pagination, Table, Tag } from "antd";
+import { Button, Form, Input, message, Modal, Pagination, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import CustomInput from "../../component/searchBox";
@@ -40,9 +40,9 @@ import {
 import { GoodReceiptDataType, GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { ProcessDate, ProcessStatus } from "../../../app/processFunction"
+import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/processFunction"
 
-const emptydata:GoodImportReceiptDetailDataType={
+const emptydata: GoodImportReceiptDetailDataType = {
   "id": 0,
   "importDate": "01/01/1970",
   "partnerID": 0,
@@ -74,7 +74,7 @@ const emptydata:GoodImportReceiptDetailDataType={
       "priceUnit": 0,
       "quantity": 0
     }]
-  }
+}
 
 export default function ImportTransaction() {
   const navigate = useNavigate();
@@ -109,24 +109,21 @@ export default function ImportTransaction() {
       });
 
     //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page]);
+  }, [page,showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.import.getAll;
     return fetch_Api(api_link);
   };
 
-  const getGoodReceiptByID = (ID:string) => {
+  const getGoodReceiptByID = (ID: string) => {
     const api_link = api_links.goodsIssue.import.getById;
-    const words1 = api_link.url.split('/');
-words1.pop();words1.push(ID);
-const strCopy1 = words1.join('/');
-    api_link.url=strCopy1;
+    api_link.url = processAPIPostLink(api_link.url, ID);
     return fetch_Api(api_link);
   };
 
-  const handleEdit =(ID:string)=>{
-  getGoodReceiptByID(ID)
+  const handleEdit = (ID: string) => {
+    getGoodReceiptByID(ID)
       .then((res) => {
         setGoodReciptData(res.data);
         console.log(res.data);
@@ -137,7 +134,7 @@ const strCopy1 = words1.join('/');
       });
 
     setShowModal("edit");
-}
+  }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -149,200 +146,233 @@ const strCopy1 = words1.join('/');
   };
   const hasSelected = selectedRowKeys.length > 0;
 
+  const handleAccept = (receiptId:number) => {
+    const api_link = api_links.goodsIssue.import.accept;
+    api_link.url = processAPIPostLink(api_link.url, receiptId);
+    fetch_Api(api_link).then((res) => {
+      message.success("Đã duyệt hóa đơn "+receiptId);
+      setShowModal(undefined);
+    })
+    .catch((error) => {
+      message.error("Đơn "+receiptId+" chưa được duyệt");
+    });  
+    setShowModal(undefined);
+
+  };
+
+  const handleCancel = (receiptId:number|string) => {
+    const api_link = api_links.goodsIssue.import.cancel;
+    api_link.url = processAPIPostLink(api_link.url, receiptId);
+    fetch_Api(api_link).then((res) => {
+      message.success("Đã hủy hóa đơn "+receiptId);
+    })
+    .catch((error) => {
+      message.error("Đơn "+receiptId+" chưa được hủy");
+    });  
+    setShowModal(undefined);
+  };
+
   const onFinish = () => {
     console.log(form.getFieldsValue());
   };
 
 
- //////////// EDIT MODAL//////////
-  const ImportReceiptDetail=(ID: string, isShowModal?: boolean, setIsShowModal?: any)=>{
-  return (
-    <div className="product-container">
-      <Modal
-        title={`Phiếu nhập kho${" - " + goodReceiptData.id}`}
-        open={isShowModal}
-        onOk={() => setShowModal(undefined)}
-        onCancel={() => {
-          setShowModal(undefined);
-          form.resetFields();
-        }}
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <Button onClick={onFinish}>Lưu</Button>
-          </>
-        )}
-        className="modal-create-trans"
-      >
-        <div className="modal-header">
-          <div className="modal-info">Thông tin</div>
-          {/*<div className="modal-desc">Nhập đến kho hiện tại</div>*/}
-        </div>
-        <hr className="modal-line" />
-        <div className="modal-content">
-          <div className="modal-box">
-            <Form form={form} onFinish={onFinish}>
-              <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
-                {goodReceiptData.id}
-              </Form.Item>
-              <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
-              <ProcessDate dateString={goodReceiptData.importDate}/>
-              </Form.Item>
-              <Form.Item
-                className="trans"
-                label={"Nhà cung cấp"}
-                name={"trans"}
-              >
-                {goodReceiptData.partner.name}
-              </Form.Item>
-              <Form.Item
-                className="status"
-                label={"Trạng thái"}
-                name={"status"}
-              >
-                <ProcessStatus status={goodReceiptData.receiptStatus}/>
-              </Form.Item>
-            </Form>
+  //////////// EDIT MODAL//////////
+  const ImportReceiptDetail = (ID: string, isShowModal?: boolean, setIsShowModal?: any) => {
+    return (
+      <div className="product-container">
+        <Modal
+          title={`Phiếu nhập kho${" - " + goodReceiptData.id}`}
+          open={isShowModal}
+          onOk={() => setShowModal(undefined)}
+          onCancel={() => {
+            setShowModal(undefined);
+            form.resetFields();
+          }}
+          footer={(_, { OkBtn, CancelBtn }) => (
+            goodReceiptData.receiptStatus == 2 ?
+              <>
+                <Button onClick={()=>handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button onClick={()=>handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button onClick={onFinish}>OK</Button>
+              </>
+              : <>
+                <Button onClick={onFinish}>OK</Button>
+              </>
+          )}
+          className="modal-create-trans"
+        >
+          <div className="modal-header">
+            <div className="modal-info">Thông tin</div>
+            {/*<div className="modal-desc">Nhập đến kho hiện tại</div>*/}
           </div>
-          <div className="modal-products">
-          <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
-            <table>
-              <thead>
-                <th className="code">Tên sản phẩm</th>
-                <th className="quantity">Số lượng</th>
-                <th className="name">Đơn giá</th>
-              </thead>
-              <tbody>
-                {goodReceiptData.listGoodReciptDetailsModel &&
-                  goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
-                  goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
-                    <tr key={index}>
-                      <td className="name">{product.product.name?product.product.name:""}</td>
-                      <td className="quantity">{product.quantity}</td>
-                      <td className="priceUnit">{product.priceUnit.toLocaleString()}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          <hr className="modal-line" />
+          <div className="modal-content">
+            <div className="modal-box">
+              <Form form={form} onFinish={onFinish}>
+                <Form.Item className="code" label={"Mã nhập kho"} name={"code"}>
+                  {goodReceiptData.id}
+                </Form.Item>
+                <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
+                  <ProcessDate dateString={goodReceiptData.importDate} />
+                </Form.Item>
+                <Form.Item
+                  className="trans"
+                  label={"Nhà cung cấp"}
+                  name={"trans"}
+                >
+                  {goodReceiptData.partner.name}
+                </Form.Item>
+                <Form.Item
+                  className="status"
+                  label={"Trạng thái"}
+                  name={"status"}
+                >
+                  <ProcessStatus status={goodReceiptData.receiptStatus} />
+                </Form.Item>
+              </Form>
+            </div>
+            <div className="modal-products">
+              <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
+              <table>
+                <thead>
+                  <th className="code">Tên sản phẩm</th>
+                  <th className="quantity">Số lượng</th>
+                  <th className="name">Đơn giá</th>
+                </thead>
+                <tbody>
+                  {goodReceiptData.listGoodReciptDetailsModel &&
+                    goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
+                    goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
+                      <tr key={index}>
+                        <td className="name">{product.product.name ? product.product.name : ""}</td>
+                        <td className="quantity">{product.quantity}</td>
+                        <td className="priceUnit">{product.priceUnit.toLocaleString()}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
 
-      
-    </div>
-  );}
+
+      </div>
+    );
+  }
 
 
   return (
     <React.Fragment>
-    {ImportReceiptDetail(
+      {ImportReceiptDetail(
         IDChoose,
-        goodReceiptData && showModal==="edit")}
+        goodReceiptData && showModal === "edit")}
       <div className="product-container">
-      
-      <div className="filterField">
-        <div className="title">Phiếu nhập kho</div>
-      </div>
-      <div className="product-list transaction-list">
-        <div className="header-action">
-          <Button icon={<EditOutlined />} className="custom-button">
-            Điều chỉnh
-          </Button>
-          <Button
-            icon={<PlusCircleOutlined />}
-            className="custom-button"
-            onClick={() => //setShowModal("create")
-              navigate("tao-moi")}
-          >
-            Thêm mới
-          </Button>
-          <Button icon={<DownloadOutlined />} className="custom-button">
-            Nhập File
-          </Button>
-          <Button icon={<UploadOutlined />} className="custom-button">
-            Xuất File
-          </Button>
+
+        <div className="filterField">
+          <div className="title">Phiếu nhập kho</div>
         </div>
-        <table className="table">
-          <thead className="table-header">
-            <th className="table-header-code">Mã nhập hàng</th>
-            <th className="table-header-time">Thời gian</th>
-            <th className="table-header-trans">Nhà cung cấp</th>
-            <th className="table-header-total">Tổng tiền</th>
-            <th className="table-header-status">Trạng thái</th>
-            <th className="table-header-action"></th>
-          </thead>
-          <tbody className="table-body">
-            {importReceiptData &&
-              importReceiptData.length > 0 &&
-              importReceiptData.map((tran) => (
-                <tr
-                  key={Number(tran.id)}
-                  onClick={() => {
-                    setDataChoose(tran);
-                    setIDChoose(String(tran.id));
-                  }}
-                  className={`${dataChoose?.id === tran.id && "tr-active"
-                    }`}
-                >
-                  <td className="table-body-code">{tran.id}</td>
-                  <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()}/></td>
-                  <td className="table-body-trans">{tran.partner.name}</td>
-                  <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
-                  <td className="table-body-status"><ProcessStatus status={tran.receiptStatus}/></td>
-                  {dataChoose?.id === tran.id && (
-                    <td className="table-body-action">
-                      <Button
-                        icon={<EditOutlined />}
-                        className="edit-button"
-                        onClick={() => {
-                          handleEdit(String(tran.id));
-                          setShowModal("edit");
-                          form.setFieldsValue(tran);
-                          
-                        }}
-                      >
-                        Sửa
-                      </Button>
-                      <Button
-                        icon={<DeleteOutlined />}
-                        className="delete-button"
-                        onClick={() => {
-                          setShowModal("delete");
-                        }}
-                      >
-                        Xoá
-                      </Button>
-                    </td>
-                  )}
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="custom-pagination">
-          <Pagination
-            current={page}
-            //total={fakeData.length}
-            onChange={(page) => setPage(page)}
-          />
+        <div className="product-list transaction-list">
+          <div className="header-action">
+            <Button icon={<EditOutlined />} className="custom-button">
+              Điều chỉnh
+            </Button>
+            <Button
+              icon={<PlusCircleOutlined />}
+              className="custom-button"
+              onClick={() => //setShowModal("create")
+                navigate("tao-moi")}
+            >
+              Thêm mới
+            </Button>
+            <Button icon={<DownloadOutlined />} className="custom-button">
+              Nhập File
+            </Button>
+            <Button icon={<UploadOutlined />} className="custom-button">
+              Xuất File
+            </Button>
+          </div>
+          <table className="table">
+            <thead className="table-header">
+              <th className="table-header-code">Mã nhập hàng</th>
+              <th className="table-header-time">Thời gian</th>
+              <th className="table-header-trans">Nhà cung cấp</th>
+              <th className="table-header-total">Tổng tiền</th>
+              <th className="table-header-status">Trạng thái</th>
+              <th className="table-header-action"></th>
+            </thead>
+            <tbody className="table-body">
+              {importReceiptData &&
+                importReceiptData.length > 0 &&
+                importReceiptData.map((tran) => (
+                  <tr
+                    key={Number(tran.id)}
+                    onClick={() => {
+                      setDataChoose(tran);
+                      setIDChoose(String(tran.id));
+                    }}
+                    className={`${dataChoose?.id === tran.id && "tr-active"
+                      }`}
+                  >
+                    <td className="table-body-code">{tran.id}</td>
+                    <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()} /></td>
+                    <td className="table-body-trans">{tran.partner.name}</td>
+                    <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
+                    <td className="table-body-status"><ProcessStatus status={tran.receiptStatus} /></td>
+                    {dataChoose?.id === tran.id && (
+                      <td className="table-body-action">
+                        <Button
+                          icon={<EditOutlined />}
+                          className="edit-button"
+                          onClick={() => {
+                            handleEdit(String(tran.id));
+                            setShowModal("edit");
+                            form.setFieldsValue(tran);
+
+                          }}
+                        >
+                          Chi tiết
+                        </Button>
+                        <Button
+                          icon={<DeleteOutlined />}
+                          className="delete-button"
+                          onClick={() => {
+                            setShowModal("delete");
+                          }}
+                        >
+                          Xoá
+                        </Button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          <div className="custom-pagination">
+            <Pagination
+              current={page}
+              //total={fakeData.length}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
         </div>
+        <Modal
+          title="Xoá"
+          open={showModal === "delete"}
+          onOk={() => setShowModal(undefined)}
+          onCancel={() => setShowModal(undefined)}
+          okText="Xác nhận"
+          cancelText="Huỷ"
+        >
+          <p>Bạn có chắc sẽ xoá nó không?</p>
+        </Modal>
       </div>
-      <Modal
-        title="Xoá"
-        open={showModal === "delete"}
-        onOk={() => setShowModal(undefined)}
-        onCancel={() => setShowModal(undefined)}
-        okText="Xác nhận"
-        cancelText="Huỷ"
-      >
-        <p>Bạn có chắc sẽ xoá nó không?</p>
-      </Modal>
-      </div>
-      </React.Fragment>
-      
+    </React.Fragment>
+
   );
 }
 
-      {/*//////////// EDIT MODAL//////
+{/*//////////// EDIT MODAL//////
       <Modal
         title={`Phiếu nhập kho`}//${goodReceiptData?.id?? " - " + goodReceiptData.id}
         open={showModal==="edit"}
@@ -412,7 +442,7 @@ const strCopy1 = words1.join('/');
         </div>
       </Modal>
 */}
-      {/*<React.Fragment>
+{/*<React.Fragment>
 
       <ProductInformationPopupScreen
         isPopup={isChangeInformation}

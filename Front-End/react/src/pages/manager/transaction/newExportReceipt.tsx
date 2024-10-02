@@ -322,7 +322,7 @@ export default function ExportGoods() {
         id: "0",
         exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         customerId: form.getFieldValue("customerId"),
-        exportStatus: 1,
+        exportStatus: 2,
         listGoodExportDetailModels: []
       },
       listGoodExportDetailModels: tempListGoodReceiptDetailModels,

@@ -317,7 +317,7 @@ export default function ImportGoods() {
         id: "0",
         importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         partnerId: form.getFieldValue("partnerId"),
-        receiptStatus: 1,
+        receiptStatus: 2,
         ListGoodReciptDetailsModel: []
       },
       listGoodReceiptDetailModels: tempListGoodReceiptDetailModels,

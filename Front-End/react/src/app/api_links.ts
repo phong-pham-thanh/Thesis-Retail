@@ -7,7 +7,7 @@ const api_links = {
       url: `${authUrl}/Product`,
       method: "GET",
     },
-    
+
     // GET PRODUCT BY ID
     getById: (productId: number) => ({
       url: `${authUrl}/Product/getProductById/${productId}`,
@@ -54,7 +54,20 @@ const api_links = {
         method: "POST",
         data: {},
       },
+
+      //SET STATE
+      accept: {
+        url: `${authUrl}/GoodRecipt/acceptGoodRecipt/`,
+        method: "GET",
+      },
+      cancel: {
+        url: `${authUrl}/GoodRecipt/cancelGoodRecipt/`,
+        method: "GET",
+      },
+
     },
+
+
     export: {
       getAll: {
         url: `${authUrl}/GoodExport/GetAllGoodExports`,
@@ -71,6 +84,16 @@ const api_links = {
         url: `${authUrl}/GoodExport/addGoodExport`,
         method: "POST",
         data: {},
+      },
+
+      //SET STATE
+      accept: {
+        url: `${authUrl}/GoodExport/acceptGoodExport/`,
+        method: "GET",
+      },
+      cancel: {
+        url: `${authUrl}/GoodExport/cancelGoodExport/`,
+        method: "GET",
       },
 
       ////////////////////// ELSE //////////////////////
