@@ -6,7 +6,7 @@ body {
 }
 
 .header {
-    background-color: #673AB7;
+    background-color: #007bff;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -33,6 +33,10 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    ng-select {
+        width: 100%;
+        min-width: 200px;
+    }
 }
 
 .main-content {
@@ -43,6 +47,11 @@ body {
 .invoice-section {
     width: 70%;
     padding-right: 20px;
+    max-height: 80vh; /* Giới hạn chiều cao là 80% chiều cao của viewport */
+    overflow-y: auto; /* Cho phép cuộn dọc khi nội dung vượt quá */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
 }
 
 .invoice-item {
@@ -50,25 +59,105 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: space-between;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ddd;
+    gap: 10px; /* Add gap to create space between elements */
+  
+    span {
+      flex: 1 1 auto;  // Chiều rộng tự động nhưng không quá lớn
+      max-width: 150px;  // Đặt giới hạn chiều rộng để phần tên sản phẩm không chiếm quá nhiều không gian
+      overflow: hidden;  // Đảm bảo tên sản phẩm không vượt ra khỏi khung
+      text-overflow: ellipsis;  // Thêm "..." nếu tên sản phẩm quá dài
+      white-space: nowrap;
+    }
+  
+    .quantity-control {
+      flex: 0 0 120px;  // Đặt chiều rộng cố định cho phần điều chỉnh số lượng
+      display: flex;
+      justify-content: space-between;
+    }
+  
+    .price-container {
+      flex: 0 0 200px;  // Đặt chiều rộng cố định cho phần giá, để đảm bảo không lệch quá xa
+      display: flex;
+      justify-content: center;
+    }
+  
+    .delete-item {
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+  }
+
+.price-container {
+    width: 200px; // Đảm bảo chiều rộng cố định cho container
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-align: left; 
+}
+
+.invoice-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;  // Điều chỉnh khoảng cách giữa các phần tử cho phù hợp
+    
+    span,
+    input[type="number"] {
+      width: 100px;
+      text-align: left; 
+      padding: 5px; 
+    }
+    
+    input[type="text"] {
+        width: 150px;
+        text-align: right; 
+        padding: 5px; 
+        font-size: 16px;
+      }
+  }
+
+.quantity-control {
+    display: contents;
+    align-items: center;
+    gap: 5px; /* Add small gap between buttons and input */
 }
 
 .quantity-control input {
-    width: 40px;
+    width: 50px; /* Fix width for input field */
     text-align: center;
 }
 
-.discount-input {
-    padding: 5px;
+.delete-item {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    flex-shrink: 0;
     width: 100px;
 }
 
+.invoice-item span:first-child {
+    width: 50px; /* Fixed width for the ID column */
+}
+
+.invoice-item span:nth-child(2) {
+    flex: 2; /* Larger flex value for the name column */
+}
+
+.invoice-item span:last-child {
+    flex: 1; /* Adjust flex for the price column */
+    text-align: right; /* Align price to the right */
+}
+
+
 .product-list {
     width: 30%;
-    display: grid;
+    display: flex;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
@@ -84,6 +173,7 @@ body {
     align-items: center;
     position: relative; /* Make this container the reference for absolute positioning */
     width: 150px; /* Adjust width to fit content */
+    height: 150px;
 }
 
 .product-name {
@@ -140,7 +230,7 @@ body {
 }
 
 .payment-btn {
-    background-color: #673AB7;
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;

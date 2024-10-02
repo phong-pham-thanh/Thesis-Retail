@@ -99,9 +99,9 @@ export default function PartnerInformationPopupScreen({
           <Input />
         </Form.Item>
         <Form.Item
-          name="totalSale"
-          label="Total Sale"
-          rules={[{ required: true, message: "Please enter total sale amount" }]}
+          name="phoneNumber"
+          label="Phone number"
+          rules={[{ required: true, message: "Please enter phone number" }]}
         >
           <Input />
         </Form.Item>

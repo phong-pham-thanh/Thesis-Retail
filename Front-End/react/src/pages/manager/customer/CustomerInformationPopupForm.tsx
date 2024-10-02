@@ -98,6 +98,15 @@ export default function CustomerInformationPopupScreen({
           <Input />
         </Form.Item>
       </Form>
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="phoneNumber"
+          label="Phone number"
+          rules={[{ required: true, message: "Please enter phone number" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }
