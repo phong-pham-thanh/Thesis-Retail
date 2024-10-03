@@ -224,7 +224,7 @@ export default function ExportTransaction() {
                   name={"trans"}
                   rules={[{ required: true }]}
                 >
-                  {goodReceiptData.customer.name}
+                  {goodReceiptData.customer?.name}
                 </Form.Item>
                 <Form.Item
                   className="status"

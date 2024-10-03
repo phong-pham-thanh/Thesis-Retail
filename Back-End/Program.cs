@@ -7,6 +7,7 @@ using APIBackend.Service;
 using APIBackend.Repository;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using NGO.Core.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,7 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IPriceProductRepository, PriceProductRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IBillDetailRepository, BillDetailRepository>();
-
+builder.Services.AddScoped<IUnityOfWorkFactory, TransactionScopeUnityOfWorkFactory>();
 // Mapper
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProductMapper, ProductMapper>();

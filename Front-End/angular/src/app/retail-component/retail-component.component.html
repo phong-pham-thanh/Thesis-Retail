@@ -42,7 +42,7 @@
                     <span>{{item?.product?.name}}</span>
                     <div class="quantity-control">
                         <button (click)="changeQuantity(item, false)">-</button>
-                        <input type="number" [(ngModel)]="item.quantity">
+                        <input type="number" [(ngModel)]="item.quantity" (input)="getTotalAmount()">
                         <button (click)="changeQuantity(item, true)">+</button>
                     </div>
                     <div class="price-container">
@@ -76,7 +76,5 @@
         </div>
         <button class="payment-btn" (click)="openPaymentDialog()">Thanh toán</button>
     </footer>
-
-    <script src="scripts.js"></script>
 </body>
 </html>

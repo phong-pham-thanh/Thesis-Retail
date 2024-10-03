@@ -53,7 +53,7 @@ export class RetailPaymentComponentComponent {
 
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   caculateChange(){
@@ -82,10 +82,11 @@ export class RetailPaymentComponentComponent {
           take(1),
           map(error => {
             if(error === ''){
-              this.dialogRef.close();
+              this.dialogRef.close(true);
             }
             else{
-              alert(error);
+              this.dialogRef.close(false);
+              alert(error.error.detail);
             }
           }))
         

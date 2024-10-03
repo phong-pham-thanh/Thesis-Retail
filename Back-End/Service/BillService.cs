@@ -7,6 +7,7 @@ using APIBackend.Repository;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
+using NGO.Core.Repositories;
 
 namespace APIBackend.Service
 {
@@ -28,6 +29,7 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         private readonly IGoodExportService _goodExportService;
+        protected readonly IUnityOfWorkFactory _uowFactory;
 
 
         public BillService(
@@ -38,6 +40,7 @@ namespace APIBackend.Service
             IBillDetailRepository billDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
+            IUnityOfWorkFactory uowFactory,
             IGoodExportService goodExportService
         ) 
         {
@@ -49,25 +52,30 @@ namespace APIBackend.Service
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
             _goodExportService = goodExportService;
+            _uowFactory = uowFactory;
         }
         public bool AddBill(BillModel billModel)
         {
-            //Add Bill
-            BillModel newBillModel = _billRepository.AddBill(billModel);
-
-            //Add Bill Details
-            foreach(var billDetailModel in billModel.ListBillDetails)
+            using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                BillDetails billDetails = new BillDetails();
-                _billDetailMapper.ToEntity(billDetails, billDetailModel);
-                billDetails.BillId = newBillModel.Id;
-                _billDetailRepository.AddBillDetails(billDetails);
+                //Add Bill
+                BillModel newBillModel = _billRepository.AddBill(billModel);
+
+                //Add Bill Details
+                foreach (var billDetailModel in billModel.ListBillDetails)
+                {
+                    BillDetails billDetails = new BillDetails();
+                    _billDetailMapper.ToEntity(billDetails, billDetailModel);
+                    billDetails.BillId = newBillModel.Id;
+                    _billDetailRepository.AddBillDetails(billDetails);
+                }
+                AutoAddGoodExport(billModel, billModel.ListBillDetails);
+                uow.Commit();
+                return true;
             }
-            AutoAddGoodExport(billModel, billModel.ListBillDetails);
-            return true;
         }
 
-        public void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
+        private void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
         {
             GoodsExportModel goodsExportModel = new GoodsExportModel();
             goodsExportModel.CustomerId = billModel.CustomerId;

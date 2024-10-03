@@ -3,6 +3,7 @@ using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
+using NGO.Core.Repositories;
 using System.Net.Http;
 
 namespace APIBackend.Service
@@ -22,11 +23,17 @@ namespace APIBackend.Service
         private readonly IProductMapper _productMapper;
         private readonly IProductRepository _productRepository;
         private readonly IInventoryRepository _inventoryRepository;
-        public ProductService(IProductMapper productMapper, IProductRepository productRepository, IInventoryRepository inventoryRepository)
+        protected readonly IUnityOfWorkFactory _uowFactory;
+
+        public ProductService(IProductMapper productMapper, 
+            IProductRepository productRepository, 
+            IInventoryRepository inventoryRepository,
+            IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
             _productRepository = productRepository;
             _inventoryRepository = inventoryRepository;
+            _uowFactory = uowFactory;
         }
 
         public List<ProductModel> GetAllProducts()
