@@ -12,7 +12,7 @@ namespace APIBackend.Service
 {
     public interface IBillService
     {
-        public bool AddBill(BillModel billModel, List<BillDetailModel> listBillDetailModels);
+        public bool AddBill(BillModel billModel);
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
         // public BillModel AcceptBill(int id);
@@ -50,20 +50,20 @@ namespace APIBackend.Service
             _productRepository = productRepository;
             _goodExportService = goodExportService;
         }
-        public bool AddBill(BillModel billModel, List<BillDetailModel> listBillDetailModels)
+        public bool AddBill(BillModel billModel)
         {
             //Add Bill
             BillModel newBillModel = _billRepository.AddBill(billModel);
 
             //Add Bill Details
-            foreach(var billDetailModel in listBillDetailModels)
+            foreach(var billDetailModel in billModel.ListBillDetails)
             {
                 BillDetails billDetails = new BillDetails();
                 _billDetailMapper.ToEntity(billDetails, billDetailModel);
                 billDetails.BillId = newBillModel.Id;
                 _billDetailRepository.AddBillDetails(billDetails);
             }
-            AutoAddGoodExport(billModel, listBillDetailModels);
+            AutoAddGoodExport(billModel, billModel.ListBillDetails);
             return true;
         }
 
