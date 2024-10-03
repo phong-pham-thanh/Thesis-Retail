@@ -1,3 +1,4 @@
+import { NgbDate } from "@ng-bootstrap/ng-bootstrap";
 import { Product } from "./product.model";
 
 export class PriceProduct{
