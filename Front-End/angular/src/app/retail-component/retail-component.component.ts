@@ -104,15 +104,16 @@ export class RetailComponentComponent implements OnInit {
       )
     ).subscribe();
 
-    this.initBill();
+    this.initComponent();
 
   }
 
-  initBill(){
+  initComponent(){
     this.currentBill = {
       createdDate: new Date(),
       listBillDetails: [],
     }
+    this.totalAmountBill = 0;
   }
 
 
@@ -156,6 +157,7 @@ export class RetailComponentComponent implements OnInit {
 
   removeItem(item: BillDetails){
     this.currentBill.listBillDetails = this.currentBill.listBillDetails.filter(bi => bi.product?.id !== item.product?.id);
+    this.getTotalAmount();
   }
 
   getPriceProduct(product: Product){
@@ -198,7 +200,9 @@ export class RetailComponentComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.initBill()
+      if(result){
+        this.initComponent()
+      }
     });
   }
 

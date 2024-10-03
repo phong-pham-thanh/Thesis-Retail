@@ -10,5 +10,5 @@ export interface BillState {
     isLoading: boolean;
     isLoaded: boolean;
     isSaving: boolean;
-    error: string;
+    error: any;
 }

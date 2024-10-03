@@ -42,15 +42,15 @@ namespace APIBackend.Repository
             {
                 if (inventory == null) 
                 {
-                    Inventories newInventory = new Inventories();
-                    newInventory.ProductId = idProduct;
-                    newInventory.WareHouseId = idWareHouse;
-                    newInventory.Quantity = -Quantity;
-                    _coreContext.Inventories.Add(newInventory);
+                    throw new InvalidOperationException($"Không tồn tại sản phẩm trong kho");
                 }
                 else
                 {
                     inventory.Quantity -= Quantity;
+                    if(inventory.Quantity < 0)
+                    {
+                        throw new InvalidOperationException($"Không đủ tồn kho");
+                    }
                 }
             }
             _coreContext.SaveChanges();
