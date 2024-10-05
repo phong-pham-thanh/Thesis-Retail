@@ -32,7 +32,11 @@ export default function UserPage() {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [userToDelete, setUserToDelete] = useState<UserType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [timeoutId, setTimeoutId] = useState<number | undefined>();
+  const [timeoutId, setTimeoutId] = useState<number | undefined>(); // Timeout for search
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10, // Default page size
+  });
 
   const getUsers = () => {
     setLoading(true);
@@ -57,6 +61,7 @@ export default function UserPage() {
     setSearchTerm(value);
     if (timeoutId) clearTimeout(timeoutId);
 
+    // Set timeout to delay search, simulating debounce effect
     const newTimeoutId = window.setTimeout(() => {
       if (value.trim()) {
         const filtered = customers.filter((customer) =>
@@ -64,9 +69,9 @@ export default function UserPage() {
         );
         setFilteredUsers(filtered);
       } else {
-        setFilteredUsers(customers);
+        setFilteredUsers(customers); // If search term is cleared, reset to all customers
       }
-    }, 2000);
+    }, 2000); // 2 seconds delay
 
     setTimeoutId(newTimeoutId);
   };
@@ -84,6 +89,15 @@ export default function UserPage() {
   const showDeleteDialog = (customer: UserType) => {
     setUserToDelete(customer);
     setIsAlertVisible(true);
+  };
+
+  // Handle pagination changes
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
   };
 
   const columns = [
@@ -169,6 +183,16 @@ export default function UserPage() {
               dataSource={filteredUsers}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true, // Show options to change page size
+                pageSizeOptions: ["5", "10", "20", "50"], // Admin can select page size
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>

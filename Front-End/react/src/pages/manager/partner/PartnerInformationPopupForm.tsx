@@ -6,7 +6,7 @@ import api_links from "../../../app/api_links";
 interface PartnerInformationPopupScreenProps {
   isPopup: boolean;
   setPopup: (value: boolean) => void;
-  data?: { id?: string; name?: string; totalSale?: string }; // Adjust according to partner type
+  data?: { id?: string; name?: string; phoneNumber?: string }; // Adjust according to partner type
   type?: string; // "create" or "edit"
   onSave?: () => void; // Callback after partner is saved
 }
@@ -27,16 +27,15 @@ export default function PartnerInformationPopupScreen({
       form.setFieldsValue({
         ...data,
         name: data.name,
-        totalSale: data.totalSale,
+        phoneNumber: data.phoneNumber,
       });
-    } else {
+    } else if (type === "create") {
       form.resetFields();
     }
-  }, [data, type]);
+  }, [data, type, form]);
 
   // Close the modal and reset the form
   const handleCancel = () => {
-    form.resetFields();
     setPopup(false);
   };
 
