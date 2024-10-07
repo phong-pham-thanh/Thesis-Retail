@@ -87,6 +87,7 @@ export type EmployeeListState = EmployeeState[];
 export type CustomerState = {
   id: string;
   name: string;
+  phoneNumber: string;
 };
 
 export type CustomerListState = CustomerState[];
@@ -97,22 +98,21 @@ export type CategoryType = {
   name: string;
 };
 
-export type PartnerState =
-  {
-    id: number | string,
-    name: string,
-    totalSale: number,
-  };
+export type PartnerState = {
+  id: number | string,
+  name: string,
+  totalSale: number,
+  phoneNumber: string;
+};
 
-export type WarehouseState =
-  {
-    id: number | string,
-    managerId: number | string,
-    manager: null,
-    address: string,
-    status: boolean,
-    inventories: null
-  };
+export type WarehouseState = {
+  id: number | string,
+  managerId: number | string,
+  manager: null,
+  address: string,
+  status: boolean,
+  inventories: null
+};
 
 export type GoodsReceipt = {
   id: string;
@@ -124,12 +124,9 @@ export type GoodsReceipt = {
   exportStatus?: number;
   ListGoodReciptDetailsModel?: [];
   listGoodExportDetailModels?: [];
-
-  //parnersId: string;
 };
 
-export type ListGoodReciptDetailsModel =
-{
+export type ListGoodReciptDetailsModel = {
   id: number,
   goodReceiptId?: number,
   goodExportId?: number,
@@ -147,7 +144,7 @@ export type ListGoodReciptDetailsModel =
     description: string,
     status: boolean,
     listInventories: null
-  }|null,
+  } | null,
   priceUnit?: number,
   quantity: number
 };
@@ -198,7 +195,7 @@ export type GoodImportReceiptDetailDataType = {
       priceUnit: number,
       quantity: number
     }]
-}
+};
 
 export type GoodExportReceiptDetailDataType = {
   id: number,
@@ -212,25 +209,5 @@ export type GoodExportReceiptDetailDataType = {
   exportStatus: number,
   totalAmount: number | null,
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
-  listGoodExportDetailModels: ListGoodReciptDetailsModel[]/*[
-    {
-      id: number,
-      goodReceiptId: number,
-      goodsReceipt: null,
-      productId: number,
-      product: {
-        id: number,
-        name: string,
-        categoryId: number,
-        category: {
-          id: number,
-          name: string
-        },
-        description: string,
-        status: boolean,
-        listInventories: null
-      },
-      priceUnit: number,
-      quantity: number
-    }]*/
-}
+  listGoodExportDetailModels: ListGoodReciptDetailsModel[];
+};

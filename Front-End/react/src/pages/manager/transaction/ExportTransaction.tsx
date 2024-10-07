@@ -83,6 +83,7 @@ export default function ExportTransaction() {
 
   //useSelector, useNavigate
   const [exportReceiptData, setExportReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
+  const [showReceiptData, setShowReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -92,7 +93,7 @@ export default function ExportTransaction() {
   const [loading, setLoading] = useState(false);
   //call api set data xuất kho
   const [page, setPage] = useState<number>(1);
-  const size = 7;
+  const size = 9;
 
   const [IDChoose, setIDChoose] = useState<string>();
   const [dataChoose, setDataChoose] = useState<GoodExportReceiptDetailDataType>();
@@ -106,13 +107,13 @@ export default function ExportTransaction() {
     getAllGoodReceipt()
       .then((res) => {
         setExportReciptData(res.data);
+        setShowReciptData(res.data.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);
       });
 
-    //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page,showModal]);
+  }, [showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.export.getAll;
@@ -306,7 +307,7 @@ export default function ExportTransaction() {
             <tbody className="table-body">
               {exportReceiptData &&
                 exportReceiptData.length > 0 &&
-                exportReceiptData.map((tran) => (
+                showReceiptData.map((tran) => (
                   <tr
                     key={Number(tran.id)}
                     onClick={() => {
@@ -354,8 +355,11 @@ export default function ExportTransaction() {
           <div className="custom-pagination">
             <Pagination
               current={page}
-              //total={fakeData.length}
-              onChange={(page) => setPage(page)}
+              total={exportReceiptData.length}
+              onChange={(page) => {
+                setShowReciptData(exportReceiptData.slice((page - 1) * size, page * size));
+                setPage(page);
+              }}
             />
           </div>
         </div>

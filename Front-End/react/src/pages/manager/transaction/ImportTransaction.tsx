@@ -81,6 +81,7 @@ export default function ImportTransaction() {
 
   //useSelector, useNavigate
   const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
+  const [showReceiptData, setShowReciptData] = useState<GoodReceiptDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -88,9 +89,9 @@ export default function ImportTransaction() {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
-  //call api set data nhập kho
+
   const [page, setPage] = useState<number>(1);
-  const size = 7;
+  const size = 9;
 
   const [IDChoose, setIDChoose] = useState<string>();
   const [dataChoose, setDataChoose] = useState<GoodReceiptDataType>();
@@ -103,13 +104,13 @@ export default function ImportTransaction() {
     getAllGoodReceipt()
       .then((res) => {
         setImportReciptData(res.data);
+        setShowReciptData(res.data.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);
       });
 
-    //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page,showModal]);
+  }, [showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.import.getAll;
@@ -146,29 +147,29 @@ export default function ImportTransaction() {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
-  const handleAccept = (receiptId:number) => {
+  const handleAccept = (receiptId: number) => {
     const api_link = api_links.goodsIssue.import.accept;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
     fetch_Api(api_link).then((res) => {
-      message.success("Đã duyệt hóa đơn "+receiptId);
+      message.success("Đã duyệt hóa đơn " + receiptId);
       setShowModal(undefined);
     })
-    .catch((error) => {
-      message.error("Đơn "+receiptId+" chưa được duyệt");
-    });  
+      .catch((error) => {
+        message.error("Đơn " + receiptId + " chưa được duyệt");
+      });
     setShowModal(undefined);
 
   };
 
-  const handleCancel = (receiptId:number|string) => {
+  const handleCancel = (receiptId: number | string) => {
     const api_link = api_links.goodsIssue.import.cancel;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
     fetch_Api(api_link).then((res) => {
-      message.success("Đã hủy hóa đơn "+receiptId);
+      message.success("Đã hủy hóa đơn " + receiptId);
     })
-    .catch((error) => {
-      message.error("Đơn "+receiptId+" chưa được hủy");
-    });  
+      .catch((error) => {
+        message.error("Đơn " + receiptId + " chưa được hủy");
+      });
     setShowModal(undefined);
   };
 
@@ -192,8 +193,8 @@ export default function ImportTransaction() {
           footer={(_, { OkBtn, CancelBtn }) => (
             goodReceiptData.receiptStatus == 2 ?
               <>
-                <Button onClick={()=>handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={()=>handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
                 <Button onClick={onFinish}>OK</Button>
               </>
               : <>
@@ -304,7 +305,7 @@ export default function ImportTransaction() {
             <tbody className="table-body">
               {importReceiptData &&
                 importReceiptData.length > 0 &&
-                importReceiptData.map((tran) => (
+                showReceiptData.map((tran) => (
                   <tr
                     key={Number(tran.id)}
                     onClick={() => {
@@ -351,8 +352,11 @@ export default function ImportTransaction() {
           <div className="custom-pagination">
             <Pagination
               current={page}
-              //total={fakeData.length}
-              onChange={(page) => setPage(page)}
+              total={importReceiptData.length}
+              onChange={(page) => {
+                setShowReciptData(importReceiptData.slice((page - 1) * size, page * size));
+                setPage(page);
+              }}
             />
           </div>
         </div>

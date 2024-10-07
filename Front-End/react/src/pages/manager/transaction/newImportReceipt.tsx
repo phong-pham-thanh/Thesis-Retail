@@ -29,6 +29,7 @@ import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, P
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
+import { handleSearch } from "../../../app/processFunction";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -149,6 +150,7 @@ export default function ImportGoods() {
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
+  const [choosedCategory, setChoosedCategory] = useState("Tất cả");
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
@@ -159,6 +161,7 @@ export default function ImportGoods() {
     getAllProduct()
       .then((res) => {
         setProducts(res.data);
+        setFilterProducts(res.data)
       })
       .catch((error) => {
         console.log(error);
@@ -290,25 +293,25 @@ export default function ImportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-          id: 0,
-          goodReceiptId: 0,
-          goodsReceipt: null,
-          productId: Number(item.productId),
-          product: null,
-          /*{
-            id: Number(item.productId),
-            name: "",
-            categoryId: 0,
-            category: {
-              id: 0,
-              name: ""
-            },
-            description: "",
-            status: 0,
-            listInventories: null
-          },*/
-          priceUnit: item.priceUnit,
-          quantity: item.quantity
+        id: 0,
+        goodReceiptId: 0,
+        goodsReceipt: null,
+        productId: Number(item.productId),
+        product: null,
+        /*{
+          id: Number(item.productId),
+          name: "",
+          categoryId: 0,
+          category: {
+            id: 0,
+            name: ""
+          },
+          description: "",
+          status: 0,
+          listInventories: null
+        },*/
+        priceUnit: item.priceUnit,
+        quantity: item.quantity
       })
     })
     const event = new Date();
@@ -326,23 +329,33 @@ export default function ImportGoods() {
 
     console.log(postData);
     postGoodsIssue(postData)
-    .then((res) => {
-      message.success("Tạo thành công");
-      navigate(-1);
-    })
-    .catch((error) => {
-      message.error("Tạo thất bại");
-    });
-    
+      .then((res) => {
+        message.success("Tạo thành công");
+        navigate(-1);
+      })
+      .catch((error) => {
+        message.error("Tạo thất bại");
+      });
+
   };
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-  
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    console.log(info?.source, value);
+    handleFilterProductTable(0);
+    setFilterProducts(handleSearch(value, allProducts))
+  }
+
   const handleFilterProductTable = (value: string | number) => {
-    if (value == 0) setFilterProducts(allProducts);
-    else setFilterProducts(allProducts.filter((p)=>p.categoryId==value));
+    if (value == 0) {
+      setFilterProducts(allProducts);
+      setChoosedCategory("Tất cả");
+    }
+    else {
+      setFilterProducts(allProducts.filter((p) => p.categoryId == value));
+      setChoosedCategory(allCategory.find((c) => c.id == value).name);
+    }
   };
- 
+
   return (
     <div className="dashboard-container">
 
@@ -429,7 +442,7 @@ export default function ImportGoods() {
 
 
           <div className='export-list'>
-           
+
             <Table
               columns={exportColumns}
               dataSource={[...exportTableData]}
@@ -451,22 +464,22 @@ export default function ImportGoods() {
         </div>
 
         <div className='newtransaction-product-table'>
-        <Row>
-        <Search placeholder="input search text" onSearch={onSearch} style={{ width: "50%" }} />
-              <Select
-                showSearch
-                placeholder="Phân loại"
-                optionFilterProp="label"
-                style={{ width: '50%' }}
-                onChange={handleFilterProductTable}
-              >
-                <Option value={0}>Tất cả</Option>
-                {allCategory?.map((d) => {
+          <Row>
+            <Select
+              showSearch
+              placeholder="Phân loại"
+              optionFilterProp="label"
+              style={{ width: '50%' }}
+              onChange={handleFilterProductTable}
+            >
+              <Option value={0}>Tất cả</Option>
+              {allCategory?.map((d) => {
                 return (
                   <Option value={d.id}>{d.name}</Option>
                 )
               })}</Select>
-            </Row>
+            <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
+          </Row>
           {/*<Table
             columns={productColumns}
             /*dataSource={allProducts}
@@ -474,7 +487,7 @@ export default function ImportGoods() {
             onClick: () => handleTableRowClick(record.id),
           })}*\/
           />*/}
-          <Card className="product-table" title="All">
+          <Card className="product-table" title={choosedCategory}>
             {filteredProducts?.map((p) =>
               <Card.Grid className="product-cell" style={gridStyle}
                 onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}

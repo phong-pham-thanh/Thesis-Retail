@@ -20,11 +20,12 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { GetProps } from 'antd';
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
+
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, CustomerState, ProductState, WarehouseState } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, CustomerState, ProductState, WarehouseState } from "../../../app/type.d";
-//import axios from 'axios';
+import { handleSearch } from "../../../app/processFunction"
+
 
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -149,6 +150,7 @@ export default function ExportGoods() {
   const [allCustomers, setAllCustomers] = useState<CustomerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
+  const [choosedCategory, setChoosedCategory] = useState("Tất cả");
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
@@ -291,29 +293,13 @@ export default function ExportGoods() {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
-       /* "goodsReceiptId": "",
-        "productId": Number(item.productId),
-        "priceUnit": item.priceUnit,
-        "quantity": item.quantity,*/
-          id: 0,
-          goodExportId: 0,
-          goodExport: null,
-          productId: Number(item.productId),
-          product: null,
-          /*{
-            id: Number(item.productId),
-            name: "",
-            categoryId: 0,
-            category: {
-              id: 0,
-              name: ""
-            },
-            description: "",
-            status: 0,
-            listInventories: null
-          },*/
-          //priceUnit: item.priceUnit,
-          quantity: item.quantity
+        id: 0,
+        goodExportId: 0,
+        goodExport: null,
+        productId: Number(item.productId),
+        product: null,
+        //priceUnit: item.priceUnit,
+        quantity: item.quantity
       })
     })
     const event = new Date();
@@ -331,27 +317,38 @@ export default function ExportGoods() {
 
     console.log(postData);
     postGoodsIssue(postData)
-    .then((res) => {
-      message.success("Tạo thành công");
-      navigate(-1);
-    })
-    .catch((error) => {
-      message.error("Tạo thất bại");
-    });
-    
+      .then((res) => {
+        message.success("Tạo thành công");
+        navigate(-1);
+      })
+      .catch((error) => {
+        message.error("Tạo thất bại");
+      });
+
   };
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    console.log(info?.source, value);
+    handleFilterProductTable(0);
+    setFilterProducts(handleSearch(value, allProducts))
+  }
 
   const handleFilterProductTable = (value: string | number) => {
-    if (value == 0) setFilterProducts(allProducts);
-    else setFilterProducts(allProducts.filter((p)=>p.categoryId==value));
+    if (value == 0) {
+      setFilterProducts(allProducts);
+      setChoosedCategory("Tất cả");
+    }
+    else {
+      setFilterProducts(allProducts.filter((p) => p.categoryId == value));
+      setChoosedCategory(allCategory.find((c) => c.id == value).name);
+    }
   };
 
   return (
     <div className="dashboard-container">
 
       <div className="product-container">
+
         <div className="receipt-container">
           Đơn xuất hàng
           <Form form={form}
@@ -359,82 +356,85 @@ export default function ExportGoods() {
             wrapperCol={{ span: 20 }}
             onFinish={onFinish}
           >
-            <Space size={"large"} ><Row>
-              <Col span={8}>
-                <Form.Item
-                  className="idWareHouse"
-                  label={"Xuất đến kho"}
-                  name={"idWareHouse"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Chọn kho"
-                    optionFilterProp="label"
+            <Space size={"large"} >
+              <Row>
+                <Col span={8}>
+                  <Form.Item
+                    className="idWareHouse"
+                    label={"Xuất đến kho"}
+                    name={"idWareHouse"}
+                    layout="vertical"
+                    rules={[{
+                      required: true,
+                      message: 'Không để trống',
+                    }]}
                   >
-                    {allWarehouses?.map((d) => {
-                      return (
-                        <Option value={d.id}>{d.address}</Option>
-                      )
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col><Col span={8}>
-                <Form.Item
-                  className="exportDate"
-                  label={"Ngày xuất"}
-                  name={"exportDate"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <DatePicker
-                    showTime
-                    disabledDate={(current) => { return current.valueOf() > Date.now() }}
-                  />
-                </Form.Item >
-              </Col><Col span={8}><Form.Item
-                className="customerId"
-                label={"Khách hàng"}
-                name={"customerId"}
-                layout="vertical"
-                rules={[{
-                  required: true,
-                  message: 'Không để trống',
-                }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Chọn khách hàng"
-                  optionFilterProp="label"
-                >
-                  {allCustomers?.map((d) => {
-                    return (
-                      <Option value={d.id}>{d.name}</Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-              </Col></Row>
+                    <Select
+                      showSearch
+                      placeholder="Chọn kho"
+                      optionFilterProp="label"
+                    >
+                      {allWarehouses?.map((d) => {
+                        return (
+                          <Option value={d.id}>{d.address}</Option>
+                        )
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    className="exportDate"
+                    label={"Ngày xuất"}
+                    name={"exportDate"}
+                    layout="vertical"
+                    rules={[{
+                      required: true,
+                      message: 'Không để trống',
+                    }]}
+                  >
+                    <DatePicker
+                      showTime
+                      disabledDate={(current) => { return current.valueOf() > Date.now() }}
+                    />
+                  </Form.Item >
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    className="customerId"
+                    label={"Khách hàng"}
+                    name={"customerId"}
+                    layout="vertical"
+                    rules={[{
+                      required: true,
+                      message: 'Không để trống',
+                    }]}
+                  >
+                    <Select
+                      showSearch
+                      placeholder="Chọn khách hàng"
+                      optionFilterProp="label"
+                    >
+                      {allCustomers?.map((d) => {
+                        return (
+                          <Option value={d.id}>{d.name}</Option>
+                        )
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
               <Row>
                 <Button type='primary' onClick={() => {
                   onFinish();//postGoodsIssue()
                 }}
                   style={{ backgroundColor: "#465d65" }}>
                   Thêm mới</Button>
-              </Row></Space>
+              </Row>
+            </Space>
           </Form>
 
-
-
           <div className='export-list'>
-           
             <Table
               columns={exportColumns}
               dataSource={[...exportTableData]}
@@ -451,35 +451,27 @@ export default function ExportGoods() {
                   </Table.Summary.Row>
                 </Table.Summary>
               )} />
-
           </div>
         </div>
 
         <div className='newtransaction-product-table'>
-        <Row>
-            <Search placeholder="input search text" onSearch={onSearch} style={{ width: "50%" }} />
-              <Select
-                showSearch
-                placeholder="Phân loại"
-                optionFilterProp="label"
-                style={{ width: '50%' }}
-                onChange={handleFilterProductTable}
-              >
-                <Option value={0}>Tất cả</Option>
-                {allCategory?.map((d) => {
+          <Row>
+            <Select
+              showSearch
+              placeholder="Phân loại"
+              optionFilterProp="label"
+              style={{ width: '50%' }}
+              onChange={handleFilterProductTable}
+            >
+              <Option value={0}>Tất cả</Option>
+              {allCategory?.map((d) => {
                 return (
                   <Option value={d.id}>{d.name}</Option>
                 )
               })}</Select>
-            </Row>
-          {/*<Table
-            columns={productColumns}
-            /*dataSource={allProducts}
-          onRow={(record) => ({
-            onClick: () => handleTableRowClick(record.id),
-          })}*\/
-          />*/}
-          <Card className="product-table" title="All">
+            <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
+          </Row>
+          <Card className="product-table" title={choosedCategory}>
             {filteredProducts?.map((p) =>
               <Card.Grid className="product-cell" style={gridStyle}
                 onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
