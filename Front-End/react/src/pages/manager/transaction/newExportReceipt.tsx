@@ -45,7 +45,6 @@ interface ExportProductTableState {
 interface ExportDataType {
   goodsExportModel: GoodsReceipt,
   listGoodExportDetailModels: ListGoodReciptDetailsModel[],
-  idWareHouse: string,
 }
 
 const gridStyle: React.CSSProperties = {
@@ -323,10 +322,10 @@ export default function ExportGoods() {
         exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         customerId: form.getFieldValue("customerId"),
         exportStatus: 2,
-        listGoodExportDetailModels: []
+        listGoodExportDetailModels: [],
+        wareHouseId: form.getFieldValue("idWareHouse")
       },
       listGoodExportDetailModels: tempListGoodReceiptDetailModels,
-      idWareHouse: form.getFieldValue("idWareHouse")
     }
 
     console.log(postData);

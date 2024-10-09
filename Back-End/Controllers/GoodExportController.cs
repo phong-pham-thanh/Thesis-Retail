@@ -16,7 +16,6 @@ namespace APIBackEnd.Controllers
     {
         public GoodsExportModel goodsExportModel { get; set; }
         public List<GoodExportDetailModel> listGoodExportDetailModels { get; set; }
-        public int idWareHouse { get; set; }
     }
 
     [Route("[controller]")]
@@ -71,7 +70,7 @@ namespace APIBackEnd.Controllers
                 "idWareHouse": 1
             }
             */
-            return _goodExportService.AddGoodExport(param.goodsExportModel, param.listGoodExportDetailModels, param.idWareHouse, autoAccept: false);
+            return _goodExportService.AddGoodExport(param.goodsExportModel, param.listGoodExportDetailModels, autoAccept: false);
         }
 
         [HttpGet]
