@@ -15,7 +15,6 @@ namespace APIBackEnd.Controllers
     {
         public GoodsReceiptModel goodsReceiptModel { get; set; }
         public List<GoodReceiptDetailModel> listGoodReceiptDetailModels { get; set; }
-        public int idWareHouse { get; set; }
     }
 
     [Route("[controller]")]
@@ -46,7 +45,14 @@ namespace APIBackEnd.Controllers
         [Route("addGoodRecipt")]
         public bool AddGoodRecipt([FromBody] paramAddNewGoodRecipt param)
         {
-            return _goodReciptService.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels, param.idWareHouse);
+            return _goodReciptService.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels);
+        }
+
+        [HttpGet]
+        [Route("acceptGoodImport/{id}")]
+        public GoodsReceiptModel AcceptGoodReceipt(int id)
+        {
+            return _goodReciptService.AcceptGoodReceipt(id);
         }
     }
 }

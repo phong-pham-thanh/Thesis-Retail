@@ -91,7 +91,7 @@ namespace APIBackend.Service
                 listGoodExportDetailModels.Add(newItem);
             }
 
-            _goodExportService.AddGoodExport(goodsExportModel, listGoodExportDetailModels, goodsExportModel.WareHouseId, autoAccept: true);
+            _goodExportService.AddGoodExport(goodsExportModel, listGoodExportDetailModels, autoAccept: true);
         }
 
     }

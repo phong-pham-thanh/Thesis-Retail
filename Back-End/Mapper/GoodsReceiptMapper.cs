@@ -6,7 +6,7 @@ namespace APIBackEnd.Mapper
 {
     public interface IGoodsReceiptMapper
     {
-        public GoodsReceiptModel? ToModel(GoodsReceipt efObject);
+        public GoodsReceiptModel ToModel(GoodsReceipt efObject);
         public List<GoodsReceiptModel> ToModels(List<GoodsReceipt> efObject);
         public void ToEntity(GoodsReceipt efObject, GoodsReceiptModel modelObject);
     }
@@ -14,14 +14,17 @@ namespace APIBackEnd.Mapper
     {
         private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
         private readonly IPartnerMapper _partnerMapper;
+        private readonly IWareHouseMapper _wareHouseMapper;
         public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper,
-            IPartnerMapper partnerMapper
+            IPartnerMapper partnerMapper,
+            IWareHouseMapper wareHouseMapper
             ) 
         {
             _goodReciptDetailMapper = goodReciptDetailMapper;
             _partnerMapper = partnerMapper;
+            _wareHouseMapper = wareHouseMapper;
         }
-        public GoodsReceiptModel? ToModel(GoodsReceipt efObject)
+        public GoodsReceiptModel ToModel(GoodsReceipt efObject)
         {
             if (efObject == null)
             {
@@ -29,6 +32,8 @@ namespace APIBackEnd.Mapper
             }
             GoodsReceiptModel modelObject = new GoodsReceiptModel();
             modelObject.Id = efObject.Id;
+            modelObject.WareHouseId = efObject.WareHouseId;
+            modelObject.WareHouse = _wareHouseMapper.ToModel(efObject.WareHouse);
             modelObject.PartnerID = efObject.PartnerId;
             modelObject.Partner = _partnerMapper.ToModel(efObject.Partner);
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
@@ -50,6 +55,8 @@ namespace APIBackEnd.Mapper
                 modelObject.ImportDate = item.ImportDate;
                 modelObject.TotalAmount = item.TotalAmount;
                 modelObject.Partner = _partnerMapper.ToModel(item.Partner);
+                modelObject.WareHouseId = item.WareHouseId;
+                modelObject.WareHouse = _wareHouseMapper.ToModel(item.WareHouse);
                 modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(item.ListGoodReciptDetails);
                 result.Add(modelObject);
             }
@@ -64,6 +71,7 @@ namespace APIBackEnd.Mapper
             }
             efObject.Id = modelObject.Id;
             efObject.PartnerId = modelObject.PartnerID;
+            efObject.WareHouseId = modelObject.WareHouseId;
             efObject.ReceiptStatus = modelObject.ReceiptStatus;
             efObject.ImportDate = modelObject.ImportDate;
             efObject.TotalAmount = modelObject.TotalAmount;

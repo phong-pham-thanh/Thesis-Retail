@@ -13,7 +13,7 @@ namespace APIBackend.Service
 {
     public interface IGoodExportService
     {
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept);
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
@@ -48,7 +48,7 @@ namespace APIBackend.Service
             _uowFactory = uowFactory;
         }
 
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept)
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept)
         {
             using(var uow = _uowFactory.CreateUnityOfWork())
             {
@@ -64,7 +64,6 @@ namespace APIBackend.Service
                     goodsExportModel.ExportStatus = Status.Success;
                 }
 
-                goodsExportModel.WareHouseId = idWareHouse;
                 _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
                 GoodsExportModel newGoodExportModel = _goodExportMapper.ToModel(_goodExportRepository.AddGoodExport(goodsExport));
 
