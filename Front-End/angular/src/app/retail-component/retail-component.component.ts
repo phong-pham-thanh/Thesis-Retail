@@ -66,7 +66,7 @@ export class RetailComponentComponent implements OnInit {
       mergeMap(_ => 
         this.store.pipe(select(productSelector.getAllProduct),
         map(result => {
-          this.allProduct = result; 
+          this.allProduct = result.filter(pro => pro.currentPrice); 
         }))
       ), take(1)
     ).subscribe();
@@ -124,18 +124,12 @@ export class RetailComponentComponent implements OnInit {
       currentProductDetail.quantity += 1;
     }
     else{
-      let itemPrice: number = null;
-      if(item.listPrices && item.listPrices.length > 0){
-        itemPrice = item.listPrices[0].price;
-      }
-  
       const newBillDetail: BillDetails = {
         productId: item.id,
         product: item,
         quantity: 1,
         billId: -1,
-        priceUnit: itemPrice,
-        haveDefaultPrice: itemPrice !== null
+        priceUnit: item.currentPrice,
       }
       this.currentBill.listBillDetails = [...this.currentBill.listBillDetails, {...newBillDetail}];
       // this.currentBill.listBillDetails.push({...newBillDetail});

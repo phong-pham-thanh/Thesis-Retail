@@ -18,7 +18,8 @@ import { PriceManagementFormComponent } from './price-management-form/price-mana
 })
 export class PriceManagementComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
+  // displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
+  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active'];
   dataSource = new MatTableDataSource<PriceProduct>();
   allPriceProduct: PriceProduct[];
 

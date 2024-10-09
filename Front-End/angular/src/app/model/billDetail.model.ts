@@ -6,6 +6,5 @@ export class BillDetails{
     quantity: number;
     billId: number;
     priceUnit?: number;
-    haveDefaultPrice?: boolean
     product?: Product;
 }

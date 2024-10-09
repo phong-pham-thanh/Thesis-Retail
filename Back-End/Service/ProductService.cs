@@ -1,5 +1,8 @@
-﻿using APIBackend.Repository;
+﻿using APIBackend.DataModel;
+using APIBackend.Models;
+using APIBackend.Repository;
 using APIBackEnd.Data;
+using APIBackEnd.Data.Enum;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
@@ -23,16 +26,19 @@ namespace APIBackend.Service
         private readonly IProductMapper _productMapper;
         private readonly IProductRepository _productRepository;
         private readonly IInventoryRepository _inventoryRepository;
+        private readonly IPriceProductRepository _priceProductRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
 
         public ProductService(IProductMapper productMapper, 
             IProductRepository productRepository, 
             IInventoryRepository inventoryRepository,
+            IPriceProductRepository priceProductRepository,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
             _productRepository = productRepository;
             _inventoryRepository = inventoryRepository;
+            _priceProductRepository = priceProductRepository;
             _uowFactory = uowFactory;
         }
 
@@ -53,14 +59,62 @@ namespace APIBackend.Service
 
         public ProductModel UpdateProductById(int id, ProductModel product)
         {
-            Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), product, id: id);
-            return _productRepository.UpdateProductById(id, product);
+
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), product, id);
+                ProductModel result = _productRepository.UpdateProductById(id, product);
+                if (result.CurrentPrice != null)
+                {
+                    PriceProductModel priceProductModel = new PriceProductModel();
+                    priceProductModel.ProductId = result.Id;
+                    priceProductModel.Price = (int)result.CurrentPrice;
+                    priceProductModel.StartDate = DateTime.Now;
+                    priceProductModel.Active = true;
+
+                    PriceProductModel lastPrice = _priceProductRepository.GetLastPriceByProductId(result.Id);
+                    if (lastPrice != null)
+                    {
+                        lastPrice.EndDate = DateTime.Now;
+                        lastPrice.Active = false;
+                        _priceProductRepository.Update(lastPrice.Id, lastPrice);
+                    }
+                    _priceProductRepository.AddNew(priceProductModel);
+
+                }
+                else
+                {
+                    PriceProductModel lastPrice = _priceProductRepository.GetLastPriceByProductId(result.Id);
+                    if (lastPrice != null)
+                    {
+                        lastPrice.EndDate = DateTime.Now;
+                        lastPrice.Active = false;
+                        _priceProductRepository.Update(lastPrice.Id, lastPrice);
+                    }
+                }
+                uow.Commit();
+                return result;
+            }
         }
 
         public ProductModel AddNewProduct(ProductModel newProduct)
         {
-            Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), newProduct);
-            return _productRepository.AddNewProduct(newProduct);
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), newProduct);
+                ProductModel result = _productRepository.AddNewProduct(newProduct);
+                if (result.CurrentPrice != null)
+                {
+                    PriceProductModel priceProductModel = new PriceProductModel();
+                    priceProductModel.ProductId = result.Id;
+                    priceProductModel.Price = (int)result.CurrentPrice;
+                    priceProductModel.StartDate = DateTime.Now;
+                    priceProductModel.Active = true;
+                    _priceProductRepository.AddNew(priceProductModel);
+                }
+                uow.Commit();
+                return result;
+            }
         }
 
         public List<ProductModel> GetBySearchName(string query)
