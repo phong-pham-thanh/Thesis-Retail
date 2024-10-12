@@ -6,5 +6,6 @@ export class Product{
     categoryId: number;
     description: string;
     status: boolean;
+    currentPrice: number;
     listPrices: PriceProduct[];
 }

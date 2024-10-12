@@ -124,8 +124,7 @@ export type GoodsReceipt = {
   exportStatus?: number;
   ListGoodReciptDetailsModel?: [];
   listGoodExportDetailModels?: [];
-
-  //parnersId: string;
+  wareHouseId: string;
 };
 
 export type ListGoodReciptDetailsModel =

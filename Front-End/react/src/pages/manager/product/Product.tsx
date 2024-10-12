@@ -177,6 +177,10 @@ export default function Product() {
       },
     },
     {
+      title: "Giá bán",
+      dataIndex: "currentPrice",
+    },
+    {
       title: "Mô tả",
       dataIndex: "description",
     },

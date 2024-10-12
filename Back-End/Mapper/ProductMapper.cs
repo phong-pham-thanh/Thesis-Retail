@@ -39,6 +39,7 @@ namespace APIBackEnd.Mapper
             modelObject.ListPrices = _priceProductMapper.ToModels(efObject.ListPrices);
             modelObject.Status = efObject.Status;
             modelObject.Description = efObject.Description;
+            modelObject.CurrentPrice = efObject.CurrentPrice;
             return modelObject;
         }
 
@@ -56,6 +57,7 @@ namespace APIBackEnd.Mapper
                 modelObject.ListPrices = _priceProductMapper.ToModels(item.ListPrices);
                 modelObject.Status = item.Status;
                 modelObject.Description = item.Description;
+                modelObject.CurrentPrice = item.CurrentPrice;
                 result.Add(modelObject);
             }
             return result;
@@ -72,6 +74,7 @@ namespace APIBackEnd.Mapper
             efObject.CategoryId = modelObject.CategoryId;
             efObject.Status = modelObject.Status;
             efObject.Description = modelObject.Description;
+            efObject.CurrentPrice = modelObject.CurrentPrice;
             return efObject;
         }
     }
