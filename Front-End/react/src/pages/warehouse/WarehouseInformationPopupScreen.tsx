@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Modal, message } from "antd";
+import { Button, Form, Input, Modal, message, Switch } from "antd";
 import api_links from "../../app/api_links";
 import fetch_Api from "../../app/api_fetch";
+import { WarehouseType } from "./WarehousePage";
 
 interface WarehouseInformationPopupScreenProps {
   isPopup: boolean;
   setPopup: (value: boolean) => void;
-  data?: { id?: string; name?: string };
+  data?: WarehouseType;
   type?: string;
   onSave?: () => void;
 }
@@ -21,12 +22,14 @@ export default function WarehouseInformationPopupScreen({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // Set form values if editing a partner
+  // Set form values if editing a warehouse
   useEffect(() => {
     if (type === "edit" && data) {
       form.setFieldsValue({
         ...data,
-        name: data.name,
+        address: data.address,
+        managerId: data.managerId,
+        status: data.status,
       });
     } else if (type === "create") {
       form.resetFields();
@@ -48,25 +51,25 @@ export default function WarehouseInformationPopupScreen({
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
-              ...api_links.partner.edit(Number(data.id)), // Adjusting API link for partner editing
+              ...api_links.warehouse.edit(Number(data.id)), // Adjusting API link for warehouse editing
               data: values,
             };
             await fetch_Api(api_put);
           } else if (type === "create") {
             const api_post = {
-              ...api_links.partner.create, // Adjusting API link for partner creation
+              ...api_links.warehouse.create, // Adjusting API link for warehouse creation
               data: values,
             };
             await fetch_Api(api_post);
           }
 
           message.success(
-            `Partner ${type === "edit" ? "updated" : "created"} successfully`
+            `Warehouse ${type === "edit" ? "updated" : "created"} successfully`
           );
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Failed to save partner");
+          message.error("Failed to save warehouse");
         } finally {
           setLoading(false);
         }
@@ -76,7 +79,7 @@ export default function WarehouseInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Partner" : "Create Partner"}
+      title={type === "edit" ? "Edit Warehouse" : "Create Warehouse"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
@@ -90,11 +93,25 @@ export default function WarehouseInformationPopupScreen({
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please enter partner name" }]}
+          name="address"
+          label="Address"
+          rules={[
+            { required: true, message: "Please enter warehouse address" },
+          ]}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="managerId"
+          label="Manager ID"
+          rules={[{ required: true, message: "Please enter manager ID" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+
+        <Form.Item name="status" label="Status" valuePropName="checked">
+          <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
       </Form>
     </Modal>

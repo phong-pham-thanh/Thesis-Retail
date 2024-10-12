@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import "./styleCustomer.css";
-import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
+import "./styleWarehouse.css";
+import { Button, Space, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import EditIcon from "@mui/icons-material/Edit";
+import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import WarehouseInformationPopupScreen from "./WarehouseInformationPopupScreen";
 import api_links from "../../app/api_links";
 import fetch_Api from "../../app/api_fetch";
-import WarehouseInformationPopupScreen from "./WarehouseInformationPopupScreen";
 import CustomButton from "../component/CustomeButton";
+import message from "antd/lib/message";
+import { UploadFile } from "@mui/icons-material";
 
 interface InventoryType {
   id: number;
@@ -15,7 +19,7 @@ interface InventoryType {
   quantity: number;
 }
 
-interface WarehouseType {
+export interface WarehouseType {
   id: string;
   address: string;
   managerId: string;
@@ -23,7 +27,7 @@ interface WarehouseType {
   listInventories: InventoryType[];
 }
 
-const emptydata: WarehouseType = {
+const emptyWarehouse: WarehouseType = {
   id: "0",
   address: "",
   managerId: "0",
@@ -31,29 +35,19 @@ const emptydata: WarehouseType = {
   listInventories: [],
 };
 
-export default function WarehousePage() {
-  const [customers, setUsers] = useState<WarehouseType[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<WarehouseType[]>([]);
-  const [popupData, setPopupData] = useState<WarehouseType>(emptydata);
+export default function Warehouse() {
+  const [data, setWarehouses] = useState<WarehouseType[]>([]);
+  const [popupData, setPopupData] = useState<WarehouseType>(emptyWarehouse);
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<WarehouseType | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [timeoutId, setTimeoutId] = useState<number | undefined>(); // Timeout for search
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10, // Default page size
-  });
 
-  const getUsers = () => {
+  const getAllWarehouses = () => {
+    const api_link = api_links.warehouse.getAll;
     setLoading(true);
-    const api_link = api_links.customer.getAll;
     return fetch_Api(api_link)
       .then((res) => {
-        setUsers(res.data);
-        setFilteredUsers(res.data);
+        setWarehouses(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -63,84 +57,51 @@ export default function WarehousePage() {
   };
 
   useEffect(() => {
-    getUsers();
+    getAllWarehouses();
   }, [refresh]);
 
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    if (timeoutId) clearTimeout(timeoutId);
-
-    // Set timeout to delay search, simulating debounce effect
-    const newTimeoutId = window.setTimeout(() => {
-      if (value.trim()) {
-        const filtered = customers.filter((customer) =>
-          customer.address.toLowerCase().includes(value.trim().toLowerCase())
-        );
-        setFilteredUsers(filtered);
-      } else {
-        setFilteredUsers(customers); // If search term is cleared, reset to all customers
-      }
-    }, 2000); // 2 seconds delay
-
-    setTimeoutId(newTimeoutId);
-  };
-
-  const handleEditUser = (customer: WarehouseType) => {
-    setPopupData(customer);
+  const handleEdit = (record: WarehouseType) => {
+    setPopupData(record);
     setIsChangeInformation(true);
   };
 
-  const handleAddNewUser = () => {
-    setPopupData(emptydata);
+  const handleAddNew = () => {
+    setPopupData(emptyWarehouse);
     setIsChangeInformation(true);
   };
 
-  const showDeleteDialog = (customer: WarehouseType) => {
-    setUserToDelete(customer);
-    setIsAlertVisible(true);
-  };
-
-  // Handle pagination changes
-  const handleTableChange = (pagination: any) => {
-    setPagination({
-      ...pagination,
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-    });
-  };
-
-  const columns = [
+  const columns: ColumnsType<WarehouseType> = [
     {
       title: "Warehouse ID",
       dataIndex: "id",
-      key: "id",
     },
     {
       title: "Address",
       dataIndex: "address",
-      key: "address",
     },
     {
       title: "Manager ID",
       dataIndex: "managerId",
-      key: "managerId",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status: boolean) => (status ? "Active" : "Inactive"),
     },
     {
       title: "",
-      key: "actions",
-      render: (text: any, record: WarehouseType) => (
-        <Space size="middle">
+      key: "action",
+      width: "112px",
+      render: (_, record) => (
+        <Space size="small">
           <Button
             size={"middle"}
-            icon={<EditOutlined />}
-            onClick={() => handleEditUser(record)}
-          />
-          <Button
-            size={"middle"}
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => showDeleteDialog(record)}
-          />
+            onClick={() => {
+              handleEdit(record);
+            }}
+          >
+            <EditIcon />
+          </Button>
         </Space>
       ),
     },
@@ -154,54 +115,37 @@ export default function WarehousePage() {
         isPopup={isChangeInformation}
         setPopup={setIsChangeInformation}
         data={popupData}
-        type={popupData.id === "0" ? "create" : "edit"}
         onSave={() => setRefresh(!refresh)}
       />
       <div className="dashboard-container">
         <div className="header">
-          <h2>Customer Management</h2>
+          <h2>Warehouse Management</h2>
           <div
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <CustomButton
-              text="Add New Customer"
+              text="Export"
+              icon={<UploadFile />}
+              onClick={() => message.info("Exporting file...")}
+              backgroundColor="#28C2FF"
+              color="#fff"
+            />
+            <CustomButton
+              text="Add New"
               icon={<AddCircleIcon />}
-              onClick={handleAddNewUser}
+              onClick={handleAddNew}
               backgroundColor="#28C2FF"
               color="#fff"
             />
           </div>
         </div>
-        <div className="customer-container">
-          {/* Left Sidebar for Search */}
-          <div className="filter-container">
-            <div className="search-bar">
-              <h3>Search</h3>
-              <Input
-                placeholder="Search for customers"
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                allowClear
-              />
-            </div>
-          </div>
-          {/* Right Content (Table) */}
-          <div className="content-container">
+        <div className="warehouse-container">
+          <div className="warehouse-list">
             <Table
               columns={columns}
-              dataSource={filteredUsers}
+              dataSource={data}
               loading={loading}
               rowKey="id"
-              pagination={{
-                current: pagination.current,
-                pageSize: pagination.pageSize,
-                showSizeChanger: true, // Show options to change page size
-                pageSizeOptions: ["5", "10", "20", "50"], // Admin can select page size
-                onChange: (page, pageSize) => {
-                  setPagination({ current: page, pageSize });
-                },
-              }}
-              onChange={handleTableChange}
             />
           </div>
         </div>
