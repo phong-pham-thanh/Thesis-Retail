@@ -33,7 +33,7 @@ namespace APIBackend.Repository
 
         public PriceProductModel GetLastPriceByProductId(int productId)
         {
-            return _priceProductMapper.ToModel(_coreContext.PriceProduct.Where(p => p.ProductId == productId).OrderBy(p => p.Id).FirstOrDefault());
+            return _priceProductMapper.ToModel(_coreContext.PriceProduct.Where(p => p.ProductId == productId).OrderByDescending(p => p.Id).FirstOrDefault());
         }
 
         public PriceProductModel AddNew(PriceProductModel domObject)

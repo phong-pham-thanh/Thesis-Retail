@@ -15,6 +15,7 @@ namespace APIBackend.Service
         public List<GoodsReceiptModel> GetAllGoodRecipts();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
+        public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -50,12 +51,7 @@ namespace APIBackend.Service
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
-            int totalAmount = 0;
-            foreach(GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
-            {
-                totalAmount += goodReceiptDetailModel.PriceUnit * goodReceiptDetailModel.Quantity;
-            }
-            goodsReceiptModel.TotalAmount = totalAmount;
+            goodsReceiptModel.TotalAmount = this.CaculateTotalAmount(listGoodReceiptDetailModels);
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
 
             GoodsReceiptModel newGoodReciptModel = _goodReciptMapper.ToModel(_goodReciptRepository.AddGoodRecipt(goodsReceipt));
@@ -107,10 +103,38 @@ namespace APIBackend.Service
 
         public void UpdateInventoryForGoodRecipt(GoodsReceiptModel currentGoodReceipt)
         {
-            foreach(var goodExportDetailModel in currentGoodReceipt.ListGoodReciptDetailsModel)
+            foreach(var goodReceiptDetailModel in currentGoodReceipt.ListGoodReciptDetailsModel)
             {
-                _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, currentGoodReceipt.WareHouseId, true);
+                _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, currentGoodReceipt.WareHouseId, true);
             }
+        }
+
+        public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem)
+        {
+            GoodsReceiptModel result = new GoodsReceiptModel();
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                updateItem.TotalAmount = this.CaculateTotalAmount(updateItem.ListGoodReciptDetailsModel);
+                result = _goodReciptRepository.UpdateGoodReceipt(id, updateItem);
+
+                foreach (var goodReceiptDetailModel in updateItem.ListGoodReciptDetailsModel)
+                {
+                    _goodReciptDetailRepository.UpdateGoodReceiptDetails(goodReceiptDetailModel.Id, goodReceiptDetailModel);
+                }
+                uow.Commit();
+            }
+            return result;
+        }
+
+
+        private int CaculateTotalAmount(List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
+        {
+            int totalAmount = 0;
+            foreach(GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
+            {
+                totalAmount += goodReceiptDetailModel.PriceUnit * goodReceiptDetailModel.Quantity;
+            }
+            return totalAmount;
         }
     }
 }

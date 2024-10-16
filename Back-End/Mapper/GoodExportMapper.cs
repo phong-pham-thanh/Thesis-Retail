@@ -68,7 +68,6 @@ namespace APIBackEnd.Mapper
             {
                 return;
             }
-            efObject.Id = modelObject.Id;
             efObject.CustomerId = modelObject.CustomerId;
             efObject.WareHouseId = modelObject.WareHouseId;
             efObject.ExportStatus = modelObject.ExportStatus;

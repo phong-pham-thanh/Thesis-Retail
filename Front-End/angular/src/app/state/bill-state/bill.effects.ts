@@ -11,17 +11,17 @@ import * as priceProductAction from './bill.actions'
 export class BillEffects {
     constructor(private priceProductService: BillService, private actions$: Actions) {}
 
-    // loadAllBill$ = createEffect(() =>
-    //   this.actions$.pipe(
-    //     ofType(priceProductAction.BillActionTypes.LoadAllBill),
-    //     mergeMap(() =>
-    //       this.priceProductService.getAllBill().pipe(
-    //         map(result => new priceProductAction.LoadAllBillSuccess(result)),
-    //         catchError(err => of(new priceProductAction.LoadAllBillFail(err)))
-    //       )
-    //     )
-    //   )
-    // );
+    loadAllBill$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.BillActionTypes.LoadAllBill),
+        mergeMap(() =>
+          this.priceProductService.getAllBill().pipe(
+            map(result => new priceProductAction.LoadAllBillSuccess(result)),
+            catchError(err => of(new priceProductAction.LoadAllBillFail(err)))
+          )
+        )
+      )
+    );
 
     
     addNewBill$ = createEffect(() =>

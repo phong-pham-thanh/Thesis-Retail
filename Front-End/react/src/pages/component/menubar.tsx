@@ -134,6 +134,12 @@ export default function NavBar() {
           path: "xuat-hang",
           status: location.pathname.includes("xuat-hang"),
         },
+        {
+          title: "Hóa đơn",
+          icon: <IosShareIcon />,
+          path: "bill",
+          status: location.pathname.includes("bill"),
+        },
       ],
     },
     {

@@ -1,0 +1,40 @@
+.dialog-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dialog-title {
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .tab-container {
+    margin-bottom: 15px;
+  }
+  
+  .info-section p {
+    margin-bottom: 5px;
+  }
+  
+  .total-section {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .table {
+    margin-top: 10px;
+  }
+  
+  .dialog-footer {
+    margin-top: 20px;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+  

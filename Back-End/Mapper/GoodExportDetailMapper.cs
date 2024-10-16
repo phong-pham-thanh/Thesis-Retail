@@ -53,7 +53,6 @@ namespace APIBackend.Mapper
         {
             if (modelObject == null) return;
 
-            efObject.Id = modelObject.Id;
             efObject.ProductId = modelObject.ProductId;
             efObject.GoodExportId = modelObject.GoodExportId;
             efObject.Quantity = modelObject.Quantity;
