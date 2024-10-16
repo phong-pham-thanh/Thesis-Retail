@@ -80,5 +80,34 @@ namespace APIBackEnd.Controllers
 
             return _goodExportService.AcceptGoodExport(id);
         }
+
+
+        [HttpPut]
+        [Route("updateGoodExport/{id}")]
+        public GoodsExportModel EditGoodExport(int id, [FromBody] GoodsExportModel goodsExportModel)
+        {
+            //{
+            //    "Id": 38,
+            //    "CustomerId": 3,
+            //    "Status": 1,
+            //    "ExportDate": "2024-10-09T00:00:00",
+            //    "WareHouseId": 5,
+            //    "ListGoodExportDetailsModel": [
+            //        {
+            //                    "Id": 57,
+            //            "GoodExportId": 38,
+            //            "ProductId": 4,
+            //            "Quantity": 3
+            //        },
+            //        {
+            //                    "Id": 58,
+            //            "GoodExportId": 38,
+            //            "ProductId": 5,
+            //            "Quantity": 3
+            //        }
+            //    ]
+            //}
+            return _goodExportService.UpdateGoodExport(id, goodsExportModel);
+        }
     }
 }

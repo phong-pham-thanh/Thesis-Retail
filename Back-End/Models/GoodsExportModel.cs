@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using APIBackend.Models;
 using APIBackEnd.Data.Enum;
+using Newtonsoft.Json;
 
 namespace APIBackEnd.Models
 {
@@ -12,8 +13,9 @@ namespace APIBackEnd.Models
         public int? CustomerId { get; set; }
         public int WareHouseId { get; set; }
         public Status ExportStatus { get; set; }
-        public List<GoodExportDetailModel>? ListGoodExportDetailsModel { get; set; }
-        public CustomerModel? Customer { get; set; }
+        [JsonProperty("ListGoodExportDetailsModel")]
+        public List<GoodExportDetailModel> ListGoodExportDetailsModel { get; set; }
+        public CustomerModel Customer { get; set; }
         public WareHouseModel WareHouse { get; set; }
     }
 }

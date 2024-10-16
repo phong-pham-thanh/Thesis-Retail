@@ -17,6 +17,7 @@ namespace APIBackend.Service
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -86,6 +87,22 @@ namespace APIBackend.Service
             }
             
             return true;
+        }
+
+        public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem)
+        {
+            GoodsExportModel result = new GoodsExportModel();
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                result = _goodExportRepository.UpdateGoodExport(id, updateItem);
+
+                foreach (var goodExportDetailModel in updateItem.ListGoodExportDetailsModel)
+                {
+                    _goodExportDetailRepository.UpdateGoodExportDetails(goodExportDetailModel.Id, goodExportDetailModel);
+                }
+                uow.Commit();
+            }
+            return result;
         }
 
         public GoodsExportModel GetGoodExportById(int id)
