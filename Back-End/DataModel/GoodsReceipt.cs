@@ -12,12 +12,12 @@ namespace APIBackEnd.Data
         public DateTime ImportDate { get; set; }
         public int PartnerId { get; set; }
         [ForeignKey("PartnerId")]
-        public Partners? Partner {get; set;}
+        public Partners Partner {get; set;}
         public int WareHouseId { get; set; }
         [ForeignKey("WareHouseId")]
-        public WareHouses? WareHouse { get; set; }
+        public WareHouses WareHouse { get; set; }
         public Status ReceiptStatus { get; set; }
-        public List<GoodReceiptDetails>? ListGoodReciptDetails {get; set;}
+        public List<GoodReceiptDetails> ListGoodReciptDetails {get; set;}
         public long? TotalAmount { get; set; }
     }
 }

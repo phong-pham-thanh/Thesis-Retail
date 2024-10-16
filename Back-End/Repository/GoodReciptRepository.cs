@@ -14,6 +14,7 @@ namespace APIBackend.Repository
         public List<GoodsReceiptModel> GetAllGoodRecipts();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodRecipt(int id);
+        public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
@@ -66,6 +67,17 @@ namespace APIBackend.Repository
             efObject.ReceiptStatus = Status.Success;
             _coreContext.SaveChanges();
 
+            return _goodReciptMapper.ToModel(efObject);
+        }
+        public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem)
+        {
+            GoodsReceipt efObject = _coreContext.GoodsReceipt.Where(g => g.Id == id).FirstOrDefault();
+            if(efObject == null)
+            {
+                throw new ArgumentException("Good Receipt not found");
+            }
+            _goodReciptMapper.ToEntity(efObject, updateItem);
+            _coreContext.SaveChanges();
             return _goodReciptMapper.ToModel(efObject);
         }
     }
