@@ -48,7 +48,9 @@ import { billReducer } from './state/bill-state/bill.reducer';
 import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component';
 import { RetailPaymentComponentComponent } from './retail-component/retail-payment-component/retail-payment-component.component';
 import { BillListComponent } from './bill-list/bill-list.component';
-import { BillDetailComponent } from './bill-list/bill-detail/bill-detail.component'; // Đảm bảo bạn có reducers
+import { BillDetailComponent } from './bill-list/bill-detail/bill-detail.component';
+import { GoodTransferComponent } from './good-transfer/good-transfer.component';
+import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detail/good-transfer-detail.component'; // Đảm bảo bạn có reducers
 
 
 export const MY_DATE_FORMATS = {
@@ -71,7 +73,9 @@ export const MY_DATE_FORMATS = {
     PriceManagementFormComponent,
     RetailPaymentComponentComponent,
     BillListComponent,
-    BillDetailComponent
+    BillDetailComponent,
+    GoodTransferComponent,
+    GoodTransferDetailComponent
   ],
   imports: [
     BrowserModule,
