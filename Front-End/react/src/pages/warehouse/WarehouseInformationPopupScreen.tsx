@@ -22,7 +22,6 @@ export default function WarehouseInformationPopupScreen({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // Set form values if editing a warehouse
   useEffect(() => {
     if (type === "edit" && data) {
       form.setFieldsValue({
@@ -36,12 +35,10 @@ export default function WarehouseInformationPopupScreen({
     }
   }, [data, type, form]);
 
-  // Close the modal and reset the form
   const handleCancel = () => {
     setPopup(false);
   };
 
-  // Handle form submission (Create or Update)
   const handleOk = () => {
     form
       .validateFields()
@@ -51,13 +48,13 @@ export default function WarehouseInformationPopupScreen({
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
-              ...api_links.warehouse.edit(Number(data.id)), // Adjusting API link for warehouse editing
+              ...api_links.warehouse.edit(Number(data.id)),
               data: values,
             };
             await fetch_Api(api_put);
           } else if (type === "create") {
             const api_post = {
-              ...api_links.warehouse.create, // Adjusting API link for warehouse creation
+              ...api_links.warehouse.create,
               data: values,
             };
             await fetch_Api(api_post);
@@ -66,7 +63,7 @@ export default function WarehouseInformationPopupScreen({
           message.success(
             `Warehouse ${type === "edit" ? "updated" : "created"} successfully`
           );
-          if (onSave) onSave(); // Trigger refresh or other action
+          if (onSave) onSave();
           handleCancel();
         } catch (error) {
           message.error("Failed to save warehouse");

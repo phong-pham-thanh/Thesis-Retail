@@ -11,6 +11,7 @@ import fetch_Api from "../../app/api_fetch";
 import CustomButton from "../component/CustomeButton";
 import message from "antd/lib/message";
 import { UploadFile } from "@mui/icons-material";
+import Input from "antd/lib/input";
 
 interface InventoryType {
   id: number;
@@ -36,11 +37,16 @@ const emptyWarehouse: WarehouseType = {
 };
 
 export default function Warehouse() {
-  const [data, setWarehouses] = useState<WarehouseType[]>([]);
+  const [warehouses, setWarehouses] = useState<WarehouseType[]>([]);
   const [popupData, setPopupData] = useState<WarehouseType>(emptyWarehouse);
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [timeoutId, setTimeoutId] = useState<number | undefined>();
+  const [filteredWarehouses, setFilteredWarehouses] = useState<WarehouseType[]>(
+    []
+  );
 
   const getAllWarehouses = () => {
     const api_link = api_links.warehouse.getAll;
@@ -48,9 +54,11 @@ export default function Warehouse() {
     return fetch_Api(api_link)
       .then((res) => {
         setWarehouses(res.data);
+        setFilteredWarehouses(res.data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        message.error(error.message || "Failed to get categories.");
         console.log(error);
         setLoading(false);
       });
@@ -68,6 +76,24 @@ export default function Warehouse() {
   const handleAddNew = () => {
     setPopupData(emptyWarehouse);
     setIsChangeInformation(true);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    if (timeoutId) clearTimeout(timeoutId);
+
+    const newTimeoutId = window.setTimeout(() => {
+      if (value.trim()) {
+        const filtered = warehouses.filter((warehouse) =>
+          warehouse.address.toLowerCase().includes(value.trim().toLowerCase())
+        );
+        setFilteredWarehouses(filtered);
+      } else {
+        setFilteredWarehouses(warehouses);
+      }
+    }, 2000); // 2 seconds delay
+
+    setTimeoutId(newTimeoutId);
   };
 
   const columns: ColumnsType<WarehouseType> = [
@@ -115,6 +141,7 @@ export default function Warehouse() {
         isPopup={isChangeInformation}
         setPopup={setIsChangeInformation}
         data={popupData}
+        type={popupData.id === "0" ? "create" : "edit"}
         onSave={() => setRefresh(!refresh)}
       />
       <div className="dashboard-container">
@@ -140,10 +167,21 @@ export default function Warehouse() {
           </div>
         </div>
         <div className="warehouse-container">
+          <div className="filter-container">
+            <div className="search-bar">
+              <h3>Search</h3>
+              <Input
+                placeholder="Search for customers"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                allowClear
+              />
+            </div>
+          </div>
           <div className="warehouse-list">
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={filteredWarehouses}
               loading={loading}
               rowKey="id"
             />
