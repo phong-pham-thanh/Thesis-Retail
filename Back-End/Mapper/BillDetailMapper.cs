@@ -1,6 +1,7 @@
 using APIBackend.DataModel;
 using APIBackend.Models;
 using APIBackEnd.Data;
+using APIBackEnd.Mapper;
 
 namespace APIBackend.Mapper
 {
@@ -14,7 +15,13 @@ namespace APIBackend.Mapper
 
     public class BillDetailMapper : IBillDetailMapper
     {
-        public BillDetailMapper() { }
+        private readonly IProductMapper _productMapper;
+        public BillDetailMapper(
+            IProductMapper productMapper
+            ) 
+        {
+            _productMapper = productMapper;
+        }
 
 
         public BillDetailModel ToModel(BillDetails efObject)
@@ -29,6 +36,7 @@ namespace APIBackend.Mapper
             modelObject.BillId = efObject.BillId;
             modelObject.Quantity = efObject.Quantity;
             modelObject.PriceUnit = efObject.PriceUnit;
+            modelObject.Product = _productMapper.ToModel(efObject.Product);
             return modelObject;
         }
 
@@ -47,6 +55,7 @@ namespace APIBackend.Mapper
                 modelObject.BillId = item.BillId;
                 modelObject.Quantity = item.Quantity;
                 modelObject.PriceUnit = item.PriceUnit;
+                modelObject.Product = _productMapper.ToModel(item.Product);
                 result.Add(modelObject);
             }
             return result;

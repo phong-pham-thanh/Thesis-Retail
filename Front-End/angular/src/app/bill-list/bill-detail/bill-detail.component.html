@@ -1,0 +1,50 @@
+<div class="dialog-container">
+    <h4 class="dialog-title">Hóa đơn- 54</h4>
+  
+    <div class="tab-container">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active">Thông tin</a>
+        </li>
+      </ul>
+    </div>
+  
+    <div class="dialog-body">
+      <div class="info-section">
+        <p><strong>Mã hóa đơn: </strong>{{currentBill.id}}</p>
+        <p><strong>Ngày xuất hóa đơn: </strong>{{currentBill.createdDate  | date: 'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Khách mua: </strong>{{currentBill.customer ? currentBill.customer.name : 'Khách lẻ'}}</p>
+        <p><strong>Trạng thái: </strong><span class="badge bg-success">Hoàn thành</span></p>
+      </div>
+  
+      <hr>
+  
+  
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Đơn giá</th>
+          </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let detail of currentBill.listBillDetails">
+                <tr>
+                    <td>{{detail.product.name}}</td>
+                    <td>{{detail.quantity}}</td>
+                    <td>{{detail.priceUnit  | currency:'VND':'symbol':'1.0-0' }}</td>
+                </tr>
+            </ng-container>
+        </tbody>
+      </table>
+      <div class="total-section">
+        <h5><strong>Tổng cộng: {{currentBill.totalAmount  | currency:'VND':'symbol':'1.0-0' }}</strong></h5>
+      </div>
+    </div>
+  
+    <div class="dialog-footer text-center">
+      <button class="btn btn-primary" (click)="closeDialog()">OK</button>
+    </div>
+  </div>
+  
