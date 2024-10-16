@@ -6,14 +6,14 @@ namespace APIBackend.Mapper
 {
     public interface IGoodReciptDetailMapper
     {
-        public GoodReceiptDetailModel? ToModel(GoodReceiptDetails efObject);
-        public List<GoodReceiptDetailModel>? ToModels(List<GoodReceiptDetails>? efObjects);
+        public GoodReceiptDetailModel ToModel(GoodReceiptDetails efObject);
+        public List<GoodReceiptDetailModel> ToModels(List<GoodReceiptDetails> efObjects);
         public void ToEntity(GoodReceiptDetails efObject, GoodReceiptDetailModel modelObject);
     }
     public class GoodReciptDetailMapper : IGoodReciptDetailMapper
     {
         public GoodReciptDetailMapper() { }
-        public GoodReceiptDetailModel? ToModel(GoodReceiptDetails efObject)
+        public GoodReceiptDetailModel ToModel(GoodReceiptDetails efObject)
         {
             if (efObject == null)
             {
@@ -29,7 +29,7 @@ namespace APIBackend.Mapper
             return modelObject;
         }
 
-        public List<GoodReceiptDetailModel>? ToModels(List<GoodReceiptDetails>? efObjects)
+        public List<GoodReceiptDetailModel> ToModels(List<GoodReceiptDetails> efObjects)
         {
             if(efObjects == null || efObjects.Count == 0)
             {
@@ -54,7 +54,6 @@ namespace APIBackend.Mapper
         {
             if (modelObject == null) return;
 
-            efObject.Id = modelObject.Id;
             efObject.ProductId = modelObject.ProductId;
             efObject.GoodReceiptId = modelObject.GoodReceiptId;
             efObject.Quantity = modelObject.Quantity;

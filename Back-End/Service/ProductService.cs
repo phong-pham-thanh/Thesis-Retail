@@ -63,24 +63,27 @@ namespace APIBackend.Service
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
                 Utilities.ValidateDuplicate<ProductModel>(_productRepository.GetAllProducts(), product, id);
+                int? currentPrice = _productRepository.GetProductById(id).CurrentPrice;
                 ProductModel result = _productRepository.UpdateProductById(id, product);
                 if (result.CurrentPrice != null)
                 {
-                    PriceProductModel priceProductModel = new PriceProductModel();
-                    priceProductModel.ProductId = result.Id;
-                    priceProductModel.Price = (int)result.CurrentPrice;
-                    priceProductModel.StartDate = DateTime.Now;
-                    priceProductModel.Active = true;
-
-                    PriceProductModel lastPrice = _priceProductRepository.GetLastPriceByProductId(result.Id);
-                    if (lastPrice != null)
+                    if(result.CurrentPrice != currentPrice)
                     {
-                        lastPrice.EndDate = DateTime.Now;
-                        lastPrice.Active = false;
-                        _priceProductRepository.Update(lastPrice.Id, lastPrice);
-                    }
-                    _priceProductRepository.AddNew(priceProductModel);
+                        PriceProductModel priceProductModel = new PriceProductModel();
+                        priceProductModel.ProductId = result.Id;
+                        priceProductModel.Price = (int)result.CurrentPrice;
+                        priceProductModel.StartDate = DateTime.Now;
+                        priceProductModel.Active = true;
 
+                        PriceProductModel lastPrice = _priceProductRepository.GetLastPriceByProductId(result.Id);
+                        if (lastPrice != null)
+                        {
+                            lastPrice.EndDate = DateTime.Now;
+                            lastPrice.Active = false;
+                            _priceProductRepository.Update(lastPrice.Id, lastPrice);
+                        }
+                        _priceProductRepository.AddNew(priceProductModel);
+                    }
                 }
                 else
                 {
