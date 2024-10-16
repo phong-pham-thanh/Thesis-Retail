@@ -39,29 +39,29 @@ export const getError= createSelector(
 // Reducer function
 export function billReducer(state = initialState, action: BillActions): BillState {
     switch (action.type) {
-        // case BillActionTypes.LoadAllBill:
-        //     return {
-        //         ...state,
-        //         needRefreshBrowseList: false,
-        //         isLoading: true
-        //     };
+        case BillActionTypes.LoadAllBill:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
 
-        // case BillActionTypes.LoadAllBillSuccess:
-        //     return {
-        //         ...state,
-        //         allBill: action.payload,
-        //         isLoading: false,
-        //         isLoaded: true,
-        //         error: ''
-        //     };
+        case BillActionTypes.LoadAllBillSuccess:
+            return {
+                ...state,
+                allBill: action.payload,
+                isLoading: false,
+                isLoaded: true,
+                error: ''
+            };
         
-        // case BillActionTypes.LoadAllBillFail:
-        //     return {
-        //         ...state,
-        //         isLoading: false,
-        //         isLoaded: true,
-        //         error: action.payload
-        //     };
+        case BillActionTypes.LoadAllBillFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
     
         case BillActionTypes.AddNewBill:
             return {

@@ -8,6 +8,27 @@ export enum BillActionTypes {
     AddNewBill = '[AddNewBill] Add new Bill',
     AddNewBillSuccess = '[AddNewBill] Add new Bill Success',
     AddNewBillFail = '[AddNewBill] Add new Bill Fail',
+    LoadAllBill = '[AllBill] Load All Price Bill',
+    LoadAllBillSuccess = '[AllBill] Load AllBill Success',
+    LoadAllBillFail = '[AllBill] Load AllBill Fail',
+}
+
+export class LoadAllBill implements Action {
+    readonly type = BillActionTypes.LoadAllBill;
+
+    constructor() { }
+}
+
+export class LoadAllBillSuccess implements Action {
+    readonly type = BillActionTypes.LoadAllBillSuccess;
+
+    constructor(public payload: Bill[]) { }
+}
+  
+export class LoadAllBillFail implements Action {
+    readonly type = BillActionTypes.LoadAllBillFail;
+  
+    constructor(public payload: string) { }
 }
 
 export class AddNewBill implements Action {
@@ -28,6 +49,9 @@ export class AddNewBillFail implements Action {
     constructor(public payload: string) { }
 }
 
-export type BillActions = AddNewBill
+export type BillActions = LoadAllBill
+  | LoadAllBillSuccess
+  | LoadAllBillFail
+  | AddNewBill
   | AddNewBillSuccess
   | AddNewBillFail

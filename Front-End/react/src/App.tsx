@@ -60,6 +60,7 @@ function App() {
               <Route path="/quan-ly/baocao" element={<Report />} />
               <Route path="/quan-ly/retail" />
               <Route path="/quan-ly/price-management" />
+              <Route path="/quan-ly/bill" />
             </Route>
           </Routes>
         </div>

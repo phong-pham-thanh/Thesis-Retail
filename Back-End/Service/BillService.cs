@@ -14,6 +14,7 @@ namespace APIBackend.Service
     public interface IBillService
     {
         public bool AddBill(BillModel billModel);
+        public List<BillModel> GetAll();
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
         // public BillModel AcceptBill(int id);
@@ -29,6 +30,7 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         private readonly IGoodExportService _goodExportService;
+        private readonly IUserRepository _userRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
 
 
@@ -40,6 +42,7 @@ namespace APIBackend.Service
             IBillDetailRepository billDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
+            IUserRepository userRepository,
             IUnityOfWorkFactory uowFactory,
             IGoodExportService goodExportService
         ) 
@@ -52,8 +55,20 @@ namespace APIBackend.Service
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
             _goodExportService = goodExportService;
+            _userRepository = userRepository;
             _uowFactory = uowFactory;
         }
+
+        public List<BillModel> GetAll()
+        {
+            List<BillModel> result = _billRepository.GetAll();
+            foreach (var item in result)
+            {
+                item.User = _userRepository.GetUserById(item.UserId);
+            }
+            return result;
+        }
+
         public bool AddBill(BillModel billModel)
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
