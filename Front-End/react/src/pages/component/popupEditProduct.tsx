@@ -66,14 +66,13 @@ export default function ProductInformationPopupScreen({
         ...data,
         categoryId: data.category.id,
       });
-    } else {
+    } else if (type === "create") {
       form.resetFields();
     }
-  }, [data, type]);
+  }, [data, type, form]);
 
   // Close the modal and reset the form
   const handleCancel = () => {
-    form.resetFields();
     setPopup(false);
   };
 

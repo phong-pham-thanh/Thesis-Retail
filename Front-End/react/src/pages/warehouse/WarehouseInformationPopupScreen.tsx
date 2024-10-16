@@ -1,58 +1,44 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  message,
-  Checkbox,
-} from "antd";
-import fetch_Api from "../../../app/api_fetch";
-import api_links from "../../../app/api_links";
-import { CategoryState } from "../../../app/type.d";
+import { Button, Form, Input, Modal, message, Switch } from "antd";
+import api_links from "../../app/api_links";
+import fetch_Api from "../../app/api_fetch";
+import { WarehouseType } from "./WarehousePage";
 
-const { Option } = Select;
-const { TextArea } = Input;
-
-interface CategoryInformationPopupScreenProps {
+interface WarehouseInformationPopupScreenProps {
   isPopup: boolean;
   setPopup: (value: boolean) => void;
-  data?: CategoryState;
+  data?: WarehouseType;
   type?: string;
-  onSave?: () => void; // onSave callback after Category is saved
+  onSave?: () => void;
 }
 
-export default function CategoryInformationPopupScreen({
+export default function WarehouseInformationPopupScreen({
   isPopup,
   setPopup,
   data,
   type,
   onSave,
-}: CategoryInformationPopupScreenProps) {
+}: WarehouseInformationPopupScreenProps) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // Set form values if editing a Category
   useEffect(() => {
     if (type === "edit" && data) {
       form.setFieldsValue({
         ...data,
-        name: data.name,
+        address: data.address,
+        managerId: data.managerId,
+        status: data.status,
       });
     } else if (type === "create") {
       form.resetFields();
     }
   }, [data, type, form]);
 
-  // Close the modal and reset the form
   const handleCancel = () => {
     setPopup(false);
   };
 
-  // Handle form submission (Create or Update)
   const handleOk = () => {
     form
       .validateFields()
@@ -62,25 +48,25 @@ export default function CategoryInformationPopupScreen({
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
-              ...api_links.category.edit(Number(data.id)),
+              ...api_links.warehouse.edit(Number(data.id)),
               data: values,
             };
             await fetch_Api(api_put);
           } else if (type === "create") {
             const api_post = {
-              ...api_links.category.create,
+              ...api_links.warehouse.create,
               data: values,
             };
             await fetch_Api(api_post);
           }
 
           message.success(
-            `Category ${type === "edit" ? "updated" : "created"} successfully`
+            `Warehouse ${type === "edit" ? "updated" : "created"} successfully`
           );
-          if (onSave) onSave(); // Trigger refresh or other action
+          if (onSave) onSave();
           handleCancel();
         } catch (error) {
-          message.error("Failed to save Category");
+          message.error("Failed to save warehouse");
         } finally {
           setLoading(false);
         }
@@ -90,7 +76,7 @@ export default function CategoryInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Category" : "Create Category"}
+      title={type === "edit" ? "Edit Warehouse" : "Create Warehouse"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
@@ -104,11 +90,25 @@ export default function CategoryInformationPopupScreen({
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          name="name"
-          label="Category Name"
-          rules={[{ required: true, message: "Please enter Category name" }]}
+          name="address"
+          label="Address"
+          rules={[
+            { required: true, message: "Please enter warehouse address" },
+          ]}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="managerId"
+          label="Manager ID"
+          rules={[{ required: true, message: "Please enter manager ID" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+
+        <Form.Item name="status" label="Status" valuePropName="checked">
+          <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
       </Form>
     </Modal>
