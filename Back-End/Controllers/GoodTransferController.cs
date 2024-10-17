@@ -22,7 +22,6 @@ namespace APIBackend.Controllers
         }
 
         [HttpGet]
-        [Route("getAllGoodTransfers")]
         public List<GoodsTransferModel> GetAllGoodTransfers()
         {
             return _goodTransferService.GetAllGoodTransfers();

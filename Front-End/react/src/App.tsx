@@ -64,6 +64,8 @@ function App() {
               <Route path="/quan-ly/price-management" />
               <Route path="/quan-ly/bill" />
               <Route path="/quan-ly/good-transfer" />
+              <Route path="/quan-ly/good-transfer/edit/:id" />
+
             </Route>
           </Routes>
         </div>

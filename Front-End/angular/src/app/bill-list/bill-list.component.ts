@@ -1,17 +1,14 @@
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { State } from '../price-management/price-state/price.state';
-import * as priceProductActions from '../price-management/price-state/price.actions';
+import {State} from '../state/bill-state/bill.state'
 import * as billActions from '../state/bill-state/bill.actions';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { PriceProduct } from '../model/price.model';
-// import * as pricePRoductSelector from '../price-management/price-state/price.reducer';
 import * as billSelector from '../state/bill-state/bill.reducer';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
-import { PriceManagementFormComponent } from '../price-management/price-management-form/price-management-form.component';  // Import the component
 import { Bill } from '../model/bill.model';
 import { BillDetailComponent } from './bill-detail/bill-detail.component';
 @Component({
@@ -80,7 +77,6 @@ export class BillListComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed', result);
     });
     
   }
