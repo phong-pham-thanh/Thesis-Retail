@@ -10,7 +10,7 @@ namespace APIBackend.Models
         public GoodsReceiptModel? GoodsReceipt { get; set; }
         public int ProductId { get; set; }
         public ProductModel? Product { get; set; }
-        public int PriceUnit { get; set; }
+        public int? PriceUnit { get; set; }
         public int Quantity { get; set; }
     }
 }

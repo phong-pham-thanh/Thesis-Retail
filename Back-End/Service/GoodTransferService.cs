@@ -29,6 +29,8 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        private readonly IGoodExportService _goodExportService;
+        private readonly IGoodReciptService _goodReciptService;
 
         public GoodTransferService(IProductMapper productMapper, 
             IGoodsTransferMapper goodTransferMapper, 
@@ -37,6 +39,8 @@ namespace APIBackend.Service
             IGoodTransferDetailRepository goodTransferDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
+            IGoodExportService goodExportService,
+            IGoodReciptService goodReciptService,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
@@ -46,6 +50,8 @@ namespace APIBackend.Service
             _goodTransferDetailRepository = goodTransferDetailRepository;
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
+            _goodExportService = goodExportService;
+            _goodReciptService = goodReciptService;
             _uowFactory = uowFactory;
         }
 
@@ -118,6 +124,13 @@ namespace APIBackend.Service
         public List<GoodsTransferModel> GetAllGoodTransfers()
         {
             List<GoodsTransferModel> listGoodTransfer = _goodTransferRepository.GetAllGoodTransfers();
+            foreach (GoodsTransferModel item in listGoodTransfer)
+            {
+                foreach(GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
+                {
+                    detail.Product = _productRepository.GetProductById(detail.ProductId);
+                }
+            }
             return listGoodTransfer;
         }
 
@@ -126,11 +139,62 @@ namespace APIBackend.Service
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
                 GoodsTransferModel result = _goodTransferRepository.AcceptGoodTransfer(id);
-                // UpdateInventoryForGoodTransfer(result);
+                //UpdateInventoryForGoodTransfer(result);
+                GoodsExportModel exportModel = this.BuildGoodExportFromTransfer(result);
+                _goodExportService.AddGoodExport(exportModel, exportModel.ListGoodExportDetailsModel, autoAccept: true);
+
+
+                GoodsReceiptModel receiptModel = this.BuildGoodReceiptFromTransfer(result);
+                _goodReciptService.AddGoodRecipt(receiptModel, receiptModel.ListGoodReciptDetailsModel, autoAccept: true);
+
+
                 uow.Commit();
                 return result;
             }
         }
+
+        private GoodsReceiptModel BuildGoodReceiptFromTransfer(GoodsTransferModel goodsTransferModel)
+        {
+            GoodsReceiptModel result = new GoodsReceiptModel 
+            {
+                Id = 0,
+                ReceiptStatus = Status.Success,
+                ImportDate = DateTime.Now,
+                WareHouseId = goodsTransferModel.ToWareHouseId,
+                ListGoodReciptDetailsModel = new List<GoodReceiptDetailModel>(),
+            };
+            foreach(GoodTransferDetailModel item in goodsTransferModel.ListGoodTransferDetailsModel)
+            {
+                result.ListGoodReciptDetailsModel.Add(new GoodReceiptDetailModel
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                    });
+            }
+            return result;
+        }
+
+        private GoodsExportModel BuildGoodExportFromTransfer(GoodsTransferModel goodsTransferModel)
+        {
+            GoodsExportModel result = new GoodsExportModel
+            {
+                Id = 0,
+                ExportStatus = Status.Success,
+                ExportDate = DateTime.Now,
+                WareHouseId = goodsTransferModel.FromWareHouseId,
+                ListGoodExportDetailsModel = new List<GoodExportDetailModel>(),
+            };
+            foreach (GoodTransferDetailModel item in goodsTransferModel.ListGoodTransferDetailsModel)
+            {
+                result.ListGoodExportDetailsModel.Add(new GoodExportDetailModel
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                });
+            }
+            return result;
+        }
+
 
         // public void UpdateInventoryForGoodTransfer(GoodsTransferModel currentGoodTransfer)
         // {

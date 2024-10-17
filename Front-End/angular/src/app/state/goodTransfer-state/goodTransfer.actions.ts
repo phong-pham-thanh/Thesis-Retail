@@ -11,6 +11,9 @@ export enum GoodTransferActionTypes {
     LoadAllGoodTransfer = '[AllGoodTransfer] Load All Price GoodTransfer',
     LoadAllGoodTransferSuccess = '[AllGoodTransfer] Load AllGoodTransfer Success',
     LoadAllGoodTransferFail = '[AllGoodTransfer] Load AllGoodTransfer Fail',
+    AcceptGoodTransfer = '[AcceptGoodTransfer] Add new GoodTransfer',
+    AcceptGoodTransferSuccess = '[AcceptGoodTransfer] Add new GoodTransfer Success',
+    AcceptGoodTransferFail = '[AcceptGoodTransfer] Add new GoodTransfer Fail',
 }
 
 export class LoadAllGoodTransfer implements Action {
@@ -49,9 +52,30 @@ export class AddNewGoodTransferFail implements Action {
     constructor(public payload: string) { }
 }
 
+export class AcceptGoodTransfer implements Action {
+    readonly type = GoodTransferActionTypes.AcceptGoodTransfer;
+
+    constructor(public payload: number) { }
+}
+
+export class AcceptGoodTransferSuccess implements Action {
+    readonly type = GoodTransferActionTypes.AcceptGoodTransferSuccess;
+
+    constructor(public payload: GoodTransfer) { }
+}
+  
+export class AcceptGoodTransferFail implements Action {
+    readonly type = GoodTransferActionTypes.AcceptGoodTransferFail;
+  
+    constructor(public payload: string) { }
+}
+
 export type GoodTransferActions = LoadAllGoodTransfer
   | LoadAllGoodTransferSuccess
   | LoadAllGoodTransferFail
   | AddNewGoodTransfer
   | AddNewGoodTransferSuccess
   | AddNewGoodTransferFail
+  | AcceptGoodTransfer
+  | AcceptGoodTransferSuccess
+  | AcceptGoodTransferFail

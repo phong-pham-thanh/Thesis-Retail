@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { GoodTransfer } from '../../model/goodTransfer.model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Store, select } from '@ngrx/store';
+import {State} from '../../state/goodTransfer-state/goodTransfer.state'
 
+import * as goodTransferActions from '../../state/goodTransfer-state/goodTransfer.actions';
+import * as goodTransferSelector from '../../state/goodTransfer-state/goodTransfer.reducer';
+import { filter, map, mergeMap, take } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-good-transfer-view',
   templateUrl: './good-transfer-view.component.html',
@@ -7,4 +15,45 @@ import { Component } from '@angular/core';
 })
 export class GoodTransferViewComponent {
 
+  currentGoodTransfer: GoodTransfer;
+
+  constructor(
+    protected store: Store<State>,
+    @Inject(MAT_DIALOG_DATA) public data: GoodTransfer,
+    public dialogRef: MatDialogRef<GoodTransferViewComponent>,
+    private router: Router,
+  ) 
+  {
+
+    if(data && data.id > 0){
+      this.currentGoodTransfer = JSON.parse(JSON.stringify(data));
+    }
+  }
+
+  closeDialog(){
+    this.dialogRef.close();
+  }
+  accept(){
+    this.store.dispatch(new goodTransferActions.AcceptGoodTransfer(this.currentGoodTransfer.id));
+    this.store.pipe(select(goodTransferSelector.getIsLoading),
+      filter(loading => loading === false),
+      mergeMap(_ => 
+        this.store.pipe(select(goodTransferSelector.getError),
+        map(error => {
+          if(error){
+            this.dialogRef.close({
+              isSuccess: false,
+              message: error.error.detail
+            });
+          }
+          else{
+            this.dialogRef.close({
+              isSuccess: true,
+              message: null
+            });
+          }
+        }))
+      ), take(1)
+    ).subscribe();
+  }
 }

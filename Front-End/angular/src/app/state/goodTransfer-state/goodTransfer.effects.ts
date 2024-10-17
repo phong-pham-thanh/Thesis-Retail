@@ -37,6 +37,19 @@ export class GoodTransferEffects {
       )
     );
 
+    acceptGoodTransfer$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.GoodTransferActionTypes.AcceptGoodTransfer),
+        map((action: priceProductAction.AcceptGoodTransfer) => action.payload),
+        mergeMap((newItem) =>
+          this.priceProductService.acceptGoodTransfer(newItem).pipe(
+            map(result => new priceProductAction.AcceptGoodTransferSuccess(result)),
+            catchError(err => of(new priceProductAction.AcceptGoodTransferFail(err)))
+          )
+        )
+      )
+    );
+
     
     // updateGoodTransfer$ = createEffect(() =>
     //   this.actions$.pipe(

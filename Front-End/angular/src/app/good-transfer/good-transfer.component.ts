@@ -62,6 +62,23 @@ export class GoodTransferComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if(result.isSuccess){
+        this.store.dispatch(new goodTransferActions.LoadAllGoodTransfer());
+        
+        this.store.pipe(select(goodTransferSelector.getIsLoaded),
+          filter(loaded => loaded === true),
+          mergeMap(_ => 
+            this.store.pipe(select(goodTransferSelector.getAllGoodTransfer),
+            map(result => {
+              this.allGoodTransfer = result; 
+            }))
+          )
+        ).subscribe();
+      }
+      else{
+        alert(result.message);
+      }
     });
   }
 }
