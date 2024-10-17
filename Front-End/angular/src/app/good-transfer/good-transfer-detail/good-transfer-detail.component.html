@@ -1,0 +1,69 @@
+<div class="dashboard-container">
+    <div class="receipt-container">
+        <h3>Đơn xuất hàng</h3>
+        <form id="exportForm">
+            <div class="form-item">
+                <label for="warehouse">Xuất đến kho:</label>
+                <select id="warehouse" name="warehouse">
+                    <option value="1">Kho 1</option>
+                    <option value="2">Kho 2</option>
+                </select>
+            </div>
+            <div class="form-item">
+                <label for="exportDate">Ngày xuất:</label>
+                <input type="date" id="exportDate" name="exportDate">
+            </div>
+            <div class="form-item">
+                <label for="customer">Khách hàng:</label>
+                <select id="customer" name="customer">
+                    <option value="1">Khách hàng 1</option>
+                    <option value="2">Khách hàng 2</option>
+                </select>
+            </div>
+            <div class="form-button">
+                <button type="button">Thêm mới</button>
+            </div>
+        </form>
+
+        <div class="export-list">
+            <h4>Danh sách sản phẩm xuất</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên hàng</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5" style="text-align: center;">No data</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4">Tổng cộng:</td>
+                    <td>0</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="product-container">
+        <div class="product-table">
+            <div class="product-table-title">All</div>
+            <div class="product-cell">pro 1 23323</div>
+            <div class="product-cell">Product</div>
+            <div class="product-cell">bbbbđđ</div>
+            <div class="product-cell">pro 1 23323</div>
+            <div class="product-cell">ok</div>
+            <div class="product-cell">Product 45</div>
+            <div class="product-cell">4444</div>
+            <div class="product-cell">tes</div>
+            <div class="product-cell">tesst</div>
+        </div>
+    </div>
+</div>
