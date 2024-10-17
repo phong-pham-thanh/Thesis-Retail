@@ -14,6 +14,7 @@ import AlertDialog from "../../component/AlertDialog";
 import { UploadFile } from "@mui/icons-material";
 import message from "antd/lib/message";
 import { WarehouseFilter } from "./WarehouseFilter";
+import { CategoryFilter } from "./CategoryFilter";
 
 interface InventoryType {
   id: number;
@@ -72,6 +73,7 @@ export default function Product() {
     return fetch_Api(api_link)
       .then((res) => {
         setProducts(res.data);
+        setFilteredProducts(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -96,9 +98,24 @@ export default function Product() {
     setFilteredProducts(filtered);
   };
 
+  const filterProductsByCategory = (categoryId: string) => {
+    if (categoryId === null) {
+      setFilteredProducts(data);
+    } else {
+      const filtered = data.filter(
+        (product) => product.categoryId === categoryId
+      );
+      setFilteredProducts(filtered);
+    }
+  };
+
   const handleWarehouseChange = (value: number) => {
     filterProductsByWarehouse(value); // Filter products based on the selected warehouse
   };
+
+  function handleCategoryChange(value: string): void {
+    filterProductsByCategory(value);
+  }
 
   const handleEdit = (record: DataType) => {
     setPopupData(record); // Set the selected product data
@@ -257,8 +274,7 @@ export default function Product() {
           <div className="filterField">
             <WarehouseFilter onSelect={handleWarehouseChange} />
 
-            <FilterBox title={"Tổng bán"} type={"amount"} />
-            <FilterBox title={"Số lượng"} type={"num"} />
+            <CategoryFilter onSelect={handleCategoryChange} />
           </div>
           <div className="product-list">
             <div>
@@ -271,7 +287,7 @@ export default function Product() {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={filteredProducts}
               loading={loading}
               rowKey="id"
             />

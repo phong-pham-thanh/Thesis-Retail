@@ -64,9 +64,7 @@ const api_links = {
         url: `${authUrl}/GoodRecipt/cancelGoodRecipt/`,
         method: "GET",
       },
-
     },
-
 
     export: {
       getAll: {
@@ -200,6 +198,25 @@ const api_links = {
       url: `${authUrl}/WareHouse`,
       method: "GET",
     },
+    getById: {
+      url: `${authUrl}/Warehouse/getWarehouseById/`,
+      method: "GET",
+    },
+    edit: (id: number) => ({
+      url: `${authUrl}/Warehouse/updateWarehouseById/${id}`,
+      method: "PUT",
+      data: {},
+    }),
+    create: {
+      url: `${authUrl}/Warehouse/addNewWarehouse`,
+      method: "POST",
+      data: {},
+    },
+    search: (name: string) => ({
+      url: `${authUrl}/Warehouse/getCustomerBySearchName`,
+      method: "GET",
+      data: { name },
+    }),
   },
 };
 
