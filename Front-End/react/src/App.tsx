@@ -26,6 +26,7 @@ import Report from "./pages/manager/report/Report";
 import Register from "./pages/register/Register";
 import CategoryPage from "./pages/manager/category/CategoryPage";
 import PartnerPage from "./pages/manager/partner/PartnerPage";
+import WarehousePage from "./pages/warehouse/WarehousePage";
 function App() {
   return (
     <Provider store={store}>
@@ -38,6 +39,7 @@ function App() {
               <Route path="/quan-ly/kiemkho" element={<Product />} />
               <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
               <Route path="/quan-ly/nhanvien" element={<Employee />} />
+              <Route path="/quan-ly/quan-ly-kho" element={<WarehousePage />} />
               <Route
                 path="/quan-ly/nhap-hang"
                 element={<ImportTransaction />}
@@ -60,6 +62,8 @@ function App() {
               <Route path="/quan-ly/baocao" element={<Report />} />
               <Route path="/quan-ly/retail" />
               <Route path="/quan-ly/price-management" />
+              <Route path="/quan-ly/bill" />
+              <Route path="/quan-ly/good-transfer" />
             </Route>
           </Routes>
         </div>

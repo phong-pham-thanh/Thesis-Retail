@@ -37,6 +37,7 @@ import HailIcon from "@mui/icons-material/Hail";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import LogoutIcon from "@mui/icons-material/Logout";
+import HouseIcon from "@mui/icons-material/House";
 
 // import Logo from '../component/IconComponent/AppLogo'
 // import IconTongquan from '../component/IconComponent/IconTongquan'
@@ -77,7 +78,17 @@ export default function NavBar() {
       title: "Tổng quan",
       icon: <DashboardIcon />,
       path: "tongquan",
-      status: location.pathname.includes("tongquan"),
+      status:
+        location.pathname.includes("tongquan") ||
+        location.pathname.includes("quan-ly-kho"),
+      subNav: [
+        {
+          title: "Quản lý kho",
+          icon: <HouseIcon />,
+          path: "quan-ly-kho",
+          status: location.pathname.includes("quan-ly-kho"),
+        },
+      ],
     },
     {
       title: "Hàng hóa",
@@ -122,6 +133,18 @@ export default function NavBar() {
           icon: <IosShareIcon />,
           path: "xuat-hang",
           status: location.pathname.includes("xuat-hang"),
+        },
+        {
+          title: "Hóa đơn",
+          icon: <IosShareIcon />,
+          path: "bill",
+          status: location.pathname.includes("bill"),
+        },
+        {
+          title: "Chuyển kho",
+          icon: <IosShareIcon />,
+          path: "good-transfer",
+          status: location.pathname.includes("good-transfer"),
         },
       ],
     },

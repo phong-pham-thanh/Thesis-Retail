@@ -25,9 +25,17 @@ namespace APIBackend.Controllers
             _billService = billService;
         }
 
+        [HttpGet]
+        public List<BillModel> GetAll()
+        {
+
+            List<BillModel> ressult = _billService.GetAll();
+            return ressult;
+        }
+
         [HttpPost]
         [Route("addBill")]
-        public bool AddBill([FromBody] paramAddNewBill param)
+        public bool AddBill([FromBody] BillModel newBill)
         {
             // {
             //     "billModel": {
@@ -50,7 +58,7 @@ namespace APIBackend.Controllers
             //         }
             //     ]
             // }
-            return _billService.AddBill(param.billModel, param.listBillDetailModels);
+            return _billService.AddBill(newBill);
         }
     }
 }

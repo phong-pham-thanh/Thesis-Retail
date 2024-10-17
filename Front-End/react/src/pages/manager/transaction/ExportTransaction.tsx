@@ -225,7 +225,7 @@ export default function ExportTransaction() {
                   name={"trans"}
                   rules={[{ required: true }]}
                 >
-                  {goodReceiptData.customer.name}
+                  {goodReceiptData.customer?.name}
                 </Form.Item>
                 <Form.Item
                   className="status"
@@ -319,7 +319,7 @@ export default function ExportTransaction() {
                   >
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()} /></td>
-                    <td className="table-body-trans">{tran.customer.name}</td>
+                    <td className="table-body-trans">{tran.customer?.name}</td>
                     <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                     <td className="table-body-status"><ProcessStatus status={tran.exportStatus} /></td>
                     {dataChoose?.id === tran.id && (

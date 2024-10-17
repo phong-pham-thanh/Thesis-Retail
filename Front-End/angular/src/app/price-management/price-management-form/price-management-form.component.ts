@@ -35,7 +35,6 @@ export class PriceManagementFormComponent  implements OnInit{
     this.store.dispatch(new productActions.LoadAllProduct());
 
     if(data && data.id > 0){
-      // this.formData = data;
       this.formData = JSON.parse(JSON.stringify(data));
       this.isEdit = true;
     }
@@ -54,8 +53,6 @@ export class PriceManagementFormComponent  implements OnInit{
     ).subscribe();
   }
 
-
-
   onClose(): void {
     this.dialogRef.close();
   }
@@ -65,17 +62,49 @@ export class PriceManagementFormComponent  implements OnInit{
       alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
       return;
     }
+
+    let saveData: PriceProduct = this.formData;
+    saveData.startDate = saveData.startDate ? this.convertDateTime(saveData.startDate) : undefined;
+    saveData.endDate = saveData.endDate ? this.convertDateTime(saveData.endDate) : undefined;
+
     if(this.isEdit){
-      this.store.dispatch(new priceProductActions.UpdatePriceProduct(this.formData));
+      this.store.dispatch(new priceProductActions.UpdatePriceProduct(saveData));
     }
     else{
-      this.store.dispatch(new priceProductActions.AddNewPriceProduct(this.formData));
+      this.store.dispatch(new priceProductActions.AddNewPriceProduct(saveData));
     }
     this.store.pipe(select(pricePRoductSelector.getIsLoading),
       filter(x => x === false),
-      map(_ =>
+      map(_ =>{
         this.store.dispatch(new priceProductActions.LoadAllPriceProduct())
+        this.dialogRef.close();
+        }
       ), take(1)).subscribe();
-    this.dialogRef.close();
+  }
+
+
+
+  convertDateTime(date: Date | string): Date {
+    if (date === null || date === undefined) {
+      return null;
+    }
+    if (typeof date === 'string') {
+      date = new Date(date);
+    }
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      return null;
+    }
+  
+    // Chuyển đổi ngày sang UTC bằng cách loại bỏ ảnh hưởng của múi giờ
+    const convertDate = new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds()
+    ));
+  
+    return convertDate;
   }
 }

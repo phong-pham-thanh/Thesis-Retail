@@ -30,15 +30,37 @@
 
   <div class="form-group" [ngClass]="{'has-error': priceForm.submitted && !startDate.valid}">
     <label for="startDate" class="form-label">Ngày bắt đầu:</label>
-    <input type="date" id="startDate" class="form-control" [(ngModel)]="formData.startDate" name="startDate" #startDate="ngModel" required />
+    <mat-form-field appearance="fill">
+      <input matInput 
+             [matDatepicker]="startPicker" 
+             [(ngModel)]="formData.startDate" 
+             id="startDate"
+             name="startDate"
+             #startDate="ngModel"
+             required
+             placeholder="Chọn ngày bắt đầu">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
     <div *ngIf="priceForm.submitted && !startDate.valid" class="error-message">
       Vui lòng chọn ngày bắt đầu
     </div>
   </div>
 
+
   <div class="form-group">
     <label for="endDate" class="form-label">Ngày kết thúc:</label>
-    <input type="date" id="endDate" class="form-control" [(ngModel)]="formData.endDate" name="endDate" />
+    <mat-form-field appearance="fill">
+      <input matInput 
+             [matDatepicker]="endPicker" 
+             [(ngModel)]="formData.endDate" 
+             id="endDate"
+             name="endDate"
+             #endDate="ngModel"
+             placeholder="Chọn ngày kết thúc">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
   </div>
 
   <div class="form-group form-checkbox">

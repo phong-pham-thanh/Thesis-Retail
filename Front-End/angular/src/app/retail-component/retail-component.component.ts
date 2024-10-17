@@ -7,6 +7,8 @@ import { Store, select } from '@ngrx/store';
 import { State } from '../product-state/product.state';
 import * as productActions from '../product-state/product.actions';
 import * as productSelector from '../product-state/product.reducer';
+import * as warehouseActions from '../state/warehouse-state/warehouse.actions';
+import * as warehouseSelector from '../state/warehouse-state/warehouse.reducer';
 import * as customerActions from '../customer-state/customer.actions';
 import * as customerSelector from '../customer-state/customer.reducer';
 import * as priceProductActions from '../price-management/price-state/price.actions';
@@ -19,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RetailPaymentComponentComponent } from './retail-payment-component/retail-payment-component.component'; 
 import { CookieService } from 'ngx-cookie-service';
 import { Users } from '../model/user.model';
+import { Warehouse } from '../model/warehouse.model';
 
 
 const imageUrl = assetUrl("images/Cocacola.png");
@@ -35,11 +38,13 @@ export class RetailComponentComponent implements OnInit {
 
   imageUrl = imageUrl;
   allProduct: Product[] = [];
+  allWarehouse: Warehouse[] = [];
   allCustomer: Customer[] = [];
   allPriceProduct: PriceProduct[] = []
   currentBill: Bill;
   currentPage: any;
   currentCustomer: Customer;
+  currentWarehouse: Warehouse;
   totalAmountBill: number = 0;
 
   constructor(protected store: Store<State>, 
@@ -48,6 +53,7 @@ export class RetailComponentComponent implements OnInit {
     private cookieService: CookieService
   ) {
     this.store.dispatch(new productActions.LoadAllProduct());
+    this.store.dispatch(new warehouseActions.LoadAllWarehouse());
     this.store.dispatch(new customerActions.LoadAllCustomer());
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
   }
@@ -60,7 +66,20 @@ export class RetailComponentComponent implements OnInit {
       mergeMap(_ => 
         this.store.pipe(select(productSelector.getAllProduct),
         map(result => {
-          this.allProduct = result; 
+          this.allProduct = result.filter(pro => pro.currentPrice); 
+        }))
+      ), take(1)
+    ).subscribe();
+
+    this.store.pipe(select(warehouseSelector.getIsLoaded),
+      filter(loaded => loaded === true),
+      mergeMap(_ => 
+        this.store.pipe(select(warehouseSelector.getAllWarehouse),
+        map(result => {
+          this.allWarehouse = result;
+          if(result && result.length > 0){
+            this.currentWarehouse = result[0];
+          }
         }))
       ), take(1)
     ).subscribe();
@@ -85,35 +104,35 @@ export class RetailComponentComponent implements OnInit {
       )
     ).subscribe();
 
-    this.currentBill = {
-      id: -1,
-      createdDate: new Date(),
-      customerId: -1,
-      billDetails: [],
-    }
+    this.initComponent();
 
   }
 
+  initComponent(){
+    this.currentBill = {
+      createdDate: new Date(),
+      listBillDetails: [],
+    }
+    this.totalAmountBill = 0;
+  }
+
+
   addProductToBill(item: Product){
     
-    if(this.currentBill && this.currentBill.billDetails && this.currentBill.billDetails.find(de => de.product.id === item.id) != null){
-      let currentProductDetail: BillDetails = this.currentBill.billDetails.find(de => de.product.id === item.id)
+    if(this.currentBill && this.currentBill.listBillDetails && this.currentBill.listBillDetails.find(de => de.product.id === item.id) != null){
+      let currentProductDetail: BillDetails = this.currentBill.listBillDetails.find(de => de.product.id === item.id)
       currentProductDetail.quantity += 1;
     }
     else{
-      let itemPrice: number = null;
-      if(item.listPrices && item.listPrices.length > 0){
-        itemPrice = item.listPrices[0].price;
-      }
-  
       const newBillDetail: BillDetails = {
+        productId: item.id,
         product: item,
         quantity: 1,
         billId: -1,
-        price: itemPrice,
-        haveDefaultPrice: itemPrice !== null
+        priceUnit: item.currentPrice,
       }
-      this.currentBill.billDetails.push(newBillDetail);
+      this.currentBill.listBillDetails = [...this.currentBill.listBillDetails, {...newBillDetail}];
+      // this.currentBill.listBillDetails.push({...newBillDetail});
     }
     this.getTotalAmount();
   }
@@ -131,7 +150,8 @@ export class RetailComponentComponent implements OnInit {
   }
 
   removeItem(item: BillDetails){
-    this.currentBill.billDetails = this.currentBill.billDetails.filter(bi => bi.product?.id !== item.product?.id);
+    this.currentBill.listBillDetails = this.currentBill.listBillDetails.filter(bi => bi.product?.id !== item.product?.id);
+    this.getTotalAmount();
   }
 
   getPriceProduct(product: Product){
@@ -143,10 +163,10 @@ export class RetailComponentComponent implements OnInit {
 
   getTotalAmount(){
     this.totalAmountBill = 0;
-    if(!this.currentBill || this.currentBill.billDetails.length == 0) return;
-    this.currentBill.billDetails.forEach(item => {
-      if(item.price){
-        this.totalAmountBill += (item.price * item.quantity)
+    if(!this.currentBill || this.currentBill.listBillDetails.length == 0) return;
+    this.currentBill.listBillDetails.forEach(item => {
+      if(item.priceUnit){
+        this.totalAmountBill += (item.priceUnit * item.quantity)
       }
     })
   }
@@ -156,19 +176,27 @@ export class RetailComponentComponent implements OnInit {
   }
 
   openPaymentDialog() {
-    // if(!this.currentBill || !this.currentBill.billDetails ||  this.currentBill.billDetails.length === 0 ){
+    // if(!this.currentBill || !this.currentBill.listBillDetails ||  this.currentBill.listBillDetails.length === 0 ){
     //   alert("Hãy thêm sản phẩm vào giỏ hàng")
     //   return;
     // }
+
+    this.currentBill.wareHouseId = this.currentWarehouse.id;
+    this.currentBill.totalAmount = this.totalAmountBill;
+
+
     const dialogRef = this.dialog.open(RetailPaymentComponentComponent, {
       data: {
         currentCustomer: this.currentCustomer,
         totalAmountBill: this.totalAmountBill,
+        currentBill: this.currentBill,
       },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed', result);
+      if(result){
+        this.initComponent()
+      }
     });
   }
 

@@ -1,0 +1,68 @@
+<div class="container-good-transfer">
+    <div class="header-good-transfer">
+        <h1 class="title-good-transfer">Phiếu xuất kho</h1>
+
+        <div class="button-group-good-transfer">
+            <button class="btn-good-transfer edit-good-transfer">✏️ Điều chỉnh</button>
+            <button class="btn-good-transfer add-good-transfer">➕ Thêm mới</button>
+            <button class="btn-good-transfer import-good-transfer">⬇️ Nhập File</button>
+            <button class="btn-good-transfer export-good-transfer">⬇️ Xuất File</button>
+        </div>
+    </div>
+
+    <table class="table-good-transfer">
+        <thead class="thead-good-transfer">
+            <tr class="row-header-good-transfer">
+                <th>Mã xuất hàng</th>
+                <th>Thời gian</th>
+                <th>Khách hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="tbody-good-transfer">
+            <tr class="row-good-transfer"  (click)="selectRow($event)">
+                <td>3</td>
+                <td>
+                    <div>00:00</div>
+                    <div>12/12/2022</div>
+                </td>
+                <td>Phong</td>
+                <td>50.000</td>
+                <td>
+                    <span class="status-good-transfer complete-good-transfer">Hoàn thành</span>
+                </td>
+                <td>
+                    <button class="btn-detail-good-transfer">Chi tiết</button>
+                    <button class="btn-delete-good-transfer">Xóa</button>
+                </td>
+            </tr>
+
+            
+            <tr class="row-good-transfer"  (click)="selectRow($event)">
+                <td>3</td>
+                <td>
+                    <div>00:00</div>
+                    <div>12/12/2022</div>
+                </td>
+                <td>Phong</td>
+                <td>50.000</td>
+                <td>
+                    <span class="status-good-transfer complete-good-transfer">Hoàn thành</span>
+                </td>
+                <td>
+                    <button class="btn-detail-good-transfer">Chi tiết</button>
+                    <button class="btn-delete-good-transfer">Xóa</button>
+                </td>
+            </tr>
+            <!-- Các hàng khác tương tự -->
+        </tbody>
+    </table>
+
+    <div class="pagination-good-transfer">
+        <button class="btn-prev-good-transfer">&lt;</button>
+        <span>1</span>
+        <button class="btn-next-good-transfer">&gt;</button>
+    </div>
+</div>

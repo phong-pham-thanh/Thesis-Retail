@@ -124,6 +124,7 @@ export type GoodsReceipt = {
   exportStatus?: number;
   ListGoodReciptDetailsModel?: [];
   listGoodExportDetailModels?: [];
+  wareHouseId: string;
 };
 
 export type ListGoodReciptDetailsModel = {

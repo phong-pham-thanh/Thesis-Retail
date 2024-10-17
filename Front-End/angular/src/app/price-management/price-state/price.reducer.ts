@@ -1,7 +1,7 @@
 /* NgRx */
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { PriceProductState } from './price.state';
-import { EntityMemberActions, PriceProductActionTypes } from './price.actions';
+import { PriceProductActions, PriceProductActionTypes } from './price.actions';
 
 const initialState: PriceProductState = {
     needRefreshBrowseList: false,
@@ -32,7 +32,7 @@ export const getIsLoaded= createSelector(
 );
 
 // Reducer function
-export function priceReducer(state = initialState, action: EntityMemberActions): PriceProductState {
+export function priceReducer(state = initialState, action: PriceProductActions): PriceProductState {
     switch (action.type) {
         case PriceProductActionTypes.LoadAllPriceProduct:
             return {

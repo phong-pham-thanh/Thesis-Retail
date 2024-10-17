@@ -7,12 +7,14 @@ using APIBackend.Repository;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
+using NGO.Core.Repositories;
 
 namespace APIBackend.Service
 {
     public interface IBillService
     {
-        public bool AddBill(BillModel billModel, List<BillDetailModel> listBillDetailModels);
+        public bool AddBill(BillModel billModel);
+        public List<BillModel> GetAll();
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
         // public BillModel AcceptBill(int id);
@@ -28,6 +30,8 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         private readonly IGoodExportService _goodExportService;
+        private readonly IUserRepository _userRepository;
+        protected readonly IUnityOfWorkFactory _uowFactory;
 
 
         public BillService(
@@ -38,6 +42,8 @@ namespace APIBackend.Service
             IBillDetailRepository billDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
+            IUserRepository userRepository,
+            IUnityOfWorkFactory uowFactory,
             IGoodExportService goodExportService
         ) 
         {
@@ -49,25 +55,42 @@ namespace APIBackend.Service
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
             _goodExportService = goodExportService;
+            _userRepository = userRepository;
+            _uowFactory = uowFactory;
         }
-        public bool AddBill(BillModel billModel, List<BillDetailModel> listBillDetailModels)
+
+        public List<BillModel> GetAll()
         {
-            //Add Bill
-            BillModel newBillModel = _billRepository.AddBill(billModel);
-
-            //Add Bill Details
-            foreach(var billDetailModel in listBillDetailModels)
+            List<BillModel> result = _billRepository.GetAll();
+            foreach (var item in result)
             {
-                BillDetails billDetails = new BillDetails();
-                _billDetailMapper.ToEntity(billDetails, billDetailModel);
-                billDetails.BillId = newBillModel.Id;
-                _billDetailRepository.AddBillDetails(billDetails);
+                item.User = _userRepository.GetUserById(item.UserId);
             }
-            AutoAddGoodExport(billModel, listBillDetailModels);
-            return true;
+            return result;
         }
 
-        public void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
+        public bool AddBill(BillModel billModel)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                //Add Bill
+                BillModel newBillModel = _billRepository.AddBill(billModel);
+
+                //Add Bill Details
+                foreach (var billDetailModel in billModel.ListBillDetails)
+                {
+                    BillDetails billDetails = new BillDetails();
+                    _billDetailMapper.ToEntity(billDetails, billDetailModel);
+                    billDetails.BillId = newBillModel.Id;
+                    _billDetailRepository.AddBillDetails(billDetails);
+                }
+                AutoAddGoodExport(billModel, billModel.ListBillDetails);
+                uow.Commit();
+                return true;
+            }
+        }
+
+        private void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
         {
             GoodsExportModel goodsExportModel = new GoodsExportModel();
             goodsExportModel.CustomerId = billModel.CustomerId;
@@ -83,7 +106,7 @@ namespace APIBackend.Service
                 listGoodExportDetailModels.Add(newItem);
             }
 
-            _goodExportService.AddGoodExport(goodsExportModel, listGoodExportDetailModels, goodsExportModel.WareHouseId, autoAccept: true);
+            _goodExportService.AddGoodExport(goodsExportModel, listGoodExportDetailModels, autoAccept: true);
         }
 
     }

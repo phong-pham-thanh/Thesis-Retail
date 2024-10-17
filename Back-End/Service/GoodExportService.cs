@@ -7,15 +7,17 @@ using APIBackend.Repository;
 using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
+using NGO.Core.Repositories;
 
 namespace APIBackend.Service
 {
     public interface IGoodExportService
     {
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept);
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -26,6 +28,7 @@ namespace APIBackend.Service
         private readonly IGoodExportDetailRepository _goodExportDetailRepository;
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
+        protected readonly IUnityOfWorkFactory _uowFactory;
 
         public GoodExportService(IProductMapper productMapper, 
             IGoodsExportMapper goodExportMapper, 
@@ -33,7 +36,8 @@ namespace APIBackend.Service
             IGoodExportRepository goodExportRepository,
             IGoodExportDetailRepository goodExportDetailRepository,
             IInventoryRepository inventoryRepository,
-            IProductRepository productRepository)
+            IProductRepository productRepository,
+            IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
             _goodExportMapper = goodExportMapper;
@@ -42,42 +46,63 @@ namespace APIBackend.Service
             _goodExportDetailRepository = goodExportDetailRepository;
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
+            _uowFactory = uowFactory;
         }
 
-        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, int idWareHouse, bool autoAccept)
+        public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept)
         {
-            //Add good Export
-            GoodsExport goodsExport = new GoodsExport();
-
-            if(!autoAccept)
+            using(var uow = _uowFactory.CreateUnityOfWork())
             {
-                goodsExportModel.ExportStatus = Status.Process;
-            }
-            else
-            {
-                goodsExportModel.ExportStatus = Status.Success;
-            }
+                //Add good Export
+                GoodsExport goodsExport = new GoodsExport();
 
-            goodsExportModel.WareHouseId = idWareHouse;
-            _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
-            GoodsExportModel newGoodExportModel = _goodExportMapper.ToModel(_goodExportRepository.AddGoodExport(goodsExport));
+                if (!autoAccept)
+                {
+                    goodsExportModel.ExportStatus = Status.Process;
+                }
+                else
+                {
+                    goodsExportModel.ExportStatus = Status.Success;
+                }
+
+                _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
+                GoodsExportModel newGoodExportModel = _goodExportMapper.ToModel(_goodExportRepository.AddGoodExport(goodsExport));
 
 
-            //Add Good Export Details
-            foreach(var goodExportDetailModel in listGoodExportDetailModels)
-            {
-                GoodExportDetails goodExportDetails = new GoodExportDetails();
-                _goodExportDetailMapper.ToEntity(goodExportDetails, goodExportDetailModel);
-                goodExportDetails.GoodExportId = newGoodExportModel.Id;
-                _goodExportDetailRepository.AddGoodExportDetails(goodExportDetails);
+                //Add Good Export Details
+                foreach (var goodExportDetailModel in listGoodExportDetailModels)
+                {
+                    GoodExportDetails goodExportDetails = new GoodExportDetails();
+                    _goodExportDetailMapper.ToEntity(goodExportDetails, goodExportDetailModel);
+                    goodExportDetails.GoodExportId = newGoodExportModel.Id;
+                    _goodExportDetailRepository.AddGoodExportDetails(goodExportDetails);
+                }
+
+                if (autoAccept)
+                {
+                    GoodsExportModel newGoodExportModelWithFullDetails = _goodExportRepository.GetGoodExportById(newGoodExportModel.Id);
+                    UpdateInventoryForGoodExport(newGoodExportModelWithFullDetails);
+                }
+                uow.Commit();
             }
-
-            if(autoAccept)
-            {
-                GoodsExportModel newGoodExportModelWithFullDetails = _goodExportRepository.GetGoodExportById(newGoodExportModel.Id);
-                UpdateInventoryForGoodExport(newGoodExportModelWithFullDetails);
-            }
+            
             return true;
+        }
+
+        public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem)
+        {
+            GoodsExportModel result = new GoodsExportModel();
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                result = _goodExportRepository.UpdateGoodExport(id, updateItem);
+
+                foreach (var goodExportDetailModel in updateItem.ListGoodExportDetailsModel)
+                {
+                    _goodExportDetailRepository.UpdateGoodExportDetails(goodExportDetailModel.Id, goodExportDetailModel);
+                }
+                uow.Commit();
+            }
+            return result;
         }
 
         public GoodsExportModel GetGoodExportById(int id)
@@ -98,9 +123,13 @@ namespace APIBackend.Service
 
         public GoodsExportModel AcceptGoodExport(int id)
         {
-            GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id);
-            UpdateInventoryForGoodExport(result);
-            return result;
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id);
+                UpdateInventoryForGoodExport(result);
+                uow.Commit();
+                return result;
+            }
         }
 
         public void UpdateInventoryForGoodExport(GoodsExportModel currentGoodExport)

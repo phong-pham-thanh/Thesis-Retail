@@ -10,6 +10,7 @@ namespace APIBackEnd.Repository
     {
         public List<UserModel> GetAllUser();
         public UserModel GetUserLogin(string username, string password);
+        public UserModel GetUserById(int id);
     }
     public class UserRepository : IUserRepository
     {
@@ -25,6 +26,12 @@ namespace APIBackEnd.Repository
         {
             List < Users > users = _coreContext.Users.ToList();
             return _userMapper.ToModels(users);
+        }
+
+        public UserModel GetUserById(int id)
+        {
+            Users user = _coreContext.Users.Where(u => u.Id == id).FirstOrDefault();
+            return _userMapper.ToModel(user);
         }
 
         public UserModel GetUserLogin(string username, string password)

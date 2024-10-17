@@ -9,6 +9,7 @@ namespace APIBackend.Repository
     public interface IPriceProductRepository
     {
         public List<PriceProductModel> GetAll();
+        public PriceProductModel GetLastPriceByProductId(int productId);
         public PriceProductModel AddNew(PriceProductModel domObject);
         public PriceProductModel Update(int id, PriceProductModel domObject);
         public bool Delete(int id);
@@ -28,6 +29,11 @@ namespace APIBackend.Repository
         public List<PriceProductModel> GetAll()
         {
             return _priceProductMapper.ToModels(_coreContext.PriceProduct.ToList());
+        }
+
+        public PriceProductModel GetLastPriceByProductId(int productId)
+        {
+            return _priceProductMapper.ToModel(_coreContext.PriceProduct.Where(p => p.ProductId == productId).OrderByDescending(p => p.Id).FirstOrDefault());
         }
 
         public PriceProductModel AddNew(PriceProductModel domObject)

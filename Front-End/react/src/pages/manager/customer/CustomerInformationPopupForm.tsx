@@ -6,7 +6,7 @@ import api_links from "../../../app/api_links";
 interface CustomerInformationPopupScreenProps {
   isPopup: boolean;
   setPopup: (value: boolean) => void;
-  data?: { id?: string; name?: string }; // Adjust according to your user type
+  data?: { id?: string; name?: string; phoneNumber?: string }; // Adjust according to your user type
   type?: string; // "create" or "edit"
   onSave?: () => void; // Callback after user is saved
 }
@@ -21,21 +21,20 @@ export default function CustomerInformationPopupScreen({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // Set form values if editing a user
+  // Set form values only when editing a customer
   useEffect(() => {
     if (type === "edit" && data) {
       form.setFieldsValue({
-        ...data,
         name: data.name,
+        phoneNumber: data.phoneNumber, // Set both name and phone number
       });
-    } else {
-      form.resetFields();
+    } else if (type === "create") {
+      form.resetFields(); // Reset form fields when creating a new customer
     }
-  }, [data, type]);
+  }, [data, type, form]);
 
-  // Close the modal and reset the form
+  // Close the modal and reset the form only when explicitly cancelled
   const handleCancel = () => {
-    form.resetFields();
     setPopup(false);
   };
 
@@ -97,8 +96,6 @@ export default function CustomerInformationPopupScreen({
         >
           <Input />
         </Form.Item>
-      </Form>
-      <Form form={form} layout="vertical">
         <Form.Item
           name="phoneNumber"
           label="Phone number"

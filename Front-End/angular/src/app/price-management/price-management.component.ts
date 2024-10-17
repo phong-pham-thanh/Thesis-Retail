@@ -18,7 +18,8 @@ import { PriceManagementFormComponent } from './price-management-form/price-mana
 })
 export class PriceManagementComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
+  // displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active', 'context'];
+  displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active'];
   dataSource = new MatTableDataSource<PriceProduct>();
   allPriceProduct: PriceProduct[];
 
@@ -43,6 +44,23 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
           this.dataSource = new MatTableDataSource<PriceProduct>(this.allPriceProduct);
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
+
+          this.dataSource.sortingDataAccessor = (item: PriceProduct, property: string) => {
+            switch (property) {
+              case 'productName':
+                return item.product?.name ? item.product.name.toLowerCase() : '';
+              case 'price':
+                return item.price;
+              case 'startDate':
+                return item.startDate ? new Date(item.startDate).getTime() : 0;
+              case 'endDate':
+                return item.endDate ? new Date(item.endDate).getTime() : 0;
+              case 'active':
+                return item.active ? 1 : 0;
+              default:
+                return '';
+            }
+          };
         }))
       )
     ).subscribe();

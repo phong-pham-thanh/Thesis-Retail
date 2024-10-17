@@ -155,11 +155,13 @@ body {
 }
 
 
-.product-list {
+.product-list-retail {
     width: 30%;
     display: flex;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .product-item {

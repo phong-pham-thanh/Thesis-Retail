@@ -15,6 +15,16 @@
         </div>
         <div class="user-profile">
             <ng-select 
+                [items]="allWarehouse" 
+                bindLabel="address" 
+                [(ngModel)]="currentWarehouse" 
+                name="warehouseName" 
+                [clearable]="false"
+                #warehouseName="ngModel">
+            </ng-select>
+        </div>
+        <div class="user-profile">
+            <ng-select 
                 [items]="allCustomer" 
                 bindLabel="name" 
                 [(ngModel)]="currentCustomer" 
@@ -26,30 +36,30 @@
     
     <main class="main-content">
         <section class="invoice-section">
-            <ng-container *ngFor="let item of currentBill.billDetails">
+            <ng-container *ngFor="let item of currentBill.listBillDetails">
                 <div class="invoice-item">
                     <span>{{item?.product?.id}}</span>
                     <span>{{item?.product?.name}}</span>
                     <div class="quantity-control">
                         <button (click)="changeQuantity(item, false)">-</button>
-                        <input type="number" [(ngModel)]="item.quantity">
+                        <input type="number" [(ngModel)]="item.quantity" (input)="getTotalAmount()">
                         <button (click)="changeQuantity(item, true)">+</button>
                     </div>
                     <div class="price-container">
-                        <span *ngIf="item.haveDefaultPrice">{{item.price | currency:'VND':'symbol':'1.0-0' }}</span>
-                        <input *ngIf="!item.haveDefaultPrice" type="text"  mask="separator.0" thousandSeparator=","  placeholder="Nhập giá" [(ngModel)]="item.price" (input)="onPriceChange(item)">
+                        <span>{{item.priceUnit | currency:'VND':'symbol':'1.0-0' }}</span>
+                        <!-- <input *ngIf="!item.haveDefaultPrice" type="text"  mask="separator.0" thousandSeparator=","  placeholder="Nhập giá" [(ngModel)]="item.priceUnit" (input)="onPriceChange(item)"> -->
                     </div>
                     <button class="delete-item" (click)="removeItem(item)">Xóa</button>
                 </div>
             </ng-container>
         </section>
         
-        <section class="product-list">
+        <section class="product-list-retail">
             <ng-container *ngFor="let item of allProduct | paginate: { itemsPerPage: 9, currentPage: currentPage }">
                 <div class="product-item">
                     <img src="{{imageUrl}}" alt="{{item.name}}" width="70" height="70">
                     <span class="product-name">{{item.name}}</span>
-                    <span class="product-price">{{getPriceProduct(item)}}</span>
+                    <span class="product-price">{{item.currentPrice | currency:'VND':'symbol':'1.0-0' }}</span>
                     <button class="add-to-cart" (click)="addProductToBill(item)">+</button>
                 </div>
             </ng-container>
@@ -66,7 +76,5 @@
         </div>
         <button class="payment-btn" (click)="openPaymentDialog()">Thanh toán</button>
     </footer>
-
-    <script src="scripts.js"></script>
 </body>
 </html>

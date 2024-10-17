@@ -42,14 +42,13 @@ export default function CategoryInformationPopupScreen({
         ...data,
         name: data.name,
       });
-    } else {
+    } else if (type === "create") {
       form.resetFields();
     }
-  }, [data, type]);
+  }, [data, type, form]);
 
   // Close the modal and reset the form
   const handleCancel = () => {
-    form.resetFields();
     setPopup(false);
   };
 

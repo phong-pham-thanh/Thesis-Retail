@@ -9,6 +9,7 @@ import {
   Select,
   message,
   Checkbox,
+  InputNumber,
 } from "antd";
 import fetch_Api from "../../app/api_fetch";
 import api_links from "../../app/api_links";
@@ -65,14 +66,13 @@ export default function ProductInformationPopupScreen({
         ...data,
         categoryId: data.category.id,
       });
-    } else {
+    } else if (type === "create") {
       form.resetFields();
     }
-  }, [data, type]);
+  }, [data, type, form]);
 
   // Close the modal and reset the form
   const handleCancel = () => {
-    form.resetFields();
     setPopup(false);
   };
 
@@ -133,6 +133,9 @@ export default function ProductInformationPopupScreen({
           rules={[{ required: true, message: "Please enter product name" }]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item name="currentPrice" label="Giá bán">
+          <InputNumber />
         </Form.Item>
         <Form.Item name="description" label="Description">
           <TextArea />

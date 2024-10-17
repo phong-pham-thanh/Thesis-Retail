@@ -90,7 +90,7 @@ export class DeletePriceProductFail implements Action {
     constructor(public payload: string) { }
 }
 
-export type EntityMemberActions = LoadAllPriceProduct
+export type PriceProductActions = LoadAllPriceProduct
   | LoadAllPriceProductSuccess
   | LoadAllPriceProductFail
   | AddNewPriceProduct
