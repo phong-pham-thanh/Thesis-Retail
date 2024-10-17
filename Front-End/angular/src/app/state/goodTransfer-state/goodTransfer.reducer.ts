@@ -86,6 +86,30 @@ export function goodTransferReducer(state = initialState, action: GoodTransferAc
                 isLoaded: true,
                 error: action.payload
             };
+    
+        case GoodTransferActionTypes.AcceptGoodTransfer:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case GoodTransferActionTypes.AcceptGoodTransferSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: null,
+            };
+        
+        case GoodTransferActionTypes.AcceptGoodTransferFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
         // case GoodTransferActionTypes.DeleteGoodTransfer:
         //     return {
         //         ...state,

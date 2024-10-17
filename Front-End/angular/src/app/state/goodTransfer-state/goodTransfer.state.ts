@@ -10,5 +10,5 @@ export interface GoodTransferState {
     isLoading: boolean;
     isLoaded: boolean;
     isSaving: boolean;
-    error: string;
+    error: any;
 }

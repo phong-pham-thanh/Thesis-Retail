@@ -54,7 +54,8 @@ namespace APIBackend.Repository
             listGoodTransfers = _coreContext.GoodsTransfers
                                             .Include(go => go.FromWareHouse)
                                             .Include(go => go.ToWareHouse)
-                                            .Include(go => go.ListGoodTransferDetails).ToList();
+                                            .Include(go => go.ListGoodTransferDetails)
+                                            .ToList();
             return _goodTransferMapper.ToModels(listGoodTransfers);
         }
 

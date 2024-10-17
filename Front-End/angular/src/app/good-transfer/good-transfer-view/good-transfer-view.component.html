@@ -1,1 +1,54 @@
-<p>good-transfer-view works!</p>
+<div class="dialog-container">
+    <h4 class="dialog-title">Phiếu chuyển kho</h4>
+
+    <div class="tab-container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active">Thông tin</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="dialog-body">
+        <div class="info-section">
+            <p><strong>Mã phiếu: {{currentGoodTransfer.id}} </strong></p>
+            <p><strong>Ngày tạo phiếu: {{currentGoodTransfer.id}}  </strong></p>
+            <p><strong>Xuất từ kho: {{currentGoodTransfer.fromWareHouse?.address}}  </strong></p>
+            <p><strong>Nhập đến kho:  {{currentGoodTransfer.toWareHouse?.address}} </strong></p>
+            <p><strong>Trạng thái: </strong>
+                <span *ngIf="currentGoodTransfer.status === 0" class="error-good-transfer">Hủy</span>
+                <span *ngIf="currentGoodTransfer.status === 1" class="complete-good-transfer">Hoàn thành</span>
+                <span *ngIf="currentGoodTransfer.status === 2" class="process-good-transfer">Đang xử lý</span>
+            </p>
+        </div>
+
+        <hr>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Số lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let item of currentGoodTransfer.listGoodTransferDetailsModel">
+                    <tr>
+                        <td>{{item.product?.name}}</td>
+                        <td>{{item.quantity}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <div class="total-section">
+            <h5><strong>Tổng cộng:</strong></h5>
+        </div>
+    </div>
+
+    <div class="dialog-footer text-center">
+        <button class="btn btn-finish" (click)="accept()">Hoàn thành</button> 
+        <button class="btn btn-ok" (click)="closeDialog()">OK</button> 
+    </div>
+    
+</div>

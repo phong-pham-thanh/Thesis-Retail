@@ -221,7 +221,7 @@ export default function ImportTransaction() {
                   label={"Nhà cung cấp"}
                   name={"trans"}
                 >
-                  {goodReceiptData.partner.name}
+                  {goodReceiptData.partner?.name}
                 </Form.Item>
                 <Form.Item
                   className="status"
@@ -247,7 +247,7 @@ export default function ImportTransaction() {
                       <tr key={index}>
                         <td className="name">{product.product.name ? product.product.name : ""}</td>
                         <td className="quantity">{product.quantity}</td>
-                        <td className="priceUnit">{product.priceUnit.toLocaleString()}</td>
+                        <td className="priceUnit">{product.priceUnit?.toLocaleString()}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -316,7 +316,7 @@ export default function ImportTransaction() {
                   >
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()} /></td>
-                    <td className="table-body-trans">{tran.partner.name}</td>
+                    <td className="table-body-trans">{tran.partner?.name}</td>
                     <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                     <td className="table-body-status"><ProcessStatus status={tran.receiptStatus} /></td>
                     {dataChoose?.id === tran.id && (

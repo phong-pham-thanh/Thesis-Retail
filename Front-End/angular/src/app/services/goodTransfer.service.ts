@@ -9,6 +9,7 @@ import { GoodTransfer } from '../model/goodTransfer.model';
 export class GoodTransferService {
   private apiGetAll = 'https://localhost:7030/GoodTransfer';
   private apiAdd= 'https://localhost:7030/GoodTransfer/addGoodTransfer';
+  private apiAccept = 'https://localhost:7030/GoodTransfer/acceptGoodTransfer';
 
 
   constructor(private http: HttpClient) {}
@@ -19,5 +20,9 @@ export class GoodTransferService {
 
   addNewGoodTransfer(goodTransfer: GoodTransfer){
     return this.http.post<GoodTransfer>(this.apiAdd, goodTransfer)
+  }
+
+  acceptGoodTransfer(id: number){
+    return this.http.get<GoodTransfer>(`${this.apiAccept}/${id}`)
   }
 }

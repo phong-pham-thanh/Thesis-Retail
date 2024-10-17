@@ -14,7 +14,7 @@ namespace APIBackend.DataModel
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         public Product Product { get; set; }
-        public int PriceUnit { get; set; }
+        public int? PriceUnit { get; set; }
         public int Quantity { get; set; }
     }
 }
