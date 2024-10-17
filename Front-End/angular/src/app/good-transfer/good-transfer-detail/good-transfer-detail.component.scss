@@ -36,6 +36,11 @@ form {
     margin-bottom: 5px;
 }
 
+input[matInput] {
+    width: 80%; // Đảm bảo input có chiều rộng đúng với các phần tử khác
+    box-sizing: border-box; // Đảm bảo padding không ảnh hưởng đến chiều rộng
+}
+
 .form-item select, 
 .form-item input[type="date"] {
     width: 100%;
@@ -102,4 +107,21 @@ tfoot {
     font-size: 16px;
     margin-bottom: 10px;
     text-align: left;
+}
+
+.required {
+    color: red;
+  }
+  
+.invalid-field ng-select, .invalid-field input {
+    border: 1px solid red;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.button-remove{
+    cursor: pointer; 
 }

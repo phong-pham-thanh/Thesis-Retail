@@ -1,62 +1,50 @@
 <div class="container-good-transfer">
     <div class="header-good-transfer">
-        <h1 class="title-good-transfer">Phiếu xuất kho</h1>
+        <h1 class="title-good-transfer">Phiếu Chuyển Kho</h1>
 
         <div class="button-group-good-transfer">
             <button class="btn-good-transfer edit-good-transfer">✏️ Điều chỉnh</button>
-            <button class="btn-good-transfer add-good-transfer">➕ Thêm mới</button>
-            <button class="btn-good-transfer import-good-transfer">⬇️ Nhập File</button>
-            <button class="btn-good-transfer export-good-transfer">⬇️ Xuất File</button>
+            <button class="btn-good-transfer add-good-transfer" (click)="addNew()">➕ Thêm mới</button>
+            <!-- <button class="btn-good-transfer import-good-transfer">⬇️ Nhập File</button>
+            <button class="btn-good-transfer export-good-transfer">⬇️ Xuất File</button> -->
         </div>
     </div>
 
     <table class="table-good-transfer">
         <thead class="thead-good-transfer">
             <tr class="row-header-good-transfer">
-                <th>Mã xuất hàng</th>
+                <th>Mã phiếu</th>
                 <th>Thời gian</th>
-                <th>Khách hàng</th>
-                <th>Tổng tiền</th>
+                <th>Xuất từ kho</th>
+                <th>Xuất đến kho</th>
+                <th>Nhân viên</th>
                 <th>Trạng thái</th>
                 <th></th>
             </tr>
         </thead>
         <tbody class="tbody-good-transfer">
-            <tr class="row-good-transfer"  (click)="selectRow($event)">
-                <td>3</td>
-                <td>
-                    <div>00:00</div>
-                    <div>12/12/2022</div>
-                </td>
-                <td>Phong</td>
-                <td>50.000</td>
-                <td>
-                    <span class="status-good-transfer complete-good-transfer">Hoàn thành</span>
-                </td>
-                <td>
-                    <button class="btn-detail-good-transfer">Chi tiết</button>
-                    <button class="btn-delete-good-transfer">Xóa</button>
-                </td>
-            </tr>
-
-            
-            <tr class="row-good-transfer"  (click)="selectRow($event)">
-                <td>3</td>
-                <td>
-                    <div>00:00</div>
-                    <div>12/12/2022</div>
-                </td>
-                <td>Phong</td>
-                <td>50.000</td>
-                <td>
-                    <span class="status-good-transfer complete-good-transfer">Hoàn thành</span>
-                </td>
-                <td>
-                    <button class="btn-detail-good-transfer">Chi tiết</button>
-                    <button class="btn-delete-good-transfer">Xóa</button>
-                </td>
-            </tr>
-            <!-- Các hàng khác tương tự -->
+            <ng-container *ngFor="let goodTransfer of allGoodTransfer">
+                <tr class="row-good-transfer" (click)="selectRow($event)">
+                    <td>{{goodTransfer.id}}</td>
+                    <td>
+                        <div>{{goodTransfer.transferDate  | date: 'dd/MM/yyyy' }}</div>
+                    </td>
+                    <td>{{goodTransfer.fromWareHouse?.address}}</td>
+                    <td>{{goodTransfer.toWareHouse?.address}}</td>
+                    <td>{{goodTransfer.user}}</td>
+                    <td>
+                        <span *ngIf="goodTransfer.status === 1" class="status-good-transfer complete-good-transfer">Hoàn thành</span>
+                        <span *ngIf="goodTransfer.status === 2" class="status-good-transfer process-good-transfer">Đang xử lý</span>
+                        <span *ngIf="goodTransfer.status === 0" class="status-good-transfer error-good-transfer">Hủy</span>
+                    </td>
+                    <td>
+                        <div>
+                            <button (click)="viewDetail(goodTransfer)" class="btn-detail-good-transfer">Chi tiết</button>
+                            <!-- <button class="btn-delete-good-transfer">Xóa</button> -->
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
 
