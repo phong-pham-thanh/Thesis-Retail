@@ -13,9 +13,11 @@ namespace APIBackend.DataModel
         public Users? Manager { get; set; }
         public string? Address { get; set; }
         public bool Status { get; set; }
-        public List<Inventories>? Inventories { get; set; }
-        public List<GoodsExport>? GoodsExports { get; set; }
-        public List<GoodsReceipt>? GoodsReceipts { get; set; }
-        public List<Bill>? ListBill { get; set; }
+        public List<Inventories> Inventories { get; set; }
+        public List<GoodsExport> GoodsExports { get; set; }
+        public List<GoodsReceipt> GoodsReceipts { get; set; }
+        public List<Bill> ListBill { get; set; }
+        public List<GoodsTransfer> ListGoodsTransferFrom { get; set; }
+        public List<GoodsTransfer> ListGoodsTransferTo { get; set; }
     }
 }

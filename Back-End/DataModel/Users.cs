@@ -20,6 +20,7 @@ namespace APIBackEnd.Data
         public int Age { get; set; }
         public List<WareHouses> WareHousesManaged { get; set; }
         public List<Bill> ListBill { get; set; }
+        public List<GoodsTransfer> ListGoodsTransfers { get; set; }
     }
     public enum Address
     {

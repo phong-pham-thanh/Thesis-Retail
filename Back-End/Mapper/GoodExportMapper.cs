@@ -7,7 +7,7 @@ namespace APIBackEnd.Mapper
 {
     public interface IGoodsExportMapper
     {
-        public GoodsExportModel? ToModel(GoodsExport efObject);
+        public GoodsExportModel ToModel(GoodsExport efObject);
         public List<GoodsExportModel> ToModels(List<GoodsExport> efObject);
         public void ToEntity(GoodsExport efObject, GoodsExportModel modelObject);
     }
@@ -25,7 +25,7 @@ namespace APIBackEnd.Mapper
             _customerMapper = customerMapper;
             _warehouseMapper = wareHouseMapper;
         }
-        public GoodsExportModel? ToModel(GoodsExport efObject)
+        public GoodsExportModel ToModel(GoodsExport efObject)
         {
             if (efObject == null)
             {
