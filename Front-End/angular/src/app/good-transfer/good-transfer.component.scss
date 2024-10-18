@@ -1,0 +1,110 @@
+.container-good-transfer {
+    width: 100%;
+    // max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-good-transfer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-good-transfer {
+    font-size: 28px;
+}
+
+.button-group-good-transfer {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-good-transfer {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.edit-good-transfer {
+    background-color: #00bfff;
+    color: white;
+}
+
+.add-good-transfer,
+.import-good-transfer,
+.export-good-transfer {
+    background-color: #00bfff;
+    color: white;
+}
+
+.table-good-transfer {
+    width: 70%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin: 20px auto
+}
+
+.row-header-good-transfer th {
+    // background-color: #f2f2f2;
+    font-weight: bold;
+}
+.thead-good-transfer{
+    border: 3px solid #605BFF !important; /* Chỉ border cho header, màu tím */
+    height: 60px;
+}
+
+.row-good-transfer td, 
+.row-header-good-transfer th {
+    padding: 12px;
+    text-align: left;
+    border: none; /* Xóa bỏ border của toàn bộ bảng */
+}
+
+.row-good-transfer.selected-good-transfer {
+    border: 2px solid #00bfff; /* Border khi click vào row */
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.5); /* Hiệu ứng shadow khi click */
+}
+
+.status-good-transfer {
+    padding: 5px 10px;
+    border-radius: 5px;
+    // font-size: 14px;
+    // font-weight: bold;
+}
+
+.complete-good-transfer {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.process-good-transfer {
+    background-color: #edd7d4;
+    color: #2121bb;
+}
+
+.error-good-transfer {
+    background-color: #edded4;
+    color: #a32639;
+}
+
+.pagination-good-transfer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-prev-good-transfer,
+.btn-next-good-transfer {
+    background-color: #00bfff;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

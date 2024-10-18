@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -24,7 +24,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -45,10 +46,17 @@ import { customerReducer } from './customer-state/customer.reducer';
 import { BillEffects } from './state/bill-state/bill.effects';
 import { billReducer } from './state/bill-state/bill.reducer';
 
+
+import { GoodTransferEffects } from './state/goodTransfer-state/goodTransfer.effects';
+import { goodTransferReducer } from './state/goodTransfer-state/goodTransfer.reducer';
+
 import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component';
 import { RetailPaymentComponentComponent } from './retail-component/retail-payment-component/retail-payment-component.component';
 import { BillListComponent } from './bill-list/bill-list.component';
-import { BillDetailComponent } from './bill-list/bill-detail/bill-detail.component'; // Đảm bảo bạn có reducers
+import { BillDetailComponent } from './bill-list/bill-detail/bill-detail.component';
+import { GoodTransferComponent } from './good-transfer/good-transfer.component';
+import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detail/good-transfer-detail.component';
+import { GoodTransferViewComponent } from './good-transfer/good-transfer-view/good-transfer-view.component'; // Đảm bảo bạn có reducers
 
 
 export const MY_DATE_FORMATS = {
@@ -71,7 +79,10 @@ export const MY_DATE_FORMATS = {
     PriceManagementFormComponent,
     RetailPaymentComponentComponent,
     BillListComponent,
-    BillDetailComponent
+    BillDetailComponent,
+    GoodTransferComponent,
+    GoodTransferDetailComponent,
+    GoodTransferViewComponent
   ],
   imports: [
     BrowserModule,
@@ -86,6 +97,7 @@ export const MY_DATE_FORMATS = {
     MatButtonModule,
     NgSelectModule,
     FormsModule,
+    ReactiveFormsModule,
     MatMenuModule,
     MatIconModule,
     NgxPaginationModule,
@@ -121,7 +133,12 @@ export const MY_DATE_FORMATS = {
     StoreModule.forFeature('warehouse', warehouseReducer),
     StoreModule.forRoot(warehouseReducer),
     EffectsModule.forRoot([WarehouseEffects]),
-    EffectsModule.forFeature([WarehouseEffects])
+    EffectsModule.forFeature([WarehouseEffects]),
+    
+    StoreModule.forFeature('goodTransfer', goodTransferReducer),
+    StoreModule.forRoot(goodTransferReducer),
+    EffectsModule.forRoot([GoodTransferEffects]),
+    EffectsModule.forFeature([GoodTransferEffects]),
   ],
   providers: [
     provideNgxMask(),

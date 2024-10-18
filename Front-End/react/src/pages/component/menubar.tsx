@@ -140,6 +140,12 @@ export default function NavBar() {
           path: "bill",
           status: location.pathname.includes("bill"),
         },
+        {
+          title: "Chuyển kho",
+          icon: <IosShareIcon />,
+          path: "good-transfer",
+          status: location.pathname.includes("good-transfer"),
+        },
       ],
     },
     {

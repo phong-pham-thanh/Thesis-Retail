@@ -1,0 +1,77 @@
+.dialog-container {
+    padding: 20px;
+    margin: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dialog-title {
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .tab-container {
+    margin-bottom: 15px;
+  }
+  
+  .info-section p {
+    margin-bottom: 5px;
+  }
+  
+  .total-section {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .table {
+    margin-top: 10px;
+  }
+  
+  .dialog-footer {
+    margin-top: 20px;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+  
+.complete-good-transfer {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.process-good-transfer {
+  background-color: #edd7d4;
+  color: #2121bb;
+}
+
+.error-good-transfer {
+  background-color: #edded4;
+  color: #a32639;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dialog-footer .btn {
+  flex: 1;
+  max-width: 150px; 
+  padding: 10px 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-finish {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-ok {
+  background-color: #007bff;
+  color: white;
+}

@@ -45,7 +45,7 @@ namespace APIBackEnd.Controllers
         [Route("addGoodRecipt")]
         public bool AddGoodRecipt([FromBody] paramAddNewGoodRecipt param)
         {
-            return _goodReciptService.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels);
+            return _goodReciptService.AddGoodRecipt(param.goodsReceiptModel, param.listGoodReceiptDetailModels, autoAccept: false);
         }
 
         [HttpGet]

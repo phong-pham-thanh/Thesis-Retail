@@ -1,0 +1,56 @@
+<div class="container-good-transfer">
+    <div class="header-good-transfer">
+        <h1 class="title-good-transfer">Phiếu Chuyển Kho</h1>
+
+        <div class="button-group-good-transfer">
+            <button class="btn-good-transfer edit-good-transfer">✏️ Điều chỉnh</button>
+            <button class="btn-good-transfer add-good-transfer" (click)="addNew()">➕ Thêm mới</button>
+            <!-- <button class="btn-good-transfer import-good-transfer">⬇️ Nhập File</button>
+            <button class="btn-good-transfer export-good-transfer">⬇️ Xuất File</button> -->
+        </div>
+    </div>
+
+    <table class="table-good-transfer">
+        <thead class="thead-good-transfer">
+            <tr class="row-header-good-transfer">
+                <th>Mã phiếu</th>
+                <th>Thời gian</th>
+                <th>Xuất từ kho</th>
+                <th>Xuất đến kho</th>
+                <th>Nhân viên</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="tbody-good-transfer">
+            <ng-container *ngFor="let goodTransfer of allGoodTransfer">
+                <tr class="row-good-transfer" (click)="selectRow($event)">
+                    <td>{{goodTransfer.id}}</td>
+                    <td>
+                        <div>{{goodTransfer.transferDate  | date: 'dd/MM/yyyy' }}</div>
+                    </td>
+                    <td>{{goodTransfer.fromWareHouse?.address}}</td>
+                    <td>{{goodTransfer.toWareHouse?.address}}</td>
+                    <td>{{goodTransfer.user}}</td>
+                    <td>
+                        <span *ngIf="goodTransfer.status === 1" class="status-good-transfer complete-good-transfer">Hoàn thành</span>
+                        <span *ngIf="goodTransfer.status === 2" class="status-good-transfer process-good-transfer">Đang xử lý</span>
+                        <span *ngIf="goodTransfer.status === 0" class="status-good-transfer error-good-transfer">Hủy</span>
+                    </td>
+                    <td>
+                        <div>
+                            <button (click)="viewDetail(goodTransfer)" class="btn-detail-good-transfer">Chi tiết</button>
+                            <!-- <button class="btn-delete-good-transfer">Xóa</button> -->
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+    <div class="pagination-good-transfer">
+        <button class="btn-prev-good-transfer">&lt;</button>
+        <span>1</span>
+        <button class="btn-next-good-transfer">&gt;</button>
+    </div>
+</div>

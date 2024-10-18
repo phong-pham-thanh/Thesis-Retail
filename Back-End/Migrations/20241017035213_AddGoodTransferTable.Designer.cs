@@ -4,6 +4,7 @@ using APIBackEnd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIBackEnd.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    partial class CoreContextModelSnapshot : ModelSnapshot
+    [Migration("20241017035213_AddGoodTransferTable")]
+    partial class AddGoodTransferTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +92,7 @@ namespace APIBackEnd.Migrations
                     b.Property<DateTime>("ImportDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PartnerId")
+                    b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiptStatus")
@@ -148,9 +150,6 @@ namespace APIBackEnd.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImgPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -300,7 +299,7 @@ namespace APIBackEnd.Migrations
                     b.Property<int>("GoodReceiptId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PriceUnit")
+                    b.Property<int>("PriceUnit")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -491,7 +490,9 @@ namespace APIBackEnd.Migrations
                 {
                     b.HasOne("APIBackEnd.Data.Partners", "Partner")
                         .WithMany()
-                        .HasForeignKey("PartnerId");
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
                         .WithMany("GoodsReceipts")

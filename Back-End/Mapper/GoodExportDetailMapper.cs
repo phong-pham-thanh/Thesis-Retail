@@ -6,14 +6,14 @@ namespace APIBackend.Mapper
 {
     public interface IGoodExportDetailMapper
     {
-        public GoodExportDetailModel? ToModel(GoodExportDetails efObject);
-        public List<GoodExportDetailModel>? ToModels(List<GoodExportDetails>? efObjects);
+        public GoodExportDetailModel ToModel(GoodExportDetails efObject);
+        public List<GoodExportDetailModel> ToModels(List<GoodExportDetails> efObjects);
         public void ToEntity(GoodExportDetails efObject, GoodExportDetailModel modelObject);
     }
     public class GoodExportDetailMapper : IGoodExportDetailMapper
     {
         public GoodExportDetailMapper() { }
-        public GoodExportDetailModel? ToModel(GoodExportDetails efObject)
+        public GoodExportDetailModel ToModel(GoodExportDetails efObject)
         {
             if (efObject == null)
             {
@@ -29,7 +29,7 @@ namespace APIBackend.Mapper
             return modelObject;
         }
 
-        public List<GoodExportDetailModel>? ToModels(List<GoodExportDetails>? efObjects)
+        public List<GoodExportDetailModel> ToModels(List<GoodExportDetails> efObjects)
         {
             if(efObjects == null || efObjects.Count == 0)
             {
