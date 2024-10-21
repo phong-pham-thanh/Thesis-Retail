@@ -24,23 +24,23 @@
         </thead>
         <tbody class="tbody-good-transfer">
             <ng-container *ngFor="let goodTransfer of allGoodTransfer">
-                <tr class="row-good-transfer" (click)="selectRow($event)">
+                <tr class="row-good-transfer" (click)="selectRow($event, goodTransfer)">
                     <td>{{goodTransfer.id}}</td>
                     <td>
                         <div>{{goodTransfer.transferDate  | date: 'dd/MM/yyyy' }}</div>
                     </td>
                     <td>{{goodTransfer.fromWareHouse?.address}}</td>
                     <td>{{goodTransfer.toWareHouse?.address}}</td>
-                    <td>{{goodTransfer.user}}</td>
+                    <td>{{goodTransfer.user?.name}}</td>
                     <td>
                         <span *ngIf="goodTransfer.status === 1" class="status-good-transfer complete-good-transfer">Hoàn thành</span>
                         <span *ngIf="goodTransfer.status === 2" class="status-good-transfer process-good-transfer">Đang xử lý</span>
-                        <span *ngIf="goodTransfer.status === 0" class="status-good-transfer error-good-transfer">Hủy</span>
+                        <span *ngIf="goodTransfer.status === 0" class="status-good-transfer error-good-transfer">Đã hủy</span>
                     </td>
                     <td>
-                        <div>
-                            <button (click)="viewDetail(goodTransfer)" class="btn-detail-good-transfer">Chi tiết</button>
-                            <!-- <button class="btn-delete-good-transfer">Xóa</button> -->
+                        <div *ngIf="selectedGoodTransferId === goodTransfer.id" class="button-container-context">
+                            <button (click)="viewDetail(goodTransfer)" class="btn-detail-good-transfer btn-green">Chi tiết</button>
+                            <button *ngIf="goodTransfer.status === 2" (click)="edit(goodTransfer)" class="btn-detail-good-transfer btn-red">Chỉnh sửa</button>
                         </div>
                     </td>
                 </tr>

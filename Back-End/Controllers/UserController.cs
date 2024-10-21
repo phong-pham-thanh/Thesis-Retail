@@ -6,6 +6,7 @@ using APIBackEnd.Repository;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
+using APIBackend.Service;
 
 namespace APIBackEnd.Controllers
 {
@@ -20,16 +21,16 @@ namespace APIBackEnd.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserRepository _userRerpository;
+        private IUserService _userService;
 
-        public UserController(IUserRepository userRepository) {
-            _userRerpository = userRepository;
+        public UserController(IUserService userService) {
+            _userService = userService;
         }
 
         [HttpGet]
         public List<UserModel> GetAll()
         {
-            List<UserModel> temp = _userRerpository.GetAllUser();
+            List<UserModel> temp = _userService.GetAll();
             return temp;
         }
 
@@ -40,24 +41,12 @@ namespace APIBackEnd.Controllers
             string username = data.username;
             string password = data.password;
 
-            UserModel userResult = _userRerpository.GetUserLogin(username, password);
+            UserModel userResult = _userService.GetUserLogin(username, password);
             if(userResult != null)
             {
                 HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
             }
             return userResult;
-        }
-
-        [Route("testSession/")]
-        [HttpGet]
-        public int GetCurrentUser()
-        {
-            var temp = HttpContext.Session.GetInt32("CurrentUserId");
-            if (temp != null)
-            {
-                return (int)temp;
-            }
-            return -1;
         }
     }
 }

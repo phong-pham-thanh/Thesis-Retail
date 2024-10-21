@@ -60,7 +60,7 @@
                 </div>
               </div>
             <div *ngIf="currentGoodTransfer.listGoodTransferDetailsModel && currentGoodTransfer.listGoodTransferDetailsModel.length > 0" class="form-button">
-              <button type="submit">Thêm mới</button>
+              <button type="submit">{{isUpdate ? 'Cập nhật' : "Thêm mới"}}</button>
             </div>
         </form>
 

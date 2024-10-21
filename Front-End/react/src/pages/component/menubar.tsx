@@ -220,7 +220,7 @@ export default function NavBar() {
   };
 
   return (
-    <header className="navbar">
+    <header className="navbar-custom">
       <div className="navbar__title navbar__item">
         <img
           src={svgLogo}
