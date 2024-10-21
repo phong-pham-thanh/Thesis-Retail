@@ -6,6 +6,7 @@ export interface State{
 
 export interface GoodTransferState {
     allGoodTransfer: GoodTransfer[];
+    currentGoodTransfer: GoodTransfer;
     needRefreshBrowseList: boolean;
     isLoading: boolean;
     isLoaded: boolean;

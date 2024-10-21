@@ -82,6 +82,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IPriceProductService, PriceProductService>();
 builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

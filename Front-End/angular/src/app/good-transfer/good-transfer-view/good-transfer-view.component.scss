@@ -38,18 +38,21 @@
   }
   
 .complete-good-transfer {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #f6ffed;
+  color: #52c41a;
+  border-color: #b7eb8f;
 }
 
 .process-good-transfer {
-  background-color: #edd7d4;
-  color: #2121bb;
+  background-color: #e6f4ff;
+  color: #1677ff;
+  border-color: #91caff;
 }
 
 .error-good-transfer {
-  background-color: #edded4;
-  color: #a32639;
+  background-color: #fff2f0;
+  color: #ff4d4f;
+  border-color: #ffccc7;
 }
 
 .dialog-footer {
@@ -68,6 +71,11 @@
 
 .btn-finish {
   background-color: #28a745;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #a73d28;
   color: white;
 }
 

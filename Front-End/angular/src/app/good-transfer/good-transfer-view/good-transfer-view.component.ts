@@ -56,4 +56,28 @@ export class GoodTransferViewComponent {
       ), take(1)
     ).subscribe();
   }
+
+  cancel(){
+    this.store.dispatch(new goodTransferActions.CancelGoodTransfer(this.currentGoodTransfer.id));
+    this.store.pipe(select(goodTransferSelector.getIsLoading),
+      filter(loading => loading === false),
+      mergeMap(_ => 
+        this.store.pipe(select(goodTransferSelector.getError),
+        map(error => {
+          if(error){
+            this.dialogRef.close({
+              isSuccess: false,
+              message: error.error.detail
+            });
+          }
+          else{
+            this.dialogRef.close({
+              isSuccess: true,
+              message: null
+            });
+          }
+        }))
+      ), take(1)
+    ).subscribe();
+  }
 }

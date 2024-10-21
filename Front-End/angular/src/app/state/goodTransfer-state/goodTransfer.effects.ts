@@ -50,6 +50,45 @@ export class GoodTransferEffects {
       )
     );
 
+    cancelGoodTransfer$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.GoodTransferActionTypes.CancelGoodTransfer),
+        map((action: priceProductAction.CancelGoodTransfer) => action.payload),
+        mergeMap((newItem) =>
+          this.priceProductService.cancelGoodTransfer(newItem).pipe(
+            map(result => new priceProductAction.CancelGoodTransferSuccess(result)),
+            catchError(err => of(new priceProductAction.CancelGoodTransferFail(err)))
+          )
+        )
+      )
+    );
+
+    getByIdGoodTransfer$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.GoodTransferActionTypes.GetByIdGoodTransfer),
+        map((action: priceProductAction.GetByIdGoodTransfer) => action.payload),
+        mergeMap((newItem) =>
+          this.priceProductService.getByIdGoodTransfer(newItem).pipe(
+            map(result => new priceProductAction.GetByIdGoodTransferSuccess(result)),
+            catchError(err => of(new priceProductAction.GetByIdGoodTransferFail(err)))
+          )
+        )
+      )
+    );
+
+    updateGoodTransfer$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.GoodTransferActionTypes.UpdateGoodTransfer),
+        map((action: priceProductAction.UpdateGoodTransfer) => action.payload),
+        mergeMap((newItem) =>
+          this.priceProductService.updateGoodTransfer(newItem).pipe(
+            map(result => new priceProductAction.UpdateGoodTransferSuccess(result)),
+            catchError(err => of(new priceProductAction.UpdateGoodTransferFail(err)))
+          )
+        )
+      )
+    );
+
     
     // updateGoodTransfer$ = createEffect(() =>
     //   this.actions$.pipe(

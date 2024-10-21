@@ -4,7 +4,8 @@ import { GoodTransferState } from './goodTransfer.state';
 import { GoodTransferActions, GoodTransferActionTypes } from './goodTransfer.actions';
 
 const initialState: GoodTransferState = {
-    needRefreshBrowseList: false,
+    needRefreshBrowseList: true,
+    currentGoodTransfer: null,
     allGoodTransfer: [],
     isLoading: false,
     isLoaded: false,
@@ -34,6 +35,16 @@ export const getIsLoaded= createSelector(
 export const getError= createSelector(
     getGoodTransferFeatureState,
     state => state.error
+);
+
+export const getCurrentGoodTransfer= createSelector(
+    getGoodTransferFeatureState,
+    state => state.currentGoodTransfer
+);
+
+export const getNeedResetBrowseList= createSelector(
+    getGoodTransferFeatureState,
+    state => state.needRefreshBrowseList
 );
 
 // Reducer function
@@ -110,6 +121,85 @@ export function goodTransferReducer(state = initialState, action: GoodTransferAc
                 isLoaded: true,
                 error: action.payload
             };
+    
+        case GoodTransferActionTypes.CancelGoodTransfer:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case GoodTransferActionTypes.CancelGoodTransferSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: null,
+            };
+        
+        case GoodTransferActionTypes.CancelGoodTransferFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
+            
+        case GoodTransferActionTypes.GetByIdGoodTransfer:
+            return {
+                ...state,
+                isLoading: true
+            };
+
+        case GoodTransferActionTypes.GetByIdGoodTransferSuccess:
+            return {
+                ...state,
+                currentGoodTransfer: action.payload,
+                isLoading: false,
+                isLoaded: true,
+                error: null,
+            };
+        
+        case GoodTransferActionTypes.GetByIdGoodTransferFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload,
+                currentGoodTransfer: null,
+            };
+        
+        case GoodTransferActionTypes.UpdateGoodTransfer:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoading: true
+            };
+
+        case GoodTransferActionTypes.UpdateGoodTransferSuccess:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                needRefreshBrowseList: true,
+                error: null,
+            };
+        
+        case GoodTransferActionTypes.UpdateGoodTransferFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };    
+
+        case GoodTransferActionTypes.ResetCurrentGoodTransfer:
+            return {
+                ...state,
+                currentGoodTransfer: null,
+                needRefreshBrowseList: true,
+            };    
         // case GoodTransferActionTypes.DeleteGoodTransfer:
         //     return {
         //         ...state,
