@@ -25,9 +25,17 @@ import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 
-import { Button, Form, Input, message, Modal, Pagination, Table, Tag } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Pagination,
+  Table,
+  Tag,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import CustomInput from "../../component/searchBox";
 import CustomSelect from "../../component/selectBox";
 import {
@@ -37,51 +45,62 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodImportReceiptDetailDataType } from "../../../app/type.d";
+import {
+  GoodReceiptDataType,
+  GoodImportReceiptDetailDataType,
+} from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/processFunction"
+import {
+  processAPIPostLink,
+  ProcessDate,
+  ProcessStatus,
+} from "../../../app/processFunction";
 
 const emptydata: GoodImportReceiptDetailDataType = {
-  "id": 0,
-  "importDate": "01/01/1970",
-  "partnerID": 0,
-  "totalAmount": 0,
-  "partner": {
-    "id": 0,
-    "name": "",
-    "totalSale": 0
+  id: 0,
+  importDate: "01/01/1970",
+  partnerID: 0,
+  totalAmount: 0,
+  partner: {
+    id: 0,
+    name: "",
+    totalSale: 0,
   },
-  "receiptStatus": 0,
-  "listGoodReciptDetailsModel": [
+  receiptStatus: 0,
+  listGoodReciptDetailsModel: [
     {
-      "id": 0,
-      "goodReceiptId": 0,
-      "goodsReceipt": null,
-      "productId": 0,
-      "product": {
-        "id": 0,
-        "name": "",
-        "categoryId": 0,
-        "category": {
-          "id": 0,
-          "name": ""
+      id: 0,
+      goodReceiptId: 0,
+      goodsReceipt: null,
+      productId: 0,
+      product: {
+        id: 0,
+        name: "",
+        categoryId: 0,
+        category: {
+          id: 0,
+          name: "",
         },
-        "description": "",
-        "status": true,
-        "listInventories": null
+        description: "",
+        status: true,
+        listInventories: null,
       },
-      "priceUnit": 0,
-      "quantity": 0
-    }]
-}
+      priceUnit: 0,
+      quantity: 0,
+    },
+  ],
+};
 
 export default function ImportTransaction() {
   const navigate = useNavigate();
 
   //useSelector, useNavigate
-  const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
-  const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
+  const [importReceiptData, setImportReciptData] = useState<
+    GoodReceiptDataType[]
+  >([]);
+  const [goodReceiptData, setGoodReciptData] =
+    useState<GoodImportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -109,7 +128,7 @@ export default function ImportTransaction() {
       });
 
     //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page,showModal]);
+  }, [page, showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.import.getAll;
@@ -134,7 +153,7 @@ export default function ImportTransaction() {
       });
 
     setShowModal("edit");
-  }
+  };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -146,29 +165,30 @@ export default function ImportTransaction() {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
-  const handleAccept = (receiptId:number) => {
+  const handleAccept = (receiptId: number) => {
     const api_link = api_links.goodsIssue.import.accept;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
-    fetch_Api(api_link).then((res) => {
-      message.success("Đã duyệt hóa đơn "+receiptId);
-      setShowModal(undefined);
-    })
-    .catch((error) => {
-      message.error("Đơn "+receiptId+" chưa được duyệt");
-    });  
+    fetch_Api(api_link)
+      .then((res) => {
+        message.success("Đã duyệt hóa đơn " + receiptId);
+        setShowModal(undefined);
+      })
+      .catch((error) => {
+        message.error("Đơn " + receiptId + " chưa được duyệt");
+      });
     setShowModal(undefined);
-
   };
 
-  const handleCancel = (receiptId:number|string) => {
+  const handleCancel = (receiptId: number | string) => {
     const api_link = api_links.goodsIssue.import.cancel;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
-    fetch_Api(api_link).then((res) => {
-      message.success("Đã hủy hóa đơn "+receiptId);
-    })
-    .catch((error) => {
-      message.error("Đơn "+receiptId+" chưa được hủy");
-    });  
+    fetch_Api(api_link)
+      .then((res) => {
+        message.success("Đã hủy hóa đơn " + receiptId);
+      })
+      .catch((error) => {
+        message.error("Đơn " + receiptId + " chưa được hủy");
+      });
     setShowModal(undefined);
   };
 
@@ -176,9 +196,12 @@ export default function ImportTransaction() {
     console.log(form.getFieldsValue());
   };
 
-
   //////////// EDIT MODAL//////////
-  const ImportReceiptDetail = (ID: string, isShowModal?: boolean, setIsShowModal?: any) => {
+  const ImportReceiptDetail = (
+    ID: string,
+    isShowModal?: boolean,
+    setIsShowModal?: any
+  ) => {
     return (
       <div className="product-container">
         <Modal
@@ -189,17 +212,23 @@ export default function ImportTransaction() {
             setShowModal(undefined);
             form.resetFields();
           }}
-          footer={(_, { OkBtn, CancelBtn }) => (
-            goodReceiptData.receiptStatus == 2 ?
+          footer={(_, { OkBtn, CancelBtn }) =>
+            goodReceiptData.receiptStatus == 2 ? (
               <>
-                <Button onClick={()=>handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={()=>handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button onClick={() => handleAccept(goodReceiptData.id)}>
+                  Hoàn thành
+                </Button>
+                <Button onClick={() => handleCancel(goodReceiptData.id)}>
+                  Hủy bỏ
+                </Button>
                 <Button onClick={onFinish}>OK</Button>
               </>
-              : <>
+            ) : (
+              <>
                 <Button onClick={onFinish}>OK</Button>
               </>
-          )}
+            )
+          }
           className="modal-create-trans"
         >
           <div className="modal-header">
@@ -233,7 +262,9 @@ export default function ImportTransaction() {
               </Form>
             </div>
             <div className="modal-products">
-              <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
+              <h4>
+                Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}
+              </h4>
               <table>
                 <thead>
                   <th className="code">Tên sản phẩm</th>
@@ -243,32 +274,32 @@ export default function ImportTransaction() {
                 <tbody>
                   {goodReceiptData.listGoodReciptDetailsModel &&
                     goodReceiptData.listGoodReciptDetailsModel.length > 0 &&
-                    goodReceiptData.listGoodReciptDetailsModel.map((product, index) => (
-                      <tr key={index}>
-                        <td className="name">{product.product.name ? product.product.name : ""}</td>
-                        <td className="quantity">{product.quantity}</td>
-                        <td className="priceUnit">{product.priceUnit?.toLocaleString()}</td>
-                      </tr>
-                    ))}
+                    goodReceiptData.listGoodReciptDetailsModel.map(
+                      (product, index) => (
+                        <tr key={index}>
+                          <td className="name">
+                            {product.product.name ? product.product.name : ""}
+                          </td>
+                          <td className="quantity">{product.quantity}</td>
+                          <td className="priceUnit">
+                            {product.priceUnit?.toLocaleString()}
+                          </td>
+                        </tr>
+                      )
+                    )}
                 </tbody>
               </table>
             </div>
           </div>
         </Modal>
-
-
       </div>
     );
-  }
-
+  };
 
   return (
     <React.Fragment>
-      {ImportReceiptDetail(
-        IDChoose,
-        goodReceiptData && showModal === "edit")}
+      {ImportReceiptDetail(IDChoose, goodReceiptData && showModal === "edit")}
       <div className="product-container">
-
         <div className="filterField">
           <div className="title">Phiếu nhập kho</div>
         </div>
@@ -280,8 +311,10 @@ export default function ImportTransaction() {
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
-              onClick={() => //setShowModal("create")
-                navigate("tao-moi")}
+              onClick={() =>
+                //setShowModal("create")
+                navigate("tao-moi")
+              }
             >
               Thêm mới
             </Button>
@@ -311,14 +344,21 @@ export default function ImportTransaction() {
                       setDataChoose(tran);
                       setIDChoose(String(tran.id));
                     }}
-                    className={`${dataChoose?.id === tran.id && "tr-active"
-                      }`}
+                    className={`${dataChoose?.id === tran.id && "tr-active"}`}
                   >
                     <td className="table-body-code">{tran.id}</td>
-                    <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()} /></td>
+                    <td className="table-body-time">
+                      <ProcessDate
+                        dateString={tran.importDate.toLocaleString()}
+                      />
+                    </td>
                     <td className="table-body-trans">{tran.partner?.name}</td>
-                    <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
-                    <td className="table-body-status"><ProcessStatus status={tran.receiptStatus} /></td>
+                    <td className="table-body-total">
+                      {tran.totalAmount?.toLocaleString()}
+                    </td>
+                    <td className="table-body-status">
+                      <ProcessStatus status={tran.receiptStatus} />
+                    </td>
                     {dataChoose?.id === tran.id && (
                       <td className="table-body-action">
                         <Button
@@ -328,7 +368,6 @@ export default function ImportTransaction() {
                             handleEdit(String(tran.id));
                             setShowModal("edit");
                             form.setFieldsValue(tran);
-
                           }}
                         >
                           Chi tiết
@@ -368,11 +407,11 @@ export default function ImportTransaction() {
         </Modal>
       </div>
     </React.Fragment>
-
   );
 }
 
-{/*//////////// EDIT MODAL//////
+{
+  /*//////////// EDIT MODAL//////
       <Modal
         title={`Phiếu nhập kho`}//${goodReceiptData?.id?? " - " + goodReceiptData.id}
         open={showModal==="edit"}
@@ -441,8 +480,10 @@ export default function ImportTransaction() {
           </div>
         </div>
       </Modal>
-*/}
-{/*<React.Fragment>
+*/
+}
+{
+  /*<React.Fragment>
 
       <ProductInformationPopupScreen
         isPopup={isChangeInformation}
@@ -648,7 +689,8 @@ export default function ImportTransaction() {
         </div>
       </Modal>
     </div>
-    </React.Fragment>*/}
+    </React.Fragment>*/
+}
 
 /*{
   "goodsReceiptModel": {

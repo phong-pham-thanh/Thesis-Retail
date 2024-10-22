@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import "./styleTransaction.css";
 import {
@@ -27,9 +27,17 @@ import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 
-import { Button, Form, Input, message, Modal, Pagination, Table, Tag } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Pagination,
+  Table,
+  Tag,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import CustomInput from "../../component/searchBox";
 import CustomSelect from "../../component/selectBox";
 import {
@@ -39,51 +47,62 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { ListGoodReciptDetailsModel, GoodExportReceiptDetailDataType } from "../../../app/type.d";
+import {
+  ListGoodReciptDetailsModel,
+  GoodExportReceiptDetailDataType,
+} from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/processFunction"
+import {
+  processAPIPostLink,
+  ProcessDate,
+  ProcessStatus,
+} from "../../../app/processFunction";
 
 const emptydata: GoodExportReceiptDetailDataType = {
-  "id": 0,
-  "exportDate": "01/01/1970",
-  "totalAmount": 0,
-  "customerID": 0,
-  "customer": {
-    "id": 0,
-    "name": "",
-    "totalSale": 0
+  id: 0,
+  exportDate: "01/01/1970",
+  totalAmount: 0,
+  customerID: 0,
+  customer: {
+    id: 0,
+    name: "",
+    totalSale: 0,
   },
-  "exportStatus": 0,
-  "listGoodExportDetailModels": [
+  exportStatus: 0,
+  listGoodExportDetailModels: [
     {
-      "id": 0,
-      "goodReceiptId": 0,
-      "goodsReceipt": null,
-      "productId": 0,
-      "product": {
-        "id": 0,
-        "name": "",
-        "categoryId": 0,
-        "category": {
-          "id": 0,
-          "name": ""
+      id: 0,
+      goodReceiptId: 0,
+      goodsReceipt: null,
+      productId: 0,
+      product: {
+        id: 0,
+        name: "",
+        categoryId: 0,
+        category: {
+          id: 0,
+          name: "",
         },
-        "description": "",
-        "status": true,
-        "listInventories": null
+        description: "",
+        status: true,
+        listInventories: null,
       },
-      "priceUnit": 0,
-      "quantity": 0
-    }]
-}
+      priceUnit: 0,
+      quantity: 0,
+    },
+  ],
+};
 
 export default function ExportTransaction() {
   const navigate = useNavigate();
 
   //useSelector, useNavigate
-  const [exportReceiptData, setExportReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
-  const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
+  const [exportReceiptData, setExportReciptData] = useState<
+    GoodExportReceiptDetailDataType[]
+  >([]);
+  const [goodReceiptData, setGoodReciptData] =
+    useState<GoodExportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -95,11 +114,13 @@ export default function ExportTransaction() {
   const size = 7;
 
   const [IDChoose, setIDChoose] = useState<string>();
-  const [dataChoose, setDataChoose] = useState<GoodExportReceiptDetailDataType>();
+  const [dataChoose, setDataChoose] =
+    useState<GoodExportReceiptDetailDataType>();
   const [showModal, setShowModal] = useState<string>();
 
   //call api set data products on modal
-  const [listProduct, setListProduct] = useState<ListGoodReciptDetailsModel[]>();
+  const [listProduct, setListProduct] =
+    useState<ListGoodReciptDetailsModel[]>();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -112,7 +133,7 @@ export default function ExportTransaction() {
       });
 
     //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page,showModal]);
+  }, [page, showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.export.getAll;
@@ -136,7 +157,7 @@ export default function ExportTransaction() {
         console.log(error);
       });
     setShowModal("edit");
-  }
+  };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -152,22 +173,23 @@ export default function ExportTransaction() {
     const api_link = api_links.goodsIssue.export.accept;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
     console.log(api_link);
-    fetch_Api(api_link).then((res) => {
-      message.success("Đã duyệt hóa đơn " + receiptId);
-    })
+    fetch_Api(api_link)
+      .then((res) => {
+        message.success("Đã duyệt hóa đơn " + receiptId);
+      })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được duyệt");
       });
     setShowModal(undefined);
-
   };
 
   const handleCancel = (receiptId: number | string) => {
     const api_link = api_links.goodsIssue.export.cancel;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
-    fetch_Api(api_link).then((res) => {
-      message.success("Đã hủy hóa đơn " + receiptId);
-    })
+    fetch_Api(api_link)
+      .then((res) => {
+        message.success("Đã hủy hóa đơn " + receiptId);
+      })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được hủy");
       });
@@ -178,9 +200,12 @@ export default function ExportTransaction() {
     console.log(form.getFieldsValue());
   };
 
-
   //////////// EDIT MODAL//////////
-  const ExportReceiptDetail = (ID: string, isShowModal?: boolean, setIsShowModal?: any) => {
+  const ExportReceiptDetail = (
+    ID: string,
+    isShowModal?: boolean,
+    setIsShowModal?: any
+  ) => {
     return (
       <div className="product-container">
         <Modal
@@ -191,17 +216,23 @@ export default function ExportTransaction() {
             setShowModal(undefined);
             form.resetFields();
           }}
-          footer={(_, { OkBtn, CancelBtn }) => (
-            goodReceiptData.exportStatus == 2 ?
+          footer={(_, { OkBtn, CancelBtn }) =>
+            goodReceiptData.exportStatus == 2 ? (
               <>
-                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button onClick={() => handleAccept(goodReceiptData.id)}>
+                  Hoàn thành
+                </Button>
+                <Button onClick={() => handleCancel(goodReceiptData.id)}>
+                  Hủy bỏ
+                </Button>
                 <Button onClick={onFinish}>OK</Button>
               </>
-              : <>
+            ) : (
+              <>
                 <Button onClick={onFinish}>OK</Button>
               </>
-          )}
+            )
+          }
           className="modal-create-trans"
         >
           <div className="modal-header">
@@ -236,7 +267,9 @@ export default function ExportTransaction() {
               </Form>
             </div>
             <div className="modal-products">
-              <h4>Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}</h4>
+              <h4>
+                Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}
+              </h4>
               <table>
                 <thead>
                   <th className="code">Tên sản phẩm</th>
@@ -246,32 +279,32 @@ export default function ExportTransaction() {
                 <tbody>
                   {goodReceiptData.listGoodExportDetailsModel &&
                     goodReceiptData.listGoodExportDetailsModel.length > 0 &&
-                    goodReceiptData.listGoodExportDetailsModel.map((product, index) => (
-                      <tr key={index}>
-                        <td className="name">{product.product.name ? product.product.name : ""}</td>
-                        <td className="quantity">{product.quantity}</td>
-                        <td className="priceUnit">{product.priceUnit?.toLocaleString()}</td>
-                      </tr>
-                    ))}
+                    goodReceiptData.listGoodExportDetailsModel.map(
+                      (product, index) => (
+                        <tr key={index}>
+                          <td className="name">
+                            {product.product.name ? product.product.name : ""}
+                          </td>
+                          <td className="quantity">{product.quantity}</td>
+                          <td className="priceUnit">
+                            {product.priceUnit?.toLocaleString()}
+                          </td>
+                        </tr>
+                      )
+                    )}
                 </tbody>
               </table>
             </div>
           </div>
         </Modal>
-
-
       </div>
     );
-  }
-
+  };
 
   return (
     <React.Fragment>
-      {ExportReceiptDetail(
-        IDChoose,
-        goodReceiptData && showModal === "edit")}
+      {ExportReceiptDetail(IDChoose, goodReceiptData && showModal === "edit")}
       <div className="product-container">
-
         <div className="filterField">
           <div className="title">Phiếu xuất kho</div>
         </div>
@@ -283,8 +316,11 @@ export default function ExportTransaction() {
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
-              onClick={() => //setShowModal("create")
-                navigate("tao-moi")}          >
+              onClick={() =>
+                //setShowModal("create")
+                navigate("tao-moi")
+              }
+            >
               Thêm mới
             </Button>
             <Button icon={<DownloadOutlined />} className="custom-button">
@@ -313,14 +349,21 @@ export default function ExportTransaction() {
                       setDataChoose(tran);
                       setIDChoose(String(tran.id));
                     }}
-                    className={`${dataChoose?.id === tran.id && "tr-active"
-                      }`}
+                    className={`${dataChoose?.id === tran.id && "tr-active"}`}
                   >
                     <td className="table-body-code">{tran.id}</td>
-                    <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()} /></td>
+                    <td className="table-body-time">
+                      <ProcessDate
+                        dateString={tran.exportDate.toLocaleString()}
+                      />
+                    </td>
                     <td className="table-body-trans">{tran.customer?.name}</td>
-                    <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
-                    <td className="table-body-status"><ProcessStatus status={tran.exportStatus} /></td>
+                    <td className="table-body-total">
+                      {tran.totalAmount?.toLocaleString()}
+                    </td>
+                    <td className="table-body-status">
+                      <ProcessStatus status={tran.exportStatus} />
+                    </td>
                     {dataChoose?.id === tran.id && (
                       <td className="table-body-action">
                         <Button
@@ -331,7 +374,9 @@ export default function ExportTransaction() {
                             setShowModal("edit");
                             form.setFieldsValue(tran);
 
-                            setListProduct(form.getFieldValue("listGoodReciptDetailsModel"))
+                            setListProduct(
+                              form.getFieldValue("listGoodReciptDetailsModel")
+                            );
                           }}
                         >
                           Chi tiết
@@ -371,6 +416,5 @@ export default function ExportTransaction() {
         </Modal>
       </div>
     </React.Fragment>
-
   );
 }

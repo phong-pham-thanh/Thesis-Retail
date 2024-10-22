@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./styleProduct.css";
 import { Button, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FilterBox } from "../../component/filterBox";
 import EditIcon from "@mui/icons-material/Edit";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
+import ProductInformationPopupScreen from "./popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 import CustomButton from "../../component/CustomeButton";
@@ -35,6 +34,7 @@ interface DataType {
   description: string;
   status: boolean;
   listInventories: InventoryType[];
+  imgPath: string;
 }
 
 const emptydata: DataType = {
@@ -49,6 +49,7 @@ const emptydata: DataType = {
   description: "string",
   status: true,
   listInventories: [],
+  imgPath: "",
 };
 
 export default function Product() {
@@ -66,6 +67,9 @@ export default function Product() {
   const [refresh, setRefresh] = useState(false); // State to track changes for refetching
   const [isAlertVisible, setIsAlertVisible] = useState(false); // Track visibility of AlertDialog
   const [productToDelete, setProductToDelete] = useState<DataType | null>(null); // Store the product to be deleted
+
+  const defaultImage =
+    "https://localhost:7030/images/products/default_image.webp";
 
   const getAllProducts = () => {
     const api_link = api_links.product.getAll;
@@ -170,6 +174,22 @@ export default function Product() {
   };
 
   const columns: ColumnsType<DataType> = [
+    {
+      title: "",
+      dataIndex: "imgPath",
+      render: (imgPath: string) => (
+        <img
+          src={imgPath && imgPath.trim() !== "" ? imgPath : defaultImage}
+          alt=""
+          style={{
+            width: "50px",
+            height: "50px",
+            objectFit: "cover",
+            borderRadius: "5px",
+          }}
+        />
+      ),
+    },
     {
       title: "Mã sản phẩm",
       dataIndex: "id",
