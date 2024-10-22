@@ -10,6 +10,7 @@ import * as billSelector from '../../state/bill-state/bill.reducer';
 import { Users } from '../../model/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { filter, map, mergeMap, take } from 'rxjs';
+import { UtilitiesService } from '../../common/utilities.service';
 
 @Component({
   selector: 'app-retail-payment-component',
@@ -67,7 +68,7 @@ export class RetailPaymentComponentComponent {
 
   onPaying(){
     
-    let savingObject: Bill = {...this.currentBill};
+    let savingObject: Bill = UtilitiesService.cloneDeep(this.currentBill);
 
     if(this.currentCustomer){
       savingObject.customerId = this.currentCustomer.id;

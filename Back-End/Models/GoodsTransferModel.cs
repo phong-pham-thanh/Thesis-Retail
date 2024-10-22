@@ -3,6 +3,7 @@ using APIBackend.DataModel;
 using APIBackEnd.Data.Enum;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using APIBackEnd.Models;
 
 namespace APIBackend.Models
 {
@@ -15,7 +16,7 @@ namespace APIBackend.Models
         public int ToWareHouseId { get; set; }
         public WareHouseModel ToWareHouse { get; set; }
         public int UserId { get; set; }
-        public Users User { get; set; }
+        public UserModel User { get; set; }
         public Status Status { get; set; }
         public List<GoodTransferDetailModel> ListGoodTransferDetailsModel { get; set; }
     }

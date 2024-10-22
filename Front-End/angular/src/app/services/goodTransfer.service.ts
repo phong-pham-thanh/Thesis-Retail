@@ -10,6 +10,9 @@ export class GoodTransferService {
   private apiGetAll = 'https://localhost:7030/GoodTransfer';
   private apiAdd= 'https://localhost:7030/GoodTransfer/addGoodTransfer';
   private apiAccept = 'https://localhost:7030/GoodTransfer/acceptGoodTransfer';
+  private apiGetById = 'https://localhost:7030/GoodTransfer/getGoodTransferById';
+  private apiUpdate = 'https://localhost:7030/GoodTransfer/updateGoodTransfer';
+  private apiCancel = 'https://localhost:7030/GoodTransfer/cancelGoodTransfer';
 
 
   constructor(private http: HttpClient) {}
@@ -24,5 +27,17 @@ export class GoodTransferService {
 
   acceptGoodTransfer(id: number){
     return this.http.get<GoodTransfer>(`${this.apiAccept}/${id}`)
+  }
+
+  cancelGoodTransfer(id: number){
+    return this.http.get<GoodTransfer>(`${this.apiCancel}/${id}`)
+  }
+  
+  getByIdGoodTransfer(id: number){
+    return this.http.get<GoodTransfer>(`${this.apiGetById}/${id}`)
+  }
+  
+  updateGoodTransfer(goodTransfer: GoodTransfer){
+    return this.http.post<GoodTransfer>(`${this.apiUpdate}/${goodTransfer.id}`, goodTransfer)
   }
 }

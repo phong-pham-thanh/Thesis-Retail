@@ -13,6 +13,8 @@ namespace APIBackend.Repository
     {
         public bool AddGoodTransferDetails(GoodTransferDetails goodTransferDetails);
         public GoodTransferDetailModel UpdateGoodTransferDetails(int id, GoodTransferDetailModel updateItem);
+        public bool AddListGoodTransferDetails(List<GoodTransferDetailModel> listGoodTransferDetailModels);
+        public bool DeleteListGoodTransferDetailByGoodTransferId(int transferId);
     }
     public class GoodTransferDetailRepository : IGoodTransferDetailRepository
     {
@@ -41,5 +43,31 @@ namespace APIBackend.Repository
             _coreContext.SaveChanges();
             return _goodTransferDetailMapper.ToModel(efObject);
         }
+
+        public bool AddListGoodTransferDetails(List<GoodTransferDetailModel> listGoodTransferDetailModels)
+        {
+
+            foreach (var item in listGoodTransferDetailModels)
+            {
+                GoodTransferDetails efObject = new GoodTransferDetails();
+                _goodTransferDetailMapper.ToEntity(efObject, item);
+                _coreContext.GoodTransferDetails.Add(efObject);
+            }
+            _coreContext.SaveChanges();
+            return true;
+        }
+
+
+        public bool DeleteListGoodTransferDetailByGoodTransferId(int transferId)
+        {
+            List<GoodTransferDetails> listGoodTransferDetails = _coreContext.GoodTransferDetails.Where(x => x.GoodTransferId == transferId).ToList();
+            foreach (GoodTransferDetails efObject in listGoodTransferDetails)
+            {
+                _coreContext.GoodTransferDetails.Remove(efObject);
+            }
+            _coreContext.SaveChanges();
+            return true;
+        }
+
     }
 }

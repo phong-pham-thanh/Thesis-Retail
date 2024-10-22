@@ -18,6 +18,7 @@ namespace APIBackend.Service
         public GoodsTransferModel GetGoodTransferById(int id);
         public GoodsTransferModel AcceptGoodTransfer(int id);
         public GoodsTransferModel UpdateGoodTransfer(int id, GoodsTransferModel updateItem);
+        public GoodsTransferModel CancelGoodTransfer(int id);
     }
     public class GoodTransferService : IGoodTransferService
     {
@@ -31,6 +32,7 @@ namespace APIBackend.Service
         protected readonly IUnityOfWorkFactory _uowFactory;
         private readonly IGoodExportService _goodExportService;
         private readonly IGoodReciptService _goodReciptService;
+        private readonly IUserService _userService;
 
         public GoodTransferService(IProductMapper productMapper, 
             IGoodsTransferMapper goodTransferMapper, 
@@ -41,6 +43,7 @@ namespace APIBackend.Service
             IProductRepository productRepository,
             IGoodExportService goodExportService,
             IGoodReciptService goodReciptService,
+            IUserService userService,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
@@ -52,6 +55,7 @@ namespace APIBackend.Service
             _productRepository = productRepository;
             _goodExportService = goodExportService;
             _goodReciptService = goodReciptService;
+            _userService = userService;
             _uowFactory = uowFactory;
         }
 
@@ -101,11 +105,8 @@ namespace APIBackend.Service
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
                 result = _goodTransferRepository.UpdateGoodTransfer(id, updateItem);
-
-                foreach (var goodTransferDetailModel in updateItem.ListGoodTransferDetailsModel)
-                {
-                    _goodTransferDetailRepository.UpdateGoodTransferDetails(goodTransferDetailModel.Id, goodTransferDetailModel);
-                }
+                _goodTransferDetailRepository.DeleteListGoodTransferDetailByGoodTransferId(updateItem.Id);
+                _goodTransferDetailRepository.AddListGoodTransferDetails(updateItem.ListGoodTransferDetailsModel);
                 uow.Commit();
             }
             return result;
@@ -130,6 +131,7 @@ namespace APIBackend.Service
                 {
                     detail.Product = _productRepository.GetProductById(detail.ProductId);
                 }
+                item.User = _userService.GetById(item.UserId);
             }
             return listGoodTransfer;
         }
@@ -193,6 +195,16 @@ namespace APIBackend.Service
                 });
             }
             return result;
+        }
+
+        public GoodsTransferModel CancelGoodTransfer(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsTransferModel result = _goodTransferRepository.CancelGoodTransfer(id);
+                uow.Commit();
+                return result;
+            }
         }
 
 
