@@ -1,6 +1,7 @@
 ﻿using APIBackend.DataModel;
 using APIBackend.Models;
 using APIBackEnd.Data;
+using APIBackEnd.Mapper;
 using APIBackEnd.Models;
 
 namespace APIBackend.Mapper
@@ -15,6 +16,11 @@ namespace APIBackend.Mapper
 
     public class WareHouseMapper : IWareHouseMapper
     {
+        private IUserMapper _userMapper;
+        public WareHouseMapper(IUserMapper userMapper)
+        { 
+            _userMapper = userMapper;
+        }
         public WareHouseModel ToModel(WareHouses efObject)
         {
             if(efObject == null)
@@ -25,7 +31,7 @@ namespace APIBackend.Mapper
             domObject.Id = efObject.Id;
             domObject.Address = efObject.Address;
             domObject.Status = efObject.Status;
-            domObject.Manager = efObject.Manager;
+            domObject.Manager = _userMapper.ToModel(efObject.Manager);
             domObject.ManagerId = efObject.ManagerId;
             domObject.Inventories = efObject.Inventories;
             return domObject;
@@ -40,7 +46,7 @@ namespace APIBackend.Mapper
                 modelObject.Id = efObject.Id;
                 modelObject.Address = efObject.Address;
                 modelObject.Status = efObject.Status;
-                modelObject.Manager = efObject.Manager;
+                modelObject.Manager = _userMapper.ToModel(efObject.Manager);
                 modelObject.ManagerId = efObject.ManagerId;
                 modelObject.Inventories = efObject.Inventories;
                 result.Add(modelObject);

@@ -26,6 +26,7 @@ namespace APIBackEnd.Data
         public DbSet<BillDetails> BillDetails { get; set; }
         public DbSet<GoodsTransfer> GoodsTransfers { get; set; }
         public DbSet<GoodTransferDetails> GoodTransferDetails { get; set; }
+        public DbSet<UserWareHouse> UserWareHouse { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +64,18 @@ namespace APIBackEnd.Data
                 .HasOne(gt => gt.User)
                 .WithMany(w => w.ListGoodsTransfers)
                 .HasForeignKey(gt => gt.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserWareHouse>()
+                .HasOne(gt => gt.User)
+                .WithMany(w => w.ListUserWareHouse)
+                .HasForeignKey(gt => gt.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserWareHouse>()
+                .HasOne(gt => gt.WareHouse)
+                .WithMany(w => w.ListUserWareHouse)
+                .HasForeignKey(gt => gt.WareHouseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

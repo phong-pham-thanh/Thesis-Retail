@@ -1,6 +1,7 @@
 ﻿using APIBackend.Models;
 using APIBackend.Repository;
 using APIBackEnd.Data;
+using NGO.Core.Repositories;
 
 namespace APIBackend.Service
 {
@@ -15,9 +16,16 @@ namespace APIBackend.Service
     public class WareHouseService : IWareHouseService
     {
         private readonly IWareHouseRepository _wareHouseRepository;
-        public WareHouseService(IWareHouseRepository wareHouseRepository)
+        private readonly IUserWareHouseService _userWareHouseService;
+        protected readonly IUnityOfWorkFactory _uowFactory;
+        public WareHouseService(
+            IWareHouseRepository wareHouseRepository,
+            IUserWareHouseService userWareHouseService,
+            IUnityOfWorkFactory uowFactory)
         {
             _wareHouseRepository = wareHouseRepository;
+            _userWareHouseService = userWareHouseService;
+            _uowFactory = uowFactory;
 
         }
         public List<WareHouseModel> GetAll()
@@ -32,14 +40,26 @@ namespace APIBackend.Service
 
         public WareHouseModel AddNewWareHouse(WareHouseModel wareHouseModel)
         {
-            Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: null, columnName: "Address");
-            return _wareHouseRepository.AddNewWareHouse(wareHouseModel);
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: null, columnName: "Address");
+                WareHouseModel result = _wareHouseRepository.AddNewWareHouse(wareHouseModel);
+                _userWareHouseService.AddMangagerToWareHouseIfNeed(result.ManagerId, result.Id);
+                uow.Commit();
+                return result;
+            }
         }
 
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel wareHouseModel)
         {
-            Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: id, columnName: "Address");
-            return _wareHouseRepository.UpdateWareHouse(id, wareHouseModel);
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                Utilities.ValidateDuplicate<WareHouseModel>(_wareHouseRepository.GetAll(), wareHouseModel, id: id, columnName: "Address");
+                WareHouseModel result = _wareHouseRepository.UpdateWareHouse(id, wareHouseModel);
+                _userWareHouseService.AddMangagerToWareHouseIfNeed(result.ManagerId, id);
+                uow.Commit();
+                return result;
+            }
         }
 
         public List<WareHouseModel> GetBySearchName(string query)
