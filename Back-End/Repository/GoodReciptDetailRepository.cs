@@ -12,6 +12,8 @@ namespace APIBackend.Repository
     {
         public bool AddGoodReciptDetails(GoodReceiptDetails goodReceiptDetails);
         public GoodReceiptDetailModel UpdateGoodReceiptDetails(int id, GoodReceiptDetailModel updateItem);
+        public bool AddListGoodReceiptDetails(List<GoodReceiptDetailModel> listGoodReceiptDetailModels);
+        public bool DeleteListGoodReceiptDetailByGoodReceiptId(int receiptId);
     }
     public class GoodReciptDetailRepository : IGoodReciptDetailRepository
     {
@@ -39,6 +41,31 @@ namespace APIBackend.Repository
             _goodReciptDetailMapper.ToEntity(efObject, updateItem);
             _coreContext.SaveChanges();
             return _goodReciptDetailMapper.ToModel(efObject);
+        }
+
+        public bool AddListGoodReceiptDetails(List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
+        {
+
+            foreach (var item in listGoodReceiptDetailModels)
+            {
+                GoodReceiptDetails efObject = new GoodReceiptDetails();
+                _goodReciptDetailMapper.ToEntity(efObject, item);
+                _coreContext.GoodReceiptDetails.Add(efObject);
+            }
+            _coreContext.SaveChanges();
+            return true;
+        }
+
+
+        public bool DeleteListGoodReceiptDetailByGoodReceiptId(int receiptId)
+        {
+            List<GoodReceiptDetails> listGoodReceiptDetails = _coreContext.GoodReceiptDetails.Where(x => x.GoodReceiptId == receiptId).ToList();
+            foreach (GoodReceiptDetails efObject in listGoodReceiptDetails)
+            {
+                _coreContext.GoodReceiptDetails.Remove(efObject);
+            }
+            _coreContext.SaveChanges();
+            return true;
         }
 
     }
