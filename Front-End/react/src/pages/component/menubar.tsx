@@ -174,8 +174,8 @@ export default function NavBar() {
     {
       title: "Nhân viên",
       icon: <HailIcon />,
-      path: "nhanvien",
-      status: location.pathname.includes("nhanvien"),
+      path: "employee",
+      status: location.pathname.includes("employee"),
     },
     {
       title: "Khuyến mãi",
