@@ -51,6 +51,7 @@ builder.Services.AddScoped<IBillDetailRepository, BillDetailRepository>();
 builder.Services.AddScoped<IUnityOfWorkFactory, TransactionScopeUnityOfWorkFactory>();
 builder.Services.AddScoped<IGoodTransferRepository, GoodTransferRepository>();
 builder.Services.AddScoped<IGoodTransferDetailRepository, GoodTransferDetailRepository>();
+builder.Services.AddScoped<IUserWareHouseRepository, UserWareHouseRepository>();
 
 // Mapper
 builder.Services.AddScoped<IUserMapper, UserMapper>();
@@ -70,6 +71,7 @@ builder.Services.AddScoped<IBillMapper, BillMapper>();
 builder.Services.AddScoped<IBillDetailMapper, BillDetailMapper>();
 builder.Services.AddScoped<IGoodsTransferMapper, GoodsTransferMapper>();
 builder.Services.AddScoped<IGoodTransferDetailMapper, GoodTransferDetailMapper>();
+builder.Services.AddScoped<IUserWareHouseMapper, UserWareHouseMapper>();
 
 // Service
 builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
@@ -83,6 +85,7 @@ builder.Services.AddScoped<IPriceProductService, PriceProductService>();
 builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserWareHouseService, UserWareHouseService>();
 
 var app = builder.Build();
 

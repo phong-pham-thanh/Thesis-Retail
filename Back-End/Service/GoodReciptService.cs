@@ -127,11 +127,9 @@ namespace APIBackend.Service
             {
                 updateItem.TotalAmount = this.CaculateTotalAmount(updateItem.ListGoodReciptDetailsModel);
                 result = _goodReciptRepository.UpdateGoodReceipt(id, updateItem);
+                _goodReciptDetailRepository.DeleteListGoodReceiptDetailByGoodReceiptId(updateItem.Id);
+                _goodReciptDetailRepository.AddListGoodReceiptDetails(updateItem.ListGoodReciptDetailsModel);
 
-                foreach (var goodReceiptDetailModel in updateItem.ListGoodReciptDetailsModel)
-                {
-                    _goodReciptDetailRepository.UpdateGoodReceiptDetails(goodReceiptDetailModel.Id, goodReceiptDetailModel);
-                }
                 uow.Commit();
             }
             return result;

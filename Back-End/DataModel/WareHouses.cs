@@ -10,8 +10,8 @@ namespace APIBackend.DataModel
         public int Id { get; set; }
         public int ManagerId { get; set; }
         [ForeignKey("ManagerId")]
-        public Users? Manager { get; set; }
-        public string? Address { get; set; }
+        public Users Manager { get; set; }
+        public string Address { get; set; }
         public bool Status { get; set; }
         public List<Inventories> Inventories { get; set; }
         public List<GoodsExport> GoodsExports { get; set; }
@@ -19,5 +19,6 @@ namespace APIBackend.DataModel
         public List<Bill> ListBill { get; set; }
         public List<GoodsTransfer> ListGoodsTransferFrom { get; set; }
         public List<GoodsTransfer> ListGoodsTransferTo { get; set; }
+        public List<UserWareHouse> ListUserWareHouse { get; set; }
     }
 }
