@@ -96,10 +96,8 @@ namespace APIBackend.Service
             {
                 result = _goodExportRepository.UpdateGoodExport(id, updateItem);
 
-                foreach (var goodExportDetailModel in updateItem.ListGoodExportDetailsModel)
-                {
-                    _goodExportDetailRepository.UpdateGoodExportDetails(goodExportDetailModel.Id, goodExportDetailModel);
-                }
+                _goodExportDetailRepository.DeleteListGoodExportDetailByGoodExportId(updateItem.Id);
+                _goodExportDetailRepository.AddListGoodExportDetails(updateItem.ListGoodExportDetailsModel);
                 uow.Commit();
             }
             return result;

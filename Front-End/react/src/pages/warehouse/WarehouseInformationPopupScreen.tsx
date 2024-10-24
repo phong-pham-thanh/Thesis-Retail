@@ -46,7 +46,7 @@ export default function WarehouseInformationPopupScreen({
         setLoading(true);
 
         try {
-          if (type === "edit" && data?.id) {
+          if (type === "edit" && data?.id != null) {
             const api_put = {
               ...api_links.warehouse.edit(Number(data.id)),
               data: values,

@@ -22,6 +22,7 @@ import { RetailPaymentComponentComponent } from './retail-payment-component/reta
 import { CookieService } from 'ngx-cookie-service';
 import { Users } from '../model/user.model';
 import { Warehouse } from '../model/warehouse.model';
+import { UtilitiesService } from '../common/utilities.service';
 
 
 const imageUrl = assetUrl("images/Cocacola.png");
@@ -131,8 +132,7 @@ export class RetailComponentComponent implements OnInit {
         billId: -1,
         priceUnit: item.currentPrice,
       }
-      this.currentBill.listBillDetails = [...this.currentBill.listBillDetails, {...newBillDetail}];
-      // this.currentBill.listBillDetails.push({...newBillDetail});
+      this.currentBill.listBillDetails = [...this.currentBill.listBillDetails, UtilitiesService.cloneDeep(newBillDetail)];
     }
     this.getTotalAmount();
   }

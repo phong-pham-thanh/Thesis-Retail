@@ -6,12 +6,14 @@ using APIBackend.DataModel;
 using APIBackend.Repository;
 using APIBackEnd.Repository;
 using NGO.Core.Repositories;
+using APIBackEnd.Data.Enum;
+using APIBackEnd.Models;
 
 namespace APIBackend.Service
 {
     public interface IGoodReciptService
     {
-        public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels);
+        public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept);
         public List<GoodsReceiptModel> GetAllGoodRecipts();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
@@ -47,10 +49,18 @@ namespace APIBackend.Service
             _uowFactory = uowFactory;
         }
 
-        public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
+        public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept)
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
+            if (!autoAccept)
+            {
+                goodsReceipt.ReceiptStatus = Status.Process;
+            }
+            else
+            {
+                goodsReceipt.ReceiptStatus = Status.Success;
+            }
             goodsReceiptModel.TotalAmount = this.CaculateTotalAmount(listGoodReceiptDetailModels);
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
 
@@ -64,11 +74,12 @@ namespace APIBackend.Service
                 _goodReciptDetailMapper.ToEntity(goodReciptDetails, goodReceiptDetailModel);
                 goodReciptDetails.GoodReceiptId = newGoodReciptModel.Id;
                 _goodReciptDetailRepository.AddGoodReciptDetails(goodReciptDetails);
-
-                //Update Inventory in ware house
-                // _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, idWareHouse, true);
             }
-            
+            if (autoAccept)
+            {
+                GoodsReceiptModel newGoodReceiptModelWithFullDetails = _goodReciptRepository.GetGoodReciptById(newGoodReciptModel.Id);
+                UpdateInventoryForGoodRecipt(newGoodReceiptModelWithFullDetails);
+            }
 
             return true;
         }
@@ -116,11 +127,9 @@ namespace APIBackend.Service
             {
                 updateItem.TotalAmount = this.CaculateTotalAmount(updateItem.ListGoodReciptDetailsModel);
                 result = _goodReciptRepository.UpdateGoodReceipt(id, updateItem);
+                _goodReciptDetailRepository.DeleteListGoodReceiptDetailByGoodReceiptId(updateItem.Id);
+                _goodReciptDetailRepository.AddListGoodReceiptDetails(updateItem.ListGoodReciptDetailsModel);
 
-                foreach (var goodReceiptDetailModel in updateItem.ListGoodReciptDetailsModel)
-                {
-                    _goodReciptDetailRepository.UpdateGoodReceiptDetails(goodReceiptDetailModel.Id, goodReceiptDetailModel);
-                }
                 uow.Commit();
             }
             return result;
@@ -132,7 +141,8 @@ namespace APIBackend.Service
             int totalAmount = 0;
             foreach(GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
             {
-                totalAmount += goodReceiptDetailModel.PriceUnit * goodReceiptDetailModel.Quantity;
+                int priceUnit = goodReceiptDetailModel.PriceUnit != null ? goodReceiptDetailModel.PriceUnit.Value : 0;
+                totalAmount += priceUnit * goodReceiptDetailModel.Quantity;
             }
             return totalAmount;
         }

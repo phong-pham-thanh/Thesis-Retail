@@ -49,6 +49,10 @@ builder.Services.AddScoped<IPriceProductRepository, PriceProductRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IBillDetailRepository, BillDetailRepository>();
 builder.Services.AddScoped<IUnityOfWorkFactory, TransactionScopeUnityOfWorkFactory>();
+builder.Services.AddScoped<IGoodTransferRepository, GoodTransferRepository>();
+builder.Services.AddScoped<IGoodTransferDetailRepository, GoodTransferDetailRepository>();
+builder.Services.AddScoped<IUserWareHouseRepository, UserWareHouseRepository>();
+
 // Mapper
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IProductMapper, ProductMapper>();
@@ -65,6 +69,9 @@ builder.Services.AddScoped<ICustomerMapper, CustomerMapper>();
 builder.Services.AddScoped<IPriceProductMapper, PriceProductMapper>();
 builder.Services.AddScoped<IBillMapper, BillMapper>();
 builder.Services.AddScoped<IBillDetailMapper, BillDetailMapper>();
+builder.Services.AddScoped<IGoodsTransferMapper, GoodsTransferMapper>();
+builder.Services.AddScoped<IGoodTransferDetailMapper, GoodTransferDetailMapper>();
+builder.Services.AddScoped<IUserWareHouseMapper, UserWareHouseMapper>();
 
 // Service
 builder.Services.AddScoped<IGoodReciptService, GoodReciptService>();
@@ -76,6 +83,9 @@ builder.Services.AddScoped<IGoodExportService, GoodExportService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IPriceProductService, PriceProductService>();
 builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserWareHouseService, UserWareHouseService>();
 
 var app = builder.Build();
 

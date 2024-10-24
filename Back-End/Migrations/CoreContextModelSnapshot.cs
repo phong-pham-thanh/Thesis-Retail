@@ -90,7 +90,7 @@ namespace APIBackEnd.Migrations
                     b.Property<DateTime>("ImportDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PartnerId")
+                    b.Property<int?>("PartnerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReceiptStatus")
@@ -180,8 +180,14 @@ namespace APIBackEnd.Migrations
                     b.Property<string>("Branch")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DateOnboard")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -297,7 +303,7 @@ namespace APIBackEnd.Migrations
                     b.Property<int>("GoodReceiptId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PriceUnit")
+                    b.Property<int?>("PriceUnit")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -342,6 +348,66 @@ namespace APIBackEnd.Migrations
                     b.HasIndex("WareHouseId");
 
                     b.ToTable("GoodsExports");
+                });
+
+            modelBuilder.Entity("APIBackend.DataModel.GoodsTransfer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("FromWareHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToWareHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TransferDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromWareHouseId");
+
+                    b.HasIndex("ToWareHouseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GoodsTransfers");
+                });
+
+            modelBuilder.Entity("APIBackend.DataModel.GoodTransferDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GoodTransferId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoodTransferId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("GoodTransferDetails");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
@@ -400,6 +466,29 @@ namespace APIBackEnd.Migrations
                     b.ToTable("PriceProduct");
                 });
 
+            modelBuilder.Entity("APIBackend.DataModel.UserWareHouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WareHouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WareHouseId");
+
+                    b.ToTable("UserWareHouse");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
                     b.Property<int>("Id")
@@ -428,9 +517,7 @@ namespace APIBackEnd.Migrations
                 {
                     b.HasOne("APIBackEnd.Data.Partners", "Partner")
                         .WithMany()
-                        .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartnerId");
 
                     b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
                         .WithMany("GoodsReceipts")
@@ -554,6 +641,52 @@ namespace APIBackEnd.Migrations
                     b.Navigation("WareHouse");
                 });
 
+            modelBuilder.Entity("APIBackend.DataModel.GoodsTransfer", b =>
+                {
+                    b.HasOne("APIBackend.DataModel.WareHouses", "FromWareHouse")
+                        .WithMany("ListGoodsTransferFrom")
+                        .HasForeignKey("FromWareHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("APIBackend.DataModel.WareHouses", "ToWareHouse")
+                        .WithMany("ListGoodsTransferTo")
+                        .HasForeignKey("ToWareHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("APIBackEnd.Data.Users", "User")
+                        .WithMany("ListGoodsTransfers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromWareHouse");
+
+                    b.Navigation("ToWareHouse");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("APIBackend.DataModel.GoodTransferDetails", b =>
+                {
+                    b.HasOne("APIBackend.DataModel.GoodsTransfer", "GoodsTransfer")
+                        .WithMany("ListGoodTransferDetails")
+                        .HasForeignKey("GoodTransferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("APIBackEnd.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GoodsTransfer");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.Inventories", b =>
                 {
                     b.HasOne("APIBackEnd.Data.Product", "Product")
@@ -584,10 +717,29 @@ namespace APIBackEnd.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("APIBackend.DataModel.UserWareHouse", b =>
+                {
+                    b.HasOne("APIBackEnd.Data.Users", "User")
+                        .WithMany("ListUserWareHouse")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("APIBackend.DataModel.WareHouses", "WareHouse")
+                        .WithMany("ListUserWareHouse")
+                        .HasForeignKey("WareHouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("WareHouse");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
                     b.HasOne("APIBackEnd.Data.Users", "Manager")
-                        .WithMany("WareHousesManaged")
+                        .WithMany("ListWareHousesManaged")
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -616,7 +768,11 @@ namespace APIBackEnd.Migrations
                 {
                     b.Navigation("ListBill");
 
-                    b.Navigation("WareHousesManaged");
+                    b.Navigation("ListGoodsTransfers");
+
+                    b.Navigation("ListUserWareHouse");
+
+                    b.Navigation("ListWareHousesManaged");
                 });
 
             modelBuilder.Entity("APIBackend.DataModel.Bill", b =>
@@ -629,6 +785,11 @@ namespace APIBackEnd.Migrations
                     b.Navigation("ListGoodExportDetails");
                 });
 
+            modelBuilder.Entity("APIBackend.DataModel.GoodsTransfer", b =>
+                {
+                    b.Navigation("ListGoodTransferDetails");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.WareHouses", b =>
                 {
                     b.Navigation("GoodsExports");
@@ -638,6 +799,12 @@ namespace APIBackEnd.Migrations
                     b.Navigation("Inventories");
 
                     b.Navigation("ListBill");
+
+                    b.Navigation("ListGoodsTransferFrom");
+
+                    b.Navigation("ListGoodsTransferTo");
+
+                    b.Navigation("ListUserWareHouse");
                 });
 #pragma warning restore 612, 618
         }

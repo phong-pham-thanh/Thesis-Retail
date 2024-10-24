@@ -45,40 +45,59 @@
 }
 
 .table-good-transfer {
-    width: 80%;
+    width: 70%;
     border-collapse: collapse;
     margin-bottom: 20px;
     margin: 20px auto
 }
 
 .row-header-good-transfer th {
-    background-color: #f2f2f2;
+    // background-color: #f2f2f2;
     font-weight: bold;
-    border: 2px solid #800080; /* Chỉ border cho header, màu tím */
+}
+.thead-good-transfer{
+    border: 3px solid #605BFF !important;
+    height: 60px;
 }
 
-.row-good-transfer td, 
+.row-good-transfer td,
 .row-header-good-transfer th {
     padding: 12px;
     text-align: left;
-    border: none; /* Xóa bỏ border của toàn bộ bảng */
+    border: none;
+    height: 100px; 
+    align-items: center; 
 }
 
 .row-good-transfer.selected-good-transfer {
-    border: 2px solid #00bfff; /* Border khi click vào row */
-    box-shadow: 0 0 5px rgba(0, 191, 255, 0.5); /* Hiệu ứng shadow khi click */
+    border: 2px solid #00bfff;
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.5); 
+    td, th{
+        height: 50px !important;
+    }
 }
 
 .status-good-transfer {
     padding: 5px 10px;
     border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
 }
 
 .complete-good-transfer {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #f6ffed;
+    color: #52c41a;
+    border-color: #b7eb8f;
+}
+
+.process-good-transfer {
+    background-color: #e6f4ff;
+    color: #1677ff;
+    border-color: #91caff;
+}
+
+.error-good-transfer {
+    background-color: #fff2f0;
+    color: #ff4d4f;
+    border-color: #ffccc7;
 }
 
 .pagination-good-transfer {
@@ -95,3 +114,39 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.button-container-context {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.btn-detail-good-transfer {
+    color: white; /* Màu chữ trắng */
+    border: none; /* Bỏ viền */
+    padding: 10px 10px; /* Khoảng cách bên trong */
+    margin: 5px 0; /* Khoảng cách giữa các nút */
+    font-size: 14px;
+    border-radius: 5px; /* Bo góc nút */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Độ rộng 100% để các nút bằng nhau */
+}
+
+.btn-green {
+    background-color: #4CAF50; /* Màu nền xanh lá cây */
+}
+
+.btn-green:hover {
+    background-color: #45a049; /* Màu khi hover của nút xanh */
+}
+
+.btn-red {
+    background-color: #f44336; /* Màu nền đỏ */
+}
+
+.btn-red:hover {
+    background-color: #d32f2f; /* Màu khi hover của nút đỏ */
+}
+

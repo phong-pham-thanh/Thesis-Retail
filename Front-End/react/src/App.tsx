@@ -40,7 +40,7 @@ function App() {
             <Route path="/quan-ly" element={<Manager />}>
               <Route path="/quan-ly/kiemkho" element={<Product />} />
               <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
-              <Route path="/quan-ly/nhanvien" element={<Employee />} />
+              {/* <Route path="/quan-ly/employee" element={<Employee />} /> */}
               <Route path="/quan-ly/quan-ly-kho" element={<WarehousePage />} />
               <Route
                 path="/quan-ly/nhap-hang"
@@ -74,6 +74,9 @@ function App() {
               <Route path="/quan-ly/price-management" />
               <Route path="/quan-ly/bill" />
               <Route path="/quan-ly/good-transfer" />
+              <Route path="/quan-ly/good-transfer/edit/:id" />
+              <Route path="/quan-ly/employee"/>
+
             </Route>
           </Routes>
         </div>
