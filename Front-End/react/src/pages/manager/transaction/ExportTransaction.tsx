@@ -48,11 +48,11 @@ const emptydata: GoodExportReceiptDetailDataType = {
   "id": 0,
   "exportDate": "01/01/1970",
   "totalAmount": 0,
-  "customerID": 0,
+  "customerId": 0,
   "customer": {
-    "id": 0,
+    "id": "0",
     "name": "",
-    "totalSale": 0
+    "phoneNumber": "",
   },
   "exportStatus": 0,
   "listGoodExportDetailModels": [
@@ -66,7 +66,7 @@ const emptydata: GoodExportReceiptDetailDataType = {
         "name": "",
         "categoryId": 0,
         "category": {
-          "id": 0,
+          "id": "0",
           "name": ""
         },
         "description": "",
@@ -75,7 +75,9 @@ const emptydata: GoodExportReceiptDetailDataType = {
       },
       "priceUnit": 0,
       "quantity": 0
-    }]
+    }],
+    "wareHouseId": "0",
+    "wareHouse": null,
 }
 
 export default function ExportTransaction() {
@@ -106,8 +108,9 @@ export default function ExportTransaction() {
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        setExportReciptData(res.data);
-        setShowReciptData(res.data.slice((page - 1) * size, page * size));
+        let d=res.data.reverse();
+        setExportReciptData(d);
+        setShowReciptData(d.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);

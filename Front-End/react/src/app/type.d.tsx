@@ -138,10 +138,7 @@ export type ListGoodReciptDetailsModel = {
     id: number,
     name: string,
     categoryId: number,
-    category: {
-      id: number,
-      name: string
-    },
+    category: CategoryType,
     description: string,
     status: boolean,
     listInventories: null
@@ -150,65 +147,27 @@ export type ListGoodReciptDetailsModel = {
   quantity: number
 };
 
-export type GoodReceiptDataType = GoodImportReceiptDetailDataType;
-/*{
-  id: string|number,
-  importDate: string|Date,
-  partnerID: string|number,
-  receiptStatus: string|number,
-  listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
-  partner?: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
-};*/
-
 export type GoodImportReceiptDetailDataType = {
   id: number,
   importDate: string,
-  partnerID: number,
-  partner: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
+  partnerId: number,
+  partner: PartnerState,
   receiptStatus: number,
   totalAmount: number | null,
-  listGoodReciptDetailsModel: [
-    {
-      id: number,
-      goodReceiptId: number,
-      goodsReceipt: null,
-      productId: number,
-      product: {
-        id: number,
-        name: string,
-        categoryId: number,
-        category: {
-          id: number,
-          name: string
-        },
-        description: string,
-        status: boolean,
-        listInventories: null
-      },
-      priceUnit: number,
-      quantity: number
-    }]
+  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[],
+  wareHouseId: string;
+  wareHouse: WarehouseState;
 };
 
 export type GoodExportReceiptDetailDataType = {
   id: number,
   exportDate: string,
-  customerID: number,
-  customer: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
+  customerId: number,
+  customer: CustomerState,
   exportStatus: number,
   totalAmount: number | null,
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
   listGoodExportDetailModels: ListGoodReciptDetailsModel[];
+  wareHouseId: string;
+  wareHouse: WarehouseState;
 };

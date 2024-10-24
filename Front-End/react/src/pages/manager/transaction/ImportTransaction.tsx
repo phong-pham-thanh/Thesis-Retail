@@ -37,7 +37,7 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
-import { GoodReceiptDataType, GoodImportReceiptDetailDataType } from "../../../app/type.d";
+import { GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/processFunction"
@@ -45,12 +45,13 @@ import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/pro
 const emptydata: GoodImportReceiptDetailDataType = {
   "id": 0,
   "importDate": "01/01/1970",
-  "partnerID": 0,
+  "partnerId": 0,
   "totalAmount": 0,
   "partner": {
     "id": 0,
     "name": "",
-    "totalSale": 0
+    "totalSale": 0,
+    "phoneNumber": "",
   },
   "receiptStatus": 0,
   "listGoodReciptDetailsModel": [
@@ -64,7 +65,7 @@ const emptydata: GoodImportReceiptDetailDataType = {
         "name": "",
         "categoryId": 0,
         "category": {
-          "id": 0,
+          "id": "0",
           "name": ""
         },
         "description": "",
@@ -73,15 +74,17 @@ const emptydata: GoodImportReceiptDetailDataType = {
       },
       "priceUnit": 0,
       "quantity": 0
-    }]
+    }],
+    "wareHouseId": "0",
+    "wareHouse": null,
 }
 
 export default function ImportTransaction() {
   const navigate = useNavigate();
 
   //useSelector, useNavigate
-  const [importReceiptData, setImportReciptData] = useState<GoodReceiptDataType[]>([]);
-  const [showReceiptData, setShowReciptData] = useState<GoodReceiptDataType[]>([]);
+  const [importReceiptData, setImportReciptData] = useState<GoodImportReceiptDetailDataType[]>([]);
+  const [showReceiptData, setShowReciptData] = useState<GoodImportReceiptDetailDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -94,7 +97,7 @@ export default function ImportTransaction() {
   const size = 9;
 
   const [IDChoose, setIDChoose] = useState<string>();
-  const [dataChoose, setDataChoose] = useState<GoodReceiptDataType>();
+  const [dataChoose, setDataChoose] = useState<GoodImportReceiptDetailDataType>();
   const [showModal, setShowModal] = useState<string>();
 
   //call api set data products on modal
@@ -103,8 +106,9 @@ export default function ImportTransaction() {
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        setImportReciptData(res.data);
-        setShowReciptData(res.data.slice((page - 1) * size, page * size));
+        let d=res.data.reverse();
+        setImportReciptData(d);
+        //setShowReciptData(d.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);
@@ -297,6 +301,7 @@ export default function ImportTransaction() {
             <thead className="table-header">
               <th className="table-header-code">Mã nhập hàng</th>
               <th className="table-header-time">Thời gian</th>
+              <th className="table-header-trans">Kho nhập</th>
               <th className="table-header-trans">Nhà cung cấp</th>
               <th className="table-header-total">Tổng tiền</th>
               <th className="table-header-status">Trạng thái</th>
@@ -317,6 +322,7 @@ export default function ImportTransaction() {
                   >
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()} /></td>
+                    <th className="table-body-trans">Kho nhập</th>
                     <td className="table-body-trans">{tran.partner.name}</td>
                     <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                     <td className="table-body-status"><ProcessStatus status={tran.receiptStatus} /></td>

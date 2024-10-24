@@ -14,7 +14,9 @@ import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
 import NewImportGoods from "./pages/manager/transaction/newImportReceipt";
+import EditImportGoods from "./pages/manager/transaction/editExportReceipt";
 import NewExportGoods from "./pages/manager/transaction/newExportReceipt";
+import EditExportGoods from "./pages/manager/transaction/editExportReceipt";
 import Employee from "./pages/manager/employee/Employee";
 import Dashboard from "./pages/manager/dashboard/Dashboard";
 import ImportTransaction from "./pages/manager/transaction/ImportTransaction";
@@ -49,12 +51,20 @@ function App() {
                 element={<NewImportGoods />}
               />
               <Route
+                path="/quan-ly/nhap-hang/chinh-sua/:id"
+                element={<EditImportGoods />}
+              />
+              <Route
                 path="/quan-ly/xuat-hang"
                 element={<ExportTransaction />}
               />
               <Route
                 path="/quan-ly/xuat-hang/tao-moi"
                 element={<NewExportGoods />}
+              />
+              <Route
+                path="/quan-ly/xuat-hang/chinh-sua/:id"
+                element={<EditExportGoods />}
               />
               <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
               <Route path="/quan-ly/nhacungcap" element={<PartnerPage />} />
