@@ -137,6 +137,8 @@ app.UseExceptionHandler(builder =>
     });
 });
 
+app.UseStaticFiles();
+
 app.UseRouting();
 
 // Use CORS after routing but before authorization or session

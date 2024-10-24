@@ -58,7 +58,7 @@ export default function Warehouse() {
         setLoading(false);
       })
       .catch((error: any) => {
-        message.error(error.message || "Failed to get categories.");
+        message.error(error.message || "Failed to get warehouse.");
         console.log(error);
         setLoading(false);
       });
@@ -171,7 +171,7 @@ export default function Warehouse() {
             <div className="search-bar">
               <h3>Search</h3>
               <Input
-                placeholder="Search for customers"
+                placeholder="Search warehouse address"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 allowClear

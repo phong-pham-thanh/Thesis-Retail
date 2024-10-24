@@ -218,6 +218,14 @@ const api_links = {
       data: { name },
     }),
   },
+
+  uploadFile: {
+    post: {
+      url: `${authUrl}/api/Upload/upload-image`,
+      method: "POST",
+      data: {},
+    },
+  },
 };
 
 export default api_links;

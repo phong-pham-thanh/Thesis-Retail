@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Modal, message, Switch } from "antd";
+import { Button, Form, Input, Modal, message, Switch, Select } from "antd";
 import api_links from "../../app/api_links";
 import fetch_Api from "../../app/api_fetch";
 import { WarehouseType } from "./WarehousePage";
+import { StaffState } from "../../app/type.d";
 
 interface WarehouseInformationPopupScreenProps {
   isPopup: boolean;
@@ -12,6 +13,8 @@ interface WarehouseInformationPopupScreenProps {
   onSave?: () => void;
 }
 
+const { Option } = Select;
+
 export default function WarehouseInformationPopupScreen({
   isPopup,
   setPopup,
@@ -20,7 +23,25 @@ export default function WarehouseInformationPopupScreen({
   onSave,
 }: WarehouseInformationPopupScreenProps) {
   const [form] = Form.useForm();
+  const [users, setUsers] = useState<StaffState[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const api_get = api_links.user.getAll;
+        const response = await fetch_Api(api_get);
+        setUsers(response.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        message.error("Failed to load users");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (type === "edit" && data) {
@@ -101,10 +122,16 @@ export default function WarehouseInformationPopupScreen({
 
         <Form.Item
           name="managerId"
-          label="Manager ID"
-          rules={[{ required: true, message: "Please enter manager ID" }]}
+          label="Manager"
+          rules={[{ required: true, message: "Please select a manager" }]}
         >
-          <Input type="number" />
+          <Select>
+            {users.map((user) => (
+              <Option key={user.id} value={user.id}>
+                {user.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item name="status" label="Status" valuePropName="checked">

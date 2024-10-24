@@ -28,7 +28,7 @@ import { FilterBox } from "../../component/filterBox";
 
 import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
+import ProductInformationPopupScreen from "../product/popupEditProduct";
 
 interface DataType {
   key: React.Key;

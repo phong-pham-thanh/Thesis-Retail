@@ -17,6 +17,6 @@ namespace APIBackEnd.Models
         public List<InventoryModel> ListInventories { get; set; }
         public List<PriceProductModel> ListPrices { get; set; }
         public int? CurrentPrice { get; set; }
-
+        public string ImgPath { get; set; }
     }
 }

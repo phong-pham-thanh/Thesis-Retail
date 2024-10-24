@@ -2,15 +2,15 @@ export type LoginState = {
   message: string | null;
   isSuccess: boolean;
   errors:
-  | {
-    /*
+    | {
+        /*
       "Password": string[]|null;
       UserName: string[]|null;
       AccountInformation: string[]|null;
       ConfirmPassword:string[]|null;*/
-  }
-  | string[]
-  | null;
+      }
+    | string[]
+    | null;
   token: string | undefined;
   userInformation?: null; //UserInformationLoginState |
   customerInformation?: null; //CustomerInformationLoginState |
@@ -65,6 +65,7 @@ export type ProductState = {
   };
   description: string;
   status: boolean;
+  imgPath?: string;
 };
 export type CategoryState = {
   id: string;
@@ -91,28 +92,30 @@ export type CustomerState = {
 
 export type CustomerListState = CustomerState[];
 
-
 export type CategoryType = {
   id: string;
   name: string;
 };
 
-export type PartnerState =
-  {
-    id: number | string,
-    name: string,
-    totalSale: number,
-  };
+export type PartnerState = {
+  id: number | string;
+  name: string;
+  totalSale: number;
+};
 
-export type WarehouseState =
-  {
-    id: number | string,
-    managerId: number | string,
-    manager: null,
-    address: string,
-    status: boolean,
-    inventories: null
-  };
+export type StaffState = {
+  id: string;
+  name: string;
+};
+
+export type WarehouseState = {
+  id: number | string;
+  managerId: number | string;
+  manager: null;
+  address: string;
+  status: boolean;
+  inventories: null;
+};
 
 export type GoodsReceipt = {
   id: string;
@@ -127,28 +130,27 @@ export type GoodsReceipt = {
   wareHouseId: string;
 };
 
-export type ListGoodReciptDetailsModel =
-{
-  id: number,
-  goodReceiptId?: number,
-  goodExportId?: number,
-  goodsReceipt?: null,
-  goodExport?: null,
-  productId: number,
+export type ListGoodReciptDetailsModel = {
+  id: number;
+  goodReceiptId?: number;
+  goodExportId?: number;
+  goodsReceipt?: null;
+  goodExport?: null;
+  productId: number;
   product: {
-    id: number,
-    name: string,
-    categoryId: number,
+    id: number;
+    name: string;
+    categoryId: number;
     category: {
-      id: number,
-      name: string
-    },
-    description: string,
-    status: boolean,
-    listInventories: null
-  }|null,
-  priceUnit?: number,
-  quantity: number
+      id: number;
+      name: string;
+    };
+    description: string;
+    status: boolean;
+    listInventories: null;
+  } | null;
+  priceUnit?: number;
+  quantity: number;
 };
 
 export type GoodReceiptDataType = GoodImportReceiptDetailDataType;
@@ -166,52 +168,53 @@ export type GoodReceiptDataType = GoodImportReceiptDetailDataType;
 };*/
 
 export type GoodImportReceiptDetailDataType = {
-  id: number,
-  importDate: string,
-  partnerID: number,
+  id: number;
+  importDate: string;
+  partnerID: number;
   partner: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
-  receiptStatus: number,
-  totalAmount: number | null,
+    id: number;
+    name: string;
+    totalSale: number;
+  };
+  receiptStatus: number;
+  totalAmount: number | null;
   listGoodReciptDetailsModel: [
     {
-      id: number,
-      goodReceiptId: number,
-      goodsReceipt: null,
-      productId: number,
+      id: number;
+      goodReceiptId: number;
+      goodsReceipt: null;
+      productId: number;
       product: {
-        id: number,
-        name: string,
-        categoryId: number,
+        id: number;
+        name: string;
+        categoryId: number;
         category: {
-          id: number,
-          name: string
-        },
-        description: string,
-        status: boolean,
-        listInventories: null
-      },
-      priceUnit: number,
-      quantity: number
-    }]
-}
+          id: number;
+          name: string;
+        };
+        description: string;
+        status: boolean;
+        listInventories: null;
+      };
+      priceUnit: number;
+      quantity: number;
+    }
+  ];
+};
 
 export type GoodExportReceiptDetailDataType = {
-  id: number,
-  exportDate: string,
-  customerID: number,
+  id: number;
+  exportDate: string;
+  customerID: number;
   customer: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
-  exportStatus: number,
-  totalAmount: number | null,
+    id: number;
+    name: string;
+    totalSale: number;
+  };
+  exportStatus: number;
+  totalAmount: number | null;
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
-  listGoodExportDetailModels: ListGoodReciptDetailsModel[]/*[
+  listGoodExportDetailModels: ListGoodReciptDetailsModel[] /*[
     {
       id: number,
       goodReceiptId: number,
@@ -231,5 +234,5 @@ export type GoodExportReceiptDetailDataType = {
       },
       priceUnit: number,
       quantity: number
-    }]*/
-}
+    }]*/;
+};
