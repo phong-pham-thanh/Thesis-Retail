@@ -103,6 +103,11 @@ export type PartnerState = {
   totalSale: number;
 };
 
+export type StaffState = {
+  id: string;
+  name: string;
+};
+
 export type WarehouseState = {
   id: number | string;
   managerId: number | string;

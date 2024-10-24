@@ -114,7 +114,8 @@ export default function Product() {
   };
 
   const handleWarehouseChange = (value: number) => {
-    filterProductsByWarehouse(value); // Filter products based on the selected warehouse
+    setSelectedWarehouseId(value);
+    //filterProductsByWarehouse(value); // Filter products based on the selected warehouse
   };
 
   function handleCategoryChange(value: string): void {
