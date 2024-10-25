@@ -134,14 +134,16 @@ export type ListGoodReciptDetailsModel = {
   goodsReceipt?: null,
   goodExport?: null,
   productId: number,
-  product: {
-    id: number,
-    name: string,
-    categoryId: number,
-    category: CategoryType,
-    description: string,
-    status: boolean,
-    listInventories: null
+  product?: {
+    id?: number,
+    name?: string,
+    categoryId?: number,
+    category?: CategoryType,
+    description?: string,
+    status?: boolean,
+    listInventories?: null,
+    currentPrice?: null,
+
   } | null,
   priceUnit?: number,
   quantity: number
@@ -150,24 +152,24 @@ export type ListGoodReciptDetailsModel = {
 export type GoodImportReceiptDetailDataType = {
   id: number,
   importDate: string,
-  partnerId: number,
-  partner: PartnerState,
+  partnerID: number,
+  partner?: PartnerState,
   receiptStatus: number,
-  totalAmount: number | null,
+  totalAmount?: number | null,
   listGoodReciptDetailsModel: ListGoodReciptDetailsModel[],
   wareHouseId: string;
-  wareHouse: WarehouseState;
+  wareHouse?: WarehouseState;
 };
 
 export type GoodExportReceiptDetailDataType = {
   id: number,
   exportDate: string,
   customerId: number,
-  customer: CustomerState,
+  customer?: CustomerState,
   exportStatus: number,
-  totalAmount: number | null,
+  totalAmount?: number | null,
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
-  listGoodExportDetailModels: ListGoodReciptDetailsModel[];
+  listGoodExportDetailModels?: ListGoodReciptDetailsModel[];
   wareHouseId: string;
-  wareHouse: WarehouseState;
+  wareHouse?: WarehouseState;
 };

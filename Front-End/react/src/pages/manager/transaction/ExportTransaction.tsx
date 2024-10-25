@@ -200,7 +200,7 @@ export default function ExportTransaction() {
               <>
                 <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
                 <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={onFinish}>OK</Button>
+                <Button onClick={() => navigate("chinh-sua/"+goodReceiptData.id)}>Chỉnh sửa</Button>
               </>
               : <>
                 <Button onClick={onFinish}>OK</Button>
@@ -212,7 +212,6 @@ export default function ExportTransaction() {
             <div className="modal-info">Thông tin</div>
             {/*<div className="modal-desc">xuất đến kho hiện tại</div>*/}
           </div>
-          <hr className="modal-line" />
           <div className="modal-content">
             <div className="modal-box">
               <Form form={form} onFinish={onFinish}>
@@ -281,9 +280,6 @@ export default function ExportTransaction() {
         </div>
         <div className="product-list transaction-list">
           <div className="header-action">
-            <Button icon={<EditOutlined />} className="custom-button">
-              Điều chỉnh
-            </Button>
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
@@ -302,6 +298,7 @@ export default function ExportTransaction() {
             <thead className="table-header">
               <th className="table-header-code">Mã xuất hàng</th>
               <th className="table-header-time">Thời gian</th>
+              <th className="table-header-trans">Mã kho xuất</th>
               <th className="table-header-trans">Khách hàng</th>
               <th className="table-header-total">Tổng tiền</th>
               <th className="table-header-status">Trạng thái</th>
@@ -322,6 +319,7 @@ export default function ExportTransaction() {
                   >
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()} /></td>
+                    <th className="table-body-trans">{tran.wareHouseId}</th>
                     <td className="table-body-trans">{tran.customer?.name}</td>
                     <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                     <td className="table-body-status"><ProcessStatus status={tran.exportStatus} /></td>

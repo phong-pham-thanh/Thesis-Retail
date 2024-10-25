@@ -242,9 +242,16 @@ export default function ExportGoods() {
     return fetch_Api(api_link);
   };
 
+  const putGoodsIssue = (putData: GoodExportReceiptDetailDataType) => {
+    const api_post = api_links.goodsIssue.export.update;
+    api_post.url = processAPIPostLink(api_post.url, goodReceiptData.id);
+    api_post.data = putData;
+    return fetch_Api(api_post);
+  };
+
   const handleGetTableProductDataByID = (listProduct: ListGoodReciptDetailsModel[]) => {
-    let newExportData : ExportProductTableState;
-    listProduct.map((item)=>{
+    let newExportData: ExportProductTableState;
+    listProduct.map((item) => {
       newExportData = {
         //"goodsReceiptId": "0",
         "productId": String(item.productId),
@@ -254,7 +261,7 @@ export default function ExportGoods() {
         "subTotal": 0,
       }
       exportTableData.push(newExportData);
-   })
+    })
     updateTotal();
     setExportTableData([...exportTableData]);
     console.log(exportTableData);
@@ -318,47 +325,43 @@ export default function ExportGoods() {
     setTotalQty(sumQ);
   }
 
-  const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.export.createNew;
-    api_post.data = postData;
-    return fetch_Api(api_post);
-  };
-
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
         id: 0,
-        goodExportId: 0,
+        goodExportId: goodReceiptData.id,
         goodExport: null,
         productId: Number(item.productId),
-        product: null,
+        product: {
+          currentPrice: null,
+        },
         //priceUnit: item.priceUnit,
-        quantity: item.quantity
+        quantity: item.quantity,
+
       })
     })
     const event = new Date();
-    const postData: ExportDataType = {
-      goodsExportModel: {
-        id: "0",
-        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        customerId: form.getFieldValue("customerId"),
-        exportStatus: 2,
-        listGoodExportDetailModels: [],
-        wareHouseId: form.getFieldValue("idWareHouse")
-      },
-      listGoodExportDetailModels: tempListGoodReceiptDetailModels,
-    }
+    const postData: GoodExportReceiptDetailDataType = {
+      id: goodReceiptData.id,
+      exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+      customerId: form.getFieldValue("customerId"),
+      exportStatus: 2,
+      listGoodExportDetailsModel: tempListGoodReceiptDetailModels,
+      wareHouseId: form.getFieldValue("idWareHouse"),
+      wareHouse: null,
+    };
 
     console.log(postData);
-    /*postGoodsIssue(postData)
+    putGoodsIssue(postData)
       .then((res) => {
-        message.success("Tạo thành công");
+        message.success("Chỉnh sửa thành công");
         navigate(-1);
       })
       .catch((error) => {
-        message.error("Tạo thất bại");
-      });*/
+        message.error(error.detail);
+        console.log(error);
+      });
 
   };
 
@@ -410,7 +413,7 @@ export default function ExportGoods() {
                         showSearch
                         placeholder="Chọn kho"
                         optionFilterProp="label"
-                        //defaultValue={goodReceiptData?.wareHouseId}
+                      //defaultValue={goodReceiptData?.wareHouseId}
                       >
                         {allWarehouses?.map((d) => {
                           return (
@@ -454,7 +457,7 @@ export default function ExportGoods() {
                         showSearch
                         placeholder="Chọn khách hàng"
                         optionFilterProp="label"
-                        //defaultValue={goodReceiptData?.customerId}//
+                      //defaultValue={goodReceiptData?.customerId}//
                       >
                         {allCustomers?.map((d) => {
                           return (
@@ -524,4 +527,27 @@ export default function ExportGoods() {
       </div>
     </div >
   );
-}
+};
+/*{
+  "id": 56,
+  "exportDate": "2024-10-04T03:07:53",
+  "customerId": 2,
+  "wareHouseId": 3,
+  "exportStatus": 2,
+  "listGoodExportDetailsModel": [
+    {
+      "goodExportId": 56,
+      "productId": 4,
+      "product": {
+        "id": 4,
+        "name": "Omachi",
+
+
+        "currentPrice": null
+      },
+      "quantity": 18
+    }
+  ],
+
+  "wareHouse": null
+}*/

@@ -278,6 +278,7 @@ main {
 .modal-create-trans .modal-content {
     display: flex;
     align-items: flex-start;
+    flex-direction: row;
 }
 
 .modal-create-trans .modal-box {

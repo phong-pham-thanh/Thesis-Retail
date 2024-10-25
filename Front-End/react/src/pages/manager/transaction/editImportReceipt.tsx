@@ -22,7 +22,7 @@ import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, 
 import type { ColumnsType } from "antd/es/table";
 import type { GetProps } from 'antd';
 
-import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, CustomerState, ProductState, WarehouseState, GoodImportReceiptDetailDataType } from "../../../app/type.d";
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState, GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 import { handleSearch, processAPIPostLink } from "../../../app/processFunction"
@@ -115,7 +115,7 @@ export default function ImportGoods() {
       dataIndex: 'priceUnit',
       render: (_, record) => (
         <Space size="small">
-          <InputNumber min={0} defaultValue={0} placeholder={"0"}
+          <InputNumber min={0} defaultValue={record.priceUnit} placeholder={"0"}
             onChange={(e) => {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
@@ -150,7 +150,7 @@ export default function ImportGoods() {
   const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>();
   const [allProducts, setProducts] = useState<ProductState[]>([]);
   const [filteredProducts, setFilterProducts] = useState<ProductState[]>([]);
-  const [allCustomers, setAllCustomers] = useState<CustomerState[]>([]);
+  const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
   const [choosedCategory, setChoosedCategory] = useState("Tất cả");
@@ -178,9 +178,9 @@ export default function ImportGoods() {
       .catch((error) => {
         console.log(error);
       });
-    getAllCustomer()
+    getAllPartner()
       .then((res) => {
-        setAllCustomers(res.data);
+        setAllPartners(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -229,8 +229,8 @@ export default function ImportGoods() {
     const api_link = api_links.product.getAll;
     return fetch_Api(api_link);
   };
-  const getAllCustomer = () => {
-    const api_link = api_links.customer.getAll;
+  const getAllPartner = () => {
+    const api_link = api_links.partner.getAll;
     return fetch_Api(api_link);
   };
   const getAllWarehouse = () => {
@@ -242,6 +242,13 @@ export default function ImportGoods() {
     return fetch_Api(api_link);
   };
 
+  const putGoodsIssue = (putData: GoodImportReceiptDetailDataType) => {
+    const api_post = api_links.goodsIssue.import.update;
+    api_post.url = processAPIPostLink(api_post.url, goodReceiptData.id);
+    api_post.data = putData;
+    return fetch_Api(api_post);
+  };
+
   const handleGetTableProductDataByID = (listProduct: ListGoodReciptDetailsModel[]) => {
     let newExportData : ExportProductTableState;
     listProduct.map((item)=>{
@@ -251,7 +258,7 @@ export default function ImportGoods() {
         "productName": item.product.name,
         "priceUnit": item.priceUnit,
         "quantity": item.quantity,
-        "subTotal": 0,
+        "subTotal": item.priceUnit*item.quantity,
       }
       exportTableData.push(newExportData);
    })
@@ -318,48 +325,38 @@ export default function ImportGoods() {
     setTotalQty(sumQ);
   }
 
-  const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.import.update;
-    api_post.data = postData;
-    return fetch_Api(api_post);
-  };
-
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
         id: 0,
-        goodExportId: 0,
-        goodExport: null,
+        goodReceiptId: goodReceiptData.id,
         productId: Number(item.productId),
-        product: null,
-        //priceUnit: item.priceUnit,
+        priceUnit: item.priceUnit,
         quantity: item.quantity
       })
     })
     const event = new Date();
-    const postData: ExportDataType = {
-      goodsReceiptModel: {
-        id: "0",
+    const postData: GoodImportReceiptDetailDataType = {
+        id: goodReceiptData.id,
         importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        partnerId: form.getFieldValue("partnerId"),
+        partnerID: form.getFieldValue("partnerId"),
         receiptStatus: 2,
-        ListGoodReciptDetailsModel: [],
-        wareHouseId: form.getFieldValue("idWareHouse")
-      },
-      listGoodReceiptDetailModels: tempListGoodReceiptDetailModels,
+        wareHouseId: form.getFieldValue("idWareHouse"),      
+        listGoodReciptDetailsModel: tempListGoodReceiptDetailModels,
     }
 
 
     console.log(postData);
-    /*postGoodsIssue(postData)
+    putGoodsIssue(postData)
       .then((res) => {
-        message.success("Tạo thành công");
+        message.success("Chỉnh sửa thành công");
         navigate(-1);
       })
       .catch((error) => {
-        message.error("Tạo thất bại");
-      });*/
+        message.error(error.detail);
+        console.log(error);
+      });
 
   };
 
@@ -386,7 +383,7 @@ export default function ImportGoods() {
       <div className="product-container">
 
         <div className="receipt-container">
-          Đơn xuất hàng
+          Đơn nhập hàng
           <Form form={form}
             //labelCol={{ span: 8 }}
             wrapperCol={{ span: 20 }}
@@ -398,7 +395,7 @@ export default function ImportGoods() {
                   <Col span={8}>
                     <Form.Item
                       className="idWareHouse"
-                      label={"Xuất đến kho"}
+                      label={"Nhập đến kho"}
                       name={"idWareHouse"}
                       layout="vertical"
                       rules={[{
@@ -423,7 +420,7 @@ export default function ImportGoods() {
                   <Col span={8}>
                     <Form.Item
                       className="exportDate"
-                      label={"Ngày xuất"}
+                      label={"Ngày nhập"}
                       name={"exportDate"}
                       layout="vertical"
                       rules={[{
@@ -440,22 +437,22 @@ export default function ImportGoods() {
                   </Col>
                   <Col span={8}>
                     <Form.Item
-                      className="customerId"
-                      label={"Khách hàng"}
-                      name={"customerId"}
+                      className="partnerId"
+                      label={"Nhà cung cấp"}
+                      name={"partnerId"}
                       layout="vertical"
                       rules={[{
                         required: true,
                         message: 'Không để trống',
                       }]}
-                      initialValue={goodReceiptData?.partnerId}
+                      initialValue={goodReceiptData?.partnerID}
                     >
                       <Select
                         showSearch
-                        placeholder="Chọn khách hàng"
+                        placeholder="Chọn nhà cung cấp"
                         optionFilterProp="label"
                       >
-                        {allCustomers?.map((d) => {
+                        {allPartners?.map((d) => {
                           return (
                             <Option value={d.id}>{d.name}</Option>
                           )

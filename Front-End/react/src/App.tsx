@@ -14,7 +14,7 @@ import Login from "./pages/login/Login";
 import Manager from "./pages/manager/Main";
 import Product from "./pages/manager/product/Product";
 import NewImportGoods from "./pages/manager/transaction/newImportReceipt";
-import EditImportGoods from "./pages/manager/transaction/editExportReceipt";
+import EditImportGoods from "./pages/manager/transaction/editImportReceipt";
 import NewExportGoods from "./pages/manager/transaction/newExportReceipt";
 import EditExportGoods from "./pages/manager/transaction/editExportReceipt";
 import Employee from "./pages/manager/employee/Employee";

@@ -45,7 +45,7 @@ import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/pro
 const emptydata: GoodImportReceiptDetailDataType = {
   "id": 0,
   "importDate": "01/01/1970",
-  "partnerId": 0,
+  "partnerID": 0,
   "totalAmount": 0,
   "partner": {
     "id": 0,
@@ -108,7 +108,7 @@ export default function ImportTransaction() {
       .then((res) => {
         let d=res.data.reverse();
         setImportReciptData(d);
-        //setShowReciptData(d.slice((page - 1) * size, page * size));
+        setShowReciptData(d.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);
@@ -199,7 +199,7 @@ export default function ImportTransaction() {
               <>
                 <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
                 <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={onFinish}>OK</Button>
+                <Button onClick={() => navigate("chinh-sua/"+goodReceiptData.id)}>Chỉnh sửa</Button>
               </>
               : <>
                 <Button onClick={onFinish}>OK</Button>
@@ -211,7 +211,6 @@ export default function ImportTransaction() {
             <div className="modal-info">Thông tin</div>
             {/*<div className="modal-desc">Nhập đến kho hiện tại</div>*/}
           </div>
-          <hr className="modal-line" />
           <div className="modal-content">
             <div className="modal-box">
               <Form form={form} onFinish={onFinish}>
@@ -279,9 +278,6 @@ export default function ImportTransaction() {
         </div>
         <div className="product-list transaction-list">
           <div className="header-action">
-            <Button icon={<EditOutlined />} className="custom-button">
-              Điều chỉnh
-            </Button>
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
@@ -301,7 +297,7 @@ export default function ImportTransaction() {
             <thead className="table-header">
               <th className="table-header-code">Mã nhập hàng</th>
               <th className="table-header-time">Thời gian</th>
-              <th className="table-header-trans">Kho nhập</th>
+              <th className="table-header-trans">Mã kho nhập</th>
               <th className="table-header-trans">Nhà cung cấp</th>
               <th className="table-header-total">Tổng tiền</th>
               <th className="table-header-status">Trạng thái</th>
@@ -322,7 +318,7 @@ export default function ImportTransaction() {
                   >
                     <td className="table-body-code">{tran.id}</td>
                     <td className="table-body-time"><ProcessDate dateString={tran.importDate.toLocaleString()} /></td>
-                    <th className="table-body-trans">Kho nhập</th>
+                    <th className="table-body-trans">{tran.wareHouseId}</th>
                     <td className="table-body-trans">{tran.partner.name}</td>
                     <td className="table-body-total">{tran.totalAmount?.toLocaleString()}</td>
                     <td className="table-body-status"><ProcessStatus status={tran.receiptStatus} /></td>
