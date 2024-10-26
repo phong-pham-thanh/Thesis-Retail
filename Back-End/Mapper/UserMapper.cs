@@ -26,6 +26,9 @@ namespace APIBackEnd.Mapper
             modelObject.Branch = efObject.Branch;
             modelObject.Address = efObject.Address;
             modelObject.Age = efObject.Age;                    
+            modelObject.DateOnboard = efObject.DateOnboard;                    
+            modelObject.DateOfBirth = efObject.DateOfBirth;
+            modelObject.IsAdmin = efObject.IsAdmin;
             return modelObject;                                  
         }
 
@@ -41,6 +44,9 @@ namespace APIBackEnd.Mapper
                 modelObject.Age = item.Age;
                 modelObject.Branch = item.Branch;
                 modelObject.Address = item.Address;
+                modelObject.DateOnboard = item.DateOnboard;
+                modelObject.DateOfBirth = item.DateOfBirth;
+                modelObject.IsAdmin = item.IsAdmin;
                 result.Add(modelObject);
             }
             return result;

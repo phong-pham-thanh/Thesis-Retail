@@ -34,6 +34,14 @@ namespace APIBackEnd.Controllers
             return temp;
         }
 
+        [Route("getAllWithFullInfo")]
+        [HttpGet]
+        public List<UserModel> GetAllWithFullInfor()
+        {
+            List<UserModel> temp = _userService.GetAllWithFullInfor();
+            return temp;
+        }
+
         [Route("login/")]
         [HttpPost]
         public UserModel GetLoginUser([FromBody] LoginModel data)

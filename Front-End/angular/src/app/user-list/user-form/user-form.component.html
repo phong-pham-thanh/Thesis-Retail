@@ -1,0 +1,69 @@
+<h2 class="form-title">Quản lý giá sản phẩm</h2>
+
+<!-- <form (ngSubmit)="onSubmit()" class="form-price-management"> -->
+<form (ngSubmit)="onSubmit(employeeForm)" #employeeForm="ngForm" class="form-employee-management">
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !employeeName.valid}">
+        <label for="employee" class="form-label">Tên nhân viên:</label>
+        <input  id="employeeId" class="form-control" [(ngModel)]="formData.name" name="employeeName" #employeeName="ngModel"
+            required placeholder="Nhập tên nhân viên" />
+        <div *ngIf="employeeForm.submitted && !employeeName.valid" class="error-message">
+            Vui lòng nhập tên nhân viên
+        </div>
+    </div>
+
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !productName.valid}">
+        <label for="productName" class="form-label">Tên sản phẩm:</label>
+        <ng-select class="form-control form-select" [items]="allProducts" bindLabel="name" bindValue="id"
+            [(ngModel)]="formDataPrice.productId" name="productName" #productName="ngModel" required>
+        </ng-select>
+        <div *ngIf="employeeForm.submitted && !productName.valid" class="error-message">
+            Vui lòng chọn tên sản phẩm
+        </div>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !price.valid}">
+        <label for="price" class="form-label">Giá áp dụng:</label>
+        <input type="number" id="price" class="form-control" [(ngModel)]="formDataPrice.price" name="price" #price="ngModel"
+            required placeholder="Nhập giá áp dụng" />
+        <div *ngIf="employeeForm.submitted && !price.valid" class="error-message">
+            Vui lòng nhập giá áp dụng
+        </div>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !startDate.valid}">
+        <label for="startDate" class="form-label">Ngày bắt đầu:</label>
+        <mat-form-field appearance="fill">
+            <input matInput [matDatepicker]="startPicker" [(ngModel)]="formDataPrice.startDate" id="startDate"
+                name="startDate" #startDate="ngModel" required placeholder="Chọn ngày bắt đầu">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <div *ngIf="employeeForm.submitted && !startDate.valid" class="error-message">
+            Vui lòng chọn ngày bắt đầu
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="endDate" class="form-label">Ngày kết thúc:</label>
+        <mat-form-field appearance="fill">
+            <input matInput [matDatepicker]="endPicker" [(ngModel)]="formDataPrice.endDate" id="endDate" name="endDate"
+                #endDate="ngModel" placeholder="Chọn ngày kết thúc">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="form-group form-checkbox">
+        <label for="active" class="form-label-checkbox">Còn hiệu lực:</label>
+        <input type="checkbox" id="active" class="form-checkbox-control" [(ngModel)]="formDataPrice.active" name="active" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <button type="button" class="btn btn-secondary" (click)="onClose()">Đóng</button>
+    </div>
+
+</form>
