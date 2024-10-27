@@ -73,11 +73,12 @@ export default function ProductInformationPopupScreen({
 
   const handleCancel = () => {
     setPopup(false);
-    clearImage();
+    clearImage(); // Reset image when modal is canceled
   };
 
   const clearImage = () => {
     setSelectedFile(null);
+    setImageUrl(""); // Clear the image preview URL
   };
 
   const handleOk = () => {
@@ -124,18 +125,17 @@ export default function ProductInformationPopupScreen({
       return;
     }
     setSelectedFile(file);
-    console.log(file.name);
     await handleUpload(file);
   };
 
   const handleUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("productName", data.name);
 
     try {
       const uploadApi = { ...api_links.uploadFile.post, data: formData };
       const response = await fetch_Api(uploadApi);
-      console.log(response.data.imageUrl);
       setImageUrl(response.data.imageUrl);
       message.success("Image uploaded successfully.");
     } catch (error) {
