@@ -1,9 +1,24 @@
 import { Injectable } from '@angular/core';
-
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Users } from '../model/user.model';
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  private apiGetAll = 'https://localhost:7030/User/getAllWithFullInfo';
+  private apiUpdate = 'https://localhost:7030/User/update';
+
+  constructor(private http: HttpClient) { }
+
+  getAllUsers(): Observable<Users[]> {
+    return this.http.get<Users[]>(this.apiGetAll)
+  }
+
+  updateUser(user: Users){
+    return this.http.put<Users>(`${this.apiUpdate}/${user.id}`, user)
+  }
+
 }
