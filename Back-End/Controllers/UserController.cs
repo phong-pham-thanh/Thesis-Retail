@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using APIBackend.Service;
+using APIBackend.Models;
 
 namespace APIBackEnd.Controllers
 {
@@ -32,6 +33,22 @@ namespace APIBackEnd.Controllers
         {
             List<UserModel> temp = _userService.GetAll();
             return temp;
+        }
+
+        [Route("getAllWithFullInfo")]
+        [HttpGet]
+        public List<UserModel> GetAllWithFullInfor()
+        {
+            List<UserModel> temp = _userService.GetAllWithFullInfor();
+            return temp;
+        }
+
+        [Route("update/{id}")]
+        [HttpPut]
+        public UserModel Update(int id, [FromBody] UserModel user)
+        {
+            UserModel result = _userService.Update(id, user);
+            return result;
         }
 
         [Route("login/")]
