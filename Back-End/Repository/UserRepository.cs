@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using APIBackEnd.Data;
 using APIBackEnd.Mapper;
 using APIBackEnd.Models;
+using APIBackend.DataModel;
+using APIBackend.Models;
 
 namespace APIBackEnd.Repository
 {
@@ -12,6 +14,7 @@ namespace APIBackEnd.Repository
         public UserModel GetUserLogin(string username, string password);
         public UserModel GetUserById(int id);
         public UserModel Update(int id, UserModel user);
+        public UserModel Add(UserModel user);
     }
     public class UserRepository : IUserRepository
     {
@@ -50,6 +53,14 @@ namespace APIBackEnd.Repository
             _userMapper.ToEntity(efObject, user);
             _coreContext.SaveChanges();
             return _userMapper.ToModel(efObject);
+        }
+        public UserModel Add(UserModel user)
+        {
+            Users efobject = new Users();
+            _userMapper.ToEntity(efobject, user);
+            _coreContext.Users.Add(efobject);
+            _coreContext.SaveChanges(true);
+            return _userMapper.ToModel(efobject);
         }
     }
 }

@@ -25,7 +25,14 @@
     <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !wareHouseBelong.valid}">
         <label for="wareHouseBelong" class="form-label">Thuộc về chi nhánh:</label>
         <ng-select class="form-control form-select" [items]="allWareHouses" bindLabel="address" bindValue="id"
-            [(ngModel)]="currentWareHouseId" name="wareHouseBelong" #wareHouseBelong="ngModel" [multiple]="true">
+            [(ngModel)]="currentWareHouseId" name="wareHouseBelong" #wareHouseBelong="ngModel" [multiple]="true" (ngModelChange)="onWarehouseBelongChange()">
+        </ng-select>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !defaultWareHouse.valid}">
+        <label for="defaultWareHouse" class="form-label">Chi nhánh mặc định:</label>
+        <ng-select class="form-control form-select" [items]="defaultWareHouseCanHave" bindLabel="address" bindValue="id"
+            [(ngModel)]="formData.defaultWareHouseId" name="defaultWareHouse" #defaultWareHouse="ngModel">
         </ng-select>
     </div>
 

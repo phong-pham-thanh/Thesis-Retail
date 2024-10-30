@@ -5,47 +5,47 @@ import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { UserService } from '../../services/user.service';
-import * as priceProductAction from './users.actions'
+import * as userAction from './users.actions'
 
 @Injectable()
 export class UsersEffects {
-    constructor(private priceProductService: UserService, private actions$: Actions) {}
+    constructor(private userService: UserService, private actions$: Actions) {}
 
     loadAllUsers$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(priceProductAction.UsersActionTypes.LoadAllUsers),
+        ofType(userAction.UsersActionTypes.LoadAllUsers),
         mergeMap(() =>
-          this.priceProductService.getAllUsers().pipe(
-            map(result => new priceProductAction.LoadAllUsersSuccess(result)),
-            catchError(err => of(new priceProductAction.LoadAllUsersFail(err)))
+          this.userService.getAllUsers().pipe(
+            map(result => new userAction.LoadAllUsersSuccess(result)),
+            catchError(err => of(new userAction.LoadAllUsersFail(err)))
           )
         )
       )
     );
 
     
-    // addNewUsers$ = createEffect(() =>
-    //   this.actions$.pipe(
-    //     ofType(priceProductAction.UsersActionTypes.AddNewUsers),
-    //     map((action: priceProductAction.AddNewUsers) => action.payload),
-    //     mergeMap((newItem) =>
-    //       this.priceProductService.addNewUsers(newItem).pipe(
-    //         map(result => new priceProductAction.AddNewUsersSuccess(result)),
-    //         catchError(err => of(new priceProductAction.AddNewUsersFail(err)))
-    //       )
-    //     )
-    //   )
-    // );
+    addNewUsers$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(userAction.UsersActionTypes.AddNewUsers),
+        map((action: userAction.AddNewUsers) => action.payload),
+        mergeMap((newItem) =>
+          this.userService.addNewUser(newItem).pipe(
+            map(result => new userAction.AddNewUsersSuccess(result)),
+            catchError(err => of(new userAction.AddNewUsersFail(err)))
+          )
+        )
+      )
+    );
 
     
     updateUsers$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(priceProductAction.UsersActionTypes.UpdateUsers),
-        map((action: priceProductAction.UpdateUsers) => action.payload),
+        ofType(userAction.UsersActionTypes.UpdateUsers),
+        map((action: userAction.UpdateUsers) => action.payload),
         mergeMap((newItem) =>
-          this.priceProductService.updateUser(newItem).pipe(
-            map(result => new priceProductAction.UpdateUsersSuccess(result)),
-            catchError(err => of(new priceProductAction.UpdateUsersFail(err)))
+          this.userService.updateUser(newItem).pipe(
+            map(result => new userAction.UpdateUsersSuccess(result)),
+            catchError(err => of(new userAction.UpdateUsersFail(err)))
           )
         )
       )
@@ -55,12 +55,12 @@ export class UsersEffects {
     
     // deleteUsers$ = createEffect(() =>
     //   this.actions$.pipe(
-    //     ofType(priceProductAction.UsersActionTypes.DeleteUsers),
-    //     map((action: priceProductAction.DeleteUsers) => action.payload),
+    //     ofType(userAction.UsersActionTypes.DeleteUsers),
+    //     map((action: userAction.DeleteUsers) => action.payload),
     //     mergeMap((newItem) =>
-    //       this.priceProductService.deleteItem(newItem).pipe(
-    //         map(result => new priceProductAction.DeleteUsersSuccess(result)),
-    //         catchError(err => of(new priceProductAction.DeleteUsersFail(err)))
+    //       this.userService.deleteItem(newItem).pipe(
+    //         map(result => new userAction.DeleteUsersSuccess(result)),
+    //         catchError(err => of(new userAction.DeleteUsersFail(err)))
     //       )
     //     )
     //   )

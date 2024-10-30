@@ -78,6 +78,12 @@ namespace APIBackEnd.Data
                 .HasForeignKey(gt => gt.WareHouseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Users>()
+                .HasOne(gt => gt.DefaultWareHouse)
+                .WithMany(w => w.UserUseForDefaultWareHouse)
+                .HasForeignKey(gt => gt.DefaultWareHouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(modelBuilder);
         }
     }

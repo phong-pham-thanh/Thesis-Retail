@@ -1,4 +1,5 @@
 import { UserWareHouse } from "./userWareHouse.model";
+import { Warehouse } from "./warehouse.model";
 
 export class Users{
     id: number;
@@ -12,4 +13,6 @@ export class Users{
     dateOfBirth?: Date;
     isAdmin?: boolean;
     listUserWareHouse?: UserWareHouse[];
+    defaultWareHouseId?: number;
+    defaultWareHouse?: Warehouse;
 }

@@ -16,6 +16,8 @@ namespace APIBackEnd.Models
         public DateTime? DateOfBirth { get; set; }
         public int Age { get; set; }
         public bool? IsAdmin { get; set; }
+        public int? DefaultWareHouseId { get; set; }
+        public WareHouses DefaultWareHouse { get; set; }
         public List<UserWareHouseModel> ListUserWareHouse { get; set; }
 
     }

@@ -21,6 +21,9 @@ namespace APIBackEnd.Data
         public int Age { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public bool? IsAdmin { get; set; }
+        public int? DefaultWareHouseId { get; set; }
+        [ForeignKey("DefaultWareHouseId")]
+        public WareHouses DefaultWareHouse { get; set; }
         public List<WareHouses> ListWareHousesManaged { get; set; }
         public List<Bill> ListBill { get; set; }
         public List<GoodsTransfer> ListGoodsTransfers { get; set; }

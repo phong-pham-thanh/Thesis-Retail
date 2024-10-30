@@ -12,6 +12,7 @@ namespace APIBackend.Service
         public UserModel GetById(int id);
         public UserModel GetUserLogin(string username, string password);
         public UserModel Update(int id, UserModel user);
+        public UserModel Add(UserModel user);
 
     }
     public class UserService : IUserService
@@ -52,6 +53,17 @@ namespace APIBackend.Service
             return _userRepository.GetUserLogin(username, password);
         }
 
+        public UserModel Add(UserModel user)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                UserModel result = _userRepository.Add(user);
+                _userWareHouseService.UpdateUserWareHouseforUser(result.Id, user);
+                uow.Commit();
+                return result;
+            }
+        }
+
         public List<UserModel> GetAllWithFullInfor()
         {
             List<UserModel> result = _userRepository.GetAllUser();
@@ -72,8 +84,8 @@ namespace APIBackend.Service
                 UserModel result = _userRepository.Update(id, user);
                 _userWareHouseService.UpdateUserWareHouseforUser(id, user);
                 uow.Commit();
+                return result;
             }
-            return null;
         }
 
 
