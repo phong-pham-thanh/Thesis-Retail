@@ -145,7 +145,7 @@ export default function ProductInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Product" : "Create Product"}
+      title={type === "edit" ? "Chỉnh sửa" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
@@ -160,21 +160,18 @@ export default function ProductInformationPopupScreen({
       <Form form={form} layout="vertical">
         <Form.Item
           name="name"
-          label="Product Name"
-          rules={[{ required: true, message: "Please enter product name" }]}
+          label="Tên sản phẩm"
+          rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item name="currentPrice" label="Giá bán">
           <InputNumber />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <TextArea />
-        </Form.Item>
         <Form.Item
           name="categoryId"
-          label="Category"
-          rules={[{ required: true, message: "Please select a category" }]}
+          label="Danh mục"
+          rules={[{ required: true, message: "Chọn danh mục" }]}
         >
           <Select>
             {categories.map((category) => (
@@ -188,7 +185,7 @@ export default function ProductInformationPopupScreen({
           <Checkbox>Active</Checkbox>
         </Form.Item>
 
-        <Form.Item label="Upload Product Image">
+        <Form.Item label="Tải hình ảnh">
           {/* <input type="file" onChange={handleFileChange} /> */}
           <input id="file-upload" type="file" onChange={handleFileChange} />
         </Form.Item>
@@ -196,7 +193,7 @@ export default function ProductInformationPopupScreen({
         {imageUrl && (
           <img
             src={imageUrl}
-            alt="Product Preview"
+            alt="Xem trước"
             style={{ width: "100px", marginTop: "10px" }}
           />
         )}

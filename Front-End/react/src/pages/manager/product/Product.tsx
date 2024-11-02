@@ -198,10 +198,12 @@ export default function Product() {
     {
       title: "Tên hàng",
       dataIndex: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Loại",
       dataIndex: ["category", "name"], // Show category name instead of categoryId
+      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Số lượng",
@@ -213,14 +215,23 @@ export default function Product() {
         );
         return inventory ? inventory.quantity : "N/A"; // Show quantity or 'N/A' if not found
       },
+      sorter: (a, b) => {
+        const quantityA =
+          a.listInventories.find(
+            (inv) => inv.wareHouseId === selectedWarehouseId
+          )?.quantity || 0;
+        const quantityB =
+          b.listInventories.find(
+            (inv) => inv.wareHouseId === selectedWarehouseId
+          )?.quantity || 0;
+
+        return quantityA - quantityB;
+      },
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Giá bán",
       dataIndex: "currentPrice",
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
     },
     {
       title: "",
