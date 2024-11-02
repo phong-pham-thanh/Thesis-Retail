@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using APIBackend.Helpers;
 
 namespace APIBackend.Controllers
 {
@@ -6,10 +7,17 @@ namespace APIBackend.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private readonly string _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+        private readonly string _uploadPath;
+        private readonly string _baseUrl;
+
+        public UploadController(IConfiguration configuration)
+        {
+            _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+            _baseUrl = configuration["ImageSettings:BaseUrl"];
+        }
 
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string productName)
         {
             if (file == null || file.Length == 0)
             {
@@ -18,16 +26,9 @@ namespace APIBackend.Controllers
 
             try
             {
-                if (!Directory.Exists(_uploadPath))
-                    Directory.CreateDirectory(_uploadPath);
+                var newFileName = await ImageHelper.ValidateAndProcessImageAsync(file, _uploadPath, productName);
 
-                var filePath = Path.Combine(_uploadPath, file.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                var imageUrl = $"https://localhost:7030/images/products/{file.FileName}";
+                var imageUrl = $"{_baseUrl}/{newFileName}";
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)
