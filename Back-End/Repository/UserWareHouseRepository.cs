@@ -10,6 +10,7 @@ namespace APIBackend.Repository
         public List<UserWareHouseModel> GetAll();
         public List<UserWareHouseModel> GetAllByUserId(int userId);
         public void AddUserToListWareHouse(int userId, List<int> lstWareHouseId);
+        public void RemoveListWarehouseOfUser(int userId, List<int> lstWareHouseId);
         public void RemoveAllByUserId(int userId);
         public UserWareHouseModel GetById(int id);
         public UserWareHouseModel AddNewUserWareHouse(UserWareHouseModel UserWareHouseModel);
@@ -84,6 +85,18 @@ namespace APIBackend.Repository
             _coreContext.SaveChanges();
             return;
         }
+
+        public void RemoveListWarehouseOfUser(int userId, List<int> lstWareHouseId)
+        {
+            List<UserWareHouse> lstUserWareHouse = _coreContext.UserWareHouse.Where(x => x.UserId == userId && lstWareHouseId.Contains(x.WareHouseId)).ToList();
+            foreach (UserWareHouse efObject in lstUserWareHouse)
+            {
+                _coreContext.UserWareHouse.Remove(efObject);
+            }
+            _coreContext.SaveChanges();
+            return;
+        }
+
 
     }
 }

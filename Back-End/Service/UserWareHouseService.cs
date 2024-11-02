@@ -1,4 +1,5 @@
-﻿using APIBackend.Models;
+﻿using APIBackend.DataModel;
+using APIBackend.Models;
 using APIBackend.Repository;
 using APIBackEnd.Models;
 
@@ -8,6 +9,7 @@ namespace APIBackend.Service
     {
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId);
         public void AddMangagerToWareHouseIfNeed(int userId, int wareHouse);
+        public void UpdateUserWareHouseforUser(int userId, UserModel user);
     }
     public class UserWareHouseService : IUserWareHouseService
     {
@@ -36,5 +38,20 @@ namespace APIBackend.Service
             }
         }
 
+        public void UpdateUserWareHouseforUser(int userId, UserModel user)
+        {
+            List<int> newListWareHouseForUser = user.ListUserWareHouse.Select(x => x.WareHouseId).ToList();
+            if(newListWareHouseForUser == null || newListWareHouseForUser.Count() == 0)
+            {
+                _userWareHouseRepository.RemoveAllByUserId(user.Id);
+                return;
+            }
+            List<UserWareHouseModel> lstCurrentWareHouseForUser = _userWareHouseRepository.GetAllByUserId(userId);
+            List<int> lstIdWareHouseToRemove = lstCurrentWareHouseForUser.Where(x => !newListWareHouseForUser.Any(y => y == x.WareHouseId)).Select(x => x.WareHouseId).ToList();
+            List<int> lstIdWareHouseToAdd = newListWareHouseForUser.Where(x => !lstCurrentWareHouseForUser.Any(y => y.WareHouseId == x)).ToList();
+            _userWareHouseRepository.RemoveListWarehouseOfUser(userId, lstIdWareHouseToRemove);
+            _userWareHouseRepository.AddUserToListWareHouse(userId, lstIdWareHouseToAdd);
+            return;
+        }
     }
 }

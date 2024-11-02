@@ -8,6 +8,7 @@ namespace APIBackEnd.Mapper
     {
         public UserModel ToModel(Users efObject);
         public List<UserModel> ToModels(List<Users> efObject);
+        public void ToEntity(Users efObject, UserModel domObject);
     }
     public class UserMapper : IUserMapper
     {
@@ -26,6 +27,9 @@ namespace APIBackEnd.Mapper
             modelObject.Branch = efObject.Branch;
             modelObject.Address = efObject.Address;
             modelObject.Age = efObject.Age;                    
+            modelObject.DateOnboard = efObject.DateOnboard;                    
+            modelObject.DateOfBirth = efObject.DateOfBirth;
+            modelObject.IsAdmin = efObject.IsAdmin;
             return modelObject;                                  
         }
 
@@ -41,9 +45,25 @@ namespace APIBackEnd.Mapper
                 modelObject.Age = item.Age;
                 modelObject.Branch = item.Branch;
                 modelObject.Address = item.Address;
+                modelObject.DateOnboard = item.DateOnboard;
+                modelObject.DateOfBirth = item.DateOfBirth;
+                modelObject.IsAdmin = item.IsAdmin;
                 result.Add(modelObject);
             }
             return result;
         }
+        public void ToEntity(Users efObject, UserModel domObject)
+        {
+            efObject.Name = domObject.Name;
+            efObject.Username = domObject.Username;
+            efObject.Age = domObject.Age;
+            efObject.Branch = domObject.Branch;
+            efObject.Address = domObject.Address;
+            efObject.DateOnboard = domObject.DateOnboard;
+            efObject.DateOfBirth = domObject.DateOfBirth;
+            efObject.IsAdmin = domObject.IsAdmin;
+            return;
+        }
+
     }
 }

@@ -11,6 +11,7 @@ namespace APIBackEnd.Repository
         public List<UserModel> GetAllUser();
         public UserModel GetUserLogin(string username, string password);
         public UserModel GetUserById(int id);
+        public UserModel Update(int id, UserModel user);
     }
     public class UserRepository : IUserRepository
     {
@@ -38,6 +39,17 @@ namespace APIBackEnd.Repository
         {
             Users users = _coreContext.Users.Where(us => us.Username == username && us.Password == password).FirstOrDefault();
             return _userMapper.ToModel(users);
+        }
+        public UserModel Update(int id, UserModel user)
+        {
+            Users efObject = _coreContext.Users.Where(u => u.Id == id).FirstOrDefault();
+            if (efObject == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+            _userMapper.ToEntity(efObject, user);
+            _coreContext.SaveChanges();
+            return _userMapper.ToModel(efObject);
         }
     }
 }

@@ -50,6 +50,9 @@ import { billReducer } from './state/bill-state/bill.reducer';
 import { GoodTransferEffects } from './state/goodTransfer-state/goodTransfer.effects';
 import { goodTransferReducer } from './state/goodTransfer-state/goodTransfer.reducer';
 
+import { UsersEffects } from './state/users-state/users.effects';
+import { usersReducer } from './state/users-state/users.reducer';
+
 import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component';
 import { RetailPaymentComponentComponent } from './retail-component/retail-payment-component/retail-payment-component.component';
 import { BillListComponent } from './bill-list/bill-list.component';
@@ -57,7 +60,8 @@ import { BillDetailComponent } from './bill-list/bill-detail/bill-detail.compone
 import { GoodTransferComponent } from './good-transfer/good-transfer.component';
 import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detail/good-transfer-detail.component';
 import { GoodTransferViewComponent } from './good-transfer/good-transfer-view/good-transfer-view.component';
-import { UserListComponent } from './user-list/user-list.component'; // Đảm bảo bạn có reducers
+import { UserListComponent } from './user-list/user-list.component';
+import { UserFormComponent } from './user-list/user-form/user-form.component'; // Đảm bảo bạn có reducers
 
 
 export const MY_DATE_FORMATS = {
@@ -84,7 +88,8 @@ export const MY_DATE_FORMATS = {
     GoodTransferComponent,
     GoodTransferDetailComponent,
     GoodTransferViewComponent,
-    UserListComponent
+    UserListComponent,
+    UserFormComponent
   ],
   imports: [
     BrowserModule,
@@ -141,6 +146,11 @@ export const MY_DATE_FORMATS = {
     StoreModule.forRoot(goodTransferReducer),
     EffectsModule.forRoot([GoodTransferEffects]),
     EffectsModule.forFeature([GoodTransferEffects]),
+    
+    StoreModule.forFeature('users', usersReducer),
+    StoreModule.forRoot(usersReducer),
+    EffectsModule.forRoot([UsersEffects]),
+    EffectsModule.forFeature([UsersEffects]),
   ],
   providers: [
     provideNgxMask(),
