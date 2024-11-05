@@ -8,6 +8,8 @@ using APIBackend.Repository;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NGO.Core.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
+//dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 6.0.0
 
 builder.Services.AddDbContext<CoreContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("CoreContext")));
 
@@ -30,6 +34,13 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(300);
+    options.Cookie.HttpOnly = true; // Bảo mật cookie
+    options.Cookie.IsEssential = true;
 });
 
 // Repository
@@ -86,6 +97,7 @@ builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserWareHouseService, UserWareHouseService>();
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 var app = builder.Build();
 
@@ -136,6 +148,7 @@ app.UseExceptionHandler(builder =>
         }
     });
 });
+app.UseSession();
 
 app.UseStaticFiles();
 
@@ -152,6 +165,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseSession();
 app.MapControllers();
 app.Run();

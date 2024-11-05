@@ -33,6 +33,7 @@ namespace APIBackend.Service
         private readonly IGoodExportService _goodExportService;
         private readonly IGoodReciptService _goodReciptService;
         private readonly IUserService _userService;
+        private readonly IUserWareHouseService _userWareHosueService;
 
         public GoodTransferService(IProductMapper productMapper, 
             IGoodsTransferMapper goodTransferMapper, 
@@ -44,6 +45,7 @@ namespace APIBackend.Service
             IGoodExportService goodExportService,
             IGoodReciptService goodReciptService,
             IUserService userService,
+            IUserWareHouseService userWareHosueService,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
@@ -57,6 +59,7 @@ namespace APIBackend.Service
             _goodReciptService = goodReciptService;
             _userService = userService;
             _uowFactory = uowFactory;
+            _userWareHosueService = userWareHosueService;
         }
 
         public bool AddGoodTransfer(GoodsTransferModel goodsTransferModel, List<GoodTransferDetailModel> listGoodTransferDetailModels, bool autoAccept)
@@ -125,6 +128,8 @@ namespace APIBackend.Service
         public List<GoodsTransferModel> GetAllGoodTransfers()
         {
             List<GoodsTransferModel> listGoodTransfer = _goodTransferRepository.GetAllGoodTransfers();
+            List<int> listWareHouseIdShouldShow = _userWareHosueService.GetWareHouseBelongCurrentUser();
+            listGoodTransfer = listGoodTransfer.Where(item => listWareHouseIdShouldShow.Contains(item.FromWareHouseId) || listWareHouseIdShouldShow.Contains(item.ToWareHouseId)).ToList();
             foreach (GoodsTransferModel item in listGoodTransfer)
             {
                 foreach(GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)

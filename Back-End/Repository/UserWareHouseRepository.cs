@@ -1,5 +1,6 @@
 ﻿using APIBackend.DataModel;
 using APIBackend.Mapper;
+using APIBackend.Service;
 using APIBackEnd.Data;
 using APIBackEnd.Models;
 
@@ -15,6 +16,7 @@ namespace APIBackend.Repository
         public UserWareHouseModel GetById(int id);
         public UserWareHouseModel AddNewUserWareHouse(UserWareHouseModel UserWareHouseModel);
         public UserWareHouseModel UpdateUserWareHouse(int id, UserWareHouseModel UserWareHouseModel);
+        public List<int> GetWareHouseBelong(int userId);
     }
     public class UserWareHouseRepository : IUserWareHouseRepository
     {
@@ -97,6 +99,10 @@ namespace APIBackend.Repository
             return;
         }
 
+        public List<int> GetWareHouseBelong(int userId)
+        {
+            return _coreContext.UserWareHouse.Where(uw => uw.UserId == userId).Select(x => x.WareHouseId).ToList();
+        }
 
     }
 }

@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using APIBackend.Service;
 using APIBackend.Models;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace APIBackEnd.Controllers
 {
@@ -23,9 +28,11 @@ namespace APIBackEnd.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private IUserSessionService _userSessionService;
 
-        public UserController(IUserService userService) {
+        public UserController(IUserService userService, IUserSessionService userSessionService) {
             _userService = userService;
+            _userSessionService = userSessionService;
         }
 
         [HttpGet]
@@ -69,9 +76,22 @@ namespace APIBackEnd.Controllers
             UserModel userResult = _userService.GetUserLogin(username, password);
             if(userResult != null)
             {
-                HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
+                HttpContext.Session.SetString("CurrentUser", JsonConvert.SerializeObject(userResult));
             }
             return userResult;
+        }
+
+        [HttpGet("addSession/{id}")]
+        public void SetUserToSession(int id)
+        {
+            var temp = HttpContext.Session.GetString("CurrentUser");
+            var temp2222 = HttpContext.Session.GetString("currentUser");
+            var currentUser = _userSessionService.GetCurrentUser();
+            // UserModel currentUser = _userService.GetById(id);
+            // if (currentUser != null)
+            // {
+            //     HttpContext.Session.SetString("currentUser", JsonConvert.SerializeObject(currentUser));
+            // }
         }
     }
 }

@@ -10,18 +10,22 @@ namespace APIBackend.Service
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId);
         public void AddMangagerToWareHouseIfNeed(int userId, int wareHouse);
         public void UpdateUserWareHouseforUser(int userId, UserModel user);
+        public List<int> GetWareHouseBelongCurrentUser();
     }
     public class UserWareHouseService : IUserWareHouseService
     {
+        private readonly IUserSessionService _userSessionService;
         private IUserWareHouseRepository _userWareHouseRepository;
         private IWareHouseRepository _wareHouseRepository;
         public UserWareHouseService(
             IUserWareHouseRepository userWareHouseRepository,
-            IWareHouseRepository wareHouseRepository
+            IWareHouseRepository wareHouseRepository,
+            IUserSessionService userSessionService
         )
         {
             _userWareHouseRepository = userWareHouseRepository;
             _wareHouseRepository = wareHouseRepository;
+            _userSessionService = userSessionService;
         }
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId)
         {
@@ -72,5 +76,12 @@ namespace APIBackend.Service
                 }
             }
         }
+
+        public List<int> GetWareHouseBelongCurrentUser()
+        {
+            int userId = _userSessionService.GetCurrentUser().Id;
+            return _userWareHouseRepository.GetWareHouseBelong(userId);
+        }
+
     }
 }
