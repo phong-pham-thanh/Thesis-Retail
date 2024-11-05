@@ -51,6 +51,14 @@ namespace APIBackEnd.Controllers
             return result;
         }
 
+        [Route("add")]
+        [HttpPost]
+        public UserModel Add([FromBody] UserModel user)
+        {
+            UserModel result = _userService.Add(user);
+            return result;
+        }
+
         [Route("login/")]
         [HttpPost]
         public UserModel GetLoginUser([FromBody] LoginModel data)

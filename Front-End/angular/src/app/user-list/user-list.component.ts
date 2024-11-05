@@ -46,7 +46,6 @@ export class UserListComponent {
         map(result => {
           this.allUsers = result; 
           this.dataSource = new MatTableDataSource<Users>(this.allUsers);
-          console.log(this.allUsers)
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
           this.dataSource.sortingDataAccessor = (item: Users, property: string) => {
@@ -90,6 +89,12 @@ export class UserListComponent {
     // dialogRef.afterClosed().subscribe(result => {
     // });
     
+  }
+
+  addNew(){
+    const dialogRef = this.dialog.open(UserFormComponent, {
+      width: '800px',
+    });
   }
 
   getListWareHouseName(item: Users){
