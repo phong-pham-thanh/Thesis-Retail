@@ -15,6 +15,7 @@ namespace APIBackend.Service
     {
         public bool AddBill(BillModel billModel);
         public List<BillModel> GetAll();
+        public List<BillModel> GetAllByRole();
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
         // public BillModel AcceptBill(int id);
@@ -32,6 +33,7 @@ namespace APIBackend.Service
         private readonly IGoodExportService _goodExportService;
         private readonly IUserRepository _userRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        protected readonly IUserWareHouseService _userWareHouseService;
 
 
         public BillService(
@@ -44,6 +46,7 @@ namespace APIBackend.Service
             IProductRepository productRepository,
             IUserRepository userRepository,
             IUnityOfWorkFactory uowFactory,
+            IUserWareHouseService userWareHouseService,
             IGoodExportService goodExportService
         ) 
         {
@@ -57,11 +60,24 @@ namespace APIBackend.Service
             _goodExportService = goodExportService;
             _userRepository = userRepository;
             _uowFactory = uowFactory;
+            _userWareHouseService = userWareHouseService;
         }
 
         public List<BillModel> GetAll()
         {
             List<BillModel> result = _billRepository.GetAll();
+            foreach (var item in result)
+            {
+                item.User = _userRepository.GetUserById(item.UserId);
+            }
+            return result;
+        }
+
+        public List<BillModel> GetAllByRole()
+        {
+            List<BillModel> result = _billRepository.GetAll();
+            List<int> listIdWarehouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            result = result.Where(x => listIdWarehouseBelong.Contains(x.WareHouseId)).ToList();
             foreach (var item in result)
             {
                 item.User = _userRepository.GetUserById(item.UserId);

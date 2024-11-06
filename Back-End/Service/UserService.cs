@@ -13,6 +13,7 @@ namespace APIBackend.Service
         public UserModel GetUserLogin(string username, string password);
         public UserModel Update(int id, UserModel user);
         public UserModel Add(UserModel user);
+        public void SetSession(int userId);
 
     }
     public class UserService : IUserService
@@ -22,13 +23,15 @@ namespace APIBackend.Service
         private IWareHouseRepository _wareHouseRepository;
         private readonly IUserWareHouseService _userWareHouseService;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(
             IUserRepository userRepository, 
             IUserWareHouseRepository userWareHouseRepository,
             IWareHouseRepository wareHouseRepository,
             IUserWareHouseService userWareHouseService,
-            IUnityOfWorkFactory uowFactory
+            IUnityOfWorkFactory uowFactory,
+            IHttpContextAccessor httpContextAccessor
             ) 
         {
             _userRepository = userRepository;
@@ -36,6 +39,7 @@ namespace APIBackend.Service
             _wareHouseRepository = wareHouseRepository;
             _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public List<UserModel> GetAll()
@@ -50,7 +54,14 @@ namespace APIBackend.Service
 
         public UserModel GetUserLogin(string username, string password)
         {
-            return _userRepository.GetUserLogin(username, password);
+            UserModel result = _userRepository.GetUserLogin(username, password);
+            if (result != null)
+            {
+                //Add result to currentUser here
+                _httpContextAccessor.HttpContext.Session.SetString("currentUser", result.Id.ToString());
+
+            }
+            return result;
         }
 
         public UserModel Add(UserModel user)
@@ -88,6 +99,10 @@ namespace APIBackend.Service
             }
         }
 
+        public void SetSession(int userId)
+        {
+            _httpContextAccessor.HttpContext.Session.SetInt32("currentUserId", userId);
+        }
 
     }
 }

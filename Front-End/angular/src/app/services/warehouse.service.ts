@@ -9,11 +9,16 @@ import { Warehouse } from '../model/warehouse.model';
 export class WarehouseService {
 
 
-  private apiUrl = 'https://localhost:7030/Warehouse';
+  private apiUrlGetAll = 'https://localhost:7030/Warehouse/';
+  private apiUrlGetAllByRole = 'https://localhost:7030/Warehouse/getAllByRole';
 
   constructor(private http: HttpClient) { }
 
   getAllWarehouse(): Observable<Warehouse[]> {
-    return this.http.get<Warehouse[]>(this.apiUrl)
+    return this.http.get<Warehouse[]>(this.apiUrlGetAll, {withCredentials: true})
+  }
+
+  getAllWarehouseByRole(): Observable<Warehouse[]> {
+    return this.http.get<Warehouse[]>(this.apiUrlGetAllByRole, {withCredentials: true})
   }
 }

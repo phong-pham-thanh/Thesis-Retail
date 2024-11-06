@@ -4,7 +4,7 @@ const api_links = {
   product: {
     // GET ALL PRODUCTS
     getAll: {
-      url: `${authUrl}/Product`,
+      url: `${authUrl}/Product/getAllProductFullInventory`,
       method: "GET",
     },
 
@@ -39,7 +39,7 @@ const api_links = {
     import: {
       //GET ALL
       getAll: {
-        url: `${authUrl}/GoodRecipt/GetAllGoodRecipts`,
+        url: `${authUrl}/GoodRecipt/GetAllGoodReciptsByRole`,
         method: "GET",
       },
       //GET BY ID
@@ -68,7 +68,7 @@ const api_links = {
 
     export: {
       getAll: {
-        url: `${authUrl}/GoodExport/GetAllGoodExports`,
+        url: `${authUrl}/GoodExport/GetAllGoodExportsByRole`,
         method: "GET",
       },
       //GET BY ID
@@ -146,6 +146,7 @@ const api_links = {
       url: `${authUrl}/User/login`,
       method: "POST",
       data: {},
+      withCredentials: true
     },
   },
 
@@ -198,6 +199,10 @@ const api_links = {
       url: `${authUrl}/WareHouse`,
       method: "GET",
     },
+    getAllByRole: {
+      url: `${authUrl}/WareHouse/getAllByRole`,
+      method: "GET",
+    },
     getById: {
       url: `${authUrl}/Warehouse/getWarehouseById/`,
       method: "GET",
@@ -216,6 +221,13 @@ const api_links = {
       url: `${authUrl}/Warehouse/getCustomerBySearchName`,
       method: "GET",
       data: { name },
+    }),
+  },
+
+  users: {
+    setSession: (id: number) => ({
+      url: `${authUrl}/User/setSession/${id}`,
+      method: "GET",
     }),
   },
 

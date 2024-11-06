@@ -14,6 +14,7 @@ namespace APIBackend.Service
     public interface IProductService
     {
         public List<ProductModel> GetAllProducts();
+        public List<ProductModel> GetAllProductFullInventory();
         public ProductModel GetProductById(int id);
         public ProductModel AddNewProduct(ProductModel product);
         public bool DeleteProdcutById(int id);
@@ -28,23 +29,37 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IPriceProductRepository _priceProductRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        protected readonly IUserWareHouseService _userWareHouseService;
 
         public ProductService(IProductMapper productMapper, 
             IProductRepository productRepository, 
             IInventoryRepository inventoryRepository,
             IPriceProductRepository priceProductRepository,
+            IUserWareHouseService userWareHouseService,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
             _productRepository = productRepository;
             _inventoryRepository = inventoryRepository;
             _priceProductRepository = priceProductRepository;
+            _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
         }
 
         public List<ProductModel> GetAllProducts()
         {
             List<ProductModel> result = _productRepository.GetAllProducts();
+            return result;
+        }
+        public List<ProductModel> GetAllProductFullInventory()
+        {
+            
+            List<ProductModel> result = _productRepository.GetAllProductsFullInventory();
+            List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            foreach(ProductModel item in result)
+            {
+                item.ListInventories = item.ListInventories.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
+            }
             return result;
         }
 

@@ -26,10 +26,11 @@ namespace APIBackend.Controllers
         }
 
         [HttpGet]
-        public List<BillModel> GetAll()
+        [Route("getAllByRole")]
+        public List<BillModel> GetAllByRole()
         {
 
-            List<BillModel> ressult = _billService.GetAll();
+            List<BillModel> ressult = _billService.GetAllByRole();
             return ressult;
         }
 

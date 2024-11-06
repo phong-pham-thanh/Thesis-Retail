@@ -10,17 +10,21 @@ namespace APIBackend.Service
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId);
         public void AddMangagerToWareHouseIfNeed(int userId, int wareHouse);
         public void UpdateUserWareHouseforUser(int userId, UserModel user);
+        public List<int> GetListWareHouseCurrentUserBelong();
     }
     public class UserWareHouseService : IUserWareHouseService
     {
         private IUserWareHouseRepository _userWareHouseRepository;
         private IWareHouseRepository _wareHouseRepository;
+        private IUserSessionService _userSessionService;
         public UserWareHouseService(
             IUserWareHouseRepository userWareHouseRepository,
+            IUserSessionService userSessionService,
             IWareHouseRepository wareHouseRepository
         )
         {
             _userWareHouseRepository = userWareHouseRepository;
+            _userSessionService = userSessionService;
             _wareHouseRepository = wareHouseRepository;
         }
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId)
@@ -70,6 +74,18 @@ namespace APIBackend.Service
                 {
                     throw new InvalidOperationException($"Không thể gỡ user khỏi kho: {_wareHouseRepository.GetById(warehouseid)?.Address} vì đây là quản lý của kho");
                 }
+            }
+        }
+        public List<int> GetListWareHouseCurrentUserBelong()
+        {
+            UserModel userModel = _userSessionService.GetCurrentUser();
+            if(userModel.IsAdmin == true)
+            {
+                return _wareHouseRepository.GetAllId();
+            }
+            else
+            {
+                return _userWareHouseRepository.GetIdWareHouseUserBelong(userModel.Id);
             }
         }
     }

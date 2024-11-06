@@ -83,6 +83,7 @@ export default function Login() {
         url: api_links.user.login.url,
         method: api_links.user.login.method,
         data: data,
+        withCredentials: true
     }
     try {
         const response: AxiosResponse = await axios(config);

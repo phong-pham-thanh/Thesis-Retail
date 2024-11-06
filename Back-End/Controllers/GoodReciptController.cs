@@ -28,10 +28,10 @@ namespace APIBackEnd.Controllers
             _goodReciptService = goodReciptService;
         }
         [HttpGet]
-        [Route("GetAllGoodRecipts")]
-        public List<GoodsReceiptModel> GetAllGoodRecipts()
+        [Route("GetAllGoodReciptsByRole")]
+        public List<GoodsReceiptModel> GetAllGoodReciptsByRole()
         {
-            return _goodReciptService.GetAllGoodRecipts();
+            return _goodReciptService.GetAllGoodReciptsByRole();
         }
 
         [HttpGet]

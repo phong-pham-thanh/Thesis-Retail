@@ -29,7 +29,7 @@ export function WarehouseFilter({ onSelect }: WarehouseFilterProps) {
   useEffect(() => {
     const fetchWarehouses = async () => {
       try {
-        const res = await fetch_Api(api_links.warehouse.getAll);
+        const res = await fetch_Api(api_links.warehouse.getAllByRole);
         const warehouseData = res.data.map((warehouse: Warehouse) => ({
           value: warehouse.id,
           label: warehouse.address.toString(),

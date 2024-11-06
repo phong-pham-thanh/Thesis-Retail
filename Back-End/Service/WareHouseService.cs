@@ -8,6 +8,7 @@ namespace APIBackend.Service
     public interface IWareHouseService
     {
         public List<WareHouseModel> GetAll();
+        public List<WareHouseModel> GetAllByRole();
         public WareHouseModel GetById(int id);
         public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel);
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel);
@@ -31,6 +32,13 @@ namespace APIBackend.Service
         public List<WareHouseModel> GetAll()
         {
             return _wareHouseRepository.GetAll();
+        }
+
+        public List<WareHouseModel> GetAllByRole()
+        {
+            List<WareHouseModel> result = _wareHouseRepository.GetAll();
+            List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            return result.Where(w => listIdWareHouseBelong.Contains(w.Id)).ToList();
         }
 
         public WareHouseModel GetById(int id)
