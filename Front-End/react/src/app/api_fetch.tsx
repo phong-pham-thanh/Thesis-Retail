@@ -23,6 +23,7 @@ const fetch_Api = async function (params: Api): Promise<AxiosResponse> {
     url: params.url,
     method: params.method,
     data: params.data,
+    withCredentials: true
   };
   try {
     const response: AxiosResponse = await axios(config);

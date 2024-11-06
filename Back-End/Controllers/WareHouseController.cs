@@ -21,6 +21,12 @@ namespace APIBackend.Controllers
         {
             return _wareHouseService.GetAll();
         }
+        [HttpGet]
+        [Route("getAllByRole")]
+        public List<WareHouseModel> GetAllByRole()
+        {
+            return _wareHouseService.GetAllByRole();
+        }
 
         [HttpGet]
         [Route("getWarehouseById")]

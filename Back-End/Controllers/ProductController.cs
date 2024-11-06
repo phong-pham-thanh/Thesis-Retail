@@ -24,6 +24,14 @@ namespace APIBackEnd.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("getAllProductFullInventory")]
+        public List<ProductModel> GetAllProductByRole()
+        {
+            List<ProductModel> result = _productService.GetAllProductFullInventory();
+            return result;
+        }
+
         [Route("getProductById/{id}")]
         [HttpGet]
         public ProductModel GetProductById(int id)

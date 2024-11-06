@@ -69,9 +69,17 @@ namespace APIBackEnd.Controllers
             UserModel userResult = _userService.GetUserLogin(username, password);
             if(userResult != null)
             {
-                HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
+                HttpContext.Session.SetInt32("currentUserId", userResult.Id);
             }
             return userResult;
+        }
+
+        [Route("setSession/{userId}")]
+        [HttpGet]
+        public void SetSession(int userId)
+        {
+            _userService.SetSession(userId);
+            return;
         }
     }
 }

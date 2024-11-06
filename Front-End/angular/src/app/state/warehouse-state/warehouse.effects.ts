@@ -22,4 +22,16 @@ export class WarehouseEffects {
           )
         )
       );
+
+    loadAllWarehouseByRole$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(warehouseAction.WarehouseActionTypes.LoadAllWarehouseByRole),
+        mergeMap(() =>
+          this.warehouseService.getAllWarehouseByRole().pipe(
+            map(result => new warehouseAction.LoadAllWarehouseByRoleSuccess(result)),
+            catchError(err => of(new warehouseAction.LoadAllWarehouseByRoleFail(err)))
+          )
+        )
+      )
+    );
 }

@@ -54,7 +54,7 @@ export class RetailComponentComponent implements OnInit {
     private cookieService: CookieService
   ) {
     this.store.dispatch(new productActions.LoadAllProduct());
-    this.store.dispatch(new warehouseActions.LoadAllWarehouse());
+    this.store.dispatch(new warehouseActions.LoadAllWarehouseByRole());
     this.store.dispatch(new customerActions.LoadAllCustomer());
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
   }
@@ -75,7 +75,7 @@ export class RetailComponentComponent implements OnInit {
     this.store.pipe(select(warehouseSelector.getIsLoaded),
       filter(loaded => loaded === true),
       mergeMap(_ => 
-        this.store.pipe(select(warehouseSelector.getAllWarehouse),
+        this.store.pipe(select(warehouseSelector.getAllWarehouseByRole),
         map(result => {
           this.allWarehouse = result;
           if(result && result.length > 0){

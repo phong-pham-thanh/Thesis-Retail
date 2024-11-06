@@ -15,6 +15,7 @@ namespace APIBackend.Repository
         public UserWareHouseModel GetById(int id);
         public UserWareHouseModel AddNewUserWareHouse(UserWareHouseModel UserWareHouseModel);
         public UserWareHouseModel UpdateUserWareHouse(int id, UserWareHouseModel UserWareHouseModel);
+        public List<int> GetIdWareHouseUserBelong(int userId);
     }
     public class UserWareHouseRepository : IUserWareHouseRepository
     {
@@ -97,6 +98,10 @@ namespace APIBackend.Repository
             return;
         }
 
+        public List<int> GetIdWareHouseUserBelong(int userId)
+        {
+            return _coreContext.UserWareHouse.Where(u => u.UserId == userId).Select(u => u.WareHouseId).ToList();
+        }
 
     }
 }
