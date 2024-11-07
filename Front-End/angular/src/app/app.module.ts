@@ -61,7 +61,8 @@ import { GoodTransferComponent } from './good-transfer/good-transfer.component';
 import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detail/good-transfer-detail.component';
 import { GoodTransferViewComponent } from './good-transfer/good-transfer-view/good-transfer-view.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { UserFormComponent } from './user-list/user-form/user-form.component'; // Đảm bảo bạn có reducers
+import { UserFormComponent } from './user-list/user-form/user-form.component';
+import { EmptyComponentComponent } from './empty-component/empty-component.component'; // Đảm bảo bạn có reducers
 
 
 export const MY_DATE_FORMATS = {
@@ -89,7 +90,8 @@ export const MY_DATE_FORMATS = {
     GoodTransferDetailComponent,
     GoodTransferViewComponent,
     UserListComponent,
-    UserFormComponent
+    UserFormComponent,
+    EmptyComponentComponent
   ],
   imports: [
     BrowserModule,
