@@ -27,7 +27,7 @@ import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 
-import { Button, Form, Input, message, Modal, Pagination, Table, Tag } from "antd";
+import { Button, Form, Input, message, Modal, Pagination, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import CustomInput from "../../component/searchBox";
@@ -88,6 +88,9 @@ export default function ExportTransaction() {
   const [showReceiptData, setShowReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
 
+  const [filterByPartner, setFilterByPartner] = useState([]);
+  const [filterByWarehouse, setFilterByWarehouse] = useState([]);
+
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
 
@@ -105,12 +108,27 @@ export default function ExportTransaction() {
   const [listProduct, setListProduct] = useState<ListGoodReciptDetailsModel[]>();
   const [form] = Form.useForm();
 
+  const filterByStatus = [
+    {
+      text: 'Đang xử lý',
+      value: '2',
+    },
+    {
+      text: 'Hoàn thành',
+      value: '1',
+    },
+    {
+      text: 'Đã hủy',
+      value: '0',
+    },
+  ];
+
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
         let d=res.data.reverse();
         setExportReciptData(d);
-        setShowReciptData(d.slice((page - 1) * size, page * size));
+        //setShowReciptData(d.slice((page - 1) * size, page * size));
       })
       .catch((error) => {
         console.log(error);
@@ -182,6 +200,79 @@ export default function ExportTransaction() {
     console.log(form.getFieldsValue());
   };
 
+  const columns: ColumnsType<GoodExportReceiptDetailDataType> = [
+    {
+      title: "Mã nhập hàng",
+      dataIndex: "id",
+    },
+    {
+      title: "Ngày xuất",
+      key: "exportDate",
+      render: (record) => {
+        return <ProcessDate dateString={record.exportDate.toLocaleString()} />
+      },
+      sorter: (a, b) => a.exportDate < b.exportDate ? -1 : 1,
+    },
+    {
+      title: "Mã kho xuất",
+      dataIndex: "wareHouseId",
+      //dataIndex: ["wareHouse", "name"], 
+      filters: filterByWarehouse,
+      onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,
+    },
+    {
+      title: "Khách hàng",
+      dataIndex: ["customer", "name"],
+      filters: filterByPartner,
+      onFilter: (value, record) => String(record.customer.id).indexOf(value as string) === 0,
+    },
+    {
+      title: "Tổng tiền",
+      key: "totalAmount",
+      render: (record) => {
+        return record.totalAmount?.toLocaleString();
+      },
+    },
+    {
+      title: "Trạng thái",
+      key: "exportStatus",
+      render: (record) => {
+        return <ProcessStatus status={record.exportStatus} />
+      },
+      filters: filterByStatus,
+      onFilter: (value, record) => String(record.exportStatus).indexOf(value as string) === 0,
+    },
+
+    {
+      title: "",
+      key: "action",
+      width: "112px",
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            size={"middle"}
+            icon={<EditOutlined />}
+            className="edit-button"
+            onClick={() => {
+              handleEdit(String(record.id));
+              setShowModal("edit");
+              //form.setFieldsValue(record);
+            }}
+          >{/*Chi tiết*/}
+          </Button>
+          <Button
+            size={"middle"}
+            icon={<DeleteOutlined />}
+            className="delete-button"
+            onClick={() => {
+              setShowModal("delete");
+            }}
+          >
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   //////////// EDIT MODAL//////////
   const ExportReceiptDetail = (ID: string, isShowModal?: boolean, setIsShowModal?: any) => {
@@ -294,7 +385,30 @@ export default function ExportTransaction() {
               Xuất File
             </Button>
           </div>
-          <table className="table">
+          <Table
+            columns={columns}
+            dataSource={exportReceiptData}
+            loading={loading}
+            rowKey="id"
+          />
+        </div>
+        <Modal
+          title="Xoá"
+          open={showModal === "delete"}
+          onOk={() => setShowModal(undefined)}
+          onCancel={() => setShowModal(undefined)}
+          okText="Xác nhận"
+          cancelText="Huỷ"
+        >
+          <p>Bạn có chắc sẽ xoá nó không?</p>
+        </Modal>
+      </div>
+    </React.Fragment>
+
+  );
+}
+
+ {/*<table className="table">
             <thead className="table-header">
               <th className="table-header-code">Mã xuất hàng</th>
               <th className="table-header-time">Thời gian</th>
@@ -362,20 +476,4 @@ export default function ExportTransaction() {
                 setPage(page);
               }}
             />
-          </div>
-        </div>
-        <Modal
-          title="Xoá"
-          open={showModal === "delete"}
-          onOk={() => setShowModal(undefined)}
-          onCancel={() => setShowModal(undefined)}
-          okText="Xác nhận"
-          cancelText="Huỷ"
-        >
-          <p>Bạn có chắc sẽ xoá nó không?</p>
-        </Modal>
-      </div>
-    </React.Fragment>
-
-  );
-}
+          </div>*/}

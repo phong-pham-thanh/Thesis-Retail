@@ -305,7 +305,7 @@ export default function ExportGoods() {
     const postData: ExportDataType = {
       goodsExportModel: {
         id: "0",
-        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        exportDate: form.getFieldValue("exportDate")?.toLocaleString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         customerId: form.getFieldValue("customerId"),
         exportStatus: 2,
         listGoodExportDetailModels: [],
