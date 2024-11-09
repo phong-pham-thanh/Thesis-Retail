@@ -2,15 +2,15 @@ export type LoginState = {
   message: string | null;
   isSuccess: boolean;
   errors:
-  | {
-    /*
+    | {
+        /*
       "Password": string[]|null;
       UserName: string[]|null;
       AccountInformation: string[]|null;
       ConfirmPassword:string[]|null;*/
-  }
-  | string[]
-  | null;
+      }
+    | string[]
+    | null;
   token: string | undefined;
   userInformation?: null; //UserInformationLoginState |
   customerInformation?: null; //CustomerInformationLoginState |
@@ -65,6 +65,7 @@ export type ProductState = {
   };
   description: string;
   status: boolean;
+  imgPath?: string;
 };
 export type CategoryState = {
   id: string;
@@ -91,7 +92,6 @@ export type CustomerState = {
 };
 
 export type CustomerListState = CustomerState[];
-
 
 export type CategoryType = {
   id: string;

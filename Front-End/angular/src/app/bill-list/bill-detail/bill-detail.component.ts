@@ -22,7 +22,6 @@ export class BillDetailComponent {
 
     if(data && data.id > 0){
       this.currentBill = JSON.parse(JSON.stringify(data));
-      console.log(this.currentBill);
     }
   }
 

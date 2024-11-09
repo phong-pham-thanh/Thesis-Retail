@@ -1,0 +1,73 @@
+<h2 class="form-title">Quản lý giá nhân viên</h2>
+
+<!-- <form (ngSubmit)="onSubmit()" class="form-price-management"> -->
+<form (ngSubmit)="onSubmit(employeeForm)" #employeeForm="ngForm" class="form-employee-management">
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !employeeName.valid}">
+        <label for="employee" class="form-label">Tên nhân viên:</label>
+        <input  id="employeeId" class="form-control" [(ngModel)]="formData.name" name="employeeName" #employeeName="ngModel"
+            required placeholder="Nhập tên nhân viên" />
+        <div *ngIf="employeeForm.submitted && !employeeName.valid" class="error-message">
+            Vui lòng nhập tên nhân viên
+        </div>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !employeeUsername.valid}">
+        <label for="employee" class="form-label">Tên đăng nhập:</label>
+        <input  id="employeeId" class="form-control" [(ngModel)]="formData.username" name="employeeUsername" #employeeUsername="ngModel"
+            required placeholder="Nhập tên nhân viên" />
+        <div *ngIf="employeeForm.submitted && !employeeUsername.valid" class="error-message">
+            Vui lòng nhập tên đăng nhập cho nhân viên
+        </div>
+    </div>
+
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !wareHouseBelong.valid}">
+        <label for="wareHouseBelong" class="form-label">Thuộc về chi nhánh:</label>
+        <ng-select class="form-control form-select" [items]="allWareHouses" bindLabel="address" bindValue="id"
+            [(ngModel)]="currentWareHouseId" name="wareHouseBelong" #wareHouseBelong="ngModel" [multiple]="true" (ngModelChange)="onWarehouseBelongChange()">
+        </ng-select>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !defaultWareHouse.valid}">
+        <label for="defaultWareHouse" class="form-label">Chi nhánh mặc định:</label>
+        <ng-select class="form-control form-select" [items]="defaultWareHouseCanHave" bindLabel="address" bindValue="id"
+            [(ngModel)]="formData.defaultWareHouseId" name="defaultWareHouse" #defaultWareHouse="ngModel">
+        </ng-select>
+    </div>
+
+    <div class="form-group" [ngClass]="{'has-error': employeeForm.submitted && !dateOnboard.valid}">
+        <label for="dateOnboard" class="form-label">Ngày bắt đầu làm việc:</label>
+        <mat-form-field appearance="fill">
+            <input matInput [matDatepicker]="startPicker" [(ngModel)]="formData.dateOnboard" id="dateOnboard"
+                name="dateOnboard" #dateOnboard="ngModel" required placeholder="Chọn ngày bắt đầu">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <div *ngIf="employeeForm.submitted && !dateOnboard.valid" class="error-message">
+            Vui lòng chọn ngày bắt đầu làm việc
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="dateOfBirth" class="form-label">Ngày sinh:</label>
+        <mat-form-field appearance="fill">
+            <input matInput [matDatepicker]="endPicker" [(ngModel)]="formData.dateOfBirth" id="dateOfBirth" name="dateOfBirth"
+                #dateOfBirth="ngModel" placeholder="Chọn ngày sinh">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="form-group form-checkbox">
+        <label for="isAdmin" class="form-label-checkbox">Là Admin:</label>
+        <input type="checkbox" id="isAdmin" class="form-checkbox-control" [(ngModel)]="formData.isAdmin" name="isAdmin" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <button type="button" class="btn btn-secondary" (click)="onClose()">Đóng</button>
+    </div>
+
+</form>

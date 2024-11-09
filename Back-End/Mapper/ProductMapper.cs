@@ -40,6 +40,7 @@ namespace APIBackEnd.Mapper
             modelObject.Status = efObject.Status;
             modelObject.Description = efObject.Description;
             modelObject.CurrentPrice = efObject.CurrentPrice;
+            modelObject.ImgPath = efObject.ImgPath;
             return modelObject;
         }
 
@@ -58,6 +59,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Status = item.Status;
                 modelObject.Description = item.Description;
                 modelObject.CurrentPrice = item.CurrentPrice;
+                modelObject.ImgPath = item.ImgPath;
                 result.Add(modelObject);
             }
             return result;
@@ -75,6 +77,7 @@ namespace APIBackEnd.Mapper
             efObject.Status = modelObject.Status;
             efObject.Description = modelObject.Description;
             efObject.CurrentPrice = modelObject.CurrentPrice;
+            efObject.ImgPath = modelObject.ImgPath;
             return efObject;
         }
     }

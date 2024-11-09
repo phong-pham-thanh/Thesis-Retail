@@ -5,7 +5,8 @@ export interface State{
 }
 
 export interface WarehouseState {
-    allWarehouse: Warehouse[]
+    allWarehouse: Warehouse[];
+    allWarehouseByRole: Warehouse[];
     needRefreshBrowseList: boolean;
     isLoading: boolean;
     isLoaded: boolean;

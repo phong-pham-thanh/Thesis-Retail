@@ -30,10 +30,10 @@ namespace APIBackEnd.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllGoodExports")]
-        public List<GoodsExportModel> GetAllGoodExports()
+        [Route("GetAllGoodExportsByRole")]
+        public List<GoodsExportModel> GetAllGoodExportsByRole()
         {
-            return _goodExportService.GetAllGoodExports();
+            return _goodExportService.GetAllGoodExportsByRole();
         }
 
         [HttpGet]

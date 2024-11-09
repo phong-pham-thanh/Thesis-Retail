@@ -7,7 +7,7 @@ import { GoodTransfer } from '../model/goodTransfer.model';
   providedIn: 'root'
 })
 export class GoodTransferService {
-  private apiGetAll = 'https://localhost:7030/GoodTransfer';
+  private apiGetAll = 'https://localhost:7030/GoodTransfer/getAllGoodTransferByRole';
   private apiAdd= 'https://localhost:7030/GoodTransfer/addGoodTransfer';
   private apiAccept = 'https://localhost:7030/GoodTransfer/acceptGoodTransfer';
   private apiGetById = 'https://localhost:7030/GoodTransfer/getGoodTransferById';
@@ -18,7 +18,7 @@ export class GoodTransferService {
   constructor(private http: HttpClient) {}
 
   getAllGoodTransfer(){
-    return this.http.get<GoodTransfer[]>(this.apiGetAll)
+    return this.http.get<GoodTransfer[]>(this.apiGetAll, {withCredentials: true})
   }
 
   addNewGoodTransfer(goodTransfer: GoodTransfer){

@@ -44,7 +44,6 @@ export class BillListComponent {
         map(result => {
           this.allBill = result; 
           this.dataSource = new MatTableDataSource<Bill>(this.allBill);
-          console.log(this.allBill)
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
 

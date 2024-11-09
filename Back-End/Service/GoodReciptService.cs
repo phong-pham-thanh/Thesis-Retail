@@ -15,6 +15,7 @@ namespace APIBackend.Service
     {
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept);
         public List<GoodsReceiptModel> GetAllGoodRecipts();
+        public List<GoodsReceiptModel> GetAllGoodReciptsByRole();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
@@ -29,6 +30,8 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        private readonly IUserSessionService _userSessionService;
+        private readonly IUserWareHouseService _userWareHouseService;
 
         public GoodReciptService(IProductMapper productMapper, 
             IGoodsReceiptMapper goodReciptMapper, 
@@ -37,7 +40,9 @@ namespace APIBackend.Service
             IGoodReciptDetailRepository goodReciptDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
-            IUnityOfWorkFactory uowFactory)
+            IUnityOfWorkFactory uowFactory,
+            IUserWareHouseService userWareHouseService,
+            IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
             _goodReciptMapper = goodReciptMapper;
@@ -47,6 +52,8 @@ namespace APIBackend.Service
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
             _uowFactory = uowFactory;
+            _userSessionService = userSessionService;
+            _userWareHouseService = userWareHouseService;
         }
 
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept)
@@ -87,6 +94,14 @@ namespace APIBackend.Service
         public List<GoodsReceiptModel> GetAllGoodRecipts()
         {
             return _goodReciptRepository.GetAllGoodRecipts();
+        }
+
+        public List<GoodsReceiptModel> GetAllGoodReciptsByRole()
+        {
+            List<GoodsReceiptModel> result = _goodReciptRepository.GetAllGoodRecipts();
+            List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            result = result.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
+            return result;
         }
 
         public GoodsReceiptModel GetGoodReciptById(int id)

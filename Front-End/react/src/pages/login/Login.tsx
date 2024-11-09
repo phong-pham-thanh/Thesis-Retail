@@ -65,7 +65,7 @@ export default function Login() {
   useEffect(() => {
     document.title = "Đăng nhập";
     if (cookies.get("user") !== undefined) {
-      navigate("/quan-ly/hanghoa");
+      navigate("/quan-ly");
       //return
     }
   }, []);
@@ -83,6 +83,7 @@ export default function Login() {
         url: api_links.user.login.url,
         method: api_links.user.login.method,
         data: data,
+        withCredentials: true
     }
     try {
         const response: AxiosResponse = await axios(config);

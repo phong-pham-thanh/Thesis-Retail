@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using APIBackend.Service;
+using APIBackend.Models;
 
 namespace APIBackEnd.Controllers
 {
@@ -34,6 +35,30 @@ namespace APIBackEnd.Controllers
             return temp;
         }
 
+        [Route("getAllWithFullInfo")]
+        [HttpGet]
+        public List<UserModel> GetAllWithFullInfor()
+        {
+            List<UserModel> temp = _userService.GetAllWithFullInfor();
+            return temp;
+        }
+
+        [Route("update/{id}")]
+        [HttpPut]
+        public UserModel Update(int id, [FromBody] UserModel user)
+        {
+            UserModel result = _userService.Update(id, user);
+            return result;
+        }
+
+        [Route("add")]
+        [HttpPost]
+        public UserModel Add([FromBody] UserModel user)
+        {
+            UserModel result = _userService.Add(user);
+            return result;
+        }
+
         [Route("login/")]
         [HttpPost]
         public UserModel GetLoginUser([FromBody] LoginModel data)
@@ -44,9 +69,17 @@ namespace APIBackEnd.Controllers
             UserModel userResult = _userService.GetUserLogin(username, password);
             if(userResult != null)
             {
-                HttpContext.Session.SetInt32("CurrentUserId", userResult.Id);
+                HttpContext.Session.SetInt32("currentUserId", userResult.Id);
             }
             return userResult;
+        }
+
+        [Route("setSession/{userId}")]
+        [HttpGet]
+        public void SetSession(int userId)
+        {
+            _userService.SetSession(userId);
+            return;
         }
     }
 }

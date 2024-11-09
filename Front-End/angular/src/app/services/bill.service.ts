@@ -9,16 +9,16 @@ import { Bill } from '../model/bill.model';
 export class BillService {
 
 
-  private apiGetAll = 'https://localhost:7030/Bill';
+  private apiGetAll = 'https://localhost:7030/Bill/getAllByRole';
   private apiAdd = 'https://localhost:7030/Bill/addBill';
 
   constructor(private http: HttpClient) { }
 
   getAllBill(): Observable<Bill[]> {
-    return this.http.get<Bill[]>(this.apiGetAll)
+    return this.http.get<Bill[]>(this.apiGetAll, {withCredentials: true})
   }
 
   addNewBill(param: Bill): Observable<boolean> {
-    return this.http.post<boolean>(this.apiAdd, param)
+    return this.http.post<boolean>(this.apiAdd, param, {withCredentials: true})
   }
 }

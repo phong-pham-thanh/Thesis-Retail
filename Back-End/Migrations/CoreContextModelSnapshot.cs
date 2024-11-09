@@ -150,6 +150,9 @@ namespace APIBackEnd.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImgPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -186,6 +189,9 @@ namespace APIBackEnd.Migrations
                     b.Property<DateTime>("DateOnboard")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DefaultWareHouseId")
+                        .HasColumnType("int");
+
                     b.Property<bool?>("IsAdmin")
                         .HasColumnType("bit");
 
@@ -199,6 +205,8 @@ namespace APIBackEnd.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultWareHouseId");
 
                     b.ToTable("Users");
                 });
@@ -541,6 +549,16 @@ namespace APIBackEnd.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("APIBackEnd.Data.Users", b =>
+                {
+                    b.HasOne("APIBackend.DataModel.WareHouses", "DefaultWareHouse")
+                        .WithMany("UserUseForDefaultWareHouse")
+                        .HasForeignKey("DefaultWareHouseId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("DefaultWareHouse");
+                });
+
             modelBuilder.Entity("APIBackend.DataModel.Bill", b =>
                 {
                     b.HasOne("APIBackEnd.Data.Customers", "Customer")
@@ -805,6 +823,8 @@ namespace APIBackEnd.Migrations
                     b.Navigation("ListGoodsTransferTo");
 
                     b.Navigation("ListUserWareHouse");
+
+                    b.Navigation("UserUseForDefaultWareHouse");
                 });
 #pragma warning restore 612, 618
         }

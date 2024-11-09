@@ -6,6 +6,7 @@ import { WarehouseActions, WarehouseActionTypes } from './warehouse.actions';
 const initialState: WarehouseState = {
     needRefreshBrowseList: false,
     allWarehouse: [],
+    allWarehouseByRole: [],
     isLoading: false,
     isLoaded: false,
     isSaving: false,
@@ -17,6 +18,11 @@ const getWarehouseFeatureState = createFeatureSelector<WarehouseState>('warehous
 export const getAllWarehouse = createSelector(
     getWarehouseFeatureState,
     state => state.allWarehouse
+);
+
+export const getAllWarehouseByRole = createSelector(
+    getWarehouseFeatureState,
+    state => state.allWarehouseByRole
 );
 
 
@@ -38,6 +44,7 @@ export function warehouseReducer(state = initialState, action: WarehouseActions)
             return {
                 ...state,
                 needRefreshBrowseList: false,
+                isLoaded: false,
                 isLoading: true
             };
 
@@ -51,6 +58,31 @@ export function warehouseReducer(state = initialState, action: WarehouseActions)
             };
         
         case WarehouseActionTypes.LoadAllWarehouseFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
+        
+        case WarehouseActionTypes.LoadAllWarehouseByRole:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoaded: false,
+                isLoading: true
+            };
+
+        case WarehouseActionTypes.LoadAllWarehouseByRoleSuccess:
+            return {
+                ...state,
+                allWarehouseByRole: action.payload,
+                isLoading: false,
+                isLoaded: true,
+                error: ''
+            };
+        
+        case WarehouseActionTypes.LoadAllWarehouseByRoleFail:
             return {
                 ...state,
                 isLoading: false,

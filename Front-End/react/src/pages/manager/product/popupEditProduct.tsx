@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Button,
-  Col,
   Form,
   Input,
   Modal,
-  Row,
   Select,
   message,
   Checkbox,
   InputNumber,
 } from "antd";
-import fetch_Api from "../../app/api_fetch";
-import api_links from "../../app/api_links";
-import { ProductState, CategoryType } from "../../app/type.d";
+import fetch_Api from "../../../app/api_fetch";
+import api_links from "../../../app/api_links";
+import { ProductState, CategoryType } from "../../../app/type.d";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -25,7 +23,7 @@ interface ProductInformationPopupScreenProps {
   componentDisabled?: boolean;
   setComponentDisabled?: (value: boolean) => void;
   type?: string;
-  onSave?: () => void; // onSave callback after product is saved
+  onSave?: () => void;
 }
 
 export default function ProductInformationPopupScreen({
@@ -40,8 +38,9 @@ export default function ProductInformationPopupScreen({
   const [form] = Form.useForm();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -59,41 +58,48 @@ export default function ProductInformationPopupScreen({
     fetchCategories();
   }, []);
 
-  // Set form values if editing a product
   useEffect(() => {
     if (type === "edit" && data) {
       form.setFieldsValue({
         ...data,
         categoryId: data.category.id,
       });
+      setImageUrl(data.imgPath || "");
     } else if (type === "create") {
       form.resetFields();
     }
+    clearImage();
   }, [data, type, form]);
 
-  // Close the modal and reset the form
   const handleCancel = () => {
     setPopup(false);
+    clearImage(); // Reset image when modal is canceled
   };
 
-  // Handle form submission (Create or Update)
+  const clearImage = () => {
+    setSelectedFile(null);
+    setImageUrl(""); // Clear the image preview URL
+  };
+
   const handleOk = () => {
     form
       .validateFields()
       .then(async (values) => {
         setLoading(true);
-
+        const productData = { ...values, imgPath: imageUrl };
+        console.log(productData.imgPath);
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
               ...api_links.product.edit(Number(data.id)),
-              data: values,
+              data: productData,
             };
+            console.log(api_put);
             await fetch_Api(api_put);
           } else if (type === "create") {
             const api_post = {
               ...api_links.product.createNew,
-              data: values,
+              data: productData,
             };
             await fetch_Api(api_post);
           }
@@ -101,7 +107,7 @@ export default function ProductInformationPopupScreen({
           message.success(
             `Product ${type === "edit" ? "updated" : "created"} successfully`
           );
-          if (onSave) onSave(); // Trigger refresh or other action
+          if (onSave) onSave();
           handleCancel();
         } catch (error) {
           message.error("Failed to save product");
@@ -110,6 +116,31 @@ export default function ProductInformationPopupScreen({
         }
       })
       .catch(() => setLoading(false));
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    if (!file) {
+      message.error("No file selected.");
+      return;
+    }
+    setSelectedFile(file);
+    await handleUpload(file);
+  };
+
+  const handleUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("productName", data.name);
+
+    try {
+      const uploadApi = { ...api_links.uploadFile.post, data: formData };
+      const response = await fetch_Api(uploadApi);
+      setImageUrl(response.data.imageUrl);
+      message.success("Image uploaded successfully.");
+    } catch (error) {
+      message.error("Failed to upload image.");
+    }
   };
 
   return (
@@ -156,6 +187,19 @@ export default function ProductInformationPopupScreen({
         <Form.Item name="status" valuePropName="checked">
           <Checkbox>Active</Checkbox>
         </Form.Item>
+
+        <Form.Item label="Upload Product Image">
+          {/* <input type="file" onChange={handleFileChange} /> */}
+          <input id="file-upload" type="file" onChange={handleFileChange} />
+        </Form.Item>
+
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Product Preview"
+            style={{ width: "100px", marginTop: "10px" }}
+          />
+        )}
       </Form>
     </Modal>
   );
