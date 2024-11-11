@@ -45,7 +45,7 @@
 }
 
 .table-good-transfer {
-    width: 70%;
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     margin: 20px auto
@@ -54,6 +54,7 @@
 .row-header-good-transfer th {
     // background-color: #f2f2f2;
     font-weight: bold;
+    cursor: pointer;
 }
 .thead-good-transfer{
     border: 3px solid #605BFF !important;
@@ -74,6 +75,7 @@
     box-shadow: 0 0 5px rgba(0, 191, 255, 0.5); 
     td, th{
         height: 50px !important;
+        max-height: 50px !important;
     }
 }
 
@@ -150,3 +152,67 @@
     background-color: #d32f2f; /* Màu khi hover của nút đỏ */
 }
 
+.filter-container-good-transfer{
+    border-radius: 10px;
+    flex-direction: column;
+    overflow: auto;
+    width: 300px;
+    height: fit-content;
+    padding: 0px;
+}
+
+.list-and-filter-container{
+    display: flex
+}
+
+.dropdown-container-good-transfer {
+    border: 1px solid #00b0ff;
+    position: relative;
+    font-family: Nunito;
+    border-radius: 10px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    overflow: auto;
+    width: 300px;
+    height: fit-content;
+    margin: 20px auto
+  }
+  
+  /* Title and arrow */
+  .dropdown-header-good-transfer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 21px;
+    color: #333;
+  }
+  
+  .dropdown-arrow-good-transfer {
+    transition: transform 0.3s;
+  }
+  
+  .dropdown-arrow-good-transfer.open {
+    transform: rotate(180deg);
+  }
+  
+  /* Dropdown items */
+  .dropdown-content-good-transfer {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .dropdown-item-good-transfer {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+  
+  .dropdown-item-good-transfer label {
+    margin-left: 5px;
+    font-size: 19px;
+    color: #333;
+  }

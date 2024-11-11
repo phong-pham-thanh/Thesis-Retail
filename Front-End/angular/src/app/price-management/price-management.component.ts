@@ -2,6 +2,8 @@ import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { State } from './price-state/price.state';
 import * as priceProductActions from './price-state/price.actions';
+import * as productActions from '../product-state/product.actions';
+import * as productSelector from '../product-state/product.reducer';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +12,8 @@ import * as pricePRoductSelector from './price-state/price.reducer';
 import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
 import { PriceManagementFormComponent } from './price-management-form/price-management-form.component';  // Import the component
+import { Product } from '../model/product.model';
+import { UtilitiesService } from '../common/utilities.service';
 
 @Component({
   selector: 'app-price-management',
@@ -22,8 +26,11 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['productName', 'price', 'startDate', 'endDate', 'active'];
   dataSource = new MatTableDataSource<PriceProduct>();
   allPriceProduct: PriceProduct[];
-
-
+  fullData: PriceProduct[]
+  allProducts: Product[] = [];
+  productSelectedId: number[] = [];
+  isDropdownOpenStatus = false;
+  selectedIdStatus: boolean[] = [];
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -32,7 +39,13 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog
   ) {
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
+    this.store.dispatch(new productActions.LoadAllProduct());
   }
+
+  statusArray = [
+    {idStatus: true, name: 'Hiện hành', className: 'status-good-transfer error-good-transfer'},
+    {idStatus: false, name: 'Đã dừng', className: 'status-good-transfer complete-good-transfer'},
+  ]
 
   ngOnInit() {
     this.store.pipe(select(pricePRoductSelector.getIsLoaded),
@@ -41,6 +54,7 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
         this.store.pipe(select(pricePRoductSelector.getAllPriceProduct),
         map(result => {
           this.allPriceProduct = result; 
+          this.fullData = result; 
           this.dataSource = new MatTableDataSource<PriceProduct>(this.allPriceProduct);
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
@@ -64,6 +78,16 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
         }))
       )
     ).subscribe();
+
+    this.store.pipe(select(productSelector.getIsLoaded),
+      filter(loaded => loaded === true),
+      mergeMap(_ => 
+        this.store.pipe(select(productSelector.getAllProduct),
+        map(result => {
+          this.allProducts = result;
+        }))
+      )
+    ).subscribe();
   }
 
 
@@ -78,7 +102,6 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed', result);
     });
   }
 
@@ -89,7 +112,6 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed', result);
     });
   }
 
@@ -101,5 +123,37 @@ export class PriceManagementComponent implements OnInit, AfterViewInit {
       map(_ =>
         this.store.dispatch(new priceProductActions.LoadAllPriceProduct())
       ), take(1)).subscribe();
+  }
+
+
+  onProductSelectedChange($event: number[]) {
+    this.productSelectedId = $event
+    this.filterList();
+  }
+
+  toggleDropdownStatus() {
+    this.isDropdownOpenStatus = !this.isDropdownOpenStatus;
+  }
+
+  onCheckboxChangeStatus(idStatus: boolean, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedIdStatus.push(idStatus);
+    } else {
+      this.selectedIdStatus = this.selectedIdStatus.filter(id => id !== idStatus);
+    }
+    this.filterList();
+  }
+
+  filterList(){
+    this.allPriceProduct = UtilitiesService.cloneDeep(this.fullData);
+    this.allPriceProduct = this.productSelectedId.length > 0 ? UtilitiesService.cloneDeep(this.allPriceProduct.filter(x => this.productSelectedId.includes(x.productId))): this.allPriceProduct;
+    this.allPriceProduct = this.selectedIdStatus.length > 0 ? UtilitiesService.cloneDeep(this.allPriceProduct.filter(x => this.selectedIdStatus.includes(x.active))): this.allPriceProduct;
+
+    
+
+    this.dataSource = new MatTableDataSource<PriceProduct>(this.allPriceProduct);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }

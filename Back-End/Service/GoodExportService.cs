@@ -15,6 +15,7 @@ namespace APIBackend.Service
     {
         public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept);
         public List<GoodsExportModel> GetAllGoodExports();
+        public List<GoodsExportModel> GetAllGoodExportsByRole();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
@@ -29,6 +30,8 @@ namespace APIBackend.Service
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IProductRepository _productRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        private readonly IUserSessionService _userSessionService;
+        private readonly IUserWareHouseService _userWareHouseService;
 
         public GoodExportService(IProductMapper productMapper, 
             IGoodsExportMapper goodExportMapper, 
@@ -37,7 +40,9 @@ namespace APIBackend.Service
             IGoodExportDetailRepository goodExportDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
-            IUnityOfWorkFactory uowFactory)
+            IUnityOfWorkFactory uowFactory,
+            IUserWareHouseService userWareHouseService,
+            IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
             _goodExportMapper = goodExportMapper;
@@ -47,6 +52,8 @@ namespace APIBackend.Service
             _inventoryRepository = inventoryRepository;
             _productRepository = productRepository;
             _uowFactory = uowFactory;
+            _userSessionService = userSessionService;
+            _userWareHouseService = userWareHouseService;
         }
 
         public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept)
@@ -116,6 +123,16 @@ namespace APIBackend.Service
         public List<GoodsExportModel> GetAllGoodExports()
         {
             List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
+            listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
+            return listGoodExport;
+        }
+
+        public List<GoodsExportModel> GetAllGoodExportsByRole()
+        {
+            List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
+            List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            listGoodExport = listGoodExport.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
+            listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
             return listGoodExport;
         }
 

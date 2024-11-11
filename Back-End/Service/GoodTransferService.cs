@@ -15,6 +15,7 @@ namespace APIBackend.Service
     {
         public bool AddGoodTransfer(GoodsTransferModel goodsTransferModel, List<GoodTransferDetailModel> listGoodTransferDetailModels, bool autoAccept);
         public List<GoodsTransferModel> GetAllGoodTransfers();
+        public List<GoodsTransferModel> GetAllGoodTransfersByRole();
         public GoodsTransferModel GetGoodTransferById(int id);
         public GoodsTransferModel AcceptGoodTransfer(int id);
         public GoodsTransferModel UpdateGoodTransfer(int id, GoodsTransferModel updateItem);
@@ -33,6 +34,8 @@ namespace APIBackend.Service
         private readonly IGoodExportService _goodExportService;
         private readonly IGoodReciptService _goodReciptService;
         private readonly IUserService _userService;
+        private readonly IUserSessionService _userSessionService;
+        private readonly IUserWareHouseService _userWareHouseService;
 
         public GoodTransferService(IProductMapper productMapper, 
             IGoodsTransferMapper goodTransferMapper, 
@@ -44,7 +47,9 @@ namespace APIBackend.Service
             IGoodExportService goodExportService,
             IGoodReciptService goodReciptService,
             IUserService userService,
-            IUnityOfWorkFactory uowFactory)
+            IUnityOfWorkFactory uowFactory,
+            IUserWareHouseService userWareHouseService,
+            IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
             _goodTransferMapper = goodTransferMapper;
@@ -57,6 +62,8 @@ namespace APIBackend.Service
             _goodReciptService = goodReciptService;
             _userService = userService;
             _uowFactory = uowFactory;
+            _userSessionService = userSessionService;
+            _userWareHouseService = userWareHouseService;
         }
 
         public bool AddGoodTransfer(GoodsTransferModel goodsTransferModel, List<GoodTransferDetailModel> listGoodTransferDetailModels, bool autoAccept)
@@ -133,6 +140,24 @@ namespace APIBackend.Service
                 }
                 item.User = _userService.GetById(item.UserId);
             }
+            listGoodTransfer = listGoodTransfer.OrderByDescending(g => g.Status).ToList();
+            return listGoodTransfer;
+        }
+
+        public List<GoodsTransferModel> GetAllGoodTransfersByRole()
+        {
+            List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
+            List<GoodsTransferModel> listGoodTransfer = _goodTransferRepository.GetAllGoodTransfers();
+            listGoodTransfer = listGoodTransfer.Where(x => listIdWareHouseBelong.Contains(x.ToWareHouseId) || listIdWareHouseBelong.Contains(x.FromWareHouseId)).ToList();
+            foreach (GoodsTransferModel item in listGoodTransfer)
+            {
+                foreach(GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
+                {
+                    detail.Product = _productRepository.GetProductById(detail.ProductId);
+                }
+                item.User = _userService.GetById(item.UserId);
+            }
+            listGoodTransfer = listGoodTransfer.OrderByDescending(g => g.Status).ToList();
             return listGoodTransfer;
         }
 

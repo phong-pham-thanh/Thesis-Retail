@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<CoreContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("CoreContext")));
 
@@ -26,10 +26,21 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:9000") // Allow your React app's origin
+        policy.WithOrigins("http://localhost:9000")
+              .AllowCredentials()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = false;
+    options.Cookie.IsEssential = false;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.None;
+
 });
 
 // Repository
@@ -86,6 +97,7 @@ builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserWareHouseService, UserWareHouseService>();
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 var app = builder.Build();
 
@@ -126,7 +138,7 @@ app.UseExceptionHandler(builder =>
             {
                 problemDetails.Status = 500; // Internal Server Error
                 problemDetails.Title = "Internal Server Error";
-                problemDetails.Detail = "An unexpected error occurred. Please try again later.";
+                problemDetails.Detail = exception.Message;
             }
 
             context.Response.StatusCode = problemDetails.Status ?? 500;
@@ -143,6 +155,7 @@ app.UseRouting();
 
 // Use CORS after routing but before authorization or session
 app.UseCors();
+app.UseSession();
 
 if (app.Environment.IsDevelopment())
 {
@@ -152,6 +165,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseSession();
 app.MapControllers();
 app.Run();

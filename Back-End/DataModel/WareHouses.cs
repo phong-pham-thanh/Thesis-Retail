@@ -20,5 +20,6 @@ namespace APIBackend.DataModel
         public List<GoodsTransfer> ListGoodsTransferFrom { get; set; }
         public List<GoodsTransfer> ListGoodsTransferTo { get; set; }
         public List<UserWareHouse> ListUserWareHouse { get; set; }
+        public List<Users> UserUseForDefaultWareHouse { get; set; }
     }
 }

@@ -22,9 +22,10 @@ namespace APIBackend.Controllers
         }
 
         [HttpGet]
-        public List<GoodsTransferModel> GetAllGoodTransfers()
+        [Route("getAllGoodTransferByRole")]
+        public List<GoodsTransferModel> GetAllGoodTransfersByRole()
         {
-            return _goodTransferService.GetAllGoodTransfers();
+            return _goodTransferService.GetAllGoodTransfersByRole();
         }
 
         [HttpGet]

@@ -43,7 +43,7 @@ export class AddNewUsers implements Action {
 export class AddNewUsersSuccess implements Action {
     readonly type = UsersActionTypes.AddNewUsersSuccess;
 
-    constructor(public payload: boolean) { }
+    constructor(public payload: Users) { }
 }
   
 export class AddNewUsersFail implements Action {
@@ -79,3 +79,6 @@ export type UsersActions = LoadAllUsers
   | UpdateUsers
   | UpdateUsersSuccess
   | UpdateUsersFail
+  | AddNewUsers
+  | AddNewUsersSuccess
+  | AddNewUsersFail

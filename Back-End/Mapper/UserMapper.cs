@@ -30,6 +30,7 @@ namespace APIBackEnd.Mapper
             modelObject.DateOnboard = efObject.DateOnboard;                    
             modelObject.DateOfBirth = efObject.DateOfBirth;
             modelObject.IsAdmin = efObject.IsAdmin;
+            modelObject.DefaultWareHouseId = efObject.DefaultWareHouseId;
             return modelObject;                                  
         }
 
@@ -48,6 +49,7 @@ namespace APIBackEnd.Mapper
                 modelObject.DateOnboard = item.DateOnboard;
                 modelObject.DateOfBirth = item.DateOfBirth;
                 modelObject.IsAdmin = item.IsAdmin;
+                modelObject.DefaultWareHouseId = item.DefaultWareHouseId;
                 result.Add(modelObject);
             }
             return result;
@@ -62,6 +64,7 @@ namespace APIBackEnd.Mapper
             efObject.DateOnboard = domObject.DateOnboard;
             efObject.DateOfBirth = domObject.DateOfBirth;
             efObject.IsAdmin = domObject.IsAdmin;
+            efObject.DefaultWareHouseId = domObject.DefaultWareHouseId;
             return;
         }
 

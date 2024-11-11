@@ -26,6 +26,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -61,7 +63,8 @@ import { GoodTransferComponent } from './good-transfer/good-transfer.component';
 import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detail/good-transfer-detail.component';
 import { GoodTransferViewComponent } from './good-transfer/good-transfer-view/good-transfer-view.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { UserFormComponent } from './user-list/user-form/user-form.component'; // Đảm bảo bạn có reducers
+import { UserFormComponent } from './user-list/user-form/user-form.component';
+import { EmptyComponentComponent } from './empty-component/empty-component.component'; // Đảm bảo bạn có reducers
 
 
 export const MY_DATE_FORMATS = {
@@ -76,6 +79,18 @@ export const MY_DATE_FORMATS = {
   },
 };
 
+export function CustomPaginatorIntl() {
+  const paginatorIntl = new MatPaginatorIntl();
+
+  paginatorIntl.itemsPerPageLabel = 'Số mục mỗi trang';
+  paginatorIntl.nextPageLabel = 'Trang kế tiếp';
+  paginatorIntl.previousPageLabel = 'Trang trước';
+  paginatorIntl.firstPageLabel = 'Trang đầu';
+  paginatorIntl.lastPageLabel = 'Trang cuối';
+
+  return paginatorIntl;
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,7 +104,8 @@ export const MY_DATE_FORMATS = {
     GoodTransferDetailComponent,
     GoodTransferViewComponent,
     UserListComponent,
-    UserFormComponent
+    UserFormComponent,
+    EmptyComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -155,9 +171,10 @@ export const MY_DATE_FORMATS = {
   providers: [
     provideNgxMask(),
     CookieService,
-
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' } // Đặt locale nếu cần
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MatPaginatorIntl, useFactory: CustomPaginatorIntl }
   ],
   bootstrap: [AppComponent]
 })

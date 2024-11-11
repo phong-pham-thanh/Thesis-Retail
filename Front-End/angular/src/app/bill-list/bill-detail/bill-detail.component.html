@@ -14,7 +14,8 @@
         <p><strong>Mã hóa đơn: </strong>{{currentBill.id}}</p>
         <p><strong>Ngày xuất hóa đơn: </strong>{{currentBill.createdDate  | date: 'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Khách mua: </strong>{{currentBill.customer ? currentBill.customer.name : 'Khách lẻ'}}</p>
-        <p><strong>Trạng thái: </strong><span class="badge bg-success">Hoàn thành</span></p>
+        <p><strong>Bán từ kho: </strong>{{currentBill.wareHouse?.address}}</p>
+        <!-- <p><strong>Trạng thái: </strong><span class="badge bg-success">Hoàn thành</span></p> -->
       </div>
   
       <hr>

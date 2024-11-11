@@ -12,6 +12,8 @@ namespace APIBackend.Service
         public UserModel GetById(int id);
         public UserModel GetUserLogin(string username, string password);
         public UserModel Update(int id, UserModel user);
+        public UserModel Add(UserModel user);
+        public void SetSession(int userId);
 
     }
     public class UserService : IUserService
@@ -21,13 +23,15 @@ namespace APIBackend.Service
         private IWareHouseRepository _wareHouseRepository;
         private readonly IUserWareHouseService _userWareHouseService;
         protected readonly IUnityOfWorkFactory _uowFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(
             IUserRepository userRepository, 
             IUserWareHouseRepository userWareHouseRepository,
             IWareHouseRepository wareHouseRepository,
             IUserWareHouseService userWareHouseService,
-            IUnityOfWorkFactory uowFactory
+            IUnityOfWorkFactory uowFactory,
+            IHttpContextAccessor httpContextAccessor
             ) 
         {
             _userRepository = userRepository;
@@ -35,6 +39,7 @@ namespace APIBackend.Service
             _wareHouseRepository = wareHouseRepository;
             _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public List<UserModel> GetAll()
@@ -49,7 +54,25 @@ namespace APIBackend.Service
 
         public UserModel GetUserLogin(string username, string password)
         {
-            return _userRepository.GetUserLogin(username, password);
+            UserModel result = _userRepository.GetUserLogin(username, password);
+            if (result != null)
+            {
+                //Add result to currentUser here
+                _httpContextAccessor.HttpContext.Session.SetString("currentUser", result.Id.ToString());
+
+            }
+            return result;
+        }
+
+        public UserModel Add(UserModel user)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                UserModel result = _userRepository.Add(user);
+                _userWareHouseService.UpdateUserWareHouseforUser(result.Id, user);
+                uow.Commit();
+                return result;
+            }
         }
 
         public List<UserModel> GetAllWithFullInfor()
@@ -72,10 +95,14 @@ namespace APIBackend.Service
                 UserModel result = _userRepository.Update(id, user);
                 _userWareHouseService.UpdateUserWareHouseforUser(id, user);
                 uow.Commit();
+                return result;
             }
-            return null;
         }
 
+        public void SetSession(int userId)
+        {
+            _httpContextAccessor.HttpContext.Session.SetInt32("currentUserId", userId);
+        }
 
     }
 }

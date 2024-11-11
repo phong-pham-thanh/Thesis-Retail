@@ -10,6 +10,7 @@ export class UserService {
 
   private apiGetAll = 'https://localhost:7030/User/getAllWithFullInfo';
   private apiUpdate = 'https://localhost:7030/User/update';
+  private apiAdd = 'https://localhost:7030/User/add';
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +20,10 @@ export class UserService {
 
   updateUser(user: Users){
     return this.http.put<Users>(`${this.apiUpdate}/${user.id}`, user)
+  }
+
+  addNewUser(user: Users){
+    return this.http.post<Users>(`${this.apiAdd}`, user)
   }
 
 }

@@ -1,37 +1,71 @@
 <div class="header-container">
   <h1>Lịch sử giá</h1>
-  <!-- <button class="add-new-button" (click)="addNew()">Thêm mới</button> -->
 </div>
-<div class="table-container">
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<div class="list-and-filter-container">
 
-  <ng-container matColumnDef="productName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Tên sản phẩm </div></th>
-    <td mat-cell *matCellDef="let element"> {{element.product?.name}} </td>
-  </ng-container>
 
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Giá áp dụng </div></th>
-    <td mat-cell *matCellDef="let element">{{element.price}}</td>
-  </ng-container>
+  <div class="col-md-2 filter-container-bill-list">
+    <label class="filter-label-price-management">Sản phẩm:</label>
+    <ng-select class="product-dropdown-filter" [items]="allProducts" bindLabel="name" bindValue="id" [(ngModel)]="productSelectedId"
+      name="productSelected" [multiple]="true" (ngModelChange)="onProductSelectedChange($event)">
+    </ng-select>
 
-  <ng-container matColumnDef="startDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Thời gian bắt đầu </div> </th>
-    <td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy' }} </td>
-  </ng-container>
 
-  <ng-container matColumnDef="endDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Thời gian kết thúc </div> </th>
-    <td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy' }} </td>
-  </ng-container>
+    <div class="dropdown-container-price-list">
+      <div class="dropdown-header-price-list" (click)="toggleDropdownStatus()">
+        Trạng thái
+        <span id="dropdownArrowGoodTransfer" [class.open]="isDropdownOpenStatus"
+          class="dropdown-arrow-price-list">&#9662;</span>
+      </div>
+      <div *ngIf="isDropdownOpenStatus" class="dropdown-content-price-list">
+        <div class="dropdown-item-price-list" *ngFor="let status of statusArray">
+          <input type="checkbox" [id]="status.idStatus" (change)="onCheckboxChangeStatus(status.idStatus, $event)">
+          <label [for]="status.idStatus">{{ status.name }}</label>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <ng-container matColumnDef="active">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price">  Trạng thái </div> </th>
-    <td mat-cell *matCellDef="let element"> {{element.active}} </td>
-  </ng-container>
+  <div class="col-md-10 table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-  <!-- Cột context menu -->
-  <!-- <ng-container matColumnDef="context">
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Tên sản phẩm </div>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.product?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Giá áp dụng </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.price | currency:'VND':'symbol':'1.0-0'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Thời gian bắt đầu </div>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.startDate | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Thời gian kết thúc </div>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.endDate | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Trạng thái </div>
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.active ? 'Hiện hành' : 'Đã dừng'}} </td>
+      </ng-container>
+
+      <!-- Cột context menu -->
+      <!-- <ng-container matColumnDef="context">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -51,12 +85,13 @@
     </td>
   </ng-container> -->
 
-  <!-- Header row -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <!-- Data rows -->
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+      <!-- Header row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Data rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 
-<!-- Paginator -->
-<mat-paginator [pageSizeOptions]="[20]" showFirstLastButtons></mat-paginator>
+    <!-- Paginator -->
+    <mat-paginator hidePageSize="true" [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+  </div>
 </div>

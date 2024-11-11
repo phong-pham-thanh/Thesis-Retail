@@ -10,13 +10,22 @@ namespace APIBackend.Service
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId);
         public void AddMangagerToWareHouseIfNeed(int userId, int wareHouse);
         public void UpdateUserWareHouseforUser(int userId, UserModel user);
+        public List<int> GetListWareHouseCurrentUserBelong();
     }
     public class UserWareHouseService : IUserWareHouseService
     {
         private IUserWareHouseRepository _userWareHouseRepository;
-        public UserWareHouseService(IUserWareHouseRepository userWareHouseRepository)
+        private IWareHouseRepository _wareHouseRepository;
+        private IUserSessionService _userSessionService;
+        public UserWareHouseService(
+            IUserWareHouseRepository userWareHouseRepository,
+            IUserSessionService userSessionService,
+            IWareHouseRepository wareHouseRepository
+        )
         {
             _userWareHouseRepository = userWareHouseRepository;
+            _userSessionService = userSessionService;
+            _wareHouseRepository = wareHouseRepository;
         }
         public void AddNewUserAndListWareHouseIfNeed(UserModel user, List<int> lstWareHouseId)
         {
@@ -48,10 +57,36 @@ namespace APIBackend.Service
             }
             List<UserWareHouseModel> lstCurrentWareHouseForUser = _userWareHouseRepository.GetAllByUserId(userId);
             List<int> lstIdWareHouseToRemove = lstCurrentWareHouseForUser.Where(x => !newListWareHouseForUser.Any(y => y == x.WareHouseId)).Select(x => x.WareHouseId).ToList();
+
+            VerifyUserIsManagerOfWarehouse(userId, lstIdWareHouseToRemove);
+
             List<int> lstIdWareHouseToAdd = newListWareHouseForUser.Where(x => !lstCurrentWareHouseForUser.Any(y => y.WareHouseId == x)).ToList();
             _userWareHouseRepository.RemoveListWarehouseOfUser(userId, lstIdWareHouseToRemove);
             _userWareHouseRepository.AddUserToListWareHouse(userId, lstIdWareHouseToAdd);
             return;
+        }
+
+        public void VerifyUserIsManagerOfWarehouse(int userId, List<int> lstIdWareHouseToRemove)
+        {
+            foreach(int warehouseid in lstIdWareHouseToRemove)
+            {
+                if(_wareHouseRepository.IsUserManageWareHouse(userId, warehouseid))
+                {
+                    throw new InvalidOperationException($"Không thể gỡ user khỏi kho: {_wareHouseRepository.GetById(warehouseid)?.Address} vì đây là quản lý của kho");
+                }
+            }
+        }
+        public List<int> GetListWareHouseCurrentUserBelong()
+        {
+            UserModel userModel = _userSessionService.GetCurrentUser();
+            if(userModel.IsAdmin == true)
+            {
+                return _wareHouseRepository.GetAllId();
+            }
+            else
+            {
+                return _userWareHouseRepository.GetIdWareHouseUserBelong(userModel.Id);
+            }
         }
     }
 }

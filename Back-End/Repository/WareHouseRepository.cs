@@ -9,10 +9,12 @@ namespace APIBackend.Repository
     public interface IWareHouseRepository
     {
         public List<WareHouseModel> GetAll();
+        public List<int> GetAllId();
         public WareHouseModel GetById(int id);
         public WareHouseModel AddNewWareHouse(WareHouseModel WareHouseModel);
         public WareHouseModel UpdateWareHouse(int id, WareHouseModel WareHouseModel);
         public List<WareHouseModel> GetBySearchName(string query);
+        public bool IsUserManageWareHouse(int userId, int wareHouseId);
 
     }
     public class WareHouseRepository : IWareHouseRepository
@@ -63,5 +65,14 @@ namespace APIBackend.Repository
         {
             return _wareHouseMapper.ToModels(_coreContext.WareHouses.Where(ca => ca.Address.ToLower().Contains(query.ToLower())).ToList());
         }
+        public bool IsUserManageWareHouse(int userId, int wareHouseId)
+        {
+            return _coreContext.WareHouses.Where(w => w.ManagerId == userId && w.Id == wareHouseId).ToList().Count() > 0;
+        }
+        public List<int> GetAllId()
+        {
+            return _coreContext.WareHouses.Select(x => x.Id).ToList();
+        }
+
     }
 }
