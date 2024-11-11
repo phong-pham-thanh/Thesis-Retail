@@ -11,10 +11,18 @@ import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
 import { Bill } from '../model/bill.model';
 import { BillDetailComponent } from './bill-detail/bill-detail.component';
+import { Warehouse } from '../model/warehouse.model';
+import * as wareHouseActions from '../state/warehouse-state/warehouse.actions';
+import * as wareHouseSelector from '../state/warehouse-state/warehouse.reducer';
+import { UtilitiesService } from '../common/utilities.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-bill-list',
   templateUrl: './bill-list.component.html',
-  styleUrls: ['./bill-list.component.scss']
+  styleUrls: ['./bill-list.component.scss'],
+  
 })
 export class BillListComponent {
 
@@ -23,6 +31,13 @@ export class BillListComponent {
   displayedColumns: string[] = ['id', 'createdDate', 'cusomter', 'wareHouse', 'user', 'totalAmount', 'context'];
   dataSource = new MatTableDataSource<Bill>();
   allBill: Bill[];
+  isDropDownOpenWareHouse: boolean = false;
+  allWareHouse: Warehouse[] = [];
+  selectedWarehousesId: number[] = []
+  fullData: Bill[] = [];
+
+  startDate: Date = null;
+  endDate: Date = null;
 
 
 
@@ -34,6 +49,7 @@ export class BillListComponent {
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
     this.store.dispatch(new billActions.LoadAllBill());
+    this.store.dispatch(new wareHouseActions.LoadAllWarehouseByRole());
   }
 
   ngOnInit() {
@@ -43,6 +59,7 @@ export class BillListComponent {
         this.store.pipe(select(billSelector.getAllBill),
         map(result => {
           this.allBill = result; 
+          this.fullData = result; 
           this.dataSource = new MatTableDataSource<Bill>(this.allBill);
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
@@ -66,6 +83,16 @@ export class BillListComponent {
         }))
       )
     ).subscribe();
+
+    this.store.pipe(select(wareHouseSelector.getIsLoaded),
+      filter(loaded => loaded === true),
+      mergeMap(_ => 
+        this.store.pipe(select(wareHouseSelector.getAllWarehouseByRole),
+        map(result => {
+          this.allWareHouse = result; 
+        }))
+      )
+    ).subscribe();
   }
 
 
@@ -85,23 +112,53 @@ export class BillListComponent {
     this.dataSource.paginator = this.paginator;
   }
 
-  // addNew() {
-  //   const dialogRef = this.dialog.open(PriceManagementFormComponent, {
-  //     width: '800px',
-  //   });
+  toggleDropdownWareHouse() {
+    this.isDropDownOpenWareHouse = !this.isDropDownOpenWareHouse;
+  }
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log('Dialog closed', result);
-  //   });
-  // }
+  onCheckboxChangeWareHouse(warehouseId: number, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedWarehousesId.push(warehouseId);
+    } else {
+      this.selectedWarehousesId = this.selectedWarehousesId.filter(id => id !== warehouseId);
+    }
+    this.filterBill();
+  }
 
-  // deletePrice(priceProduct: PriceProduct){
-  //   this.store.dispatch(new priceProductActions.DeletePriceProduct(priceProduct));
+
+  onDateRangeChange(event: MatDatepickerInputEvent<moment.Moment>) {
+    const selectedDate: Date = event.value ? event.value.toDate() : null;
+  
+    if (event.targetElement?.getAttribute('matStartDate') !== null) {
+      this.startDate = selectedDate;
+    } else if (event.targetElement?.getAttribute('matEndDate') !== null) {
+      this.endDate = selectedDate;
+    }
+  
+    this.filterBill();
+  }
+
+
+  filterBill(){
+    this.allBill = UtilitiesService.cloneDeep(this.fullData);
+    this.allBill = this.selectedWarehousesId.length > 0 ? UtilitiesService.cloneDeep(this.allBill.filter(x => this.selectedWarehousesId.includes(x.wareHouseId))): this.allBill;
+    if(this.startDate){
+      this.allBill = this.allBill.filter(b => {
+        const createdDate = new Date(b.createdDate);
+        return UtilitiesService.isSameDay(createdDate, this.startDate)  || UtilitiesService.isAfterDay(createdDate, this.startDate)  
+      });
+    }
+    if(this.endDate){
+      this.allBill = this.allBill.filter(b => {
+        const createdDate = new Date(b.createdDate);
+        return UtilitiesService.isSameDay(createdDate, this.endDate)  || UtilitiesService.isBeforeDay(createdDate, this.endDate)  
+      });
+    }
     
-  //   this.store.pipe(select(pricePRoductSelector.getIsLoading),
-  //     filter(x => x === false),
-  //     map(_ =>
-  //       this.store.dispatch(new priceProductActions.LoadAllPriceProduct())
-  //     ), take(1)).subscribe();
-  // }
+
+    this.dataSource = new MatTableDataSource<Bill>(this.allBill);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 }

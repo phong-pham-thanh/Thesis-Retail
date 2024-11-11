@@ -71,7 +71,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center; 
-  margin-bottom: 20px; 
+  margin-bottom: 10px; 
 }
 
 .add-new-button {
@@ -96,3 +96,78 @@
     outline: none;  // Loại bỏ viền mặc định khi focus
   }
 }
+
+.list-and-filter-container{
+  display: flex;
+}
+
+::ng-deep .product-dropdown-filter {
+  border: 1px solid #00b0ff; 
+  border-radius: 10px; 
+  padding: 4px; 
+  box-shadow: 0 0 2px #00BFFF; 
+  width: 103%;
+}
+
+::ng-deep .product-dropdown-filter .ng-select-container {
+  border: none;
+  box-shadow: none;
+}
+
+
+.filter-label-price-management{
+  font-weight: bold;
+  font-size: 21px;
+  color: #333;
+}
+
+.dropdown-container-price-list{
+  border: 1px solid #00b0ff;
+  position: relative;
+  font-family: Nunito;
+  border-radius: 10px;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap:15px;
+  overflow: auto;
+  width: 300px;
+  height: fit-content;
+  margin: 20px auto
+}
+
+.dropdown-header-price-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 21px;
+  color: #333;
+}
+
+.dropdown-arrow-price-list {
+  transition: transform 0.3s;
+}
+
+.dropdown-arrow-price-list.open {
+  transform: rotate(180deg);
+}
+
+ .dropdown-content-price-list {
+  display: block;
+  margin-top: 10px;
+}
+
+.dropdown-item-price-list {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.dropdown-item-price-list label {
+  margin-left: 5px;
+  font-size: 19px;
+  color: #333;
+}
+

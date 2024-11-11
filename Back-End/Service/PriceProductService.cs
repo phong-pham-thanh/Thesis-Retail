@@ -33,6 +33,8 @@ namespace APIBackend.Service
             {
                 priceProductModel.Product = _productRepository.GetProductById(priceProductModel.ProductId);
             }
+            result = result.OrderByDescending(x => x.Active).ToList();
+
             return result;
         }
 

@@ -26,6 +26,7 @@ import { GoodTransferDetails } from '../../model/goodTransferDetail.model';
 import { Users } from '../../model/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { UtilitiesService } from '../../common/utilities.service'; // Đường dẫn tới service của bạn
+import * as moment from 'moment';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class GoodTransferDetailComponent {
   totalItem: number = 0;
   fromWarehouse: Warehouse;
   toWarehouse: Warehouse;
-  transferDateValue: any;
+  transferDateValue: moment.Moment | Date;
 
   currentGoodTransfer: GoodTransfer = {};
   currentUser: Users;
@@ -160,7 +161,10 @@ export class GoodTransferDetailComponent {
     const savingObject: GoodTransfer = UtilitiesService.cloneDeep(this.currentGoodTransfer)
     savingObject.fromWareHouseId = this.fromWarehouse.id;
     savingObject.toWareHouseId = this.toWarehouse.id;
-    savingObject.transferDate = UtilitiesService.convertDateTime(this.transferDateValue);
+
+    
+
+    savingObject.transferDate = UtilitiesService.convertDateTime(UtilitiesService.convertMomentToDate(this.transferDateValue));
     if(this.isUpdate){
       this.store.dispatch(new GoodTransferActions.UpdateGoodTransfer(savingObject));
     }

@@ -36,6 +36,7 @@ export class GoodTransferComponent {
   selectedWarehousesIdFromWareHouse: number[] = [];
   selectedWarehousesIdToWareHouse: number[] = [];
   selectedIdStatus: number[] = [];
+  currentPage: any;
 
   statusArray = [
     {id: NoteStatus.Canceled, name: 'Đã hủy', className: 'status-good-transfer error-good-transfer'},
