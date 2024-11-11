@@ -140,6 +140,7 @@ namespace APIBackend.Service
                 }
                 item.User = _userService.GetById(item.UserId);
             }
+            listGoodTransfer = listGoodTransfer.OrderByDescending(g => g.Status).ToList();
             return listGoodTransfer;
         }
 
@@ -156,6 +157,7 @@ namespace APIBackend.Service
                 }
                 item.User = _userService.GetById(item.UserId);
             }
+            listGoodTransfer = listGoodTransfer.OrderByDescending(g => g.Status).ToList();
             return listGoodTransfer;
         }
 

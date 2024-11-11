@@ -123,6 +123,7 @@ namespace APIBackend.Service
         public List<GoodsExportModel> GetAllGoodExports()
         {
             List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
+            listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
             return listGoodExport;
         }
 
@@ -131,6 +132,7 @@ namespace APIBackend.Service
             List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
             List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
             listGoodExport = listGoodExport.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
+            listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
             return listGoodExport;
         }
 

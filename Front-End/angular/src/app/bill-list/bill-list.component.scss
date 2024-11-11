@@ -1,99 +1,141 @@
 .table-container {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  
-    table {
-      width: 100%;
-      margin-bottom: 16px;
-      /* Ghi đè style cho các ô dữ liệu */
-      ::ng-deep .mat-cell {
-        text-align: center !important;  /* Căn giữa văn bản trong các ô dữ liệu */
-      }
-    }
-  
-    /* Căn chỉnh cho paginator */
-    mat-paginator {
-      align-self: flex-end;
-    }
-  
-    /* Style cho các trạng thái */
-    .success {
-      color: green;
-      font-weight: bold;
-    }
-  
-    .cancelled {
-      color: red;
-      font-weight: bold;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  table {
+    width: 100%;
+    margin-bottom: 16px;
+
+    /* Ghi đè style cho các ô dữ liệu */
+    ::ng-deep .mat-cell {
+      text-align: center !important;
+      /* Căn giữa văn bản trong các ô dữ liệu */
     }
   }
-  
-  .table-header-price{
-    font-weight: bold !important;  /* Làm cho chữ header đậm */
-    text-align: center !important;  /* Căn giữa văn bản trong header */
-    font-weight: bold !important;  /* Làm cho chữ header đậm */
-    font-size: large;
+
+  /* Căn chỉnh cho paginator */
+  mat-paginator {
+    align-self: flex-end;
   }
-  
-  .custom-dialog-container {
-    animation: slide-down 0.5s ease-out;
+
+  /* Style cho các trạng thái */
+  .success {
+    color: green;
+    font-weight: bold;
   }
-  
-  @keyframes slide-down {
-    from {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
+
+  .cancelled {
+    color: red;
+    font-weight: bold;
   }
-  
-  
-  ::ng-deep .cdk-overlay-backdrop {
-    background-color: rgba(0, 0, 0, 0.5);  // Nền xám mờ
-    z-index: 1000;  // Đảm bảo backdrop hiển thị trên các thành phần khác
+}
+
+.table-header-price {
+  font-weight: bold !important;
+  /* Làm cho chữ header đậm */
+  text-align: center !important;
+  /* Căn giữa văn bản trong header */
+  font-weight: bold !important;
+  /* Làm cho chữ header đậm */
+  font-size: large;
+}
+
+.custom-dialog-container {
+  animation: slide-down 0.5s ease-out;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
   }
-  
-  ::ng-deep .cdk-overlay-pane {
-    z-index: 1001;  // Đảm bảo dialog nằm trên backdrop
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  
-  .custom-dialog-container {
-    animation: slide-down 0.5s ease-out;
-  }
-  
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    margin-bottom: 20px; 
-  }
-  
-  .add-new-button {
-    background-color: #1976d2;
-    color: #ffffff;    
-    padding: 10px 20px;
-    margin-left: 20px;
-    border: none;       
-    border-radius: 4px; 
-    font-size: 16px;    
-    cursor: pointer;    
-    transition: background-color 0.3s;
-    &:hover {
-      background-color: #1565c0;  // Màu nền khi hover (đậm hơn chút so với màu chính)
-    }
-  
-    &:active {
-      background-color: #0d47a1;  // Màu nền khi nhấn (đậm hơn)
-    }
-  
-    &:focus {
-      outline: none;  // Loại bỏ viền mặc định khi focus
-    }
-  }
-  
+}
+
+
+::ng-deep .cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.5); // Nền xám mờ
+  z-index: 1000; // Đảm bảo backdrop hiển thị trên các thành phần khác
+}
+
+::ng-deep .cdk-overlay-pane {
+  z-index: 1001; // Đảm bảo dialog nằm trên backdrop
+}
+
+
+.custom-dialog-container {
+  animation: slide-down 0.5s ease-out;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-and-filter-container{
+  display: flex;
+}
+
+.dropdown-container-bill-list {
+  border: 1px solid #00b0ff;
+  position: relative;
+  font-family: Nunito;
+  border-radius: 10px;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow: auto;
+  width: 300px;
+  height: fit-content;
+  margin: 20px auto
+}
+
+/* Title and arrow */
+.dropdown-header-bill-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 21px;
+  color: #333;
+}
+
+.dropdown-arrow-bill-list {
+  transition: transform 0.3s;
+}
+
+.dropdown-arrow-bill-list.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown items */
+.dropdown-content-bill-list {
+  display: block;
+  margin-top: 10px;
+}
+
+.dropdown-item-bill-list {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.dropdown-item-bill-list label {
+  margin-left: 5px;
+  font-size: 19px;
+  color: #333;
+}
+
+.range-date-picker-bill-list{
+  width: 103%;
+}
