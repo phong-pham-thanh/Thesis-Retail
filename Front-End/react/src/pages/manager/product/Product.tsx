@@ -102,12 +102,12 @@ export default function Product() {
     setFilteredProducts(filtered);
   };
 
-  const filterProductsByCategory = (categoryId: string) => {
-    if (categoryId === null) {
+  const filterProductsByCategory = (categoryId: string[]) => {
+    if (categoryId === null || categoryId.length == 0 || categoryId.includes(null)) {
       setFilteredProducts(data);
-    } else {
+    }else {
       const filtered = data.filter(
-        (product) => product.categoryId === categoryId
+        (product) => categoryId.includes(product.categoryId)
       );
       setFilteredProducts(filtered);
     }
@@ -118,7 +118,7 @@ export default function Product() {
     //filterProductsByWarehouse(value); // Filter products based on the selected warehouse
   };
 
-  function handleCategoryChange(value: string): void {
+  function handleCategoryChange(value: string[]): void {
     filterProductsByCategory(value);
   }
 
