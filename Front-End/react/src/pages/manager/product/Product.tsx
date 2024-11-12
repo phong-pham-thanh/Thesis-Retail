@@ -103,11 +103,15 @@ export default function Product() {
   };
 
   const filterProductsByCategory = (categoryId: string[]) => {
-    if (categoryId === null || categoryId.length == 0 || categoryId.includes(null)) {
+    if (
+      categoryId === null ||
+      categoryId.length == 0 ||
+      categoryId.includes(null)
+    ) {
       setFilteredProducts(data);
-    }else {
-      const filtered = data.filter(
-        (product) => categoryId.includes(product.categoryId)
+    } else {
+      const filtered = data.filter((product) =>
+        categoryId.includes(product.categoryId)
       );
       setFilteredProducts(filtered);
     }
@@ -194,6 +198,8 @@ export default function Product() {
     {
       title: "Mã sản phẩm",
       dataIndex: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Tên hàng",

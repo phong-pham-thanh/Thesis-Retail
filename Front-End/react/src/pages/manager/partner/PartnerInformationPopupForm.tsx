@@ -62,12 +62,14 @@ export default function PartnerInformationPopupScreen({
           }
 
           message.success(
-            `Partner ${type === "edit" ? "updated" : "created"} successfully`
+            `${
+              type === "edit" ? "Thay đổi" : "Thêm mới"
+            } thông tin đối tác thành công.`
           );
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Failed to save partner");
+          message.error("Lỗi khi lưu thông tin đối tác.");
         } finally {
           setLoading(false);
         }
@@ -77,30 +79,30 @@ export default function PartnerInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Partner" : "Create Partner"}
+      title={type === "edit" ? "Thay đổi" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="save" type="primary" loading={loading} onClick={handleOk}>
-          Save
+          Lưu
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please enter partner name" }]}
+          label="Tên"
+          rules={[{ required: true, message: "Nhập tên đối tác" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="phoneNumber"
-          label="Phone number"
-          rules={[{ required: true, message: "Please enter phone number" }]}
+          label="Số điện thoại"
+          rules={[{ required: true, message: "Nhập số điện thoại" }]}
         >
           <Input />
         </Form.Item>

@@ -3,7 +3,6 @@ import "./styleWarehouse.css";
 import { Button, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditIcon from "@mui/icons-material/Edit";
-import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WarehouseInformationPopupScreen from "./WarehouseInformationPopupScreen";
 import api_links from "../../app/api_links";
@@ -58,7 +57,7 @@ export default function Warehouse() {
         setLoading(false);
       })
       .catch((error: any) => {
-        message.error(error.message || "Failed to get warehouse.");
+        message.error(error.message || "Lỗi khi tải thông tin kho.");
         console.log(error);
         setLoading(false);
       });
@@ -98,19 +97,22 @@ export default function Warehouse() {
 
   const columns: ColumnsType<WarehouseType> = [
     {
-      title: "Warehouse ID",
+      title: "Mã kho",
       dataIndex: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
     },
     {
-      title: "Address",
+      title: "Địa chỉ kho",
       dataIndex: "address",
+      sorter: (a, b) => a.address.localeCompare(b.address),
     },
     {
-      title: "Manager ID",
+      title: "Mã quản lý",
       dataIndex: "managerId",
+      sorter: (a, b) => parseInt(a.managerId) - parseInt(b.managerId),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (status: boolean) => (status ? "Active" : "Inactive"),
     },
@@ -146,19 +148,19 @@ export default function Warehouse() {
       />
       <div className="dashboard-container">
         <div className="header">
-          <h2>Warehouse Management</h2>
+          <h2>Quản lý kho</h2>
           <div
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <CustomButton
-              text="Export"
+              text="Xuất file"
               icon={<UploadFile />}
-              onClick={() => message.info("Exporting file...")}
+              onClick={() => message.info("Đang xuất file...")}
               backgroundColor="#28C2FF"
               color="#fff"
             />
             <CustomButton
-              text="Add New"
+              text="Thêm mới"
               icon={<AddCircleIcon />}
               onClick={handleAddNew}
               backgroundColor="#28C2FF"
@@ -169,9 +171,9 @@ export default function Warehouse() {
         <div className="warehouse-container">
           <div className="filter-container">
             <div className="search-bar">
-              <h3>Search</h3>
+              <h3>Tìm kiếm</h3>
               <Input
-                placeholder="Search warehouse address"
+                placeholder="Địa chỉ kho"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 allowClear

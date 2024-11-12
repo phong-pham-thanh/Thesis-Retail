@@ -9,6 +9,7 @@ import api_links from "../../../app/api_links";
 import CustomerInformationPopupScreen from "./CustomerInformationPopupForm";
 import AlertDialog from "../../component/AlertDialog";
 import message from "antd/lib/message";
+import { ColumnsType } from "antd/es/table";
 
 interface UserType {
   id: string;
@@ -100,19 +101,22 @@ export default function UserPage() {
     });
   };
 
-  const columns = [
+  const columns: ColumnsType<UserType> = [
     {
-      title: "Customer ID",
+      title: "Mã khách hàng",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Customer Name",
+      title: "Tên khách hàng",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: "Phone number",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
@@ -150,12 +154,12 @@ export default function UserPage() {
       />
       <div className="dashboard-container">
         <div className="header">
-          <h2>Customer Management</h2>
+          <h2>Quản lý khách hàng</h2>
           <div
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <CustomButton
-              text="Add New Customer"
+              text="Thêm mới"
               icon={<AddCircleIcon />}
               onClick={handleAddNewUser}
               backgroundColor="#28C2FF"
@@ -167,9 +171,9 @@ export default function UserPage() {
           {/* Left Sidebar for Search */}
           <div className="filter-container">
             <div className="search-bar">
-              <h3>Search</h3>
+              <h3>Tìm kiếm</h3>
               <Input
-                placeholder="Search for customers"
+                placeholder="Tên khách hàng"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 allowClear

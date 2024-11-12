@@ -61,12 +61,14 @@ export default function CustomerInformationPopupScreen({
           }
 
           message.success(
-            `Customer ${type === "edit" ? "updated" : "created"} successfully`
+            `${
+              type === "edit" ? "Thay đổi" : "Thêm mới"
+            } thông tin khách hàng thành công.`
           );
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Failed to save customer");
+          message.error("Lỗi khi lưu thông tin khách hàng.");
         } finally {
           setLoading(false);
         }
@@ -76,30 +78,30 @@ export default function CustomerInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit customer" : "Create customer"}
+      title={type === "edit" ? "Thay đổi" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="save" type="primary" loading={loading} onClick={handleOk}>
-          Save
+          Lưu
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please enter customer name" }]}
+          label="Tên khách hàng"
+          rules={[{ required: true, message: "Nhập tên khách hàng" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="phoneNumber"
-          label="Phone number"
-          rules={[{ required: true, message: "Please enter phone number" }]}
+          label="Số điện thoại"
+          rules={[{ required: true, message: "Nhập số điện thoại" }]}
         >
           <Input />
         </Form.Item>
