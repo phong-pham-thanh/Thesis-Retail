@@ -75,12 +75,14 @@ export default function CategoryInformationPopupScreen({
           }
 
           message.success(
-            `Category ${type === "edit" ? "updated" : "created"} successfully`
+            `${
+              type === "edit" ? "Thay đổi" : "Thêm mới"
+            } thông tin danh mục thành công.`
           );
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Failed to save Category");
+          message.error(error.message || "Lỗi khi lưu thông tin danh mục");
         } finally {
           setLoading(false);
         }
@@ -90,23 +92,23 @@ export default function CategoryInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Category" : "Create Category"}
+      title={type === "edit" ? "Thay đổi" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="save" type="primary" loading={loading} onClick={handleOk}>
-          Save
+          Lưu
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="name"
-          label="Category Name"
-          rules={[{ required: true, message: "Please enter Category name" }]}
+          label="Tên danh mục"
+          rules={[{ required: true, message: "Nhập tên danh mục" }]}
         >
           <Input />
         </Form.Item>

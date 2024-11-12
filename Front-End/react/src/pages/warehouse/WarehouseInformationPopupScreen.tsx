@@ -36,7 +36,7 @@ export default function WarehouseInformationPopupScreen({
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        message.error("Failed to load users");
+        message.error("Lỗi khi tải thông tin users");
       }
     };
 
@@ -82,12 +82,14 @@ export default function WarehouseInformationPopupScreen({
           }
 
           message.success(
-            `Warehouse ${type === "edit" ? "updated" : "created"} successfully`
+            `${
+              type === "edit" ? "Thay đổi" : "Thêm mới"
+            } thông tin kho thành công.`
           );
           if (onSave) onSave();
           handleCancel();
         } catch (error) {
-          message.error("Failed to save warehouse");
+          message.error("Lỗi khi lưu thông tin kho.");
         } finally {
           setLoading(false);
         }
@@ -97,33 +99,31 @@ export default function WarehouseInformationPopupScreen({
 
   return (
     <Modal
-      title={type === "edit" ? "Edit Warehouse" : "Create Warehouse"}
+      title={type === "edit" ? "Thay đổi" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="save" type="primary" loading={loading} onClick={handleOk}>
-          Save
+          Lưu
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="address"
-          label="Address"
-          rules={[
-            { required: true, message: "Please enter warehouse address" },
-          ]}
+          label="Địa chỉ"
+          rules={[{ required: true, message: "Nhập địa chỉ kho" }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="managerId"
-          label="Manager"
-          rules={[{ required: true, message: "Please select a manager" }]}
+          label="Quản lý"
+          rules={[{ required: true, message: "Chọn thông tin quản lý" }]}
         >
           <Select>
             {users.map((user) => (
@@ -134,7 +134,7 @@ export default function WarehouseInformationPopupScreen({
           </Select>
         </Form.Item>
 
-        <Form.Item name="status" label="Status" valuePropName="checked">
+        <Form.Item name="status" label="Trạng thái" valuePropName="checked">
           <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
         </Form.Item>
       </Form>

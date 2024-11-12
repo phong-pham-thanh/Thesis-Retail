@@ -105,7 +105,7 @@ export default function ProductInformationPopupScreen({
           }
 
           message.success(
-            `Product ${type === "edit" ? "updated" : "created"} successfully`
+            `Product ${type === "edit" ? "Thay đổi" : "Thêm mới"} thành công.`
           );
           if (onSave) onSave();
           handleCancel();
@@ -150,10 +150,10 @@ export default function ProductInformationPopupScreen({
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="save" type="primary" loading={loading} onClick={handleOk}>
-          Save
+          Lưu
         </Button>,
       ]}
     >
