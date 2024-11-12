@@ -11,6 +11,10 @@ import { filter, map, mergeMap, take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';  // Import MatDialog
 import { Users } from '../model/user.model';
 import { UserFormComponent } from './user-form/user-form.component';
+import * as wareHouseActions from '../state/warehouse-state/warehouse.actions';
+import * as wareHouseSelector from '../state/warehouse-state/warehouse.reducer';
+import { Warehouse } from '../model/warehouse.model';
+import { UtilitiesService } from '../common/utilities.service';
 // import { UsersDetailComponent } from './users-detail/users-detail.component';~
 @Component({
   selector: 'app-user-list',
@@ -25,8 +29,17 @@ export class UserListComponent {
   displayedColumns: string[] = ['id', 'username', 'name', 'address', 'dateOnboard', 'dateOfBirth', 'currentWarehouse', 'isAdmin', 'context'];
   dataSource = new MatTableDataSource<Users>();
   allUsers: Users[];
+  isDropDownOpenWareHouse: boolean = false;
+  selectedWarehousesId: number[] = []
+  allWareHouse: Warehouse[] = [];
+  fullData: Users[] = [];
+  isDropdownOpenStatus = false;
+  selectedIdStatus: boolean[] = [];
 
-
+  statusArray = [
+    {idStatus: true, name: 'Admin'},
+    {idStatus: false, name: 'User thường'},
+  ]
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -36,6 +49,7 @@ export class UserListComponent {
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
     this.store.dispatch(new usersActions.LoadAllUsers());
+    this.store.dispatch(new wareHouseActions.LoadAllWarehouse());
   }
 
   ngOnInit() {
@@ -45,6 +59,7 @@ export class UserListComponent {
         this.store.pipe(select(usersSelector.getAllUsers),
         map(result => {
           this.allUsers = result; 
+          this.fullData = UtilitiesService.cloneDeep(result);
           this.dataSource = new MatTableDataSource<Users>(this.allUsers);
           this.dataSource.paginator = this.paginator; 
           this.dataSource.sort = this.sort;
@@ -58,6 +73,8 @@ export class UserListComponent {
                 return item.address;
               case 'username':
                 return item.username;
+              case 'currentWarehouse':
+                return item.listUserWareHouse.length > 0 ? item.listUserWareHouse[0].wareHouseModel?.address : null;
               case 'dateOnboard':
                 return item.dateOnboard ? new Date(item.dateOnboard).getTime() : 0;
               case 'dateOfBirth':
@@ -74,6 +91,16 @@ export class UserListComponent {
                 return '';
             }
           };
+        }))
+      )
+    ).subscribe();
+
+    this.store.pipe(select(wareHouseSelector.getIsLoaded),
+      filter(loaded => loaded === true),
+      mergeMap(_ => 
+        this.store.pipe(select(wareHouseSelector.getAllWarehouse),
+        map(result => {
+          this.allWareHouse = result; 
         }))
       )
     ).subscribe();
@@ -97,16 +124,50 @@ export class UserListComponent {
     });
   }
 
-  getListWareHouseName(item: Users){
-    let allWareHouseName: string[] = item.listUserWareHouse?.map(uw => {
-      return uw.wareHouseModel?.address;
-    })
-    return allWareHouseName.join(", ");
-  }
-
-
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  toggleDropdownWareHouse() {
+    this.isDropDownOpenWareHouse = !this.isDropDownOpenWareHouse;
+  }
+
+  toggleDropdownStatus() {
+    this.isDropdownOpenStatus = !this.isDropdownOpenStatus;
+  }
+
+  onCheckboxChangeWareHouse(warehouseId: number, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedWarehousesId.push(warehouseId);
+    } else {
+      this.selectedWarehousesId = this.selectedWarehousesId.filter(id => id !== warehouseId);
+    }
+    this.filterUser();
+  }
+
+  onCheckboxChangeStatus(idStatus: boolean, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedIdStatus.push(idStatus);
+    } else {
+      this.selectedIdStatus = this.selectedIdStatus.filter(id => id !== idStatus);
+    }
+    this.filterUser();
+  }
+
+  filterUser(){
+    this.allUsers = UtilitiesService.cloneDeep(this.fullData);
+    this.allUsers = this.selectedWarehousesId.length > 0 ? UtilitiesService.cloneDeep(this.allUsers.filter(x => {
+      return x.listUserWareHouse.map(uw => uw.wareHouseId).filter(wid => this.selectedWarehousesId.includes(wid)).length > 0;
+    })): this.allUsers;
+    this.allUsers = this.selectedIdStatus.length > 0 ? UtilitiesService.cloneDeep(this.allUsers.filter(x => this.selectedIdStatus.includes(x.isAdmin))): this.allUsers;
+
+
+    
+    this.dataSource = new MatTableDataSource<Users>(this.allUsers);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }
