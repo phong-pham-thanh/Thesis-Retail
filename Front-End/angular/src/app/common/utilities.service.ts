@@ -71,6 +71,17 @@ export class UtilitiesService {
       const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
       return d1.getTime() > d2.getTime();
     }
+
+    static isNull(obj: any): boolean {
+      if ((obj === 0) || (obj === false) || (obj === "")) {
+          return false;
+      }
+      return (!obj || typeof obj === 'undefined' || obj === null);
+  }
+
+    static isNullOrEmpty(obj: any): boolean {
+      return this.isNull(obj) || obj === '';
+  }
   
   }
   
