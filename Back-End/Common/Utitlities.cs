@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 
 public static class Utilities
 {
@@ -66,5 +69,38 @@ public static class Utilities
         {
             throw new InvalidOperationException($"Item with the name '{nameValue}' already exists.");
         }
+    }
+
+    public static string ToUrlFriendly(string input)
+    {
+        // Chuyển sang chữ thường
+        input = input.ToLowerInvariant();
+
+        // Loại bỏ dấu tiếng Việt
+        input = RemoveDiacritics(input);
+
+        // Thay khoảng trắng và các ký tự đặc biệt bằng dấu gạch ngang
+        input = Regex.Replace(input, @"[^a-z0-9\s-]", ""); // Loại bỏ các ký tự đặc biệt
+        input = Regex.Replace(input, @"\s+", "-"); // Thay khoảng trắng bằng dấu gạch ngang
+        input = Regex.Replace(input, @"-+", "-"); // Loại bỏ dấu gạch ngang thừa
+
+        return input.Trim('-'); // Loại bỏ dấu gạch ngang ở đầu và cuối chuỗi
+    }
+
+    private static string RemoveDiacritics(string text)
+    {
+        var normalizedString = text.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder();
+
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 }

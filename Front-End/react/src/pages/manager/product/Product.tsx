@@ -69,7 +69,7 @@ export default function Product() {
   const [productToDelete, setProductToDelete] = useState<DataType | null>(null); // Store the product to be deleted
 
   const defaultImage =
-    "https://localhost:7030/images/products/default_image.webp";
+    "https://localhost:7030/images/default/default_image.png";
 
   const getAllProducts = () => {
     const api_link = api_links.product.getAll;
@@ -187,8 +187,8 @@ export default function Product() {
           src={imgPath && imgPath.trim() !== "" ? imgPath : defaultImage}
           alt=""
           style={{
-            width: "50px",
-            height: "50px",
+            width: "80px",
+            height: "80px",
             objectFit: "cover",
             borderRadius: "5px",
           }}

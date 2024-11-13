@@ -39,6 +39,7 @@ export class RetailComponentComponent implements OnInit {
 
   imageUrl = imageUrl;
   allProduct: Product[] = [];
+  fullProductData: Product[] = [];
   allWarehouse: Warehouse[] = [];
   allCustomer: Customer[] = [];
   allPriceProduct: PriceProduct[] = []
@@ -47,6 +48,7 @@ export class RetailComponentComponent implements OnInit {
   currentCustomer: Customer;
   currentWarehouse: Warehouse;
   totalAmountBill: number = 0;
+  productSearchKeyName: string = null;
 
   constructor(protected store: Store<State>, 
     private currencyPipe: CurrencyPipe,
@@ -68,6 +70,7 @@ export class RetailComponentComponent implements OnInit {
         this.store.pipe(select(productSelector.getAllProduct),
         map(result => {
           this.allProduct = result.filter(pro => pro.currentPrice); 
+          this.fullProductData = UtilitiesService.cloneDeep(this.allProduct);
         }))
       ), take(1)
     ).subscribe();
@@ -147,6 +150,19 @@ export class RetailComponentComponent implements OnInit {
     }
     this.getTotalAmount();
 
+  }
+
+  onSearchProductChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const keySearch = inputElement.value;
+    this.allProduct = UtilitiesService.cloneDeep(this.fullProductData);
+    if(!UtilitiesService.isNullOrEmpty(keySearch) && keySearch !== ''){
+      this.allProduct = this.allProduct.filter(product =>
+        UtilitiesService.removeDiacritics(product.name).includes(UtilitiesService.removeDiacritics(keySearch))
+      );
+      return;
+    }
+    this.allProduct = UtilitiesService.cloneDeep(this.fullProductData);
   }
 
   removeItem(item: BillDetails){
