@@ -30,12 +30,14 @@ namespace APIBackend.Service
         private readonly IPriceProductRepository _priceProductRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
         protected readonly IUserWareHouseService _userWareHouseService;
+        private readonly string _baseUrl;
 
         public ProductService(IProductMapper productMapper, 
             IProductRepository productRepository, 
             IInventoryRepository inventoryRepository,
             IPriceProductRepository priceProductRepository,
             IUserWareHouseService userWareHouseService,
+            IConfiguration configuration,
             IUnityOfWorkFactory uowFactory)
         {
             _productMapper = productMapper;
@@ -44,11 +46,13 @@ namespace APIBackend.Service
             _priceProductRepository = priceProductRepository;
             _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
+            _baseUrl = configuration["ImageSettings:BaseUrl"];
         }
 
         public List<ProductModel> GetAllProducts()
         {
             List<ProductModel> result = _productRepository.GetAllProducts();
+            this.addUrlToImagePath(result);
             return result;
         }
         public List<ProductModel> GetAllProductFullInventory()
@@ -60,6 +64,7 @@ namespace APIBackend.Service
             {
                 item.ListInventories = item.ListInventories.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
             }
+            this.addUrlToImagePath(result);
             return result;
         }
 
@@ -143,6 +148,14 @@ namespace APIBackend.Service
         public List<ProductModel> GetByCategoryId(int cateId)
         {
             return _productRepository.GetByCategoryId(cateId);
+        }
+
+        private void addUrlToImagePath(List<ProductModel> productModels)
+        {
+            foreach (var productModel in productModels)
+            {
+                productModel.ImgPath = productModel.ImgPath != null ? $"{_baseUrl}/{productModel.ImgPath}" : null;
+            }
         }
     }
 }

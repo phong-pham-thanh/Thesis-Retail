@@ -8,4 +8,5 @@ export class Product{
     status: boolean;
     currentPrice: number;
     listPrices: PriceProduct[];
+    imgPath: string;
 }

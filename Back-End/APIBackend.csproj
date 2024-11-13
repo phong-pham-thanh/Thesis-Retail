@@ -27,4 +27,9 @@
   <ItemGroup>
     <None Remove="DataModel\Enum\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\default\" />
+    <Folder Include="wwwroot\images\products\" />
+  </ItemGroup>
 </Project>

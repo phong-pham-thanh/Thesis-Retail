@@ -39,6 +39,7 @@ export default function ProductInformationPopupScreen({
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [fullPath, setFullPath] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -64,7 +65,8 @@ export default function ProductInformationPopupScreen({
         ...data,
         categoryId: data.category.id,
       });
-      setImageUrl(data.imgPath || "");
+      // setImageUrl(data.imgPath || "");
+      setFullPath(data.imgPath || "");
     } else if (type === "create") {
       form.resetFields();
     }
@@ -79,6 +81,7 @@ export default function ProductInformationPopupScreen({
   const clearImage = () => {
     setSelectedFile(null);
     setImageUrl(""); // Clear the image preview URL
+    setFullPath(""); // Clear the image preview URL
   };
 
   const handleOk = () => {
@@ -87,7 +90,6 @@ export default function ProductInformationPopupScreen({
       .then(async (values) => {
         setLoading(true);
         const productData = { ...values, imgPath: imageUrl };
-        console.log(productData.imgPath);
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
@@ -137,6 +139,7 @@ export default function ProductInformationPopupScreen({
       const uploadApi = { ...api_links.uploadFile.post, data: formData };
       const response = await fetch_Api(uploadApi);
       setImageUrl(response.data.imageUrl);
+      setFullPath(response.data.fullPath);
       message.success("Image uploaded successfully.");
     } catch (error) {
       message.error("Failed to upload image.");
@@ -190,11 +193,11 @@ export default function ProductInformationPopupScreen({
           <input id="file-upload" type="file" onChange={handleFileChange} />
         </Form.Item>
 
-        {imageUrl && (
+        {fullPath && (
           <img
-            src={imageUrl}
+            src={fullPath}
             alt="Xem trước"
-            style={{ width: "100px", marginTop: "10px" }}
+            style={{ width: "100px", height:"100px", marginTop: "10px" }}
           />
         )}
       </Form>

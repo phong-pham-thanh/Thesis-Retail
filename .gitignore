@@ -234,6 +234,7 @@ _Pvt_Extensions
 .fake/
 Back-End/.vs
 Back-End/obj/Debug/net6.0
+Back-End/wwwroot/images/products
 
 
 
