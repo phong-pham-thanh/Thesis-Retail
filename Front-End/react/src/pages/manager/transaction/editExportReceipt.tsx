@@ -9,6 +9,7 @@ import {
   useNavigate,
   BrowserRouter,
   Outlet,
+  useParams,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,16 +21,17 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { GetProps } from 'antd';
-//import ProductInformationPopupScreen from "../../component/popupEditProduct";
+
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, CustomerState, ProductState, WarehouseState, GoodExportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
-//import axios from 'axios';
+import { handleSearch, processAPIPostLink } from "../../../app/processFunction"
+
 
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
-import { handleSearch } from "../../../app/processFunction";
+import moment from "moment";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -44,8 +46,8 @@ interface ExportProductTableState {
 };
 
 interface ExportDataType {
-  goodsReceiptModel: GoodsReceipt,
-  listGoodReceiptDetailModels: ListGoodReciptDetailsModel[],
+  goodsExportModel: GoodsReceipt,
+  listGoodExportDetailModels: ListGoodReciptDetailsModel[],
 }
 
 const gridStyle: React.CSSProperties = {
@@ -57,7 +59,7 @@ const gridStyle: React.CSSProperties = {
   margin: '2px',
 };
 
-export default function ImportGoods() {
+export default function ExportGoods() {
   const navigate = useNavigate();
 
   const productColumns: ColumnsType<ProductState> = [
@@ -143,10 +145,12 @@ export default function ImportGoods() {
 
   ];
 
+  const params = useParams();
   const [form] = Form.useForm();
+  const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>();
   const [allProducts, setProducts] = useState<ProductState[]>([]);
   const [filteredProducts, setFilterProducts] = useState<ProductState[]>([]);
-  const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
+  const [allCustomers, setAllCustomers] = useState<CustomerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
   const [choosedCategory, setChoosedCategory] = useState("Tất cả");
@@ -157,6 +161,15 @@ export default function ImportGoods() {
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
+    getGoodReceiptByID(params.id)
+      .then((res) => {
+        setGoodReciptData(res.data);
+        handleGetTableProductDataByID(res.data.listGoodExportDetailsModel);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     getAllProduct()
       .then((res) => {
         setProducts(res.data);
@@ -165,9 +178,9 @@ export default function ImportGoods() {
       .catch((error) => {
         console.log(error);
       });
-    getAllPartner()
+    getAllCustomer()
       .then((res) => {
-        setAllPartners(res.data);
+        setAllCustomers(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -207,12 +220,17 @@ export default function ImportGoods() {
     }, 1000);
   };
 
+  const getGoodReceiptByID = (ID: string) => {
+    const api_link = api_links.goodsIssue.export.getById;
+    api_link.url = processAPIPostLink(api_link.url, ID);
+    return fetch_Api(api_link);
+  };
   const getAllProduct = () => {
     const api_link = api_links.product.getAll;
     return fetch_Api(api_link);
   };
-  const getAllPartner = () => {
-    const api_link = api_links.partner.getAll;
+  const getAllCustomer = () => {
+    const api_link = api_links.customer.getAll;
     return fetch_Api(api_link);
   };
   const getAllWarehouse = () => {
@@ -223,6 +241,31 @@ export default function ImportGoods() {
     const api_link = api_links.category.getAll;
     return fetch_Api(api_link);
   };
+
+  const putGoodsIssue = (putData: GoodExportReceiptDetailDataType) => {
+    const api_post = api_links.goodsIssue.export.update;
+    api_post.url = processAPIPostLink(api_post.url, goodReceiptData.id);
+    api_post.data = putData;
+    return fetch_Api(api_post);
+  };
+
+  const handleGetTableProductDataByID = (listProduct: ListGoodReciptDetailsModel[]) => {
+    let newExportData: ExportProductTableState;
+    listProduct.map((item) => {
+      newExportData = {
+        //"goodsReceiptId": "0",
+        "productId": String(item.productId),
+        "productName": item.product.name,
+        "priceUnit": 0,
+        "quantity": item.quantity,
+        "subTotal": 0,
+      }
+      exportTableData.push(newExportData);
+    })
+    updateTotal();
+    setExportTableData([...exportTableData]);
+    console.log(exportTableData);
+  }
 
   const handleTableProductClick = (record: ProductState) => {
     const indx = exportTableData.findIndex((item) => item.productId === record.id);
@@ -282,58 +325,42 @@ export default function ImportGoods() {
     setTotalQty(sumQ);
   }
 
-  const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.import.createNew;
-    api_post.data = postData;
-    return fetch_Api(api_post);
-  };
-
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
         id: 0,
-        goodReceiptId: 0,
-        goodsReceipt: null,
+        goodExportId: goodReceiptData.id,
+        goodExport: null,
         productId: Number(item.productId),
-        product: null,
-        /*{
-          id: Number(item.productId),
-          name: "",
-          categoryId: 0,
-          category: {
-            id: 0,
-            name: ""
-          },
-          description: "",
-          status: 0,
-          listInventories: null
-        },*/
-        priceUnit: item.priceUnit,
-        quantity: item.quantity
+        product: {
+          currentPrice: null,
+        },
+        //priceUnit: item.priceUnit,
+        quantity: item.quantity,
+
       })
     })
     const event = new Date();
-    const postData: ExportDataType = {
-      goodsReceiptModel: {
-        id: "0",
-        importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        partnerId: form.getFieldValue("partnerId"),
-        receiptStatus: 2,
-        ListGoodReciptDetailsModel: [],
-        wareHouseId: form.getFieldValue("idWareHouse")
-      },
-      listGoodReceiptDetailModels: tempListGoodReceiptDetailModels,
-    }
+    const postData: GoodExportReceiptDetailDataType = {
+      id: goodReceiptData.id,
+      exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+      customerId: form.getFieldValue("customerId"),
+      exportStatus: 2,
+      listGoodExportDetailsModel: tempListGoodReceiptDetailModels,
+      wareHouseId: form.getFieldValue("idWareHouse"),
+      wareHouse: null,
+    };
 
     console.log(postData);
-    postGoodsIssue(postData)
+    putGoodsIssue(postData)
       .then((res) => {
-        message.success("Tạo thành công");
+        message.success("Chỉnh sửa thành công");
         navigate(-1);
       })
       .catch((error) => {
-        message.error("Tạo thất bại");
+        message.error(error.detail);
+        console.log(error);
       });
 
   };
@@ -359,89 +386,100 @@ export default function ImportGoods() {
     <div className="dashboard-container">
 
       <div className="product-container">
+
         <div className="receipt-container">
-          Đơn nhập hàng
+          Đơn xuất hàng
           <Form form={form}
             //labelCol={{ span: 8 }}
             wrapperCol={{ span: 20 }}
             onFinish={onFinish}
           >
-            <Space size={"large"} ><Row>
-              <Col span={8}>
-                <Form.Item
-                  className="idWareHouse"
-                  label={"Nhập đến kho"}
-                  name={"idWareHouse"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Chọn kho"
-                    optionFilterProp="label"
-                  >
-                    {allWarehouses?.map((d) => {
-                      return (
-                        <Option value={d.id}>{d.address}</Option>
-                      )
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col><Col span={8}>
-                <Form.Item
-                  className="exportDate"
-                  label={"Ngày nhập"}
-                  name={"exportDate"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <DatePicker
-                    showTime
-                    disabledDate={(current) => { return current.valueOf() > Date.now() }}
-                  />
-                </Form.Item >
-              </Col><Col span={8}><Form.Item
-                className="partnerId"
-                label={"Nhà cung cấp"}
-                name={"partnerId"}
-                layout="vertical"
-                rules={[{
-                  required: true,
-                  message: 'Không để trống',
-                }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Chọn nhà cung cấp"
-                  optionFilterProp="label"
-                >
-                  {allPartners?.map((d) => {
-                    return (
-                      <Option value={d.id}>{d.name}</Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-              </Col></Row>
+            <Space size={"large"} >
+              {goodReceiptData &&
+                <Row>
+                  <Col span={8}>
+                    <Form.Item
+                      className="idWareHouse"
+                      label={"Xuất đến kho"}
+                      name={"idWareHouse"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={goodReceiptData?.wareHouseId}
+                    >
+                      <Select
+                        showSearch
+                        placeholder="Chọn kho"
+                        optionFilterProp="label"
+                      //defaultValue={goodReceiptData?.wareHouseId}
+                      >
+                        {allWarehouses?.map((d) => {
+                          return (
+                            <Option value={d.id}>{d.address}</Option>
+                          )
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      className="exportDate"
+                      label={"Ngày xuất"}
+                      name={"exportDate"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={moment(goodReceiptData?.exportDate)}
+                    >
+                      <DatePicker
+                        showTime
+                        disabledDate={(current) => { return current.valueOf() > Date.now() }}
+                      />
+                    </Form.Item >
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      className="customerId"
+                      label={"Khách hàng"}
+                      name={"customerId"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={goodReceiptData?.customerId}
+                    >
+                      <Select
+                        showSearch
+                        placeholder="Chọn khách hàng"
+                        optionFilterProp="label"
+                      //defaultValue={goodReceiptData?.customerId}//
+                      >
+                        {allCustomers?.map((d) => {
+                          return (
+                            <Option value={d.id}>{d.name}</Option>
+                          )
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              }
               <Row>
                 <Button type='primary' onClick={() => {
                   onFinish();//postGoodsIssue()
                 }}
                   style={{ backgroundColor: "#465d65" }}>
                   Thêm mới</Button>
-              </Row></Space>
+              </Row>
+            </Space>
           </Form>
 
-
-
           <div className='export-list'>
-
             <Table
               columns={exportColumns}
               dataSource={[...exportTableData]}
@@ -458,7 +496,6 @@ export default function ImportGoods() {
                   </Table.Summary.Row>
                 </Table.Summary>
               )} />
-
           </div>
         </div>
 
@@ -479,13 +516,6 @@ export default function ImportGoods() {
               })}</Select>
             <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
           </Row>
-          {/*<Table
-            columns={productColumns}
-            /*dataSource={allProducts}
-          onRow={(record) => ({
-            onClick: () => handleTableRowClick(record.id),
-          })}*\/
-          />*/}
           <Card className="product-table" title={choosedCategory}>
             {filteredProducts?.map((p) =>
               <Card.Grid className="product-cell" style={gridStyle}
@@ -497,4 +527,27 @@ export default function ImportGoods() {
       </div>
     </div >
   );
-}
+};
+/*{
+  "id": 56,
+  "exportDate": "2024-10-04T03:07:53",
+  "customerId": 2,
+  "wareHouseId": 3,
+  "exportStatus": 2,
+  "listGoodExportDetailsModel": [
+    {
+      "goodExportId": 56,
+      "productId": 4,
+      "product": {
+        "id": 4,
+        "name": "Omachi",
+
+
+        "currentPrice": null
+      },
+      "quantity": 18
+    }
+  ],
+
+  "wareHouse": null
+}*/

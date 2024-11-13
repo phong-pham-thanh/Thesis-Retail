@@ -88,6 +88,7 @@ export type EmployeeListState = EmployeeState[];
 export type CustomerState = {
   id: string;
   name: string;
+  phoneNumber: string;
 };
 
 export type CustomerListState = CustomerState[];
@@ -98,23 +99,19 @@ export type CategoryType = {
 };
 
 export type PartnerState = {
-  id: number | string;
-  name: string;
-  totalSale: number;
-};
-
-export type StaffState = {
-  id: string;
-  name: string;
+  id: number | string,
+  name: string,
+  totalSale: number,
+  phoneNumber: string;
 };
 
 export type WarehouseState = {
-  id: number | string;
-  managerId: number | string;
-  manager: null;
-  address: string;
-  status: boolean;
-  inventories: null;
+  id: number | string,
+  managerId: number | string,
+  manager: null,
+  address: string,
+  status: boolean,
+  inventories: null
 };
 
 export type GoodsReceipt = {
@@ -131,108 +128,48 @@ export type GoodsReceipt = {
 };
 
 export type ListGoodReciptDetailsModel = {
-  id: number;
-  goodReceiptId?: number;
-  goodExportId?: number;
-  goodsReceipt?: null;
-  goodExport?: null;
-  productId: number;
-  product: {
-    id: number;
-    name: string;
-    categoryId: number;
-    category: {
-      id: number;
-      name: string;
-    };
-    description: string;
-    status: boolean;
-    listInventories: null;
-  } | null;
-  priceUnit?: number;
-  quantity: number;
+  id: number,
+  goodReceiptId?: number,
+  goodExportId?: number,
+  goodsReceipt?: null,
+  goodExport?: null,
+  productId: number,
+  product?: {
+    id?: number,
+    name?: string,
+    categoryId?: number,
+    category?: CategoryType,
+    description?: string,
+    status?: boolean,
+    listInventories?: null,
+    currentPrice?: null,
+
+  } | null,
+  priceUnit?: number,
+  quantity: number
 };
 
-export type GoodReceiptDataType = GoodImportReceiptDetailDataType;
-/*{
-  id: string|number,
-  importDate: string|Date,
-  partnerID: string|number,
-  receiptStatus: string|number,
-  listGoodReciptDetailsModel: GoodsReceiptDetails[]|null,
-  partner?: {
-    id: number,
-    name: string,
-    totalSale: number
-  },
-};*/
-
 export type GoodImportReceiptDetailDataType = {
-  id: number;
-  importDate: string;
-  partnerID: number;
-  partner: {
-    id: number;
-    name: string;
-    totalSale: number;
-  };
-  receiptStatus: number;
-  totalAmount: number | null;
-  listGoodReciptDetailsModel: [
-    {
-      id: number;
-      goodReceiptId: number;
-      goodsReceipt: null;
-      productId: number;
-      product: {
-        id: number;
-        name: string;
-        categoryId: number;
-        category: {
-          id: number;
-          name: string;
-        };
-        description: string;
-        status: boolean;
-        listInventories: null;
-      };
-      priceUnit: number;
-      quantity: number;
-    }
-  ];
+  id: number,
+  importDate: string,
+  partnerID: number,
+  partner?: PartnerState,
+  receiptStatus: number,
+  totalAmount?: number | null,
+  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[],
+  wareHouseId: string;
+  wareHouse?: WarehouseState;
 };
 
 export type GoodExportReceiptDetailDataType = {
-  id: number;
-  exportDate: string;
-  customerID: number;
-  customer: {
-    id: number;
-    name: string;
-    totalSale: number;
-  };
-  exportStatus: number;
-  totalAmount: number | null;
+  id: number,
+  exportDate: string,
+  customerId: number,
+  customer?: CustomerState,
+  exportStatus: number,
+  totalAmount?: number | null,
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
-  listGoodExportDetailModels: ListGoodReciptDetailsModel[] /*[
-    {
-      id: number,
-      goodReceiptId: number,
-      goodsReceipt: null,
-      productId: number,
-      product: {
-        id: number,
-        name: string,
-        categoryId: number,
-        category: {
-          id: number,
-          name: string
-        },
-        description: string,
-        status: boolean,
-        listInventories: null
-      },
-      priceUnit: number,
-      quantity: number
-    }]*/;
+  listGoodExportDetailModels?: ListGoodReciptDetailsModel[];
+  wareHouseId: string;
+  wareHouse?: WarehouseState;
 };

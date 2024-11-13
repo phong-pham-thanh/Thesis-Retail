@@ -27,16 +27,7 @@ import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
 import { FilterBox } from "../../component/filterBox";
 
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Pagination,
-  Table,
-  Tag,
-} from "antd";
+import { Button, Form, Input, message, Modal, Pagination, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import CustomInput from "../../component/searchBox";
 import CustomSelect from "../../component/selectBox";
@@ -58,51 +49,56 @@ import {
   ProcessDate,
   ProcessStatus,
 } from "../../../app/processFunction";
+import { StateFilter, WarehouseFilter, CustomerFilter } from "./FilterBoxes";
+
 
 const emptydata: GoodExportReceiptDetailDataType = {
-  id: 0,
-  exportDate: "01/01/1970",
-  totalAmount: 0,
-  customerID: 0,
-  customer: {
-    id: 0,
-    name: "",
-    totalSale: 0,
+  "id": 0,
+  "exportDate": "01/01/1970",
+  "totalAmount": 0,
+  "customerId": 0,
+  "customer": {
+    "id": "0",
+    "name": "",
+    "phoneNumber": "",
   },
   exportStatus: 0,
   listGoodExportDetailModels: [
     {
-      id: 0,
-      goodReceiptId: 0,
-      goodsReceipt: null,
-      productId: 0,
-      product: {
-        id: 0,
-        name: "",
-        categoryId: 0,
-        category: {
-          id: 0,
-          name: "",
+      "id": 0,
+      "goodReceiptId": 0,
+      "goodsReceipt": null,
+      "productId": 0,
+      "product": {
+        "id": 0,
+        "name": "",
+        "categoryId": 0,
+        "category": {
+          "id": "0",
+          "name": ""
         },
         description: "",
         status: true,
         listInventories: null,
       },
-      priceUnit: 0,
-      quantity: 0,
-    },
-  ],
-};
+      "priceUnit": 0,
+      "quantity": 0
+    }],
+    "wareHouseId": "0",
+    "wareHouse": null,
+}
 
 export default function ExportTransaction() {
   const navigate = useNavigate();
 
   //useSelector, useNavigate
-  const [exportReceiptData, setExportReciptData] = useState<
-    GoodExportReceiptDetailDataType[]
-  >([]);
-  const [goodReceiptData, setGoodReciptData] =
-    useState<GoodExportReceiptDetailDataType>(emptydata);
+  const [exportReceiptData, setExportReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
+  const [showReceiptData, setShowReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
+  const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
+
+  const [filterByCustomer, setFilterByCustomer] = useState("");
+  const [filterByStatus, setFilterByStatus] = useState([]);
+  const [filterByWarehouse, setFilterByWarehouse] = useState([]);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
@@ -111,7 +107,7 @@ export default function ExportTransaction() {
   const [loading, setLoading] = useState(false);
   //call api set data xuất kho
   const [page, setPage] = useState<number>(1);
-  const size = 7;
+  const size = 9;
 
   const [IDChoose, setIDChoose] = useState<string>();
   const [dataChoose, setDataChoose] =
@@ -126,14 +122,15 @@ export default function ExportTransaction() {
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        setExportReciptData(res.data);
+        let d=res.data.reverse();
+        setExportReciptData(d);
+        setShowReciptData(d);
       })
       .catch((error) => {
         console.log(error);
       });
 
-    //setDataTrans(fakeData.slice((page - 1) * size, page * size));
-  }, [page, showModal]);
+  }, [showModal]);
 
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.export.getAll;
@@ -179,6 +176,7 @@ export default function ExportTransaction() {
       })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được duyệt");
+        message.error(error.detail);
       });
     setShowModal(undefined);
   };
@@ -192,13 +190,170 @@ export default function ExportTransaction() {
       })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được hủy");
+        message.error(error.detail);
       });
     setShowModal(undefined);
+  };
+
+  const filterReceiptList = (stateId: string[], warehouseId: string[], customerName: string) => {
+    console.log(customerName);
+    // Không filter
+    if ((stateId === null || stateId?.length == 0 || stateId?.includes(null)) &&
+      (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) &&
+      (customerName === null || customerName?.length == 0 || customerName?.includes(null)))// && filter customer by name = null
+    {
+      setShowReciptData(exportReceiptData);
+      return;
+    }
+
+    if (stateId === null || stateId?.length == 0 || stateId?.includes(null)) {
+      if (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) {
+        //filter theo tên khách hàng
+        let filtered = exportReceiptData.filter((product) => (
+          product.customer?.name.includes(customerName))
+        );
+        setShowReciptData(filtered);
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo kho
+          let filtered = exportReceiptData.filter((product) => (
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và kho 
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+    } else {
+      if (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo trạng thái
+          let filtered = exportReceiptData.filter((product) => (
+            stateId?.includes(String(product.exportStatus)))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và trạng thái  
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            stateId?.includes(String(product.exportStatus)))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo trạng thái và kho
+          let filtered = exportReceiptData.filter((product) => (
+            stateId?.includes(String(product.exportStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và trạng thái và kho
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            stateId?.includes(String(product.exportStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+    }
+  };
+
+  function handleChangeFilterState(value: string[]): void {
+    setFilterByStatus(value);
+    filterReceiptList(value, filterByWarehouse, filterByCustomer);
+  };
+
+  function handleChangeFilterWarehouse(value: string[]): void {
+    setFilterByWarehouse(value);
+    filterReceiptList(filterByStatus, value, filterByCustomer);
+  };
+
+  function handleChangeFilterCustomer(value: string): void {
+    setFilterByCustomer(value);
+    filterReceiptList(filterByStatus, filterByWarehouse, value);
   };
 
   const onFinish = () => {
     console.log(form.getFieldsValue());
   };
+
+  const columns: ColumnsType<GoodExportReceiptDetailDataType> = [
+    {
+      title: "Mã nhập hàng",
+      dataIndex: "id",
+    },
+    {
+      title: "Ngày xuất",
+      key: "exportDate",
+      render: (record) => {
+        return <ProcessDate dateString={record.exportDate.toLocaleString()} />
+      },
+      sorter: (a, b) => a.exportDate < b.exportDate ? -1 : 1,
+    },
+    {
+      title: "Mã kho xuất",
+      dataIndex: "wareHouseId",
+      //dataIndex: ["wareHouse", "name"], 
+    },
+    {
+      title: "Khách hàng",
+      dataIndex: ["customer", "name"],
+    },
+    {
+      title: "Tổng tiền",
+      key: "totalAmount",
+      render: (record) => {
+        return record.totalAmount?.toLocaleString();
+      },
+    },
+    {
+      title: "Trạng thái",
+      key: "exportStatus",
+      render: (record) => {
+        return <ProcessStatus status={record.exportStatus} />
+      },
+    },
+
+    {
+      title: "",
+      key: "action",
+      width: "112px",
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            size={"middle"}
+            icon={<EditOutlined />}
+            className="edit-button"
+            onClick={() => {
+              handleEdit(String(record.id));
+              setShowModal("edit");
+              //form.setFieldsValue(record);
+            }}
+          >{/*Chi tiết*/}
+          </Button>
+          <Button
+            size={"middle"}
+            icon={<DeleteOutlined />}
+            className="delete-button"
+            onClick={() => {
+              setShowModal("delete");
+            }}
+          >
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   //////////// EDIT MODAL//////////
   const ExportReceiptDetail = (
@@ -219,13 +374,9 @@ export default function ExportTransaction() {
           footer={(_, { OkBtn, CancelBtn }) =>
             goodReceiptData.exportStatus == 2 ? (
               <>
-                <Button onClick={() => handleAccept(goodReceiptData.id)}>
-                  Hoàn thành
-                </Button>
-                <Button onClick={() => handleCancel(goodReceiptData.id)}>
-                  Hủy bỏ
-                </Button>
-                <Button onClick={onFinish}>OK</Button>
+                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button onClick={() => navigate("chinh-sua/"+goodReceiptData.id)}>Chỉnh sửa</Button>
               </>
             ) : (
               <>
@@ -239,7 +390,6 @@ export default function ExportTransaction() {
             <div className="modal-info">Thông tin</div>
             {/*<div className="modal-desc">xuất đến kho hiện tại</div>*/}
           </div>
-          <hr className="modal-line" />
           <div className="modal-content">
             <div className="modal-box">
               <Form form={form} onFinish={onFinish}>
@@ -307,12 +457,12 @@ export default function ExportTransaction() {
       <div className="product-container">
         <div className="filterField">
           <div className="title">Phiếu xuất kho</div>
+          <StateFilter onSelect={handleChangeFilterState} />
+          <WarehouseFilter onSelect={handleChangeFilterWarehouse} />
+          <CustomerFilter onSelect={handleChangeFilterCustomer} />
         </div>
         <div className="product-list transaction-list">
           <div className="header-action">
-            <Button icon={<EditOutlined />} className="custom-button">
-              Điều chỉnh
-            </Button>
             <Button
               icon={<PlusCircleOutlined />}
               className="custom-button"
@@ -330,10 +480,34 @@ export default function ExportTransaction() {
               Xuất File
             </Button>
           </div>
-          <table className="table">
+          <Table
+            columns={columns}
+            dataSource={showReceiptData}
+            loading={loading}
+            rowKey="id"
+          />
+        </div>
+        <Modal
+          title="Xoá"
+          open={showModal === "delete"}
+          onOk={() => setShowModal(undefined)}
+          onCancel={() => setShowModal(undefined)}
+          okText="Xác nhận"
+          cancelText="Huỷ"
+        >
+          <p>Bạn có chắc sẽ xoá nó không?</p>
+        </Modal>
+      </div>
+    </React.Fragment>
+
+  );
+}
+
+ {/*<table className="table">
             <thead className="table-header">
               <th className="table-header-code">Mã xuất hàng</th>
               <th className="table-header-time">Thời gian</th>
+              <th className="table-header-trans">Mã kho xuất</th>
               <th className="table-header-trans">Khách hàng</th>
               <th className="table-header-total">Tổng tiền</th>
               <th className="table-header-status">Trạng thái</th>
@@ -342,7 +516,7 @@ export default function ExportTransaction() {
             <tbody className="table-body">
               {exportReceiptData &&
                 exportReceiptData.length > 0 &&
-                exportReceiptData.map((tran) => (
+                showReceiptData.map((tran) => (
                   <tr
                     key={Number(tran.id)}
                     onClick={() => {
@@ -352,11 +526,16 @@ export default function ExportTransaction() {
                     className={`${dataChoose?.id === tran.id && "tr-active"}`}
                   >
                     <td className="table-body-code">{tran.id}</td>
+<<<<<<< HEAD
+                    <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()} /></td>
+                    <th className="table-body-trans">{tran.wareHouseId}</th>
+=======
                     <td className="table-body-time">
                       <ProcessDate
                         dateString={tran.exportDate.toLocaleString()}
                       />
                     </td>
+>>>>>>> main
                     <td className="table-body-trans">{tran.customer?.name}</td>
                     <td className="table-body-total">
                       {tran.totalAmount?.toLocaleString()}
@@ -399,22 +578,10 @@ export default function ExportTransaction() {
           <div className="custom-pagination">
             <Pagination
               current={page}
-              //total={fakeData.length}
-              onChange={(page) => setPage(page)}
+              total={exportReceiptData.length}
+              onChange={(page) => {
+                setShowReciptData(exportReceiptData.slice((page - 1) * size, page * size));
+                setPage(page);
+              }}
             />
-          </div>
-        </div>
-        <Modal
-          title="Xoá"
-          open={showModal === "delete"}
-          onOk={() => setShowModal(undefined)}
-          onCancel={() => setShowModal(undefined)}
-          okText="Xác nhận"
-          cancelText="Huỷ"
-        >
-          <p>Bạn có chắc sẽ xoá nó không?</p>
-        </Modal>
-      </div>
-    </React.Fragment>
-  );
-}
+          </div>*/}

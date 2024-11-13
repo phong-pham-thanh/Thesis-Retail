@@ -13,10 +13,13 @@
   font-weight: 600;
   line-height: normal;
   background-image: linear-gradient(0deg, #ffffff00 50%, #ffffff 50%);
+  background: white;
+  width: -webkit-fill-available;
+  min-height: 100px;
 }
 
 .navbar__title {
-  margin-right: auto;
+  /*margin-right: auto;*/
   font-size: 150%;
   padding: 12px 16px;
 }
@@ -26,8 +29,8 @@
   vertical-align: middle;
   display: flex;
   align-items: center;
-  width: 140px;
-  height: 60px;
+  width: min-content;
+  height: -webkit-fill-available;
   padding: 10px;
   gap: 10px;
 }
@@ -37,8 +40,8 @@
   flex-direction: row;
   align-items: center;
 
-  width: 140px;
-  height: 60px;
+  width: min-content;
+  height: -webkit-fill-available;
   padding: 10px;
   gap: 10px;
 
@@ -50,7 +53,7 @@
 .navbar__submenu {
   cursor: pointer;
   vertical-align: middle;
-  display: flex;
+  display: block;
   flex-direction: column;
   align-items: center;
 }

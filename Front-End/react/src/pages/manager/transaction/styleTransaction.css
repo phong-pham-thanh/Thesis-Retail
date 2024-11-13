@@ -6,28 +6,30 @@ main {
     margin: 16px;
 }
 
-.filterField{
+.filterField {
     border-radius: 10px;
     padding: 1em;
     display: flex;
     flex-direction: column;
-    gap:15px;
+    gap: 15px;
     overflow: auto;
     width: 300px;
     height: fit-content;
 }
-.filterBox{
-border-radius: 10px;
-border: 1px solid var(--Secondary-Color, #28C2FF);
-background: #FFF;
+
+.filterBox {
+    border-radius: 10px;
+    border: 1px solid var(--Secondary-Color, #28C2FF);
+    background: #FFF;
     display: flex;
     flex-direction: column;
-    gap:0px;
+    gap: 0px;
     overflow: auto;
     width: 100%;
     height: fit-content;
 }
-.filterBox-title{
+
+.filterBox-title {
     /*background-color:rgb(120, 154, 172);*/
     padding: 1em;
     display: flex;
@@ -38,18 +40,18 @@ background: #FFF;
     height: fit-content;
 
     color: var(--Text-color, #000);
-text-align: center;
-font-family: Nunito;
-font-size: 18px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
+    text-align: left;
+    font-family: Nunito;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 
-opacity: 0.5;
+    opacity: 0.5;
 
 }
 
-.filterBox-content{
+.filterBox-content {
     padding: 1em;
     padding-top: 0em;
     display: flex;
@@ -58,10 +60,14 @@ opacity: 0.5;
     overflow: auto;
     width: auto;
     height: fit-content;
-    text-align:left;
+    text-align: left;
 }
 
-.product-container{
+.none-filter-btn{
+    align-self: flex-end;
+}
+
+.product-container {
     display: flex;
     text-align: left;
     /*align-items: center;
@@ -72,8 +78,8 @@ opacity: 0.5;
     gap: 15px;*/
 }
 
-.receipt-container{
-    width:70%;
+.receipt-container {
+    width: 70%;
     display: flex;
     align-items: left;
     text-align: left;
@@ -81,7 +87,7 @@ opacity: 0.5;
     gap: 15px;
 }
 
-.newtransaction-product-table{
+.newtransaction-product-table {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -89,13 +95,13 @@ opacity: 0.5;
 
 }
 
-.export-list{
-    width:100%;
+.export-list {
+    width: 100%;
 
 }
 
 .transaction-list {
-    padding: 1em 7em 1em 1em;
+    padding: 1em 2em 1em 1em;
 }
 
 .title {
@@ -247,8 +253,8 @@ opacity: 0.5;
 }
 
 .modal-create-trans .ant-modal-title {
-   font-size: 18px;
-   font-weight: 700;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .modal-create-trans .modal-header {
@@ -276,6 +282,7 @@ opacity: 0.5;
 .modal-create-trans .modal-content {
     display: flex;
     align-items: flex-start;
+    flex-direction: row;
 }
 
 .modal-create-trans .modal-box {
@@ -320,20 +327,22 @@ opacity: 0.5;
     width: 100%;
 }
 
-.modal-create-trans .modal-products table .code, .quantity, .name {
+.modal-create-trans .modal-products table .code,
+.quantity,
+.name {
     text-align: left;
     padding: 10px;
 }
 
-.product-table{
+.product-table {
     border-color: brown;
 }
 
-.product-cell{
+.product-cell {
     width: '23%';
     text-align: center;
-    background-color: aquamarine;  
-padding: '15px';
-border-radius: '5px';
-margin: '2px';
-  }
+    background-color: aquamarine;
+    padding: '15px';
+    border-radius: '5px';
+    margin: '2px';
+}

@@ -14,12 +14,6 @@ body {
     padding: 10px 20px;
 }
 
-.search-bar input {
-    padding: 5px;
-    border-radius: 5px;
-    border: none;
-}
-
 .invoice-tabs button {
     background-color: white;
     color: black;
@@ -31,13 +25,25 @@ body {
 
 .user-profile {
     display: flex;
-    align-items: center;
+    align-items: right;
     gap: 10px;
     ng-select {
         width: 100%;
         min-width: 200px;
     }
 }
+
+
+
+.search-bar-retail input {
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 
 .main-content {
     display: flex;

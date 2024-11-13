@@ -47,7 +47,12 @@ const api_links = {
         url: `${authUrl}/GoodRecipt/getGoodReciptBydId/`,
         method: "GET",
       },
-
+      //UPDATE BY ID
+      update: {
+        url: `${authUrl}/GoodRecipt/updateGoodReceipt/`,
+        method: "PUT",
+        data: {},
+      },
       //POST
       createNew: {
         url: `${authUrl}/GoodRecipt/addGoodRecipt`,
@@ -57,7 +62,7 @@ const api_links = {
 
       //SET STATE
       accept: {
-        url: `${authUrl}/GoodRecipt/acceptGoodRecipt/`,
+        url: `${authUrl}/GoodRecipt/acceptGoodImport/`,
         method: "GET",
       },
       cancel: {
@@ -76,6 +81,12 @@ const api_links = {
         url: `${authUrl}/GoodExport/getGoodExportById/`,
         method: "GET",
       },
+      //UPDATE BY ID
+      update: {
+        url: `${authUrl}/GoodExport/updateGoodExport/`,
+        method: "PUT",
+        data: {},
+      },
 
       //POST
       createNew: {
@@ -93,22 +104,6 @@ const api_links = {
         url: `${authUrl}/GoodExport/cancelGoodExport/`,
         method: "GET",
       },
-
-      ////////////////////// ELSE //////////////////////
-      edit: {
-        url: `${authUrl}api/Product`,
-        method: "PUT",
-        token: "",
-        data: {},
-      },
-    },
-
-    ////////////////////// ELSE //////////////////////
-    edit: {
-      url: `${authUrl}api/Product`,
-      method: "PUT",
-      token: "",
-      data: {},
     },
   },
 

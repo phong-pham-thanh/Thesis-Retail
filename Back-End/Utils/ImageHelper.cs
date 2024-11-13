@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using APIBackEnd.Migrations;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
 namespace APIBackend.Helpers
@@ -18,8 +19,8 @@ namespace APIBackend.Helpers
                 Directory.CreateDirectory(uploadPath);
 
             var uploadDate = DateTime.UtcNow.ToString("yyyyMMdd");
-            productName = !string.IsNullOrWhiteSpace(productName) ? productName.Replace(" ", "_") : "";
-            var newFileName = $"{productName}_{uploadDate}.jpg";
+            string productNameFormat = Utilities.ToUrlFriendly(productName);
+            var newFileName = $"{productNameFormat}-{uploadDate}.jpg";
             var filePath = Path.Combine(uploadPath, newFileName);
 
             // Resize va luu hinh anh

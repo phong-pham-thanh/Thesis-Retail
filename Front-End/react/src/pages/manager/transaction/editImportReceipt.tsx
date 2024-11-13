@@ -9,6 +9,7 @@ import {
   useNavigate,
   BrowserRouter,
   Outlet,
+  useParams,
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,16 +21,17 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { GetProps } from 'antd';
-//import ProductInformationPopupScreen from "../../component/popupEditProduct";
+
+import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState, GoodImportReceiptDetailDataType } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
-import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
-//import axios from 'axios';
+import { handleSearch, processAPIPostLink } from "../../../app/processFunction"
+
 
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
-import { handleSearch } from "../../../app/processFunction";
+import moment from "moment";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -113,7 +115,7 @@ export default function ImportGoods() {
       dataIndex: 'priceUnit',
       render: (_, record) => (
         <Space size="small">
-          <InputNumber min={0} defaultValue={0} placeholder={"0"}
+          <InputNumber min={0} defaultValue={record.priceUnit} placeholder={"0"}
             onChange={(e) => {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
@@ -143,7 +145,9 @@ export default function ImportGoods() {
 
   ];
 
+  const params = useParams();
   const [form] = Form.useForm();
+  const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>();
   const [allProducts, setProducts] = useState<ProductState[]>([]);
   const [filteredProducts, setFilterProducts] = useState<ProductState[]>([]);
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
@@ -157,6 +161,15 @@ export default function ImportGoods() {
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
+    getGoodReceiptByID(params.id)
+      .then((res) => {
+        setGoodReciptData(res.data);
+        handleGetTableProductDataByID(res.data.listGoodReciptDetailsModel);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     getAllProduct()
       .then((res) => {
         setProducts(res.data);
@@ -207,6 +220,11 @@ export default function ImportGoods() {
     }, 1000);
   };
 
+  const getGoodReceiptByID = (ID: string) => {
+    const api_link = api_links.goodsIssue.import.getById;
+    api_link.url = processAPIPostLink(api_link.url, ID);
+    return fetch_Api(api_link);
+  };
   const getAllProduct = () => {
     const api_link = api_links.product.getAll;
     return fetch_Api(api_link);
@@ -223,6 +241,31 @@ export default function ImportGoods() {
     const api_link = api_links.category.getAll;
     return fetch_Api(api_link);
   };
+
+  const putGoodsIssue = (putData: GoodImportReceiptDetailDataType) => {
+    const api_post = api_links.goodsIssue.import.update;
+    api_post.url = processAPIPostLink(api_post.url, goodReceiptData.id);
+    api_post.data = putData;
+    return fetch_Api(api_post);
+  };
+
+  const handleGetTableProductDataByID = (listProduct: ListGoodReciptDetailsModel[]) => {
+    let newExportData : ExportProductTableState;
+    listProduct.map((item)=>{
+      newExportData = {
+        //"goodsReceiptId": "0",
+        "productId": String(item.productId),
+        "productName": item.product.name,
+        "priceUnit": item.priceUnit,
+        "quantity": item.quantity,
+        "subTotal": item.priceUnit*item.quantity,
+      }
+      exportTableData.push(newExportData);
+   })
+    updateTotal();
+    setExportTableData([...exportTableData]);
+    console.log(exportTableData);
+  }
 
   const handleTableProductClick = (record: ProductState) => {
     const indx = exportTableData.findIndex((item) => item.productId === record.id);
@@ -282,58 +325,37 @@ export default function ImportGoods() {
     setTotalQty(sumQ);
   }
 
-  const postGoodsIssue = (postData: ExportDataType) => {
-    const api_post = api_links.goodsIssue.import.createNew;
-    api_post.data = postData;
-    return fetch_Api(api_post);
-  };
-
   const onFinish = () => {
     setFormValue(form.getFieldsValue());
     exportTableData.map((item) => {
       tempListGoodReceiptDetailModels.push({
         id: 0,
-        goodReceiptId: 0,
-        goodsReceipt: null,
+        goodReceiptId: goodReceiptData.id,
         productId: Number(item.productId),
-        product: null,
-        /*{
-          id: Number(item.productId),
-          name: "",
-          categoryId: 0,
-          category: {
-            id: 0,
-            name: ""
-          },
-          description: "",
-          status: 0,
-          listInventories: null
-        },*/
         priceUnit: item.priceUnit,
         quantity: item.quantity
       })
     })
     const event = new Date();
-    const postData: ExportDataType = {
-      goodsReceiptModel: {
-        id: "0",
+    const postData: GoodImportReceiptDetailDataType = {
+        id: goodReceiptData.id,
         importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        partnerId: form.getFieldValue("partnerId"),
+        partnerID: form.getFieldValue("partnerId"),
         receiptStatus: 2,
-        ListGoodReciptDetailsModel: [],
-        wareHouseId: form.getFieldValue("idWareHouse")
-      },
-      listGoodReceiptDetailModels: tempListGoodReceiptDetailModels,
+        wareHouseId: form.getFieldValue("idWareHouse"),      
+        listGoodReciptDetailsModel: tempListGoodReceiptDetailModels,
     }
 
+
     console.log(postData);
-    postGoodsIssue(postData)
+    putGoodsIssue(postData)
       .then((res) => {
-        message.success("Tạo thành công");
+        message.success("Chỉnh sửa thành công");
         navigate(-1);
       })
       .catch((error) => {
-        message.error("Tạo thất bại");
+        message.error(error.detail);
+        console.log(error);
       });
 
   };
@@ -359,6 +381,7 @@ export default function ImportGoods() {
     <div className="dashboard-container">
 
       <div className="product-container">
+
         <div className="receipt-container">
           Đơn nhập hàng
           <Form form={form}
@@ -366,82 +389,90 @@ export default function ImportGoods() {
             wrapperCol={{ span: 20 }}
             onFinish={onFinish}
           >
-            <Space size={"large"} ><Row>
-              <Col span={8}>
-                <Form.Item
-                  className="idWareHouse"
-                  label={"Nhập đến kho"}
-                  name={"idWareHouse"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Chọn kho"
-                    optionFilterProp="label"
-                  >
-                    {allWarehouses?.map((d) => {
-                      return (
-                        <Option value={d.id}>{d.address}</Option>
-                      )
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col><Col span={8}>
-                <Form.Item
-                  className="exportDate"
-                  label={"Ngày nhập"}
-                  name={"exportDate"}
-                  layout="vertical"
-                  rules={[{
-                    required: true,
-                    message: 'Không để trống',
-                  }]}
-                >
-                  <DatePicker
-                    showTime
-                    disabledDate={(current) => { return current.valueOf() > Date.now() }}
-                  />
-                </Form.Item >
-              </Col><Col span={8}><Form.Item
-                className="partnerId"
-                label={"Nhà cung cấp"}
-                name={"partnerId"}
-                layout="vertical"
-                rules={[{
-                  required: true,
-                  message: 'Không để trống',
-                }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Chọn nhà cung cấp"
-                  optionFilterProp="label"
-                >
-                  {allPartners?.map((d) => {
-                    return (
-                      <Option value={d.id}>{d.name}</Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-              </Col></Row>
+            <Space size={"large"} >
+              {goodReceiptData &&
+                <Row>
+                  <Col span={8}>
+                    <Form.Item
+                      className="idWareHouse"
+                      label={"Nhập đến kho"}
+                      name={"idWareHouse"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={goodReceiptData?.wareHouseId}
+                    >
+                      <Select
+                        showSearch
+                        placeholder="Chọn kho"
+                        optionFilterProp="label"
+                      >
+                        {allWarehouses?.map((d) => {
+                          return (
+                            <Option value={d.id}>{d.address}</Option>
+                          )
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      className="exportDate"
+                      label={"Ngày nhập"}
+                      name={"exportDate"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={moment(goodReceiptData?.importDate)}
+                    >
+                      <DatePicker
+                        showTime
+                        disabledDate={(current) => { return current.valueOf() > Date.now() }}
+                      />
+                    </Form.Item >
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      className="partnerId"
+                      label={"Nhà cung cấp"}
+                      name={"partnerId"}
+                      layout="vertical"
+                      rules={[{
+                        required: true,
+                        message: 'Không để trống',
+                      }]}
+                      initialValue={goodReceiptData?.partnerID}
+                    >
+                      <Select
+                        showSearch
+                        placeholder="Chọn nhà cung cấp"
+                        optionFilterProp="label"
+                      >
+                        {allPartners?.map((d) => {
+                          return (
+                            <Option value={d.id}>{d.name}</Option>
+                          )
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              }
               <Row>
                 <Button type='primary' onClick={() => {
                   onFinish();//postGoodsIssue()
                 }}
                   style={{ backgroundColor: "#465d65" }}>
                   Thêm mới</Button>
-              </Row></Space>
+              </Row>
+            </Space>
           </Form>
 
-
-
           <div className='export-list'>
-
             <Table
               columns={exportColumns}
               dataSource={[...exportTableData]}
@@ -458,7 +489,6 @@ export default function ImportGoods() {
                   </Table.Summary.Row>
                 </Table.Summary>
               )} />
-
           </div>
         </div>
 
@@ -479,13 +509,6 @@ export default function ImportGoods() {
               })}</Select>
             <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
           </Row>
-          {/*<Table
-            columns={productColumns}
-            /*dataSource={allProducts}
-          onRow={(record) => ({
-            onClick: () => handleTableRowClick(record.id),
-          })}*\/
-          />*/}
           <Card className="product-table" title={choosedCategory}>
             {filteredProducts?.map((p) =>
               <Card.Grid className="product-cell" style={gridStyle}
