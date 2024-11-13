@@ -45,7 +45,7 @@
 }
 
 .table-good-transfer {
-    width: 70%;
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     margin: 20px auto
@@ -158,6 +158,7 @@
     overflow: auto;
     width: 300px;
     height: fit-content;
+    padding: 0px;
 }
 
 .list-and-filter-container{

@@ -1,74 +1,128 @@
 <div class="header-container">
-    <h1>Danh sách nhân viên</h1>
-    <button class="add-new-button" (click)="addNew()">Thêm mới</button>
+  <h1>Danh sách nhân viên</h1>
+  <button class="add-new-button" (click)="addNew()">Thêm mới</button>
+</div>
+<div class="list-and-filter-container">
+
+  <div class="col-md-2 filter-container-user-list">
+
+    <div class="dropdown-container-user-list">
+      <div class="dropdown-header-user-list" (click)="toggleDropdownStatus()">
+        Lọc theo Admin
+        <span id="dropdownArrowGoodTransfer" [class.open]="isDropdownOpenStatus"
+          class="dropdown-arrow-user-list">&#9662;</span>
+      </div>
+      <div *ngIf="isDropdownOpenStatus" class="dropdown-content-user-list">
+        <div class="dropdown-item-user-list" *ngFor="let status of statusArray">
+          <input type="checkbox" [id]="status.idStatus" (change)="onCheckboxChangeStatus(status.idStatus, $event)">
+          <label [for]="status.idStatus">{{ status.name }}</label>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="dropdown-container-user-list">
+      <div class="dropdown-header-user-list" (click)="toggleDropdownWareHouse()">
+        Lọc theo kho
+        <span id="dropdownArrow" [class.open]="isDropDownOpenWareHouse" class="dropdown-arrow-user-list">&#9662;</span>
+      </div>
+      <div *ngIf="isDropDownOpenWareHouse" class="dropdown-content-user-list">
+        <div class="dropdown-item-user-list" *ngFor="let wareHouse of allWareHouse">
+          <input type="checkbox" [id]="wareHouse.id" (change)="onCheckboxChangeWareHouse(wareHouse.id, $event)">
+          <label [for]="wareHouse.id">{{ wareHouse.address }}</label>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  
-    
-  
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Id </div></th>
-      <td mat-cell *matCellDef="let element">{{element.id}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="username">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Tên đăng nhập </div></th>
-      <td mat-cell *matCellDef="let element">{{element.username}}</td>
-    </ng-container>
-    
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Tên </div></th>
-      <td mat-cell *matCellDef="let element">{{element.name}}</td>
-    </ng-container>
-    
-    <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Địa chỉ nhà </div></th>
-      <td mat-cell *matCellDef="let element">{{element.address}}</td>
-    </ng-container>
-    
-    <ng-container matColumnDef="dateOnboard">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Ngày vào làm </div></th>
-      <td mat-cell *matCellDef="let element">{{element.dateOnboard | date: 'dd/MM/yyyy' }}</td>
-    </ng-container>
-    
-    <ng-container matColumnDef="dateOfBirth">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Ngày sinh </div></th>
-      <td mat-cell *matCellDef="let element">{{element.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="currentWarehouse">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> Kho đang làm việc </div></th>
-        <td mat-cell *matCellDef="let element">{{getListWareHouseName(element)}}</td>
+  <div class="col-md-10 table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Id </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.id}}</td>
       </ng-container>
-    
-    <ng-container matColumnDef="isAdmin">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><div class="table-header-price"> isAdmin </div></th>
-      <td mat-cell *matCellDef="let element">{{element.isAdmin}}</td>
-    </ng-container>
-  
-    <!-- Cột context menu -->
-    <ng-container matColumnDef="context">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="edit(element)">
-            <mat-icon>edit</mat-icon>
-            <span>Chỉnh sửa</span>
+
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Tên đăng nhập </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.username}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Tên </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Địa chỉ nhà </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.address}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateOnboard">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Ngày vào làm </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.dateOnboard | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateOfBirth">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Ngày sinh </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="currentWarehouse">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Kho đang làm việc </div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngFor="let warehouse of element.listUserWareHouse; let i = index">
+            <span
+              [ngStyle]="{ 'font-weight': warehouse.wareHouseModel?.id === element.defaultWareHouseId ? 'bold' : 'normal' }">
+              {{ warehouse.wareHouseModel?.address }}
+            </span>
+            <ng-container *ngIf="i < element.listUserWareHouse.length - 1">, </ng-container>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isAdmin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="table-header-price"> Là admin </div>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.isAdmin ? 'Admin' : 'User thường'}}</td>
+      </ng-container>
+
+      <!-- Cột context menu -->
+      <ng-container matColumnDef="context">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-        </mat-menu>
-      </td>
-    </ng-container>
-  
-    <!-- Header row -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <!-- Data rows -->
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-  
-  <!-- Paginator -->
-  <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="edit(element)">
+              <mat-icon>edit</mat-icon>
+              <span>Chỉnh sửa</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <!-- Header row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Data rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator hidePageSize="true" [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
   </div>
+</div>

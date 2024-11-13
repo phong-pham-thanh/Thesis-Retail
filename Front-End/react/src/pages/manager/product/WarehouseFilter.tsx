@@ -5,6 +5,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
+import message from "antd/lib/message";
 
 // Interfaces for API data
 interface Warehouse {
@@ -36,7 +37,7 @@ export function WarehouseFilter({ onSelect }: WarehouseFilterProps) {
         }));
         setStoreOptions(warehouseData);
       } catch (error) {
-        console.error("Failed to fetch warehouses:", error);
+        message.error(error.message || "Lỗi khi tải thông tin kho.");
       }
     };
 

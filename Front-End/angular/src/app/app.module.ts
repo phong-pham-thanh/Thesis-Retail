@@ -26,6 +26,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -76,6 +78,18 @@ export const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MM YYYY',
   },
 };
+
+export function CustomPaginatorIntl() {
+  const paginatorIntl = new MatPaginatorIntl();
+
+  paginatorIntl.itemsPerPageLabel = 'Số mục mỗi trang';
+  paginatorIntl.nextPageLabel = 'Trang kế tiếp';
+  paginatorIntl.previousPageLabel = 'Trang trước';
+  paginatorIntl.firstPageLabel = 'Trang đầu';
+  paginatorIntl.lastPageLabel = 'Trang cuối';
+
+  return paginatorIntl;
+}
 
 @NgModule({
   declarations: [
@@ -157,9 +171,10 @@ export const MY_DATE_FORMATS = {
   providers: [
     provideNgxMask(),
     CookieService,
-
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' } // Đặt locale nếu cần
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MatPaginatorIntl, useFactory: CustomPaginatorIntl }
   ],
   bootstrap: [AppComponent]
 })

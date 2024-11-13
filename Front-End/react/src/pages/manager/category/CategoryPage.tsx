@@ -9,6 +9,7 @@ import api_links from "../../../app/api_links";
 import CategoryInformationPopupScreen from "./PopUpCategoryInformation";
 import AlertDialog from "../../component/AlertDialog"; // Import alert dialog for delete confirmation
 import message from "antd/lib/message"; // AntD message for notifications
+import { ColumnsType } from "antd/es/table";
 
 interface CategoryType {
   id: string;
@@ -116,19 +117,22 @@ export default function CategoryPage() {
   //     setCategoryToDelete(null); // Reset the category to be deleted
   //   };
 
-  const columns = [
+  const columns: ColumnsType<CategoryType> = [
     {
-      title: "Category ID",
+      title: "Mã danh mục",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Category Name",
+      title: "Tên danh mục",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: "Actions",
+      title: "",
       key: "actions",
       render: (text: any, record: CategoryType) => (
         <Space size="middle">
@@ -187,7 +191,7 @@ export default function CategoryPage() {
             <div className="search-bar">
               <h3>Tìm kiếm</h3>
               <Input
-                placeholder="Tìm kiếm danh mục"
+                placeholder="Tên danh mục"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 allowClear

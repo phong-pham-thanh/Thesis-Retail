@@ -8,6 +8,7 @@ import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
 import PartnerInformationPopupForm from "./PartnerInformationPopupForm";
 import AlertDialog from "../../component/AlertDialog";
+import { ColumnsType } from "antd/es/table";
 
 interface PartnerType {
   id: string;
@@ -89,24 +90,29 @@ export default function PartnerPage() {
     setIsAlertVisible(true);
   };
 
-  const columns = [
+  const columns: ColumnsType<PartnerType> = [
     {
-      title: "Partner ID",
+      title: "Mã đối tác",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Partner Name",
+      title: "Tên đối tác",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: "Total Sale",
+      title: "Tổng bán",
       dataIndex: "totalSale",
       key: "totalSale",
+      sorter: (a, b) => parseInt(a.totalSale) - parseInt(b.totalSale),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Phone number",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
@@ -144,12 +150,12 @@ export default function PartnerPage() {
       />
       <div className="dashboard-container">
         <div className="header">
-          <h2>Partner Management</h2>
+          <h2>Quản lý đối tác</h2>
           <div
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <CustomButton
-              text="Add New Partner"
+              text="Thêm mới"
               icon={<AddCircleIcon />}
               onClick={handleAddNewPartner}
               backgroundColor="#28C2FF"
@@ -161,9 +167,9 @@ export default function PartnerPage() {
           {/* Left Sidebar for Search */}
           <div className="filter-container">
             <div className="search-bar">
-              <h3>Search</h3>
+              <h3>Tìm kiếm</h3>
               <Input
-                placeholder="Search for partners"
+                placeholder="Tên đối tác"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
                 allowClear

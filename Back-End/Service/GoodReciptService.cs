@@ -93,7 +93,9 @@ namespace APIBackend.Service
 
         public List<GoodsReceiptModel> GetAllGoodRecipts()
         {
-            return _goodReciptRepository.GetAllGoodRecipts();
+            List<GoodsReceiptModel> result = _goodReciptRepository.GetAllGoodRecipts();
+            result = result.OrderByDescending(x => x.ReceiptStatus).ToList();
+            return result;
         }
 
         public List<GoodsReceiptModel> GetAllGoodReciptsByRole()
@@ -101,6 +103,7 @@ namespace APIBackend.Service
             List<GoodsReceiptModel> result = _goodReciptRepository.GetAllGoodRecipts();
             List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
             result = result.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
+            result = result.OrderByDescending(x => x.ReceiptStatus).ToList();
             return result;
         }
 

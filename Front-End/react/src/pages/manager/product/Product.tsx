@@ -102,12 +102,16 @@ export default function Product() {
     setFilteredProducts(filtered);
   };
 
-  const filterProductsByCategory = (categoryId: string) => {
-    if (categoryId === null) {
+  const filterProductsByCategory = (categoryId: string[]) => {
+    if (
+      categoryId === null ||
+      categoryId.length == 0 ||
+      categoryId.includes(null)
+    ) {
       setFilteredProducts(data);
     } else {
-      const filtered = data.filter(
-        (product) => product.categoryId === categoryId
+      const filtered = data.filter((product) =>
+        categoryId.includes(product.categoryId)
       );
       setFilteredProducts(filtered);
     }
@@ -118,7 +122,7 @@ export default function Product() {
     //filterProductsByWarehouse(value); // Filter products based on the selected warehouse
   };
 
-  function handleCategoryChange(value: string): void {
+  function handleCategoryChange(value: string[]): void {
     filterProductsByCategory(value);
   }
 
@@ -194,14 +198,18 @@ export default function Product() {
     {
       title: "Mã sản phẩm",
       dataIndex: "id",
+      sorter: (a, b) => parseInt(a.id) - parseInt(b.id),
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Tên hàng",
       dataIndex: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Loại",
       dataIndex: ["category", "name"], // Show category name instead of categoryId
+      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Số lượng",
@@ -213,14 +221,23 @@ export default function Product() {
         );
         return inventory ? inventory.quantity : "N/A"; // Show quantity or 'N/A' if not found
       },
+      sorter: (a, b) => {
+        const quantityA =
+          a.listInventories.find(
+            (inv) => inv.wareHouseId === selectedWarehouseId
+          )?.quantity || 0;
+        const quantityB =
+          b.listInventories.find(
+            (inv) => inv.wareHouseId === selectedWarehouseId
+          )?.quantity || 0;
+
+        return quantityA - quantityB;
+      },
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Giá bán",
       dataIndex: "currentPrice",
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
     },
     {
       title: "",

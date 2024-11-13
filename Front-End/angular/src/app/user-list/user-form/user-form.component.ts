@@ -76,6 +76,11 @@ export class UserFormComponent {
 
   onWarehouseBelongChange(){
     this.defaultWareHouseCanHave = this.allWareHouses.filter(x => this.currentWareHouseId?.find(id => id === x.id) != null);
+    if(this.formData && !UtilitiesService.isNullOrEmpty(this.formData.defaultWareHouseId) ){
+      if(this.defaultWareHouseCanHave.length == 0 || !this.defaultWareHouseCanHave.map(x => x.id).includes(this.formData.defaultWareHouseId)){
+        this.formData.defaultWareHouseId = null;
+      }
+    }
   }
 
   onSubmit(employeeForm: any) {
