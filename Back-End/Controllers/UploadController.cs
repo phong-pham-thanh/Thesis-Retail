@@ -26,10 +26,10 @@ namespace APIBackend.Controllers
 
             try
             {
-                var newFileName = await ImageHelper.ValidateAndProcessImageAsync(file, _uploadPath, productName);
+                var imageUrl = await ImageHelper.ValidateAndProcessImageAsync(file, _uploadPath, productName);
 
-                var imageUrl = $"{_baseUrl}/{newFileName}";
-                return Ok(new { imageUrl });
+                var fullPath = $"{_baseUrl}/{imageUrl}";
+                return Ok(new { imageUrl, fullPath });
             }
             catch (Exception ex)
             {

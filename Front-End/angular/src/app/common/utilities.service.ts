@@ -77,11 +77,15 @@ export class UtilitiesService {
           return false;
       }
       return (!obj || typeof obj === 'undefined' || obj === null);
-  }
+    }
 
     static isNullOrEmpty(obj: any): boolean {
       return this.isNull(obj) || obj === '';
-  }
+    }
+
+    static removeDiacritics(str: string): string {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
   
   }
   

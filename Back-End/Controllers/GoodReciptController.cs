@@ -49,7 +49,7 @@ namespace APIBackEnd.Controllers
         }
 
         [HttpGet]
-        [Route("acceptGoodImport/{id}")]
+        [Route("acceptGoodRecipt/{id}")]
         public GoodsReceiptModel AcceptGoodReceipt(int id)
         {
             return _goodReciptService.AcceptGoodReceipt(id);
