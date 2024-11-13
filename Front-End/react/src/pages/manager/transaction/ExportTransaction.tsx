@@ -49,6 +49,8 @@ import {
   ProcessDate,
   ProcessStatus,
 } from "../../../app/processFunction";
+import { StateFilter, WarehouseFilter, CustomerFilter } from "./FilterBoxes";
+
 
 const emptydata: GoodExportReceiptDetailDataType = {
   "id": 0,
@@ -94,7 +96,8 @@ export default function ExportTransaction() {
   const [showReceiptData, setShowReciptData] = useState<GoodExportReceiptDetailDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodExportReceiptDetailDataType>(emptydata);
 
-  const [filterByPartner, setFilterByPartner] = useState([]);
+  const [filterByCustomer, setFilterByCustomer] = useState("");
+  const [filterByStatus, setFilterByStatus] = useState([]);
   const [filterByWarehouse, setFilterByWarehouse] = useState([]);
 
   const [isChangeInformation, setIsChangeInformation] = useState(false);
@@ -116,27 +119,12 @@ export default function ExportTransaction() {
     useState<ListGoodReciptDetailsModel[]>();
   const [form] = Form.useForm();
 
-  const filterByStatus = [
-    {
-      text: 'Đang xử lý',
-      value: '2',
-    },
-    {
-      text: 'Hoàn thành',
-      value: '1',
-    },
-    {
-      text: 'Đã hủy',
-      value: '0',
-    },
-  ];
-
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
         let d=res.data.reverse();
         setExportReciptData(d);
-        //setShowReciptData(d.slice((page - 1) * size, page * size));
+        setShowReciptData(d);
       })
       .catch((error) => {
         console.log(error);
@@ -188,6 +176,7 @@ export default function ExportTransaction() {
       })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được duyệt");
+        message.error(error.detail);
       });
     setShowModal(undefined);
   };
@@ -201,8 +190,97 @@ export default function ExportTransaction() {
       })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được hủy");
+        message.error(error.detail);
       });
     setShowModal(undefined);
+  };
+
+  const filterReceiptList = (stateId: string[], warehouseId: string[], customerName: string) => {
+    console.log(customerName);
+    // Không filter
+    if ((stateId === null || stateId?.length == 0 || stateId?.includes(null)) &&
+      (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) &&
+      (customerName === null || customerName?.length == 0 || customerName?.includes(null)))// && filter customer by name = null
+    {
+      setShowReciptData(exportReceiptData);
+      return;
+    }
+
+    if (stateId === null || stateId?.length == 0 || stateId?.includes(null)) {
+      if (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) {
+        //filter theo tên khách hàng
+        let filtered = exportReceiptData.filter((product) => (
+          product.customer?.name.includes(customerName))
+        );
+        setShowReciptData(filtered);
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo kho
+          let filtered = exportReceiptData.filter((product) => (
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và kho 
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+    } else {
+      if (warehouseId === null || warehouseId?.length == 0 || warehouseId?.includes(null)) {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo trạng thái
+          let filtered = exportReceiptData.filter((product) => (
+            stateId?.includes(String(product.exportStatus)))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và trạng thái  
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            stateId?.includes(String(product.exportStatus)))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 || customerName?.includes(null)) {
+          //filter theo trạng thái và kho
+          let filtered = exportReceiptData.filter((product) => (
+            stateId?.includes(String(product.exportStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        } else {
+          //filter theo khách và trạng thái và kho
+          let filtered = exportReceiptData.filter((product) => (
+            product.customer?.name.includes(customerName) &&
+            stateId?.includes(String(product.exportStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setShowReciptData(filtered);
+        }
+      }
+    }
+  };
+
+  function handleChangeFilterState(value: string[]): void {
+    setFilterByStatus(value);
+    filterReceiptList(value, filterByWarehouse, filterByCustomer);
+  };
+
+  function handleChangeFilterWarehouse(value: string[]): void {
+    setFilterByWarehouse(value);
+    filterReceiptList(filterByStatus, value, filterByCustomer);
+  };
+
+  function handleChangeFilterCustomer(value: string): void {
+    setFilterByCustomer(value);
+    filterReceiptList(filterByStatus, filterByWarehouse, value);
   };
 
   const onFinish = () => {
@@ -226,14 +304,10 @@ export default function ExportTransaction() {
       title: "Mã kho xuất",
       dataIndex: "wareHouseId",
       //dataIndex: ["wareHouse", "name"], 
-      filters: filterByWarehouse,
-      onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,
     },
     {
       title: "Khách hàng",
       dataIndex: ["customer", "name"],
-      filters: filterByPartner,
-      onFilter: (value, record) => String(record.customer.id).indexOf(value as string) === 0,
     },
     {
       title: "Tổng tiền",
@@ -248,8 +322,6 @@ export default function ExportTransaction() {
       render: (record) => {
         return <ProcessStatus status={record.exportStatus} />
       },
-      filters: filterByStatus,
-      onFilter: (value, record) => String(record.exportStatus).indexOf(value as string) === 0,
     },
 
     {
@@ -385,6 +457,9 @@ export default function ExportTransaction() {
       <div className="product-container">
         <div className="filterField">
           <div className="title">Phiếu xuất kho</div>
+          <StateFilter onSelect={handleChangeFilterState} />
+          <WarehouseFilter onSelect={handleChangeFilterWarehouse} />
+          <CustomerFilter onSelect={handleChangeFilterCustomer} />
         </div>
         <div className="product-list transaction-list">
           <div className="header-action">
@@ -407,7 +482,7 @@ export default function ExportTransaction() {
           </div>
           <Table
             columns={columns}
-            dataSource={exportReceiptData}
+            dataSource={showReceiptData}
             loading={loading}
             rowKey="id"
           />

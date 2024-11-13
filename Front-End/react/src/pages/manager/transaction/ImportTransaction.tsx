@@ -23,7 +23,6 @@ import IconLogout from "../../../icon/logout.svg";
 
 import { Account } from "../../component/account";
 import NavBar from "../../component/menubar";
-import { FilterBox } from "../../component/filterBox";
 
 import { Button, Form, Input, message, Modal, Pagination, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -37,6 +36,7 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from "@ant-design/icons";
+import { StateFilter, WarehouseFilter, PartnerFilter } from "./FilterBoxes";
 import { GoodImportReceiptDetailDataType, PartnerState, WarehouseState } from "../../../app/type.d";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
@@ -84,11 +84,15 @@ export default function ImportTransaction() {
 
   //useSelector, useNavigate
   const [importReceiptData, setImportReciptData] = useState<GoodImportReceiptDetailDataType[]>([]);
+  const [filteredReceiptData, setFilteredReciptData] = useState<GoodImportReceiptDetailDataType[]>([]);
   const [goodReceiptData, setGoodReciptData] = useState<GoodImportReceiptDetailDataType>(emptydata);
 
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
 
+  const [filterState, setFilterByState] = useState([]);
+  const [filterWarehouse, setFilterWarehouse] = useState([]);
+  const [filterCustomer, setFilterCustomer] = useState<string>("");
   const [filterByPartner, setFilterByPartner] = useState([]);
   const [filterByWarehouse, setFilterByWarehouse] = useState([]);
 
@@ -128,19 +132,19 @@ export default function ImportTransaction() {
       .then((res) => {
         let d = res.data.reverse();
         setImportReciptData(d);
+        setFilteredReciptData(d);
       })
       .catch((error) => {
         console.log(error);
       });
-
+/*
     getAllPartner()
       .then((res) => {
         setAllPartners(res.data);
-        console.log(res.data);
         res.data.map((item) => {
           filterByPartner.push({
-            text: item.name??"0",
-            value: item.id??"0"
+            text: item.name ?? "0",
+            value: item.id ?? "0"
           })
         });
       })
@@ -153,17 +157,17 @@ export default function ImportTransaction() {
         setAllWarehouses(res.data);
         res.data.map((item) => {
           filterByWarehouse.push({
-            text: item.name??"0",
-            value: item.id??"0"
+            text: item.name ?? "0",
+            value: item.id ?? "0"
           })
         });
       })
       .catch((error) => {
         console.log(error);
-      });
+      });*/
 
   }, [showModal]);
-
+/*
   const getAllPartner = () => {
     const api_link = api_links.partner.getAll;
     return fetch_Api(api_link);
@@ -172,7 +176,7 @@ export default function ImportTransaction() {
     const api_link = api_links.warehouse.getAll;
     return fetch_Api(api_link);
   };
-
+*/
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.import.getAll;
     return fetch_Api(api_link);
@@ -217,6 +221,7 @@ export default function ImportTransaction() {
     })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được duyệt");
+        message.error(error.detail);
       });
     setShowModal(undefined);
 
@@ -230,9 +235,122 @@ export default function ImportTransaction() {
     })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được hủy");
+        message.error(error.detail);
       });
     setShowModal(undefined);
   };
+
+  const filterReceiptList = (stateId: string[], warehouseId: string[], customerName: string) => {
+    // Không filter
+    if ((stateId === null || stateId?.length == 0 ) &&
+      (warehouseId === null || warehouseId?.length == 0 ) &&
+      (customerName === null || customerName?.length == 0 ))// && filter customer by name = null
+    {
+      setFilteredReciptData(importReceiptData);
+      return;
+    }
+
+    if (stateId === null || stateId?.length == 0) {
+      if (warehouseId === null || warehouseId?.length == 0 ) {
+        //filter theo tên khách hàng
+        console.log(2)
+
+        let filtered = importReceiptData.filter((product) => (
+          product.partner?.name.includes(customerName))
+        );
+        setFilteredReciptData(filtered);
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 ) {
+          //filter theo kho
+          console.log(3)
+
+          let filtered = importReceiptData.filter((product) => (
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setFilteredReciptData(filtered);
+        } else {
+          //filter theo khách và kho 
+          console.log(4)
+
+          let filtered = importReceiptData.filter((product) => (
+            product.partner?.name.includes(customerName) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setFilteredReciptData(filtered);
+        }
+      }
+    } else {
+      if (warehouseId === null || warehouseId?.length == 0) {
+        if (customerName === null || customerName?.length == 0) {
+          //filter theo trạng thái
+          console.log(1)
+          let filtered = importReceiptData.filter((product) => (
+            stateId?.includes(String(product.receiptStatus)))
+          );
+          setFilteredReciptData(filtered);
+        } else {
+          //filter theo khách và trạng thái  
+          console.log(5,customerName?.length,customerName)
+
+          let filtered = importReceiptData.filter((product) => (
+            product.partner?.name.includes(customerName) &&
+            stateId?.includes(String(product.receiptStatus)))
+          );
+          setFilteredReciptData(filtered);
+        }
+      }
+      else {
+        if (customerName === null || customerName?.length == 0 ) {
+          //filter theo trạng thái và kho
+          console.log(6)
+          let filtered = importReceiptData.filter((product) => (
+            stateId?.includes(String(product.receiptStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setFilteredReciptData(filtered);
+        } else {
+          console.log(7)
+
+          //filter theo khách và trạng thái và kho
+          let filtered = importReceiptData.filter((product) => (
+            product.partner?.name.includes(customerName) &&
+            stateId?.includes(String(product.receiptStatus)) &&
+            warehouseId?.includes(product.wareHouseId))
+          );
+          setFilteredReciptData(filtered);
+        }
+      }
+    }
+  };
+  /*  const filterReceiptList = (stateId: string[], warehouseId: string[]) => {
+    if ((stateId === null || stateId.length == 0 || stateId.includes(null)) &&
+      (warehouseId === null || warehouseId.length == 0 || warehouseId.includes(null))
+    ) {
+      setFilteredReciptData(importReceiptData);
+      return;
+    }
+    let filtered = importReceiptData.filter((product) => (
+      stateId?.includes(String(product.receiptStatus)) &&
+      warehouseId?.includes(product.wareHouseId))
+    );
+    setFilteredReciptData(filtered);
+  };*/
+
+  function handleChangeFilterState(value: string[]): void {
+    setFilterByState(value);
+    filterReceiptList(value, filterWarehouse, filterCustomer);
+  }
+
+  function handleChangeFilterWarehouse(value: string[]): void {
+    setFilterWarehouse(value);
+    filterReceiptList(filterState, value, filterCustomer);
+  }
+
+  function handleChangeFilterCustomer(value: string): void {
+    setFilterCustomer(value);
+    filterReceiptList(filterState, filterWarehouse, value);
+  }
 
   const onFinish = () => {
     console.log(form.getFieldsValue());
@@ -255,14 +373,14 @@ export default function ImportTransaction() {
       title: "Mã kho nhập",
       dataIndex: "wareHouseId",
       //dataIndex: ["wareHouse", "name"], 
-      filters: filterByWarehouse,
-      onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,
+      /*filters: filterByWarehouse,
+      onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,*/
     },
     {
       title: "Nhà cung cấp",
       dataIndex: ["partner", "name"],
-      filters: filterByPartner,
-      onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,
+      /*filters: filterByPartner,
+      onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
     },
     {
       title: "Tổng tiền",
@@ -277,8 +395,8 @@ export default function ImportTransaction() {
       render: (record) => {
         return <ProcessStatus status={record.receiptStatus} />
       },
-      filters: filterByStatus,
-      onFilter: (value, record) => String(record.receiptStatus).indexOf(value as string) === 0,
+      /*filters: filterByStatus,
+      onFilter: (value, record) => String(record.receiptStatus).indexOf(value as string) === 0,*/
     },
 
     {
@@ -405,6 +523,9 @@ export default function ImportTransaction() {
 
         <div className="filterField">
           <div className="title">Phiếu nhập kho</div>
+          <StateFilter onSelect={handleChangeFilterState} />
+          <WarehouseFilter onSelect={handleChangeFilterWarehouse} />
+          <PartnerFilter onSelect={handleChangeFilterCustomer} />
         </div>
         <div className="product-list transaction-list">
           <div className="header-action">
@@ -425,11 +546,11 @@ export default function ImportTransaction() {
           </div>
           <Table
             columns={columns}
-            dataSource={importReceiptData}
+            dataSource={filteredReceiptData}
             loading={loading}
             rowKey="id"
           />
-          
+
         </div>
         <Modal
           title="Xoá"

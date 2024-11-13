@@ -40,7 +40,7 @@ main {
     height: fit-content;
 
     color: var(--Text-color, #000);
-    text-align: center;
+    text-align: left;
     font-family: Nunito;
     font-size: 18px;
     font-style: normal;
@@ -61,6 +61,10 @@ main {
     width: auto;
     height: fit-content;
     text-align: left;
+}
+
+.none-filter-btn{
+    align-self: flex-end;
 }
 
 .product-container {
