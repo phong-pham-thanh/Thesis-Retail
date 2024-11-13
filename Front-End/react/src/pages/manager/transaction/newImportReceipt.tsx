@@ -20,7 +20,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, message, Row, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { GetProps } from 'antd';
-import ProductInformationPopupScreen from "../../component/popupEditProduct";
+//import ProductInformationPopupScreen from "../../component/popupEditProduct";
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 import { CategoryType, GoodsReceipt, ListGoodReciptDetailsModel, PartnerState, ProductState, WarehouseState } from "../../../app/type.d";
