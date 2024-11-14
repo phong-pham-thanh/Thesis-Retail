@@ -122,9 +122,8 @@ export default function ExportTransaction() {
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        let d=res.data.reverse();
-        setExportReciptData(d);
-        setShowReciptData(d);
+        setExportReciptData(res.data);
+        setShowReciptData(res.data);
       })
       .catch((error) => {
         console.log(error);

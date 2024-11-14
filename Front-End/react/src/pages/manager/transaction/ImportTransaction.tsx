@@ -130,9 +130,8 @@ export default function ImportTransaction() {
   useEffect(() => {
     getAllGoodReceipt()
       .then((res) => {
-        let d = res.data.reverse();
-        setImportReciptData(d);
-        setFilteredReciptData(d);
+        setImportReciptData(res.data);
+        setFilteredReciptData(res.data);
       })
       .catch((error) => {
         console.log(error);

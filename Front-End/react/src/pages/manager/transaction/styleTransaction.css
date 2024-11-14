@@ -102,6 +102,9 @@ main {
 
 .transaction-list {
     padding: 1em 2em 1em 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .title {
