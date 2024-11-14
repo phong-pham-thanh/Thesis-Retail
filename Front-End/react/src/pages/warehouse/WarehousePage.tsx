@@ -23,6 +23,7 @@ export interface WarehouseType {
   id: string;
   address: string;
   managerId: string;
+  manager: any;
   status: boolean;
   listInventories: InventoryType[];
 }
@@ -31,6 +32,7 @@ const emptyWarehouse: WarehouseType = {
   id: "0",
   address: "",
   managerId: "0",
+  manager: null,
   status: true,
   listInventories: [],
 };
@@ -108,8 +110,8 @@ export default function Warehouse() {
     },
     {
       title: "Mã quản lý",
-      dataIndex: "managerId",
-      sorter: (a, b) => parseInt(a.managerId) - parseInt(b.managerId),
+      dataIndex: ["manager", "name"],
+      sorter: (a, b) => a.manager.name.localeCompare(b.manager.name),
     },
     {
       title: "Trạng thái",

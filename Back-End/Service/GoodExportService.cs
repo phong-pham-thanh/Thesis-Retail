@@ -23,6 +23,7 @@ namespace APIBackend.Service
     public class GoodExportService : IGoodExportService
     {
         private readonly IProductMapper _productMapper;
+        private readonly IWareHouseRepository _wareHouseRepository;
         private readonly IGoodsExportMapper _goodExportMapper;
         private readonly IGoodExportDetailMapper _goodExportDetailMapper;
         private readonly IGoodExportRepository _goodExportRepository;
@@ -34,7 +35,8 @@ namespace APIBackend.Service
         private readonly IUserWareHouseService _userWareHouseService;
 
         public GoodExportService(IProductMapper productMapper, 
-            IGoodsExportMapper goodExportMapper, 
+            IGoodsExportMapper goodExportMapper,
+            IWareHouseRepository wareHouseRepository,
             IGoodExportDetailMapper goodExportDetailMapper, 
             IGoodExportRepository goodExportRepository,
             IGoodExportDetailRepository goodExportDetailRepository,
@@ -45,6 +47,7 @@ namespace APIBackend.Service
             IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
+            _wareHouseRepository = wareHouseRepository;
             _goodExportMapper = goodExportMapper;
             _goodExportDetailMapper = goodExportDetailMapper;
             _goodExportRepository = goodExportRepository;
@@ -124,6 +127,7 @@ namespace APIBackend.Service
         {
             List<GoodsExportModel> listGoodExport = _goodExportRepository.GetAllGoodExports();
             listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
+            bindWareHouseToGoodNote(listGoodExport);
             return listGoodExport;
         }
 
@@ -133,6 +137,7 @@ namespace APIBackend.Service
             List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
             listGoodExport = listGoodExport.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
             listGoodExport = listGoodExport.OrderByDescending(x => x.ExportStatus).ToList();
+            bindWareHouseToGoodNote(listGoodExport);
             return listGoodExport;
         }
 
@@ -152,6 +157,14 @@ namespace APIBackend.Service
             foreach(var goodExportDetailModel in currentGoodExport.ListGoodExportDetailsModel)
             {
                 _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, currentGoodExport.WareHouseId, false);
+            }
+        }
+
+        public void bindWareHouseToGoodNote(List<GoodsExportModel> listGoodExport)
+        {
+            foreach(GoodsExportModel item in listGoodExport)
+            {
+                item.WareHouse = _wareHouseRepository.GetById(item.WareHouseId);
             }
         }
 

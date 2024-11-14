@@ -370,8 +370,8 @@ export default function ImportTransaction() {
     },
     {
       title: "Mã kho nhập",
-      dataIndex: "wareHouseId",
-      //dataIndex: ["wareHouse", "name"], 
+      // dataIndex: "wareHouseId",
+      dataIndex: ["wareHouse", "address"], 
       /*filters: filterByWarehouse,
       onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,*/
     },

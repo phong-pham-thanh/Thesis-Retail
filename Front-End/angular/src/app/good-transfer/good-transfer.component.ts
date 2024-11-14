@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {State} from '../state/goodTransfer-state/goodTransfer.state'
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +13,10 @@ import { GoodTransferViewComponent } from './good-transfer-view/good-transfer-vi
 import { UtilitiesService } from '../common/utilities.service';
 import { Warehouse } from '../model/warehouse.model';
 import { NoteStatus } from '../model/status.enum';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-good-transfer',
@@ -21,6 +25,9 @@ import { NoteStatus } from '../model/status.enum';
 })
 export class GoodTransferComponent {
   
+  displayedColumns: string[] = ['id', 'createdDate', 'formWareHouse', 'toWareHouse', 'user', 'status', 'context'];
+  dataSource = new MatTableDataSource<GoodTransfer>();
+
   selectedRow: HTMLElement | null = null;
   allGoodTransfer: GoodTransfer[] = []
   fullData: GoodTransfer[] = [];
@@ -38,6 +45,11 @@ export class GoodTransferComponent {
   selectedIdStatus: number[] = [];
   currentPage: any;
 
+
+  
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   statusArray = [
     {id: NoteStatus.Canceled, name: 'Đã hủy', className: 'status-good-transfer error-good-transfer'},
     {id: NoteStatus.Success, name: 'Hoàn thành', className: 'status-good-transfer complete-good-transfer'},
@@ -46,6 +58,7 @@ export class GoodTransferComponent {
 
   constructor(protected store: Store<State>,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private router: Router
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
@@ -61,6 +74,29 @@ export class GoodTransferComponent {
         map(result => {
           this.allGoodTransfer = result; 
           this.fullData = UtilitiesService.cloneDeep(result); 
+
+          this.dataSource = new MatTableDataSource<GoodTransfer>(this.allGoodTransfer);
+
+          this.dataSource.paginator = this.paginator; 
+          this.dataSource.sort = this.sort;
+          this.dataSource.sortingDataAccessor = (item: GoodTransfer, property: string) => {
+            switch (property) {
+              case 'id':
+                return item.id;
+              case 'formWareHouse':
+                return item.fromWareHouse?.address ? item.fromWareHouse.address.toLowerCase() : '';
+              case 'toWareHouse':
+                return item.toWareHouse?.address ? item.toWareHouse.address.toLowerCase() : '';
+              case 'createdDate':
+                return item.transferDate ? new Date(item.transferDate).getTime() : 0;
+              case 'user':
+                return item.user?.name ? item.user.name.toLowerCase() : '';
+              case 'status':
+                return item.status;
+              default:
+                return '';
+            }
+          };
         }))
       )
     ).subscribe();
@@ -77,6 +113,10 @@ export class GoodTransferComponent {
     ).subscribe();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
 
   addNew(){
     this.router.navigate([`/quan-ly/good-transfer/edit`, 0]);
@@ -121,7 +161,8 @@ export class GoodTransferComponent {
           ).subscribe();
         }
         else{
-          alert(result.message);
+          UtilitiesService.showAlert(result.message);
+          // alert(result.message);
         }
       }
     });
@@ -200,5 +241,9 @@ export class GoodTransferComponent {
     this.allGoodTransfer = this.selectedWarehousesIdFromWareHouse.length > 0 ? UtilitiesService.cloneDeep(this.allGoodTransfer.filter(x => this.selectedWarehousesIdFromWareHouse.includes(x.fromWareHouseId))): this.allGoodTransfer;
     this.allGoodTransfer = this.selectedWarehousesIdToWareHouse.length > 0 ? UtilitiesService.cloneDeep(this.allGoodTransfer.filter(x => this.selectedWarehousesIdToWareHouse.includes(x.toWareHouseId))): this.allGoodTransfer;
     this.allGoodTransfer = this.selectedIdStatus.length > 0 ? UtilitiesService.cloneDeep(this.allGoodTransfer.filter(x => this.selectedIdStatus.includes(x.status))): this.allGoodTransfer;
+  
+    this.dataSource = new MatTableDataSource<GoodTransfer>(this.allGoodTransfer);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }

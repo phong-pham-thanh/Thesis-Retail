@@ -14,6 +14,9 @@ export enum UsersActionTypes {
     UpdateUsers = '[UpdateUsers] Update Users',
     UpdateUsersSuccess = '[UpdateUsers] Update Users Success',
     UpdateUsersFail = '[UpdateUsers] Update Users Fail',
+    LoadCurrentuser = '[Currentuser] Load All Price Users',
+    LoadCurrentuserSuccess = '[Currentuser] Load Currentuser Success',
+    LoadCurrentuserFail = '[Currentuser] Load Currentuser Fail',
 }
 
 export class LoadAllUsers implements Action {
@@ -70,6 +73,25 @@ export class UpdateUsersFail implements Action {
     constructor(public payload: string) { }
 }
 
+
+export class LoadCurrentuser implements Action {
+    readonly type = UsersActionTypes.LoadCurrentuser;
+
+    constructor(public payload: number) { }
+}
+
+export class LoadCurrentuserSuccess implements Action {
+    readonly type = UsersActionTypes.LoadCurrentuserSuccess;
+
+    constructor(public payload: Users) { }
+}
+  
+export class LoadCurrentuserFail implements Action {
+    readonly type = UsersActionTypes.LoadCurrentuserFail;
+  
+    constructor(public payload: string) { }
+}
+
 export type UsersActions = LoadAllUsers
   | LoadAllUsersSuccess
   | LoadAllUsersFail
@@ -82,3 +104,6 @@ export type UsersActions = LoadAllUsers
   | AddNewUsers
   | AddNewUsersSuccess
   | AddNewUsersFail
+  | LoadCurrentuser
+  | LoadCurrentuserSuccess
+  | LoadCurrentuserFail

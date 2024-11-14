@@ -1,6 +1,7 @@
 ﻿using APIBackend.Models;
 using APIBackend.Repository;
 using APIBackEnd.Data;
+using APIBackEnd.Repository;
 using NGO.Core.Repositories;
 
 namespace APIBackend.Service
@@ -17,21 +18,29 @@ namespace APIBackend.Service
     public class WareHouseService : IWareHouseService
     {
         private readonly IWareHouseRepository _wareHouseRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IUserWareHouseService _userWareHouseService;
         protected readonly IUnityOfWorkFactory _uowFactory;
         public WareHouseService(
             IWareHouseRepository wareHouseRepository,
+            IUserRepository userRepository,
             IUserWareHouseService userWareHouseService,
             IUnityOfWorkFactory uowFactory)
         {
             _wareHouseRepository = wareHouseRepository;
+            _userRepository = userRepository;
             _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
 
         }
         public List<WareHouseModel> GetAll()
         {
-            return _wareHouseRepository.GetAll();
+            List<WareHouseModel> result = _wareHouseRepository.GetAll();
+            foreach(WareHouseModel item in result)
+            {
+                item.Manager = _userRepository.GetUserById(item.ManagerId);
+            }
+            return result;
         }
 
         public List<WareHouseModel> GetAllByRole()
