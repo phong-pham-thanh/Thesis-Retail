@@ -301,8 +301,8 @@ export default function ExportTransaction() {
     },
     {
       title: "Mã kho xuất",
-      dataIndex: "wareHouseId",
-      //dataIndex: ["wareHouse", "name"], 
+      // dataIndex: "wareHouseId",
+      dataIndex: ["wareHouse", "address"], 
     },
     {
       title: "Khách hàng",
@@ -525,16 +525,13 @@ export default function ExportTransaction() {
                     className={`${dataChoose?.id === tran.id && "tr-active"}`}
                   >
                     <td className="table-body-code">{tran.id}</td>
-<<<<<<< HEAD
                     <td className="table-body-time"><ProcessDate dateString={tran.exportDate.toLocaleString()} /></td>
                     <th className="table-body-trans">{tran.wareHouseId}</th>
-=======
                     <td className="table-body-time">
                       <ProcessDate
                         dateString={tran.exportDate.toLocaleString()}
                       />
                     </td>
->>>>>>> main
                     <td className="table-body-trans">{tran.customer?.name}</td>
                     <td className="table-body-total">
                       {tran.totalAmount?.toLocaleString()}
