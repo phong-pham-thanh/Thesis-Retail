@@ -359,6 +359,7 @@ export default function ImportTransaction() {
     {
       title: "Mã nhập hàng",
       dataIndex: "id",
+      sorter: (a, b) => a.id < b.id ? -1 : 1,
     },
     {
       title: "Ngày nhập",
@@ -374,12 +375,14 @@ export default function ImportTransaction() {
       dataIndex: ["wareHouse", "address"], 
       /*filters: filterByWarehouse,
       onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,*/
+      sorter: (a, b) => a.wareHouseId < b.wareHouseId ? -1 : 1,
     },
     {
       title: "Nhà cung cấp",
       dataIndex: ["partner", "name"],
       /*filters: filterByPartner,
       onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
+      sorter: (a, b) => a.partner ? (b.partner ? (-b.partner?.name.localeCompare(a.partner?.name)) : -1) : 1,
     },
     {
       title: "Tổng tiền",
@@ -387,6 +390,7 @@ export default function ImportTransaction() {
       render: (record) => {
         return record.totalAmount?.toLocaleString();
       },
+      sorter: (a, b) => a.totalAmount < b.totalAmount ? -1 : 1,
     },
     {
       title: "Trạng thái",
@@ -396,6 +400,7 @@ export default function ImportTransaction() {
       },
       /*filters: filterByStatus,
       onFilter: (value, record) => String(record.receiptStatus).indexOf(value as string) === 0,*/
+      sorter: (a, b) => a.receiptStatus < b.receiptStatus ? -1 : 1,
     },
 
     {

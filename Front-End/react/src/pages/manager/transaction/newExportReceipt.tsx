@@ -305,7 +305,7 @@ export default function ExportGoods() {
     const postData: ExportDataType = {
       goodsExportModel: {
         id: "0",
-        exportDate: form.getFieldValue("exportDate")?.toLocaleString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         customerId: form.getFieldValue("customerId"),
         exportStatus: 2,
         listGoodExportDetailModels: [],
@@ -321,6 +321,7 @@ export default function ExportGoods() {
         navigate(-1);
       })
       .catch((error) => {
+        console.log(error);
         message.error("Tạo thất bại");
       });
 
@@ -360,7 +361,7 @@ export default function ExportGoods() {
                 <Col span={8}>
                   <Form.Item
                     className="idWareHouse"
-                    label={"Xuất đến kho"}
+                    label={"Xuất từ kho"}
                     name={"idWareHouse"}
                     layout="vertical"
                     rules={[{

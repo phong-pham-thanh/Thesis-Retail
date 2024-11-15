@@ -333,6 +333,7 @@ export default function ImportGoods() {
         navigate(-1);
       })
       .catch((error) => {
+        console.log(error);
         message.error("Tạo thất bại");
       });
 

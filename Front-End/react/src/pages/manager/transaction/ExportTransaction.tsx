@@ -84,8 +84,8 @@ const emptydata: GoodExportReceiptDetailDataType = {
       "priceUnit": 0,
       "quantity": 0
     }],
-    "wareHouseId": "0",
-    "wareHouse": null,
+  "wareHouseId": "0",
+  "wareHouse": null,
 }
 
 export default function ExportTransaction() {
@@ -290,6 +290,7 @@ export default function ExportTransaction() {
     {
       title: "Mã nhập hàng",
       dataIndex: "id",
+      sorter: (a, b) => a.id < b.id ? -1 : 1,
     },
     {
       title: "Ngày xuất",
@@ -302,25 +303,28 @@ export default function ExportTransaction() {
     {
       title: "Mã kho xuất",
       // dataIndex: "wareHouseId",
-      dataIndex: ["wareHouse", "address"], 
+      dataIndex: ["wareHouse", "address"],
+      sorter: (a, b) => a.wareHouseId < b.wareHouseId ? -1 : 1,
     },
     {
       title: "Khách hàng",
       dataIndex: ["customer", "name"],
+      sorter: (a, b) => a.customer ? (b.customer ? (-b.customer?.name.localeCompare(a.customer?.name)) : -1) : 1,
     },
-    {
+    /*{
       title: "Tổng tiền",
       key: "totalAmount",
       render: (record) => {
         return record.totalAmount?.toLocaleString();
       },
-    },
+    },*/
     {
       title: "Trạng thái",
       key: "exportStatus",
       render: (record) => {
         return <ProcessStatus status={record.exportStatus} />
       },
+      sorter: (a, b) => a.exportStatus < b.exportStatus ? -1 : 1,
     },
 
     {
@@ -375,7 +379,7 @@ export default function ExportTransaction() {
               <>
                 <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
                 <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={() => navigate("chinh-sua/"+goodReceiptData.id)}>Chỉnh sửa</Button>
+                <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
               </>
             ) : (
               <>
@@ -502,7 +506,7 @@ export default function ExportTransaction() {
   );
 }
 
- {/*<table className="table">
+{/*<table className="table">
             <thead className="table-header">
               <th className="table-header-code">Mã xuất hàng</th>
               <th className="table-header-time">Thời gian</th>

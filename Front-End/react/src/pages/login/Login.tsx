@@ -35,6 +35,9 @@ import { unescapeLeadingUnderscores } from 'typescript';*/
 //import PulseLoader from "react-spinners/PulseLoader";
 
 export default function Login() {
+
+  const [errorMessage0, setErrorMessage] = useState<String>();
+
   // Select data from store
   //not using const errorMessage = useSelector(selectErrorMessage);  const isSuccess = useSelector(selectSuccess);
   const isSuccess = useSelector(selectSuccess);
@@ -72,38 +75,13 @@ export default function Login() {
 
   const getLoginInfor0 = (data) => {
     const api_link = api_links.user.login;
-    api_link.data=data;
+    api_link.data = data;
     return fetch_Api(api_link)
   }
-  const getLoginInfor = async function (data): Promise<AxiosResponse> {
-    
-    const config: AxiosRequestConfig = {
-        headers: {
-        },
-        url: api_links.user.login.url,
-        method: api_links.user.login.method,
-        data: data,
-        withCredentials: true
-    }
-    try {
-        const response: AxiosResponse = await axios(config);
-        if (response.status==200){
-        cookies.set("user", response.data, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
-        navigate("/quan-ly");
-
-        }
-        return response
-    } catch (error: any) {
-        if (error.response) {
-            const errorMessage = error.response.data;
-            throw errorMessage
-        } else {
-            throw new Error(`Lỗi khi đưa yêu cầu: ${error}`)
-        }
-    }
-}
 
   const errorMessage = () => {
+    if (errorMessage0) return errorMessage0;
+    else return null;
     if (errorMessage2) {
       if (typeof Object.values(errorMessage2)[0] == "string") {
         return Object.values(errorMessage2)[0];
@@ -115,11 +93,21 @@ export default function Login() {
 
   const onFinish = (values: any) => {
     //dispatch(login({ "AccountInformation": values.username, "UserName": values.username, "Password": values.password, "link": loginLink }))
-    const response= getLoginInfor(values);
-
-    console.log(response);
-    navigate("/quan-ly");
-
+    //const response = getLoginInfor(values);
+    getLoginInfor0(values)
+    .then((res) => {
+          console.log(res);
+          if (res.status === 204) { 
+            setErrorMessage("Tên đăng nhập hoặc mật khẩu không chính xác")
+          }
+          if (res.status == 200) {
+            cookies.set("user", res.data, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
+            navigate("/quan-ly");
+          }
+    })
+    .catch((error) => 
+      setErrorMessage(error.detail)
+  )
   };
 
   //check token existed
@@ -177,8 +165,8 @@ export default function Login() {
               className="login-form-button"
             >
               {isSuccess ? (
-                <FontAwesomeIcon className="circle-loading" icon={faSpinner} 
-                onClick={()=>onFinish}/>
+                <FontAwesomeIcon className="circle-loading" icon={faSpinner}
+                  onClick={() => onFinish} />
               ) : (
                 "Log in"
               )}
