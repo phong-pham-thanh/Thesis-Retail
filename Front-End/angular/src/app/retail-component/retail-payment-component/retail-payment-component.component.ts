@@ -87,7 +87,8 @@ export class RetailPaymentComponentComponent {
             }
             else{
               this.dialogRef.close(false);
-              alert(error.error.detail);
+              // alert(error.error.detail);
+              UtilitiesService.showAlert(error.error.detail);
             }
           }))
         

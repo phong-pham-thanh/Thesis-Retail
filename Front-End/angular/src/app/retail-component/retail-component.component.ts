@@ -5,8 +5,11 @@ import { BillDetails } from '../model/billDetail.model';
 import { Bill } from '../model/bill.model';
 import { Store, select } from '@ngrx/store';
 import { State } from '../product-state/product.state';
+import { UsersState } from '../state/users-state/users.state';
 import * as productActions from '../product-state/product.actions';
 import * as productSelector from '../product-state/product.reducer';
+import * as userAction from '../state/users-state/users.actions';
+import * as userSelector from '../state/users-state/users.reducer';
 import * as warehouseActions from '../state/warehouse-state/warehouse.actions';
 import * as warehouseSelector from '../state/warehouse-state/warehouse.reducer';
 import * as customerActions from '../customer-state/customer.actions';
@@ -48,9 +51,11 @@ export class RetailComponentComponent implements OnInit {
   currentCustomer: Customer;
   currentWarehouse: Warehouse;
   totalAmountBill: number = 0;
+  currentUser: Users;
   productSearchKeyName: string = null;
 
   constructor(protected store: Store<State>, 
+    protected userStore: Store<State>, 
     private currencyPipe: CurrencyPipe,
     private dialog: MatDialog,
     private cookieService: CookieService
@@ -59,6 +64,19 @@ export class RetailComponentComponent implements OnInit {
     this.store.dispatch(new warehouseActions.LoadAllWarehouseByRole());
     this.store.dispatch(new customerActions.LoadAllCustomer());
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
+
+    
+    const userCookieValue = this.cookieService.get('user');
+    if (userCookieValue) {
+      try {
+        this.currentUser = JSON.parse(userCookieValue);
+        this.userStore.dispatch(new userAction.LoadCurrentuser(this.currentUser.id));
+      } catch (error) {
+        console.error('Failed to parse cookie value', error);
+      }
+    } else {
+      console.log('No user cookie found');
+    }
   }
 
 
@@ -82,7 +100,19 @@ export class RetailComponentComponent implements OnInit {
         map(result => {
           this.allWarehouse = result;
           if(result && result.length > 0){
-            this.currentWarehouse = result[0];
+            this.userStore.pipe(select(userSelector.getIsLoaded),
+              // filter(loaded => loaded === true),
+              mergeMap(_ => 
+                this.userStore.pipe(select(userSelector.getCurrentUser),
+                map(currentU => {
+                  this.currentUser = currentU;
+                  if(!UtilitiesService.isNullOrEmpty(this.currentUser?.defaultWareHouseId)){
+                    this.currentWarehouse = result.find(w => w.id === this.currentUser.defaultWareHouseId)
+                  }else{
+                    this.currentWarehouse = result[0];
+                  }
+                }))
+              ), take(1)).subscribe();
           }
         }))
       ), take(1)

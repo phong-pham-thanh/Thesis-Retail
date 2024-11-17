@@ -6,6 +6,7 @@ export interface State{
 
 export interface UsersState {
     allUsers: Users[];
+    currentUser: Users;
     needRefreshBrowseList: boolean;
     isLoading: boolean;
     isLoaded: boolean;

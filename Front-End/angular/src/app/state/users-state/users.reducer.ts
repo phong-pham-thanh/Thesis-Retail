@@ -6,6 +6,7 @@ import { UsersActions, UsersActionTypes } from './users.actions';
 const initialState: UsersState = {
     needRefreshBrowseList: false,
     allUsers: [],
+    currentUser: null,
     isLoading: false,
     isLoaded: false,
     isSaving: false,
@@ -19,6 +20,10 @@ export const getAllUsers = createSelector(
     state => state.allUsers
 );
 
+export const getCurrentUser = createSelector(
+    getUsersFeatureState,
+    state => state.currentUser
+);
 
 export const getIsLoading = createSelector(
     getUsersFeatureState,
@@ -104,6 +109,31 @@ export function usersReducer(state = initialState, action: UsersActions): UsersS
             };
         
         case UsersActionTypes.UpdateUsersFail:
+            return {
+                ...state,
+                isLoading: false,
+                isLoaded: true,
+                error: action.payload
+            };
+        
+        case UsersActionTypes.LoadCurrentuser:
+            return {
+                ...state,
+                needRefreshBrowseList: false,
+                isLoaded: false,
+                isLoading: true
+            };
+
+        case UsersActionTypes.LoadCurrentuserSuccess:
+            return {
+                ...state,
+                currentUser: action.payload,
+                isLoading: false,
+                isLoaded: true,
+                error: ''
+            };
+        
+        case UsersActionTypes.LoadCurrentuserFail:
             return {
                 ...state,
                 isLoading: false,

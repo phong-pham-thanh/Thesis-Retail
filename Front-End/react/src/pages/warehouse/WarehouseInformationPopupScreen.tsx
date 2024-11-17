@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, message, Switch, Select } from "antd";
 import api_links from "../../app/api_links";
 import fetch_Api from "../../app/api_fetch";
 import { WarehouseType } from "./WarehousePage";
-import { StaffState } from "../../app/type.d";
+import { UserState } from "../../app/type.d";
 
 interface WarehouseInformationPopupScreenProps {
   isPopup: boolean;
@@ -23,7 +23,7 @@ export default function WarehouseInformationPopupScreen({
   onSave,
 }: WarehouseInformationPopupScreenProps) {
   const [form] = Form.useForm();
-  const [users, setUsers] = useState<StaffState[]>([]);
+  const [users, setUsers] = useState<UserState[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
