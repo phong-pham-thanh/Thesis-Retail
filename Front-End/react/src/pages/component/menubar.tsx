@@ -221,12 +221,12 @@ export default function NavBar() {
 
   return (
     <header className="navbar-custom">
-      <div className="navbar__title navbar__item">
+      <div className="navbar__title">
         <img
           src={svgLogo}
           width="100"
           height="100"
-          style={{ marginLeft: 20, marginTop: 20 }}
+          style={{ marginLeft: 10, marginTop: 10 }}
         />
       </div>
       {menuList.map((item) => (
@@ -256,16 +256,7 @@ export default function NavBar() {
           )}
         </div>
       ))}
-      <div className="account-container">
-        <div>{cookies.get("user")?.name ?? "Anonymous"}</div>
-        <div>{cookies.get("user")?.branch ?? "No Branch"}</div>
-        <LogoutIcon
-          onClick={() => {
-            cookies.remove("user", { path: "/" });
-            navigate("/login");
-          }}
-        />
-      </div>
+     <Account/>
     </header>
   );
 }

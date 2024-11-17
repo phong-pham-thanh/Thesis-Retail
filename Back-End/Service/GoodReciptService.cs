@@ -32,6 +32,7 @@ namespace APIBackend.Service
         protected readonly IUnityOfWorkFactory _uowFactory;
         private readonly IUserSessionService _userSessionService;
         private readonly IUserWareHouseService _userWareHouseService;
+        private readonly IWareHouseRepository _wareHouseRepository;
 
         public GoodReciptService(IProductMapper productMapper, 
             IGoodsReceiptMapper goodReciptMapper, 
@@ -42,6 +43,7 @@ namespace APIBackend.Service
             IProductRepository productRepository,
             IUnityOfWorkFactory uowFactory,
             IUserWareHouseService userWareHouseService,
+            IWareHouseRepository wareHouseRepository,
             IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
@@ -54,6 +56,7 @@ namespace APIBackend.Service
             _uowFactory = uowFactory;
             _userSessionService = userSessionService;
             _userWareHouseService = userWareHouseService;
+            _wareHouseRepository = wareHouseRepository;
         }
 
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept)
@@ -95,6 +98,7 @@ namespace APIBackend.Service
         {
             List<GoodsReceiptModel> result = _goodReciptRepository.GetAllGoodRecipts();
             result = result.OrderByDescending(x => x.ReceiptStatus).ToList();
+            bindWareHouseToGoodNote(result);
             return result;
         }
 
@@ -104,6 +108,7 @@ namespace APIBackend.Service
             List<int> listIdWareHouseBelong = _userWareHouseService.GetListWareHouseCurrentUserBelong();
             result = result.Where(x => listIdWareHouseBelong.Contains(x.WareHouseId)).ToList();
             result = result.OrderByDescending(x => x.ReceiptStatus).ToList();
+            bindWareHouseToGoodNote(result);
             return result;
         }
 
@@ -163,6 +168,14 @@ namespace APIBackend.Service
                 totalAmount += priceUnit * goodReceiptDetailModel.Quantity;
             }
             return totalAmount;
+        }
+
+        public void bindWareHouseToGoodNote(List<GoodsReceiptModel> listGoodExport)
+        {
+            foreach (GoodsReceiptModel item in listGoodExport)
+            {
+                item.WareHouse = _wareHouseRepository.GetById(item.WareHouseId);
+            }
         }
     }
 }

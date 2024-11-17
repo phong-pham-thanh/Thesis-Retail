@@ -39,7 +39,7 @@
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="table-header-price"> Id </div>
+          <div class="table-header-price"> Mã hóa đơn </div>
         </th>
         <td mat-cell *matCellDef="let element">{{element.id}}</td>
       </ng-container>
@@ -73,7 +73,7 @@
       </ng-container>
 
       <ng-container matColumnDef="totalAmount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-no-boder">
           <div class="table-header-price"> Tổng hóa đơn </div>
         </th>
         <td mat-cell *matCellDef="let element">{{element.totalAmount | currency:'VND':'symbol':'1.0-0'}}</td>

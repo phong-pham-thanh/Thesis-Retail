@@ -28,6 +28,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -122,6 +123,7 @@ export function CustomPaginatorIntl() {
     FormsModule,
     ReactiveFormsModule,
     MatMenuModule,
+    MatSnackBarModule,
     MatIconModule,
     NgxPaginationModule,
     NgxMaskDirective,

@@ -23,6 +23,18 @@ export class UsersEffects {
       )
     );
 
+    loadCurrentuser$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(userAction.UsersActionTypes.LoadCurrentuser),
+        map((action: userAction.LoadCurrentuser) => action.payload),
+        mergeMap((id) =>
+          this.userService.getCurrentuser(id).pipe(
+            map(result => new userAction.LoadCurrentuserSuccess(result)),
+            catchError(err => of(new userAction.LoadCurrentuserFail(err)))
+          )
+        )
+      )
+    );
     
     addNewUsers$ = createEffect(() =>
       this.actions$.pipe(
