@@ -12,9 +12,11 @@ import {
 import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
 import { ProductState, CategoryType } from "../../../app/type.d";
+import { HttpStatusCode } from "axios";
 
 const { Option } = Select;
-const { TextArea } = Input;
+
+const defaultImagePathPrefix = "https://localhost:7030/images/products";
 
 interface ProductInformationPopupScreenProps {
   isPopup: boolean;
@@ -38,9 +40,8 @@ export default function ProductInformationPopupScreen({
   const [form] = Form.useForm();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [previousPath, setPreviousPath] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [fullPath, setFullPath] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -65,8 +66,8 @@ export default function ProductInformationPopupScreen({
         ...data,
         categoryId: data.category.id,
       });
-      // setImageUrl(data.imgPath || "");
-      setFullPath(data.imgPath || "");
+      setPreviousPath(data.imgPath);
+      setImageUrl(data.imgPath);
     } else if (type === "create") {
       form.resetFields();
     }
@@ -75,13 +76,15 @@ export default function ProductInformationPopupScreen({
 
   const handleCancel = () => {
     setPopup(false);
-    clearImage(); // Reset image when modal is canceled
+    if (data?.imgPath) {
+      setImageUrl(data.imgPath);
+    } else {
+      clearImage();
+    }
   };
 
   const clearImage = () => {
-    setSelectedFile(null);
-    setImageUrl(""); // Clear the image preview URL
-    setFullPath(""); // Clear the image preview URL
+    setImageUrl("");
   };
 
   const handleOk = () => {
@@ -89,14 +92,22 @@ export default function ProductInformationPopupScreen({
       .validateFields()
       .then(async (values) => {
         setLoading(true);
-        const productData = { ...values, imgPath: imageUrl };
+        console.log(
+          `2 hinh có khác nhau không? : ${
+            imageUrl !== previousPath ? "Có" : "Không"
+          }`
+        );
+        let productData;
+        if (imageUrl !== previousPath)
+          productData = { ...values, imgPath: imageUrl };
+        else productData = { ...values, imgPath: previousPath };
+        console.log(productData);
         try {
           if (type === "edit" && data?.id) {
             const api_put = {
               ...api_links.product.edit(Number(data.id)),
               data: productData,
             };
-            console.log(api_put);
             await fetch_Api(api_put);
           } else if (type === "create") {
             const api_post = {
@@ -107,12 +118,14 @@ export default function ProductInformationPopupScreen({
           }
 
           message.success(
-            `Product ${type === "edit" ? "Thay đổi" : "Thêm mới"} thành công.`
+            `${
+              type === "edit" ? "Thay đổi" : "Thêm mới"
+            } thông tin sản phẩm thành công.`
           );
           if (onSave) onSave();
           handleCancel();
         } catch (error) {
-          message.error("Failed to save product");
+          message.error("Lỗi khi lưu thông tin sản phẩm");
         } finally {
           setLoading(false);
         }
@@ -120,35 +133,36 @@ export default function ProductInformationPopupScreen({
       .catch(() => setLoading(false));
   };
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (!file) {
-      message.error("No file selected.");
+      message.error("Không tìm thấy tệp tin nào được chọn.");
       return;
     }
-    setSelectedFile(file);
-    await handleUpload(file);
+    handleUpload(file);
   };
 
   const handleUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("productName", data.name);
+    formData.append("productName", data?.name || "Sản phẩm mới");
 
     try {
       const uploadApi = { ...api_links.uploadFile.post, data: formData };
       const response = await fetch_Api(uploadApi);
-      setImageUrl(response.data.imageUrl);
-      setFullPath(response.data.fullPath);
-      message.success("Image uploaded successfully.");
+      if (response.status === HttpStatusCode.Ok) {
+        console.log(response.data);
+        setImageUrl(response.data.imageUrl);
+      }
+      message.success("Tải hình ảnh thành công.");
     } catch (error) {
-      message.error("Failed to upload image.");
+      message.error("Lỗi khi tải hình ảnh.");
     }
   };
 
   return (
     <Modal
-      title={type === "edit" ? "Chỉnh sửa" : "Thêm mới"}
+      title={type === "edit" ? "Thay đổi" : "Thêm mới"}
       open={isPopup}
       onCancel={handleCancel}
       footer={[
@@ -168,13 +182,13 @@ export default function ProductInformationPopupScreen({
         >
           <Input />
         </Form.Item>
-        <Form.Item name="currentPrice" label="Giá bán">
+        <Form.Item name="currentPrice" label="Giá">
           <InputNumber />
         </Form.Item>
         <Form.Item
           name="categoryId"
           label="Danh mục"
-          rules={[{ required: true, message: "Chọn danh mục" }]}
+          rules={[{ required: true, message: "Chọn một danh mục" }]}
         >
           <Select>
             {categories.map((category) => (
@@ -187,17 +201,16 @@ export default function ProductInformationPopupScreen({
         <Form.Item name="status" valuePropName="checked">
           <Checkbox>Active</Checkbox>
         </Form.Item>
-
         <Form.Item label="Tải hình ảnh">
-          {/* <input type="file" onChange={handleFileChange} /> */}
           <input id="file-upload" type="file" onChange={handleFileChange} />
         </Form.Item>
-
-        {fullPath && (
+        {(imageUrl || previousPath) && (
           <img
-            src={fullPath}
+            src={
+              imageUrl ? `${imageUrl}` : `${defaultImagePathPrefix}/${imageUrl}`
+            }
             alt="Xem trước"
-            style={{ width: "100px", height:"100px", marginTop: "10px" }}
+            style={{ width: "100px", height: "100px", marginTop: "10px" }}
           />
         )}
       </Form>
