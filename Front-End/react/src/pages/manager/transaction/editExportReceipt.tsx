@@ -110,23 +110,26 @@ export default function ExportGoods() {
       title: 'Tên hàng',
       dataIndex: 'productName',
     },
-    {
+    /*{
       title: 'Đơn giá',
       dataIndex: 'priceUnit',
       render: (_, record) => (
         <Space size="small">
-          <InputNumber min={0} defaultValue={0} placeholder={"0"}
+          <InputNumber
+            disabled={goodReceiptData?.exportStatus !== 2}
+            min={0} defaultValue={0} placeholder={"0"}
             onChange={(e) => {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
         </Space>),
-    },
+    },*/
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
       render: (_, record) => (
         <Space size="small">
           <InputNumber
+            disabled={goodReceiptData?.exportStatus !== 2}
             min={1} defaultValue={1}
             value={record.quantity}
             onChange={(e) => {
@@ -168,7 +171,7 @@ export default function ExportGoods() {
         console.log(res.data);
       })
       .catch((error) => {
-        console.log(error);
+        message.error(error.detail);
       });
     getAllProduct()
       .then((res) => {
@@ -346,7 +349,7 @@ export default function ExportGoods() {
       id: goodReceiptData.id,
       exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
       customerId: form.getFieldValue("customerId"),
-      exportStatus: 2,
+      exportStatus: goodReceiptData.exportStatus,
       listGoodExportDetailsModel: tempListGoodReceiptDetailModels,
       wareHouseId: form.getFieldValue("idWareHouse"),
       wareHouse: null,
@@ -356,7 +359,7 @@ export default function ExportGoods() {
     putGoodsIssue(postData)
       .then((res) => {
         message.success("Chỉnh sửa thành công");
-        navigate(-1);
+        navigate("/quan-ly/xuat-hang");
       })
       .catch((error) => {
         message.error(error.detail);
@@ -410,6 +413,7 @@ export default function ExportGoods() {
                       initialValue={goodReceiptData?.wareHouseId}
                     >
                       <Select
+                        disabled={goodReceiptData?.exportStatus !== 2}
                         showSearch
                         placeholder="Chọn kho"
                         optionFilterProp="label"
@@ -436,6 +440,7 @@ export default function ExportGoods() {
                       initialValue={moment(goodReceiptData?.exportDate)}
                     >
                       <DatePicker
+                        disabled={goodReceiptData?.exportStatus !== 2}
                         showTime
                         disabledDate={(current) => { return current.valueOf() > Date.now() }}
                       />
@@ -454,6 +459,7 @@ export default function ExportGoods() {
                       initialValue={goodReceiptData?.customerId}
                     >
                       <Select
+                        disabled={goodReceiptData?.exportStatus !== 2}
                         showSearch
                         placeholder="Chọn khách hàng"
                         optionFilterProp="label"
@@ -470,11 +476,11 @@ export default function ExportGoods() {
                 </Row>
               }
               <Row>
-                <Button type='primary' onClick={() => {
+                {(goodReceiptData?.exportStatus == 2) && <Button type='primary' onClick={() => {
                   onFinish();//postGoodsIssue()
                 }}
                   style={{ backgroundColor: "#465d65" }}>
-                  Thêm mới</Button>
+                  Chỉnh sửa</Button>}
               </Row>
             </Space>
           </Form>
@@ -498,31 +504,31 @@ export default function ExportGoods() {
               )} />
           </div>
         </div>
-
-        <div className='newtransaction-product-table'>
-          <Row>
-            <Select
-              showSearch
-              placeholder="Phân loại"
-              optionFilterProp="label"
-              style={{ width: '50%' }}
-              onChange={handleFilterProductTable}
-            >
-              <Option value={0}>Tất cả</Option>
-              {allCategory?.map((d) => {
-                return (
-                  <Option value={d.id}>{d.name}</Option>
-                )
-              })}</Select>
-            <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
-          </Row>
-          <Card className="product-table" title={choosedCategory}>
-            {filteredProducts?.map((p) =>
-              <Card.Grid className="product-cell" style={gridStyle}
-                onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
-          </Card>
-        </div>
-
+        {(goodReceiptData?.exportStatus == 2) &&
+          <div className='newtransaction-product-table'>
+            <Row>
+              <Select
+                showSearch
+                placeholder="Phân loại"
+                optionFilterProp="label"
+                style={{ width: '50%' }}
+                onChange={handleFilterProductTable}
+              >
+                <Option value={0}>Tất cả</Option>
+                {allCategory?.map((d) => {
+                  return (
+                    <Option value={d.id}>{d.name}</Option>
+                  )
+                })}</Select>
+              <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
+            </Row>
+            <Card className="product-table" title={choosedCategory}>
+              {filteredProducts?.map((p) =>
+                <Card.Grid className="product-cell" style={gridStyle}
+                  onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+            </Card>
+          </div>
+        }
 
       </div>
     </div >
