@@ -30,6 +30,7 @@ import { handleSearch } from "../../../app/processFunction"
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
+import Cookies from "universal-cookie";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -59,6 +60,7 @@ const gridStyle: React.CSSProperties = {
 
 export default function ExportGoods() {
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const productColumns: ColumnsType<ProductState> = [
     {
@@ -108,7 +110,7 @@ export default function ExportGoods() {
       title: 'Tên hàng',
       dataIndex: 'productName',
     },
-    {
+    /*{
       title: 'Đơn giá',
       dataIndex: 'priceUnit',
       render: (_, record) => (
@@ -118,7 +120,7 @@ export default function ExportGoods() {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
         </Space>),
-    },
+    },*/
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
@@ -318,11 +320,12 @@ export default function ExportGoods() {
     postGoodsIssue(postData)
       .then((res) => {
         message.success("Tạo thành công");
-        navigate(-1);
+        navigate("/quan-ly/xuat-hang");
       })
       .catch((error) => {
         console.log(error);
         message.error("Tạo thất bại");
+        message.error(error.detail);
       });
 
   };
@@ -373,6 +376,7 @@ export default function ExportGoods() {
                       showSearch
                       placeholder="Chọn kho"
                       optionFilterProp="label"
+                      defaultValue={cookies.get("user")?.defaultWareHouseId}
                     >
                       {allWarehouses?.map((d) => {
                         return (

@@ -30,6 +30,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
 import { handleSearch } from "../../../app/processFunction";
+import Cookies from "universal-cookie";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -59,6 +60,7 @@ const gridStyle: React.CSSProperties = {
 
 export default function ImportGoods() {
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const productColumns: ColumnsType<ProductState> = [
     {
@@ -330,7 +332,7 @@ export default function ImportGoods() {
     postGoodsIssue(postData)
       .then((res) => {
         message.success("Tạo thành công");
-        navigate(-1);
+        navigate("/quan-ly/nhap-hang");
       })
       .catch((error) => {
         console.log(error);
@@ -380,6 +382,7 @@ export default function ImportGoods() {
                   }]}
                 >
                   <Select
+                    defaultValue={cookies.get("user")?.defaultWareHouseId}
                     showSearch
                     placeholder="Chọn kho"
                     optionFilterProp="label"
