@@ -14,6 +14,7 @@ import { UploadFile } from "@mui/icons-material";
 import message from "antd/lib/message";
 import { WarehouseFilter } from "./WarehouseFilter";
 import { CategoryFilter } from "./CategoryFilter";
+import Input from "antd/lib/input";
 
 interface InventoryType {
   id: number;
@@ -54,8 +55,8 @@ const emptydata: DataType = {
 
 export default function Product() {
   const [data, setProducts] = useState<DataType[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<DataType[]>([]); // State for filtered products
-  const [popupData, setPopupData] = useState<DataType>(emptydata); // State to store the selected product data
+  const [filteredProducts, setFilteredProducts] = useState<DataType[]>([]);
+  const [popupData, setPopupData] = useState<DataType>(emptydata);
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState<boolean>();
   const [selectedWarehouseId, setSelectedWarehouseId] = useState<number | null>(
@@ -64,9 +65,12 @@ export default function Product() {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false); // State to track changes for refetching
-  const [isAlertVisible, setIsAlertVisible] = useState(false); // Track visibility of AlertDialog
-  const [productToDelete, setProductToDelete] = useState<DataType | null>(null); // Store the product to be deleted
+  const [refresh, setRefresh] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<DataType | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState<string>(""); // handling tìm kiếm theo tên
+  const [timeoutId, setTimeoutId] = useState<number | undefined>();
 
   const defaultImage =
     "https://localhost:7030/images/default/default_image.png";
@@ -176,6 +180,31 @@ export default function Product() {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    if (timeoutId) clearTimeout(timeoutId);
+    let lstCategory =
+      filteredProducts.length !== 0
+        ? filteredProducts.map((product) => product.categoryId)
+        : null;
+    const newTimeoutId = window.setTimeout(() => {
+      if (value.trim()) {
+        const filtered = filteredProducts.filter((product) =>
+          product.name.toLowerCase().includes(value.trim().toLowerCase())
+        );
+
+        setFilteredProducts(filtered);
+        lstCategory = filtered.map((product) => product.categoryId);
+        handleCategoryChange(lstCategory);
+      } else {
+        setFilteredProducts(filteredProducts); // Reset to original list if no search term
+        handleCategoryChange(lstCategory);
+      }
+    }, 2000); // Delay for search (2 seconds)
+
+    setTimeoutId(newTimeoutId);
   };
 
   const columns: ColumnsType<DataType> = [
@@ -310,6 +339,15 @@ export default function Product() {
         </div>
         <div className="product-container">
           <div className="filterField">
+            <div className="search-bar">
+              <h3>Tìm kiếm</h3>
+              <Input
+                placeholder="Tên sản phẩm"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                allowClear
+              />
+            </div>
             <WarehouseFilter onSelect={handleWarehouseChange} />
 
             <CategoryFilter onSelect={handleCategoryChange} />
