@@ -177,7 +177,8 @@ export class GoodTransferDetailComponent {
         this.store.pipe(select(goodTransferSelector.getError),
         map(error => {
           if(error){
-            alert('Có lỗi khi tạo mới')
+            UtilitiesService.showAlert('Có lỗi khi tạo mới');
+            // alert('Có lỗi khi tạo mới')
           }
           else{
             this.router.navigate(['/quan-ly/good-transfer']);

@@ -115,7 +115,9 @@ export default function ImportGoods() {
       dataIndex: 'priceUnit',
       render: (_, record) => (
         <Space size="small">
-          <InputNumber min={0} defaultValue={record.priceUnit} placeholder={"0"}
+          <InputNumber 
+          disabled={goodReceiptData?.receiptStatus !== 2}
+          min={0} defaultValue={record.priceUnit} placeholder={"0"}
             onChange={(e) => {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
@@ -127,6 +129,7 @@ export default function ImportGoods() {
       render: (_, record) => (
         <Space size="small">
           <InputNumber
+            disabled={goodReceiptData?.receiptStatus !== 2}
             min={1} defaultValue={1}
             value={record.quantity}
             onChange={(e) => {
@@ -250,18 +253,18 @@ export default function ImportGoods() {
   };
 
   const handleGetTableProductDataByID = (listProduct: ListGoodReciptDetailsModel[]) => {
-    let newExportData : ExportProductTableState;
-    listProduct.map((item)=>{
+    let newExportData: ExportProductTableState;
+    listProduct.map((item) => {
       newExportData = {
         //"goodsReceiptId": "0",
         "productId": String(item.productId),
         "productName": item.product.name,
         "priceUnit": item.priceUnit,
         "quantity": item.quantity,
-        "subTotal": item.priceUnit*item.quantity,
+        "subTotal": item.priceUnit * item.quantity,
       }
       exportTableData.push(newExportData);
-   })
+    })
     updateTotal();
     setExportTableData([...exportTableData]);
     console.log(exportTableData);
@@ -338,12 +341,12 @@ export default function ImportGoods() {
     })
     const event = new Date();
     const postData: GoodImportReceiptDetailDataType = {
-        id: goodReceiptData.id,
-        importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
-        partnerID: form.getFieldValue("partnerId"),
-        receiptStatus: 2,
-        wareHouseId: form.getFieldValue("idWareHouse"),      
-        listGoodReciptDetailsModel: tempListGoodReceiptDetailModels,
+      id: goodReceiptData.id,
+      importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+      partnerID: form.getFieldValue("partnerId"),
+      receiptStatus: 2,
+      wareHouseId: form.getFieldValue("idWareHouse"),
+      listGoodReciptDetailsModel: tempListGoodReceiptDetailModels,
     }
 
 
@@ -405,6 +408,7 @@ export default function ImportGoods() {
                       initialValue={goodReceiptData?.wareHouseId}
                     >
                       <Select
+                        disabled={goodReceiptData?.receiptStatus !== 2}
                         showSearch
                         placeholder="Chọn kho"
                         optionFilterProp="label"
@@ -430,6 +434,7 @@ export default function ImportGoods() {
                       initialValue={moment(goodReceiptData?.importDate)}
                     >
                       <DatePicker
+                        disabled={goodReceiptData?.receiptStatus !== 2}
                         showTime
                         disabledDate={(current) => { return current.valueOf() > Date.now() }}
                       />
@@ -448,6 +453,7 @@ export default function ImportGoods() {
                       initialValue={goodReceiptData?.partnerID}
                     >
                       <Select
+                        disabled={goodReceiptData?.receiptStatus !== 2}
                         showSearch
                         placeholder="Chọn nhà cung cấp"
                         optionFilterProp="label"
@@ -463,11 +469,13 @@ export default function ImportGoods() {
                 </Row>
               }
               <Row>
-                <Button type='primary' onClick={() => {
-                  onFinish();//postGoodsIssue()
-                }}
-                  style={{ backgroundColor: "#465d65" }}>
-                  Thêm mới</Button>
+                {goodReceiptData?.receiptStatus == 2 &&
+                  <Button type='primary' onClick={() => {
+                    onFinish();//postGoodsIssue()
+                  }}
+                    style={{ backgroundColor: "#465d65" }}>
+                    Thêm mới</Button>
+                }
               </Row>
             </Space>
           </Form>
@@ -491,31 +499,31 @@ export default function ImportGoods() {
               )} />
           </div>
         </div>
-
-        <div className='newtransaction-product-table'>
-          <Row>
-            <Select
-              showSearch
-              placeholder="Phân loại"
-              optionFilterProp="label"
-              style={{ width: '50%' }}
-              onChange={handleFilterProductTable}
-            >
-              <Option value={0}>Tất cả</Option>
-              {allCategory?.map((d) => {
-                return (
-                  <Option value={d.id}>{d.name}</Option>
-                )
-              })}</Select>
-            <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
-          </Row>
-          <Card className="product-table" title={choosedCategory}>
-            {filteredProducts?.map((p) =>
-              <Card.Grid className="product-cell" style={gridStyle}
-                onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
-          </Card>
-        </div>
-
+        {goodReceiptData?.receiptStatus == 2 &&
+          <div className='newtransaction-product-table'>
+            <Row>
+              <Select
+                showSearch
+                placeholder="Phân loại"
+                optionFilterProp="label"
+                style={{ width: '50%' }}
+                onChange={handleFilterProductTable}
+              >
+                <Option value={0}>Tất cả</Option>
+                {allCategory?.map((d) => {
+                  return (
+                    <Option value={d.id}>{d.name}</Option>
+                  )
+                })}</Select>
+              <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
+            </Row>
+            <Card className="product-table" title={choosedCategory}>
+              {filteredProducts?.map((p) =>
+                <Card.Grid className="product-cell" style={gridStyle}
+                  onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+            </Card>
+          </div>
+        }
 
       </div>
     </div >

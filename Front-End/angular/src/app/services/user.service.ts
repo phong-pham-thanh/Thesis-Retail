@@ -9,6 +9,7 @@ import { Users } from '../model/user.model';
 export class UserService {
 
   private apiGetAll = 'https://localhost:7030/User/getAllWithFullInfo';
+  private apiGetById = 'https://localhost:7030/User/getById';
   private apiUpdate = 'https://localhost:7030/User/update';
   private apiAdd = 'https://localhost:7030/User/add';
 
@@ -18,11 +19,15 @@ export class UserService {
     return this.http.get<Users[]>(this.apiGetAll)
   }
 
-  updateUser(user: Users){
+  getCurrentuser(id: number): Observable<Users> {
+    return this.http.get<Users>(`${this.apiGetById}/${id}`);
+  }
+
+  updateUser(user: Users): Observable<Users> {
     return this.http.put<Users>(`${this.apiUpdate}/${user.id}`, user)
   }
 
-  addNewUser(user: Users){
+  addNewUser(user: Users): Observable<Users> {
     return this.http.post<Users>(`${this.apiAdd}`, user)
   }
 

@@ -85,7 +85,8 @@ export class UserFormComponent {
 
   onSubmit(employeeForm: any) {
     if (employeeForm.invalid) {
-      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      UtilitiesService.showAlert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      // alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
       return;
     }
 
@@ -109,7 +110,8 @@ export class UserFormComponent {
               this.dialogRef.close();
             }
             else{
-              alert(error.error.detail);
+              UtilitiesService.showAlert(error.error.detail);
+              // alert(error.error.detail);
             }
           }))
         

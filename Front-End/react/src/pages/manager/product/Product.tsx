@@ -67,6 +67,10 @@ export default function Product() {
   const [refresh, setRefresh] = useState(false); // State to track changes for refetching
   const [isAlertVisible, setIsAlertVisible] = useState(false); // Track visibility of AlertDialog
   const [productToDelete, setProductToDelete] = useState<DataType | null>(null); // Store the product to be deleted
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const defaultImage =
     "https://localhost:7030/images/default/default_image.png";
@@ -177,6 +181,14 @@ export default function Product() {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+  };
+
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
   };
 
   const columns: ColumnsType<DataType> = [
@@ -329,6 +341,17 @@ export default function Product() {
               dataSource={filteredProducts}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true,
+                total: filteredProducts.length,
+                pageSizeOptions: ["5", "10", "20", "50"],
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>

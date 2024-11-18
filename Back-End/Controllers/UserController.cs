@@ -35,6 +35,14 @@ namespace APIBackEnd.Controllers
             return temp;
         }
 
+        [Route("getById/{id}")]
+        [HttpGet]
+        public UserModel GetById(int id)
+        {
+            UserModel temp = _userService.GetById(id);
+            return temp;
+        }
+
         [Route("getAllWithFullInfo")]
         [HttpGet]
         public List<UserModel> GetAllWithFullInfor()

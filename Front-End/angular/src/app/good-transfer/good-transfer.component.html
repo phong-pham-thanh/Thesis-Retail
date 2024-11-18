@@ -3,7 +3,7 @@
         <h1 class="title-good-transfer">Phiếu Chuyển Kho</h1>
 
         <div class="button-group-good-transfer">
-            <button class="btn-good-transfer edit-good-transfer">✏️ Điều chỉnh</button>
+            <!-- <button class="btn-good-transfer edit-good-transfer">✏️ Điều chỉnh</button> -->
             <button class="btn-good-transfer add-good-transfer" (click)="addNew()">➕ Thêm mới</button>
             <!-- <button class="btn-good-transfer import-good-transfer">⬇️ Nhập File</button>
             <button class="btn-good-transfer export-good-transfer">⬇️ Xuất File</button> -->
@@ -56,7 +56,88 @@
             </div>
         </div>
         <div class="col-md-10">
-            <table class="table-good-transfer">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="table-header-price"> Mã phiếu </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element">{{element.id}}</td>
+                </ng-container>
+          
+                <ng-container matColumnDef="createdDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="table-header-price"> Thời gian </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{element.transferDate | date: 'dd/MM/yyyy' }} </td>
+                </ng-container>
+          
+                <ng-container matColumnDef="formWareHouse">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="table-header-price"> Xuất từ kho </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fromWareHouse?.address}} </td>
+                </ng-container>
+          
+                <ng-container matColumnDef="toWareHouse">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="table-header-price"> Xuất đến kho </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{element.toWareHouse?.address }} </td>
+                </ng-container>
+          
+                <ng-container matColumnDef="user">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="table-header-price"> Nhân viên </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{element.user?.name}} </td>
+                </ng-container>
+          
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-no-boder">
+                    <div class="table-header-price"> Trạng thái </div>
+                  </th>
+                  
+                  <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.status === 1"
+                        class="status-good-transfer complete-good-transfer">Hoàn thành</span>
+                    <span *ngIf="element.status === 2"
+                        class="status-good-transfer process-good-transfer">Đang xử lý</span>
+                    <span *ngIf="element.status === 0"
+                        class="status-good-transfer error-good-transfer">Đã
+                        hủy</span>
+                  </td>
+                </ng-container>
+                <!-- Cột context menu -->
+                <ng-container matColumnDef="context">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="viewDetail(element)">
+                        <mat-icon>details</mat-icon>
+                        <span>Chi tiết</span>
+                      </button>
+                      <button mat-menu-item (click)="edit(element)">
+                        <mat-icon>edit</mat-icon>
+                        <span>Chỉnh sửa</span>
+                      </button>
+                    </mat-menu>
+                  </td>
+                </ng-container>
+          
+                <!-- Header row -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <!-- Data rows -->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+          
+              <!-- Paginator -->
+              <mat-paginator hidePageSize="true" [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+
+
+            <!-- <table class="table-good-transfer">
                 <thead class="thead-good-transfer">
                     <tr class="row-header-good-transfer">
                         <th (click)="sortTable('id')">Mã phiếu</th>
@@ -102,7 +183,7 @@
 
 
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
     <div class="pagination-good-transfer">

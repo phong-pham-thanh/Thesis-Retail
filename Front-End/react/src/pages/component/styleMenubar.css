@@ -1,10 +1,11 @@
 .navbar-custom {
-  display: -webkit-inline-box;
+  display: flex;
   align-items: flex-start !important;
   position: fixed !important;
   left: 0;
   z-index: 99;
-  gap: 15px;
+  gap: 5px;
+  justify-content: space-between;
 
   color: var(--Category-Text-Color, rgba(3, 2, 41, 0.5));
   font-family: Nunito;
@@ -19,9 +20,9 @@
 }
 
 .navbar__title {
-  /*margin-right: auto;*/
+  /*margin-right: auto;
+  padding: 12px 16px;*/
   font-size: 150%;
-  padding: 12px 16px;
 }
 
 .navbar__item {
@@ -29,10 +30,12 @@
   vertical-align: middle;
   display: flex;
   align-items: center;
-  width: min-content;
-  height: -webkit-fill-available;
+  width: max-content;
+  height: 60px;
   padding: 10px;
   gap: 10px;
+  align-items: end;
+
 }
 
 .navbar__item_active {
@@ -40,10 +43,11 @@
   flex-direction: row;
   align-items: center;
 
-  width: min-content;
-  height: -webkit-fill-available;
+  width: max-content;
+  height: 60px;
   padding: 10px;
   gap: 10px;
+  align-items: end;
 
   background: linear-gradient(180deg, #605bff 0%, rgba(255, 255, 255, 0) 43%);
   border-radius: 0px 5px 5px 0px;
@@ -103,10 +107,13 @@
 }
 
 .navbar__submenubar {
-  position: inherit;
+  position: fixed;
   display: flex;
   flex-direction: column;
   z-index: 1;
   width: 140px;
   align-items: flex-start;
+  border-left-style: ridge;
+    /* border-bottom-style: ridge; */
+  border-top-style: dashed;
 }
