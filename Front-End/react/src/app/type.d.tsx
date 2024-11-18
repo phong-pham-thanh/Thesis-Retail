@@ -1,3 +1,5 @@
+import { WarehouseType } from "../pages/warehouse/WarehousePage";
+
 export type LoginState = {
   message: string | null;
   isSuccess: boolean;
@@ -99,19 +101,19 @@ export type CategoryType = {
 };
 
 export type PartnerState = {
-  id: number | string,
-  name: string,
-  totalSale: number,
+  id: number | string;
+  name: string;
+  totalSale: number;
   phoneNumber: string;
 };
 
 export type WarehouseState = {
-  id: number | string,
-  managerId: number | string,
-  manager: null,
-  address: string,
-  status: boolean,
-  inventories: null
+  id: number | string;
+  managerId: number | string;
+  manager: null;
+  address: string;
+  status: boolean;
+  inventories: null;
 };
 
 export type GoodsReceipt = {
@@ -128,48 +130,71 @@ export type GoodsReceipt = {
 };
 
 export type ListGoodReciptDetailsModel = {
-  id: number,
-  goodReceiptId?: number,
-  goodExportId?: number,
-  goodsReceipt?: null,
-  goodExport?: null,
-  productId: number,
+  id: number;
+  goodReceiptId?: number;
+  goodExportId?: number;
+  goodsReceipt?: null;
+  goodExport?: null;
+  productId: number;
   product?: {
-    id?: number,
-    name?: string,
-    categoryId?: number,
-    category?: CategoryType,
-    description?: string,
-    status?: boolean,
-    listInventories?: null,
-    currentPrice?: null,
-
-  } | null,
-  priceUnit?: number,
-  quantity: number
+    id?: number;
+    name?: string;
+    categoryId?: number;
+    category?: CategoryType;
+    description?: string;
+    status?: boolean;
+    listInventories?: null;
+    currentPrice?: null;
+  } | null;
+  priceUnit?: number;
+  quantity: number;
 };
 
 export type GoodImportReceiptDetailDataType = {
-  id: number,
-  importDate: string,
-  partnerID: number,
-  partner?: PartnerState,
-  receiptStatus: number,
-  totalAmount?: number | null,
-  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[],
+  id: number;
+  importDate: string;
+  partnerID: number;
+  partner?: PartnerState;
+  receiptStatus: number;
+  totalAmount?: number | null;
+  listGoodReciptDetailsModel: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
 };
 
 export type GoodExportReceiptDetailDataType = {
-  id: number,
-  exportDate: string,
-  customerId: number,
-  customer?: CustomerState,
-  exportStatus: number,
-  totalAmount?: number | null,
+  id: number;
+  exportDate: string;
+  customerId: number;
+  customer?: CustomerState;
+  exportStatus: number;
+  totalAmount?: number | null;
   listGoodExportDetailsModel?: ListGoodReciptDetailsModel[];
   listGoodExportDetailModels?: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
+};
+
+type UserWarehouseType = {
+  id: number;
+  userId: number;
+  wareHouseId: number;
+  userModel: StaffState;
+  wareHouseModel: WarehouseType;
+};
+
+export type StaffState = {
+  id: number;
+  name: string;
+  username: string;
+  password: string;
+  branch: string;
+  address: string;
+  dateOnboard: Date;
+  dateOfBirth?: Date | null;
+  age: number;
+  isAdmin?: boolean | null;
+  defaultWareHouseId?: number | null;
+  defaultWareHouse?: WarehouseType | null;
+  listUserWareHouse?: UserWarehouseType[];
 };
