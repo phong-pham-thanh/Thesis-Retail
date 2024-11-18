@@ -283,7 +283,8 @@ export default function ExportTransaction() {
   };
 
   const onFinish = () => {
-    console.log(form.getFieldsValue());
+    setShowModal(undefined);
+    form.resetFields();
   };
 
   const columns: ColumnsType<GoodExportReceiptDetailDataType> = [

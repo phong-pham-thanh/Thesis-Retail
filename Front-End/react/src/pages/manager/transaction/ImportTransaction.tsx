@@ -136,46 +136,46 @@ export default function ImportTransaction() {
       .catch((error) => {
         console.log(error);
       });
-/*
-    getAllPartner()
-      .then((res) => {
-        setAllPartners(res.data);
-        res.data.map((item) => {
-          filterByPartner.push({
-            text: item.name ?? "0",
-            value: item.id ?? "0"
+    /*
+        getAllPartner()
+          .then((res) => {
+            setAllPartners(res.data);
+            res.data.map((item) => {
+              filterByPartner.push({
+                text: item.name ?? "0",
+                value: item.id ?? "0"
+              })
+            });
           })
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    getAllWarehouse()
-      .then((res) => {
-        setAllWarehouses(res.data);
-        res.data.map((item) => {
-          filterByWarehouse.push({
-            text: item.name ?? "0",
-            value: item.id ?? "0"
+          .catch((error) => {
+            console.log(error);
+          });
+    
+        getAllWarehouse()
+          .then((res) => {
+            setAllWarehouses(res.data);
+            res.data.map((item) => {
+              filterByWarehouse.push({
+                text: item.name ?? "0",
+                value: item.id ?? "0"
+              })
+            });
           })
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });*/
+          .catch((error) => {
+            console.log(error);
+          });*/
 
   }, [showModal]);
-/*
-  const getAllPartner = () => {
-    const api_link = api_links.partner.getAll;
-    return fetch_Api(api_link);
-  };
-  const getAllWarehouse = () => {
-    const api_link = api_links.warehouse.getAll;
-    return fetch_Api(api_link);
-  };
-*/
+  /*
+    const getAllPartner = () => {
+      const api_link = api_links.partner.getAll;
+      return fetch_Api(api_link);
+    };
+    const getAllWarehouse = () => {
+      const api_link = api_links.warehouse.getAll;
+      return fetch_Api(api_link);
+    };
+  */
   const getAllGoodReceipt = () => {
     const api_link = api_links.goodsIssue.import.getAll;
     return fetch_Api(api_link);
@@ -241,16 +241,16 @@ export default function ImportTransaction() {
 
   const filterReceiptList = (stateId: string[], warehouseId: string[], customerName: string) => {
     // Không filter
-    if ((stateId === null || stateId?.length == 0 ) &&
-      (warehouseId === null || warehouseId?.length == 0 ) &&
-      (customerName === null || customerName?.length == 0 ))// && filter customer by name = null
+    if ((stateId === null || stateId?.length == 0) &&
+      (warehouseId === null || warehouseId?.length == 0) &&
+      (customerName === null || customerName?.length == 0))// && filter customer by name = null
     {
       setFilteredReciptData(importReceiptData);
       return;
     }
 
     if (stateId === null || stateId?.length == 0) {
-      if (warehouseId === null || warehouseId?.length == 0 ) {
+      if (warehouseId === null || warehouseId?.length == 0) {
         //filter theo tên khách hàng
         console.log(2)
 
@@ -260,7 +260,7 @@ export default function ImportTransaction() {
         setFilteredReciptData(filtered);
       }
       else {
-        if (customerName === null || customerName?.length == 0 ) {
+        if (customerName === null || customerName?.length == 0) {
           //filter theo kho
           console.log(3)
 
@@ -290,7 +290,7 @@ export default function ImportTransaction() {
           setFilteredReciptData(filtered);
         } else {
           //filter theo khách và trạng thái  
-          console.log(5,customerName?.length,customerName)
+          console.log(5, customerName?.length, customerName)
 
           let filtered = importReceiptData.filter((product) => (
             product.partner?.name.includes(customerName) &&
@@ -300,7 +300,7 @@ export default function ImportTransaction() {
         }
       }
       else {
-        if (customerName === null || customerName?.length == 0 ) {
+        if (customerName === null || customerName?.length == 0) {
           //filter theo trạng thái và kho
           console.log(6)
           let filtered = importReceiptData.filter((product) => (
@@ -352,7 +352,8 @@ export default function ImportTransaction() {
   }
 
   const onFinish = () => {
-    console.log(form.getFieldsValue());
+    setShowModal(undefined);
+    form.resetFields();
   };
 
   const columns: ColumnsType<GoodImportReceiptDetailDataType> = [
@@ -372,7 +373,7 @@ export default function ImportTransaction() {
     {
       title: "Mã kho nhập",
       // dataIndex: "wareHouseId",
-      dataIndex: ["wareHouse", "address"], 
+      dataIndex: ["wareHouse", "address"],
       /*filters: filterByWarehouse,
       onFilter: (value, record) => String(record.wareHouseId).indexOf(value as string) === 0,*/
       sorter: (a, b) => a.wareHouseId < b.wareHouseId ? -1 : 1,
