@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, Radio, Space } from "antd";
-import type { RadioChangeEvent } from "antd";
+import { Checkbox, Space } from "antd";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import api_links from "../../../app/api_links";
@@ -12,16 +11,17 @@ interface Category {
 }
 
 interface CategoryFilterProps {
-  onSelect: (value: string[] | null) => void; // Allow `null` for 'Tất cả' option
+  onSelect: (value: string[] | null) => void;
+  warehouse: number;
 }
 
-export function CategoryFilter({ onSelect }: CategoryFilterProps) {
+export function CategoryFilter({ onSelect, warehouse }: CategoryFilterProps) {
   const [expand, setExpand] = useState(false);
   const [storeOptions, setStoreOptions] = useState<
     { value: number | null; label: string }[]
-  >([]); // Include `null` for 'Tất cả'
-  const [valueDanhMuc, setValueChinhanh] = useState<number | null>(null); // Default to `null` for 'Tất cả'
-  const [valueDanhMuc2, setValueDanhMuc] = useState([]); // Đặt giá trị mặc định là mảng rỗng
+  >([]);
+  const [valueDanhMuc, setValueChinhanh] = useState<number | null>(null);
+  const [valueDanhMuc2, setValueDanhMuc] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,16 +42,15 @@ export function CategoryFilter({ onSelect }: CategoryFilterProps) {
     fetchCategories();
   }, []);
 
-  const onChangeDanhMuc = (e: RadioChangeEvent) => {
-    const selectedValue = e.target.value;
-    setValueChinhanh(selectedValue);
-    onSelect(selectedValue); // Send `null` for 'Tất cả' selection
-  };
+  useEffect(() => {
+    setValueDanhMuc([null]);
+    onSelect(null);
+  }, [warehouse]);
 
   const onChangeDanhMuc2 = (checkedValues) => {
     console.log("Checked values: ", checkedValues);
     setValueDanhMuc(checkedValues);
-    onSelect(checkedValues); // Send `null` for 'Tất cả' selection
+    onSelect(checkedValues);
   };
   return (
     <div className="filterBox">
@@ -60,20 +59,17 @@ export function CategoryFilter({ onSelect }: CategoryFilterProps) {
         {expand ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
       </div>
       {expand && (
-         <div className="filterBox-content">
-         <Checkbox.Group onChange={onChangeDanhMuc2} value={valueDanhMuc2}>
-           <Space direction="vertical">
-             {storeOptions.map((option) => (
-               <Checkbox
-                 key={option.value}
-                 value={option.value}
-               >
-                 {option.label}
-               </Checkbox>
-             ))}
-           </Space>
-         </Checkbox.Group>
-       </div>
+        <div className="filterBox-content">
+          <Checkbox.Group onChange={onChangeDanhMuc2} value={valueDanhMuc2}>
+            <Space direction="vertical">
+              {storeOptions.map((option) => (
+                <Checkbox key={option.value} value={option.value}>
+                  {option.label}
+                </Checkbox>
+              ))}
+            </Space>
+          </Checkbox.Group>
+        </div>
       )}
     </div>
   );

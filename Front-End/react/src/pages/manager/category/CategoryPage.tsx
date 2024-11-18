@@ -7,8 +7,6 @@ import CustomButton from "../../component/CustomeButton";
 import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
 import CategoryInformationPopupScreen from "./PopUpCategoryInformation";
-import AlertDialog from "../../component/AlertDialog"; // Import alert dialog for delete confirmation
-import message from "antd/lib/message"; // AntD message for notifications
 import { ColumnsType } from "antd/es/table";
 
 interface CategoryType {
@@ -29,12 +27,12 @@ export default function CategoryPage() {
   const [popupData, setPopupData] = useState<CategoryType>(emptydata);
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false); // State to refetch data
-  const [isAlertVisible, setIsAlertVisible] = useState(false); // For alert dialog visibility
+  const [refresh, setRefresh] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<CategoryType | null>(
     null
-  ); // Category selected for deletion
-  const [searchTerm, setSearchTerm] = useState<string>(""); // For handling search input
+  );
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
 
   const getCategories = () => {
@@ -58,7 +56,7 @@ export default function CategoryPage() {
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    if (timeoutId) clearTimeout(timeoutId); // Clear the previous timeout
+    if (timeoutId) clearTimeout(timeoutId);
 
     const newTimeoutId = window.setTimeout(() => {
       if (value.trim()) {
@@ -67,55 +65,27 @@ export default function CategoryPage() {
         );
         setFilteredCategories(filtered);
       } else {
-        setFilteredCategories(categories); // Reset to original list if no search term
+        setFilteredCategories(categories);
       }
-    }, 2000); // Delay for search (2 seconds)
+    }, 2000);
 
     setTimeoutId(newTimeoutId);
   };
 
   const handleEditCategory = (category: CategoryType) => {
-    setPopupData(category); // Set selected category data for popup
-    setIsChangeInformation(true); // Trigger popup for editing
+    setPopupData(category);
+    setIsChangeInformation(true);
   };
 
   const handleAddNewCategory = () => {
-    setPopupData(emptydata); // Reset form for adding a new category
-    setIsChangeInformation(true); // Trigger popup
+    setPopupData(emptydata);
+    setIsChangeInformation(true);
   };
 
   const showDeleteDialog = (category: CategoryType) => {
-    setCategoryToDelete(category); // Store the category to be deleted
-    setIsAlertVisible(true); // Show alert dialog
+    setCategoryToDelete(category);
+    setIsAlertVisible(true);
   };
-
-  //   const handleConfirmDelete = () => {
-  //     if (categoryToDelete) {
-  //       // Simulate API call for deletion
-  //       const api_delete = {
-  //         ...api_links.category.delete(Number(categoryToDelete.id)),
-  //       };
-  //       fetch_Api(api_delete)
-  //         .then(() => {
-  //           setRefresh(!refresh); // Trigger refetch after deletion
-  //           setIsAlertVisible(false); // Close the alert dialog
-  //           setCategoryToDelete(null); // Reset category to delete
-  //           message.success(
-  //             `Category: ${categoryToDelete.name} deleted successfully.`
-  //           );
-  //         })
-  //         .catch((error) => {
-  //           console.log("Failed to delete:", error);
-  //           setIsAlertVisible(false); // Close alert dialog
-  //           setCategoryToDelete(null); // Reset category to delete
-  //         });
-  //     }
-  //   };
-
-  //   const handleCancelDelete = () => {
-  //     setIsAlertVisible(false); // Close the alert dialog without doing anything
-  //     setCategoryToDelete(null); // Reset the category to be deleted
-  //   };
 
   const columns: ColumnsType<CategoryType> = [
     {
@@ -159,17 +129,10 @@ export default function CategoryPage() {
       <CategoryInformationPopupScreen
         isPopup={isChangeInformation}
         setPopup={setIsChangeInformation}
-        data={popupData} // Pass the category data to the popup
-        type={popupData.id === "0" ? "create" : "edit"} // Check if it's a new category or edit
-        onSave={() => setRefresh(!refresh)} // Trigger refresh after adding/editing a category
+        data={popupData}
+        type={popupData.id === "0" ? "create" : "edit"}
+        onSave={() => setRefresh(!refresh)}
       />
-      {/* <AlertDialog
-        title="Xác nhận xóa"
-        visible={isAlertVisible}
-        onConfirm={handleConfirmDelete} // Proceed with deletion if confirmed
-        onCancel={handleCancelDelete} // Cancel deletion
-        message="Bạn có muốn xóa danh mục này ?"
-      /> */}
       <div className="dashboard-container">
         <div className="header">
           <h2>Danh mục hàng hóa</h2>
@@ -179,7 +142,7 @@ export default function CategoryPage() {
             <CustomButton
               text="Thêm mới"
               icon={<AddCircleIcon />}
-              onClick={handleAddNewCategory} // Trigger the add new functionality
+              onClick={handleAddNewCategory}
               backgroundColor="#28C2FF"
               color="#fff"
             />
