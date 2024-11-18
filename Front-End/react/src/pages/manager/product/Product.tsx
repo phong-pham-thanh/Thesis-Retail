@@ -65,10 +65,13 @@ export default function Product() {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<DataType | null>(null);
-
+  const [refresh, setRefresh] = useState(false); // State to track changes for refetching
+  const [isAlertVisible, setIsAlertVisible] = useState(false); // Track visibility of AlertDialog
+  const [productToDelete, setProductToDelete] = useState<DataType | null>(null); // Store the product to be deleted
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
   const [searchTerm, setSearchTerm] = useState<string>(""); // handling tìm kiếm theo tên
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
 
@@ -123,6 +126,7 @@ export default function Product() {
 
   const handleWarehouseChange = (value: number) => {
     setSelectedWarehouseId(value);
+    handleCategoryChange(null);
     //filterProductsByWarehouse(value); // Filter products based on the selected warehouse
   };
 
@@ -182,6 +186,13 @@ export default function Product() {
     onChange: onSelectChange,
   };
 
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
+    
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     if (timeoutId) clearTimeout(timeoutId);
@@ -366,6 +377,17 @@ export default function Product() {
               dataSource={filteredProducts}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true,
+                total: filteredProducts.length,
+                pageSizeOptions: ["5", "10", "20", "50"],
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>
