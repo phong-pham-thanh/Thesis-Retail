@@ -13,7 +13,7 @@ namespace APIBackend.Service
         public UserModel GetUserLogin(string username, string password);
         public UserModel Update(int id, UserModel user);
         public UserModel Add(UserModel user);
-        public void SetSession(int userId);
+        public UserModel SetSession(int userId);
 
     }
     public class UserService : IUserService
@@ -99,9 +99,10 @@ namespace APIBackend.Service
             }
         }
 
-        public void SetSession(int userId)
+        public UserModel SetSession(int userId)
         {
             _httpContextAccessor.HttpContext.Session.SetInt32("currentUserId", userId);
+            return _userRepository.GetUserById(userId);
         }
 
     }

@@ -72,6 +72,7 @@ export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const cookies = new Cookies();
+  const isAdmin = cookies.get('isAdmin') == true;
 
   const menuList: menuState = [
     {
@@ -105,12 +106,12 @@ export default function NavBar() {
           path: "kiemkho",
           status: location.pathname.includes("kiemkho"),
         },
-        {
+        (isAdmin ? {
           title: "Danh mục",
           icon: <CategoryIcon />,
           path: "danhmuc",
           status: location.pathname.includes("danhmuc"),
-        },
+        } : null),
       ],
     },
     {
@@ -148,7 +149,8 @@ export default function NavBar() {
         },
       ],
     },
-    {
+    (isAdmin ?
+      {
       title: "Đối tác",
       icon: <HandshakeIcon />,
       path: "doitac",
@@ -170,13 +172,13 @@ export default function NavBar() {
           status: location.pathname.includes("nhacungcap"),
         },
       ],
-    },
-    {
+    } : null),
+    (isAdmin ? {
       title: "Nhân viên",
       icon: <HailIcon />,
       path: "employee",
       status: location.pathname.includes("employee"),
-    },
+    } : null),
     {
       title: "Khuyến mãi",
       icon: <ConfirmationNumberIcon />,
@@ -195,12 +197,12 @@ export default function NavBar() {
       path: "retail",
       status: location.pathname.includes("retail"),
     },
-    {
+    (isAdmin ? {
       title: "Quản lý giá",
       icon: <SummarizeIcon />,
       path: "price-management",
       status: location.pathname.includes("price-management"),
-    },
+    } : null),
   ];
 
   const [nameShowSubmenubar, setNameShowSubmenubar] = useState<string>("");
@@ -229,7 +231,7 @@ export default function NavBar() {
           style={{ marginLeft: 10, marginTop: 10 }}
         />
       </div>
-      {menuList.map((item) => (
+      {menuList.filter((item) => item !== null).map((item) => (
         <div key={item.title} className="navbar__submenu">
           <div
             className={item.status ? "navbar__item_active" : "navbar__item"}

@@ -15,6 +15,7 @@ import * as wareHouseActions from '../state/warehouse-state/warehouse.actions';
 import * as wareHouseSelector from '../state/warehouse-state/warehouse.reducer';
 import { Warehouse } from '../model/warehouse.model';
 import { UtilitiesService } from '../common/utilities.service';
+import { CookieService } from 'ngx-cookie-service';
 // import { UsersDetailComponent } from './users-detail/users-detail.component';~
 @Component({
   selector: 'app-user-list',
@@ -35,6 +36,7 @@ export class UserListComponent {
   fullData: Users[] = [];
   isDropdownOpenStatus = false;
   selectedIdStatus: boolean[] = [];
+  isAdmin: boolean = false;
 
   statusArray = [
     {idStatus: true, name: 'Admin'},
@@ -45,11 +47,23 @@ export class UserListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(protected store: Store<State>,
+    private cookieService: CookieService,
     private dialog: MatDialog
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
     this.store.dispatch(new usersActions.LoadAllUsers());
     this.store.dispatch(new wareHouseActions.LoadAllWarehouse());
+
+    const userCookieValue = this.cookieService.get('user');
+    if (userCookieValue) {
+      try {
+        this.isAdmin = JSON.parse(userCookieValue).isAdmin;
+      } catch (error) {
+        console.error('Failed to parse cookie value', error);
+      }
+    } else {
+      console.log('No user cookie found');
+    }
   }
 
   ngOnInit() {

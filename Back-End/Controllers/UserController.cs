@@ -84,10 +84,9 @@ namespace APIBackEnd.Controllers
 
         [Route("setSession/{userId}")]
         [HttpGet]
-        public void SetSession(int userId)
+        public UserModel SetSession(int userId)
         {
-            _userService.SetSession(userId);
-            return;
+            return _userService.SetSession(userId);
         }
     }
 }

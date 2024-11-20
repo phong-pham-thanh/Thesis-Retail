@@ -116,10 +116,11 @@
                     </button>
                     <mat-menu #menu="matMenu">
                       <button mat-menu-item (click)="viewDetail(element)">
-                        <mat-icon>details</mat-icon>
+                        <!-- <mat-icon>details</mat-icon> -->
+                        <i class="material-icons">info_outline</i>
                         <span>Chi tiết</span>
                       </button>
-                      <button mat-menu-item (click)="edit(element)">
+                      <button *ngIf="element.status === 2"  mat-menu-item (click)="edit(element)">
                         <mat-icon>edit</mat-icon>
                         <span>Chỉnh sửa</span>
                       </button>
