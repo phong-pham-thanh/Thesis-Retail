@@ -1,1 +1,6 @@
-<router-outlet></router-outlet>
+<div *ngIf="sessionLoaded === true">
+    <router-outlet></router-outlet>
+</div>
+<div *ngIf="!sessionLoaded">
+    <h1>Đang tải.....</h1>
+</div>
