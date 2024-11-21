@@ -8,7 +8,7 @@ using APIBackEnd.Repository;
 using NGO.Core.Repositories;
 using APIBackEnd.Data.Enum;
 using APIBackEnd.Models;
-
+using DocumentFormat.OpenXml.Packaging;
 namespace APIBackend.Service
 {
     public interface IGoodReciptService
@@ -19,6 +19,7 @@ namespace APIBackend.Service
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
+        public byte[] PrintGoodReceipt(int id);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -33,17 +34,21 @@ namespace APIBackend.Service
         private readonly IUserSessionService _userSessionService;
         private readonly IUserWareHouseService _userWareHouseService;
         private readonly IWareHouseRepository _wareHouseRepository;
+        private readonly string _baseUrl;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public GoodReciptService(IProductMapper productMapper, 
-            IGoodsReceiptMapper goodReciptMapper, 
-            IGoodReciptDetailMapper goodReciptDetailMapper, 
+        public GoodReciptService(IProductMapper productMapper,
+            IGoodsReceiptMapper goodReciptMapper,
+            IGoodReciptDetailMapper goodReciptDetailMapper,
             IGoodReciptRepository goodReciptRepository,
             IGoodReciptDetailRepository goodReciptDetailRepository,
             IInventoryRepository inventoryRepository,
             IProductRepository productRepository,
             IUnityOfWorkFactory uowFactory,
             IUserWareHouseService userWareHouseService,
+            IConfiguration configuration,
             IWareHouseRepository wareHouseRepository,
+            IWebHostEnvironment webHostEnvironment,
             IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
@@ -57,6 +62,9 @@ namespace APIBackend.Service
             _userSessionService = userSessionService;
             _userWareHouseService = userWareHouseService;
             _wareHouseRepository = wareHouseRepository;
+            _baseUrl = configuration["ImageSettings:WebUrl"];
+            _webHostEnvironment = webHostEnvironment;
+
         }
 
         public bool AddGoodRecipt(GoodsReceiptModel goodsReceiptModel, List<GoodReceiptDetailModel> listGoodReceiptDetailModels, bool autoAccept)
@@ -78,7 +86,7 @@ namespace APIBackend.Service
 
 
             //Add Good Recipt Details
-            foreach(var goodReceiptDetailModel in listGoodReceiptDetailModels)
+            foreach (var goodReceiptDetailModel in listGoodReceiptDetailModels)
             {
                 GoodReceiptDetails goodReciptDetails = new GoodReceiptDetails();
                 _goodReciptDetailMapper.ToEntity(goodReciptDetails, goodReceiptDetailModel);
@@ -117,7 +125,7 @@ namespace APIBackend.Service
             GoodsReceiptModel result = _goodReciptRepository.GetGoodReciptById(id);
             if (result == null) return null;
 
-            foreach(GoodReceiptDetailModel item in result.ListGoodReciptDetailsModel)
+            foreach (GoodReceiptDetailModel item in result.ListGoodReciptDetailsModel)
             {
                 item.Product = _productRepository.GetProductById(item.ProductId);
             }
@@ -137,7 +145,7 @@ namespace APIBackend.Service
 
         public void UpdateInventoryForGoodRecipt(GoodsReceiptModel currentGoodReceipt)
         {
-            foreach(var goodReceiptDetailModel in currentGoodReceipt.ListGoodReciptDetailsModel)
+            foreach (var goodReceiptDetailModel in currentGoodReceipt.ListGoodReciptDetailsModel)
             {
                 _inventoryRepository.UpdateInventory(goodReceiptDetailModel.ProductId, goodReceiptDetailModel.Quantity, currentGoodReceipt.WareHouseId, true);
             }
@@ -162,7 +170,7 @@ namespace APIBackend.Service
         private int CaculateTotalAmount(List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
         {
             int totalAmount = 0;
-            foreach(GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
+            foreach (GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
             {
                 int priceUnit = goodReceiptDetailModel.PriceUnit != null ? goodReceiptDetailModel.PriceUnit.Value : 0;
                 totalAmount += priceUnit * goodReceiptDetailModel.Quantity;
@@ -175,6 +183,42 @@ namespace APIBackend.Service
             foreach (GoodsReceiptModel item in listGoodExport)
             {
                 item.WareHouse = _wareHouseRepository.GetById(item.WareHouseId);
+            }
+        }
+
+        public byte[] PrintGoodReceipt(int id)
+        {
+            GoodsReceiptModel noteModel = _goodReciptRepository.GetGoodReciptById(id);
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "template");
+            string fileName = "ImportTemplate.docx";
+            string filePath = Path.Combine(folderPath, fileName);
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(memoryStream, true))
+                {
+                    var mainPart = wordDoc.MainDocumentPart;
+                    if (mainPart != null)
+                    {
+                        Utilities.ReplaceFieldWithId(mainPart, "Id", id.ToString());
+                        Utilities.ReplaceFieldWithId(mainPart, "DateNote", noteModel.ImportDate.ToShortDateString());
+                        Utilities.ReplaceFieldWithId(mainPart, "WareHouseName", _wareHouseRepository.GetById(noteModel.WareHouseId).Address);
+                        Utilities.ReplaceFieldWithId(mainPart, "PartnerName", noteModel.Partner?.Name);
+                        Utilities.ReplaceFieldWithId(mainPart, "Status", noteModel.ReceiptStatus.ToString());
+                        foreach(var item in noteModel.ListGoodReciptDetailsModel)
+                        {
+                            string productName = _productRepository.GetProductById(item.ProductId).Name;
+                            Utilities.AddRowToBookmarkTableReceipt(mainPart, "dataTable", productName, item.Quantity, item.PriceUnit);
+                        }
+                        mainPart.Document.Save();
+                    }
+                }
+                memoryStream.Position = 0;
+                return memoryStream.ToArray();
             }
         }
     }

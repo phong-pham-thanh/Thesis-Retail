@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -102,5 +104,63 @@ public static class Utilities
         }
 
         return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+    }
+
+    public static void ReplaceFieldWithId(MainDocumentPart mainPart, string fieldName, string replacement)
+    {
+        foreach (var text in mainPart.Document.Descendants<Text>())
+        {
+            if (!string.IsNullOrEmpty(text.Text) && text.Text.Contains($"<<{fieldName}>>"))
+            {
+                text.Text = text.Text.Replace($"<<{fieldName}>>", replacement);
+            }
+        }
+    }
+
+    public static void AddRowToBookmarkTableReceipt(MainDocumentPart mainPart, string bookmarkName, string productName, int quantity, int? price)
+    {
+        var bookmarkStart = mainPart.Document.Body.Descendants<BookmarkStart>().FirstOrDefault(b => b.Name == bookmarkName);
+        if (bookmarkStart != null)
+        {
+            var table = bookmarkStart.Ancestors<Table>().FirstOrDefault();
+            if (table != null)
+            {
+                var newRow = new TableRow();
+                var productCell = new TableCell(new Paragraph(new Run(new Text(productName))));
+                newRow.Append(productCell);
+                var quantityCell = new TableCell(new Paragraph(new Run(new Text(quantity.ToString()))));
+                newRow.Append(quantityCell);
+                TableCell priceCell;
+                if (price.HasValue)
+                {
+                    priceCell = new TableCell(new Paragraph(new Run(new Text(price.Value.ToString("N0"))))); // Hiển thị giá trị nếu có
+                }
+                else
+                {
+                    priceCell = new TableCell(new Paragraph(new Run(new Text("")))); // Tạo ô trống nếu giá trị null
+                }
+                newRow.Append(priceCell);
+                table.Append(newRow);
+            }
+        }
+    }
+
+    public static void AddRowToBookmarkTableReceiptExport(MainDocumentPart mainPart, string bookmarkName, string productName, int quantity)
+    {
+        var bookmarkStart = mainPart.Document.Body.Descendants<BookmarkStart>().FirstOrDefault(b => b.Name == bookmarkName);
+        if (bookmarkStart != null)
+        {
+            var table = bookmarkStart.Ancestors<Table>().FirstOrDefault();
+            if (table != null)
+            {
+                var newRow = new TableRow();
+                var productCell = new TableCell(new Paragraph(new Run(new Text(productName))));
+                newRow.Append(productCell);
+                var quantityCell = new TableCell(new Paragraph(new Run(new Text(quantity.ToString()))));
+                newRow.Append(quantityCell);
+                
+                table.Append(newRow);
+            }
+        }
     }
 }

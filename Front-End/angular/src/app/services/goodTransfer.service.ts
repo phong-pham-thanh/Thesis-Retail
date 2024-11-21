@@ -13,6 +13,7 @@ export class GoodTransferService {
   private apiGetById = 'https://localhost:7030/GoodTransfer/getGoodTransferById';
   private apiUpdate = 'https://localhost:7030/GoodTransfer/updateGoodTransfer';
   private apiCancel = 'https://localhost:7030/GoodTransfer/cancelGoodTransfer';
+  private apiDownload = 'https://localhost:7030/GoodTransfer/download';
 
 
   constructor(private http: HttpClient) {}
@@ -39,5 +40,9 @@ export class GoodTransferService {
   
   updateGoodTransfer(goodTransfer: GoodTransfer){
     return this.http.post<GoodTransfer>(`${this.apiUpdate}/${goodTransfer.id}`, goodTransfer)
+  }
+
+  downloadFile(id: number) {
+    return this.http.get(`${this.apiDownload}/${id}`, { responseType: 'blob' }); // Lấy file dưới dạng Blob
   }
 }

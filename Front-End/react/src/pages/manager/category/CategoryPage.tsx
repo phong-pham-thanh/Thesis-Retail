@@ -122,7 +122,7 @@ export default function CategoryPage() {
     },
   ];
 
-  if (loading) return <h1>Loading ...</h1>;
+  if (loading) return <h1>Đang tải ...</h1>;
 
   return (
     <React.Fragment>

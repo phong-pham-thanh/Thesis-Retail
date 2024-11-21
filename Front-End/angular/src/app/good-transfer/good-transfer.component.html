@@ -124,6 +124,11 @@
                         <mat-icon>edit</mat-icon>
                         <span>Chỉnh sửa</span>
                       </button>
+                      <button mat-menu-item (click)="download(element.id)">
+                        <!-- <mat-icon>details</mat-icon> -->
+                        <i class="material-icons">info_outline</i>
+                        <span>Tải thông tin phiếu</span>
+                      </button>
                     </mat-menu>
                   </td>
                 </ng-container>

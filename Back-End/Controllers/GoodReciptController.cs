@@ -6,7 +6,10 @@ using APIBackend.Repository;
 using APIBackEnd.Data;
 using APIBackend.Models;
 using APIBackend.Service;
-
+using Syncfusion.DocIO.DLS;
+using Syncfusion.DocIORenderer;
+using Syncfusion.Pdf;
+using Syncfusion.DocIO;
 
 
 namespace APIBackEnd.Controllers
@@ -90,6 +93,35 @@ namespace APIBackEnd.Controllers
             //         ]
             //     }
             return _goodReciptService.UpdateGoodReceipt(id, goodsReceiptModel);
+        }
+
+        [HttpGet]
+        [Route("download/{id}")]
+        public IActionResult PrintGoodReceipt(int id)
+        {
+            var fileBytes = _goodReciptService.PrintGoodReceipt(id);
+            string fileName = "ImportTemplate.docx";
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
+
+            // var fileBytes = _goodReciptService.PrintGoodReceipt(id);
+
+            //// Tạo file PDF từ byte[] của Word
+            //using (var memoryStream = new MemoryStream(fileBytes))
+            //using (var wordDocument = new WordDocument(memoryStream, FormatType.Docx)) // Load tài liệu Word
+            //using (var renderer = new DocIORenderer())
+            //using (var pdfStream = new MemoryStream())
+            //{
+            //    // Chuyển đổi Word sang PDF
+            //    PdfDocument pdfDocument = renderer.ConvertToPDF(wordDocument);
+            //    pdfDocument.Save(pdfStream); // Lưu nội dung PDF vào MemoryStream
+            //    pdfDocument.Close(); // Giải phóng tài nguyên
+
+            //    pdfStream.Position = 0; // Đặt lại vị trí stream để tải xuống
+
+            //    // Trả về file PDF
+            //    string pdfFileName = "ImportTemplate.pdf";
+            //    return File(pdfStream.ToArray(), "application/pdf", pdfFileName);
+            //}
         }
     }
 }

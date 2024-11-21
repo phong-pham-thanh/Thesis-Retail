@@ -46,7 +46,7 @@ namespace APIBackend.Service
             _priceProductRepository = priceProductRepository;
             _userWareHouseService = userWareHouseService;
             _uowFactory = uowFactory;
-            _baseUrl = configuration["ImageSettings:BaseUrl"];
+            _baseUrl = configuration["ImageSettings:BaseUrlImage"];
         }
 
         public List<ProductModel> GetAllProducts()
