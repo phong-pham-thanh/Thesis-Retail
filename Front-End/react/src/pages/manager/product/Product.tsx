@@ -306,7 +306,7 @@ export default function Product() {
 
   const hasSelected = selectedRowKeys.length > 0;
 
-  if (loading) return <h1>Loading ...</h1>;
+  if (loading) return <h1>Đang tải ...</h1>;
 
   return (
     <React.Fragment>

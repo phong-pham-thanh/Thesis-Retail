@@ -180,6 +180,33 @@ export default function ExportTransaction() {
     setShowModal(undefined);
   };
 
+  const handleDownload =(receiptId: number) =>{
+    const api_link = api_links.goodsIssue.export.download;
+    api_link.url = processAPIPostLink(api_link.url, receiptId);
+    axios
+    .get(api_link.url, { responseType: "blob" }) // Đảm bảo trả về blob
+    .then((response) => {
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(response.data);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `phieu_xuat_kho_${receiptId}`; // Đặt tên file
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+
+        message.success("Đã tải phiếu xuất " + receiptId);
+      } else {
+        throw new Error(`Failed to download file: ${response.status}`);
+      }
+    })
+    .catch((error) => {
+      // Xử lý lỗi khi tải file thất bại
+      message.error("Không thể tải phiếu xuất " + receiptId);
+      message.error(error?.detail);
+    });
+  }
+
   const handleCancel = (receiptId: number | string) => {
     const api_link = api_links.goodsIssue.export.cancel;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
@@ -384,6 +411,7 @@ export default function ExportTransaction() {
               </>
             ) : (
               <>
+                <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
                 <Button onClick={onFinish}>OK</Button>
               </>
             )

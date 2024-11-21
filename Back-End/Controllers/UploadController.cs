@@ -13,7 +13,7 @@ namespace APIBackend.Controllers
         public UploadController(IConfiguration configuration)
         {
             _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
-            _baseUrl = configuration["ImageSettings:BaseUrl"];
+            _baseUrl = configuration["ImageSettings:BaseUrlImage"];
         }
 
         [HttpPost("upload-image")]

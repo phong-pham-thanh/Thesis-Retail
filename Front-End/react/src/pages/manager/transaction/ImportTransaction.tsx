@@ -41,6 +41,7 @@ import { GoodImportReceiptDetailDataType, PartnerState, WarehouseState } from ".
 import api_links from "../../../app/api_links";
 import fetch_Api from "../../../app/api_fetch";
 import { processAPIPostLink, ProcessDate, ProcessStatus } from "../../../app/processFunction"
+import axios from "axios";
 
 const emptydata: GoodImportReceiptDetailDataType = {
   "id": 0,
@@ -225,6 +226,38 @@ export default function ImportTransaction() {
     setShowModal(undefined);
 
   };
+
+  const handleDownload =(receiptId: number) =>{
+    const api_link = api_links.goodsIssue.import.download;
+    api_link.url = processAPIPostLink(api_link.url, receiptId);
+    axios
+    .get(api_link.url, { responseType: "blob" }) // Đảm bảo trả về blob
+    .then((response) => {
+      // Kiểm tra mã trạng thái phản hồi
+      if (response.status === 200) {
+        // Tạo URL từ Blob
+        const url = window.URL.createObjectURL(response.data);
+
+        // Tạo thẻ <a> để kích hoạt tải file
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `phieu_nhap_kho_${receiptId}`; // Đặt tên file
+        a.click();
+
+        // Hủy URL blob sau khi sử dụng
+        window.URL.revokeObjectURL(url);
+
+        message.success("Đã tải phiếu nhập " + receiptId);
+      } else {
+        throw new Error(`Failed to download file: ${response.status}`);
+      }
+    })
+    .catch((error) => {
+      // Xử lý lỗi khi tải file thất bại
+      message.error("Không thể tải phiếu nhập " + receiptId);
+      message.error(error?.detail);
+    });
+  }
 
   const handleCancel = (receiptId: number | string) => {
     const api_link = api_links.goodsIssue.import.cancel;
@@ -455,6 +488,7 @@ export default function ImportTransaction() {
                 <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
               </>
               : <>
+                <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
                 <Button onClick={onFinish}>OK</Button>
               </>
           )}

@@ -8,6 +8,7 @@ using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace APIBackend.Service
 {
@@ -19,6 +20,7 @@ namespace APIBackend.Service
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
+        public byte[] PrintGoodExport(int id);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -33,6 +35,7 @@ namespace APIBackend.Service
         protected readonly IUnityOfWorkFactory _uowFactory;
         private readonly IUserSessionService _userSessionService;
         private readonly IUserWareHouseService _userWareHouseService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public GoodExportService(IProductMapper productMapper, 
             IGoodsExportMapper goodExportMapper,
@@ -44,6 +47,7 @@ namespace APIBackend.Service
             IProductRepository productRepository,
             IUnityOfWorkFactory uowFactory,
             IUserWareHouseService userWareHouseService,
+            IWebHostEnvironment webHostEnvironment,
             IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
@@ -57,6 +61,7 @@ namespace APIBackend.Service
             _uowFactory = uowFactory;
             _userSessionService = userSessionService;
             _userWareHouseService = userWareHouseService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public bool AddGoodExport(GoodsExportModel goodsExportModel, List<GoodExportDetailModel> listGoodExportDetailModels, bool autoAccept)
@@ -165,6 +170,42 @@ namespace APIBackend.Service
             foreach(GoodsExportModel item in listGoodExport)
             {
                 item.WareHouse = _wareHouseRepository.GetById(item.WareHouseId);
+            }
+        }
+
+        public byte[] PrintGoodExport(int id)
+        {
+            GoodsExportModel noteModel = _goodExportRepository.GetGoodExportById(id);
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "template");
+            string fileName = "ExportTemplate.docx";
+            string filePath = Path.Combine(folderPath, fileName);
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(memoryStream, true))
+                {
+                    var mainPart = wordDoc.MainDocumentPart;
+                    if (mainPart != null)
+                    {
+                        Utilities.ReplaceFieldWithId(mainPart, "Id", id.ToString());
+                        Utilities.ReplaceFieldWithId(mainPart, "DateNote", noteModel.ExportDate.ToShortDateString());
+                        Utilities.ReplaceFieldWithId(mainPart, "WareHouseName", _wareHouseRepository.GetById(noteModel.WareHouseId).Address);
+                        Utilities.ReplaceFieldWithId(mainPart, "CustomerName", noteModel.Customer?.Name != null ? noteModel.Customer?.Name : "");
+                        Utilities.ReplaceFieldWithId(mainPart, "Status", noteModel.ExportStatus.ToString());
+                        foreach(var item in noteModel.ListGoodExportDetailsModel)
+                        {
+                            string productName = _productRepository.GetProductById(item.ProductId).Name;
+                            Utilities.AddRowToBookmarkTableReceiptExport(mainPart, "dataTable", productName, item.Quantity);
+                        }
+                        mainPart.Document.Save();
+                    }
+                }
+                memoryStream.Position = 0;
+                return memoryStream.ToArray();
             }
         }
 

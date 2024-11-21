@@ -17,6 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GoodTransferService } from '../services/goodTransfer.service';
 
 @Component({
   selector: 'app-good-transfer',
@@ -59,6 +60,7 @@ export class GoodTransferComponent {
   constructor(protected store: Store<State>,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private goodTransferService: GoodTransferService,
     private router: Router
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
@@ -245,5 +247,25 @@ export class GoodTransferComponent {
     this.dataSource = new MatTableDataSource<GoodTransfer>(this.allGoodTransfer);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  download(fileId: number) {
+    this.goodTransferService.downloadFile(fileId).subscribe(
+      (response: Blob) => {
+        const fileName = `phieu_chuyen_kho_${fileId}`;
+        const blob = new Blob([response], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        });
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+      },
+      (error) => {
+        alert("Tải phiếu bị lỗi");
+        console.error('File download error:', error);
+      }
+    );
   }
 }

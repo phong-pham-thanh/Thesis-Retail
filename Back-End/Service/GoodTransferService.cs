@@ -8,6 +8,7 @@ using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace APIBackend.Service
 {
@@ -20,6 +21,7 @@ namespace APIBackend.Service
         public GoodsTransferModel AcceptGoodTransfer(int id);
         public GoodsTransferModel UpdateGoodTransfer(int id, GoodsTransferModel updateItem);
         public GoodsTransferModel CancelGoodTransfer(int id);
+        public byte[] PrintGoodTransfer(int id);
     }
     public class GoodTransferService : IGoodTransferService
     {
@@ -36,10 +38,11 @@ namespace APIBackend.Service
         private readonly IUserService _userService;
         private readonly IUserSessionService _userSessionService;
         private readonly IUserWareHouseService _userWareHouseService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public GoodTransferService(IProductMapper productMapper, 
-            IGoodsTransferMapper goodTransferMapper, 
-            IGoodTransferDetailMapper goodTransferDetailMapper, 
+        public GoodTransferService(IProductMapper productMapper,
+            IGoodsTransferMapper goodTransferMapper,
+            IGoodTransferDetailMapper goodTransferDetailMapper,
             IGoodTransferRepository goodTransferRepository,
             IGoodTransferDetailRepository goodTransferDetailRepository,
             IInventoryRepository inventoryRepository,
@@ -49,6 +52,7 @@ namespace APIBackend.Service
             IUserService userService,
             IUnityOfWorkFactory uowFactory,
             IUserWareHouseService userWareHouseService,
+            IWebHostEnvironment webHostEnvironment,
             IUserSessionService userSessionService)
         {
             _productMapper = productMapper;
@@ -63,12 +67,13 @@ namespace APIBackend.Service
             _userService = userService;
             _uowFactory = uowFactory;
             _userSessionService = userSessionService;
+            _webHostEnvironment = webHostEnvironment;
             _userWareHouseService = userWareHouseService;
         }
 
         public bool AddGoodTransfer(GoodsTransferModel goodsTransferModel, List<GoodTransferDetailModel> listGoodTransferDetailModels, bool autoAccept)
         {
-            using(var uow = _uowFactory.CreateUnityOfWork())
+            using (var uow = _uowFactory.CreateUnityOfWork())
             {
                 //Add good Transfer
                 GoodsTransfer goodsTransfer = new GoodsTransfer();
@@ -102,7 +107,7 @@ namespace APIBackend.Service
                 }
                 uow.Commit();
             }
-            
+
             return true;
         }
 
@@ -122,7 +127,7 @@ namespace APIBackend.Service
         public GoodsTransferModel GetGoodTransferById(int id)
         {
             GoodsTransferModel result = _goodTransferRepository.GetGoodTransferById(id);
-            foreach(GoodTransferDetailModel detail in result.ListGoodTransferDetailsModel)
+            foreach (GoodTransferDetailModel detail in result.ListGoodTransferDetailsModel)
             {
                 detail.Product = _productRepository.GetProductById(detail.ProductId);
             }
@@ -134,7 +139,7 @@ namespace APIBackend.Service
             List<GoodsTransferModel> listGoodTransfer = _goodTransferRepository.GetAllGoodTransfers();
             foreach (GoodsTransferModel item in listGoodTransfer)
             {
-                foreach(GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
+                foreach (GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
                 {
                     detail.Product = _productRepository.GetProductById(detail.ProductId);
                 }
@@ -151,7 +156,7 @@ namespace APIBackend.Service
             listGoodTransfer = listGoodTransfer.Where(x => listIdWareHouseBelong.Contains(x.ToWareHouseId) || listIdWareHouseBelong.Contains(x.FromWareHouseId)).ToList();
             foreach (GoodsTransferModel item in listGoodTransfer)
             {
-                foreach(GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
+                foreach (GoodTransferDetailModel detail in item.ListGoodTransferDetailsModel)
                 {
                     detail.Product = _productRepository.GetProductById(detail.ProductId);
                 }
@@ -182,7 +187,7 @@ namespace APIBackend.Service
 
         private GoodsReceiptModel BuildGoodReceiptFromTransfer(GoodsTransferModel goodsTransferModel)
         {
-            GoodsReceiptModel result = new GoodsReceiptModel 
+            GoodsReceiptModel result = new GoodsReceiptModel
             {
                 Id = 0,
                 ReceiptStatus = Status.Success,
@@ -190,13 +195,13 @@ namespace APIBackend.Service
                 WareHouseId = goodsTransferModel.ToWareHouseId,
                 ListGoodReciptDetailsModel = new List<GoodReceiptDetailModel>(),
             };
-            foreach(GoodTransferDetailModel item in goodsTransferModel.ListGoodTransferDetailsModel)
+            foreach (GoodTransferDetailModel item in goodsTransferModel.ListGoodTransferDetailsModel)
             {
                 result.ListGoodReciptDetailsModel.Add(new GoodReceiptDetailModel
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                    });
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                });
             }
             return result;
         }
@@ -240,6 +245,40 @@ namespace APIBackend.Service
         //         _inventoryRepository.UpdateInventory(goodTransferDetailModel.ProductId, goodTransferDetailModel.Quantity, currentGoodTransfer.WareHouseId, false);
         //     }
         // }
+        public byte[] PrintGoodTransfer(int id)
+        {
+            GoodsTransferModel noteModel = _goodTransferRepository.GetGoodTransferById(id);
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "template");
+            string fileName = "TransferTemplate.docx";
+            string filePath = Path.Combine(folderPath, fileName);
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
 
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(memoryStream, true))
+                {
+                    var mainPart = wordDoc.MainDocumentPart;
+                    if (mainPart != null)
+                    {
+                        Utilities.ReplaceFieldWithId(mainPart, "Id", id.ToString());
+                        Utilities.ReplaceFieldWithId(mainPart, "DateNote", noteModel.TransferDate.ToShortDateString());
+                        Utilities.ReplaceFieldWithId(mainPart, "FromWareHouse", noteModel.FromWareHouse?.Address);
+                        Utilities.ReplaceFieldWithId(mainPart, "ToWareHouse", noteModel.ToWareHouse?.Address.ToString());
+                        Utilities.ReplaceFieldWithId(mainPart, "Status", noteModel.Status.ToString());
+                        foreach (var item in noteModel.ListGoodTransferDetailsModel)
+                        {
+                            string productName = _productRepository.GetProductById(item.ProductId).Name;
+                            Utilities.AddRowToBookmarkTableReceiptExport(mainPart, "dataTable", productName, item.Quantity);
+                        }
+                        mainPart.Document.Save();
+                    }
+                }
+                memoryStream.Position = 0;
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

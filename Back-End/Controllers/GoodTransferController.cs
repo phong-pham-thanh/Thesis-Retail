@@ -12,7 +12,7 @@ namespace APIBackend.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class GoodTransferController
+    public class GoodTransferController : ControllerBase
     {
         private IGoodTransferService _goodTransferService;
 
@@ -103,6 +103,16 @@ namespace APIBackend.Controllers
         {
 
             return _goodTransferService.CancelGoodTransfer(id);
+        }
+
+        [HttpGet]
+        [Route("download/{id}")]
+        public IActionResult DownloadGoodTransfer(int id)
+        {
+
+            var fileBytes = _goodTransferService.PrintGoodTransfer(id);
+            string fileName = "TransferTemplate.docx";
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
     }
 }

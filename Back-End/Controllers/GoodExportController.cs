@@ -20,7 +20,7 @@ namespace APIBackEnd.Controllers
 
     [Route("[controller]")]
     [ApiController]
-    public class GoodExportController
+    public class GoodExportController : ControllerBase
     {
         private IGoodExportService _goodExportService;
 
@@ -108,6 +108,15 @@ namespace APIBackEnd.Controllers
             //    ]
             //}
             return _goodExportService.UpdateGoodExport(id, goodsExportModel);
+        }
+
+        [HttpGet]
+        [Route("download/{id}")]
+        public IActionResult PrintGoodExport(int id)
+        {
+            var fileBytes = _goodExportService.PrintGoodExport(id);
+            string fileName = "ImportTemplate.docx";
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
     }
 }

@@ -69,6 +69,10 @@ const api_links = {
         url: `${authUrl}/GoodRecipt/cancelGoodRecipt/`,
         method: "GET",
       },
+      download: {
+        url: `${authUrl}/GoodRecipt/download/`,
+        method: "GET",
+      },
     },
 
     export: {
@@ -102,6 +106,10 @@ const api_links = {
       },
       cancel: {
         url: `${authUrl}/GoodExport/cancelGoodExport/`,
+        method: "GET",
+      },
+      download: {
+        url: `${authUrl}/GoodExport/download/`,
         method: "GET",
       },
     },
