@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Users } from '../model/user.model';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiSetSession = 'https://localhost:7030/User/setSession';
+  private apiSetSession = `${environment.apiBaseUrl}/setSession`;
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {}
 

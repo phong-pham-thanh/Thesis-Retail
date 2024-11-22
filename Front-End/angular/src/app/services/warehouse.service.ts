@@ -3,14 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Warehouse } from '../model/warehouse.model';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class WarehouseService {
 
 
-  private apiUrlGetAll = 'https://localhost:7030/Warehouse/';
-  private apiUrlGetAllByRole = 'https://localhost:7030/Warehouse/getAllByRole';
+  private apiUrlGetAll = `${environment.apiBaseUrl}/Warehouse/`;
+  private apiUrlGetAllByRole = `${environment.apiBaseUrl}/Warehouse/getAllByRole`;
 
   constructor(private http: HttpClient) { }
 

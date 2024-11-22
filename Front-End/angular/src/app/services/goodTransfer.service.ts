@@ -2,18 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GoodTransfer } from '../model/goodTransfer.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoodTransferService {
-  private apiGetAll = 'https://localhost:7030/GoodTransfer/getAllGoodTransferByRole';
-  private apiAdd= 'https://localhost:7030/GoodTransfer/addGoodTransfer';
-  private apiAccept = 'https://localhost:7030/GoodTransfer/acceptGoodTransfer';
-  private apiGetById = 'https://localhost:7030/GoodTransfer/getGoodTransferById';
-  private apiUpdate = 'https://localhost:7030/GoodTransfer/updateGoodTransfer';
-  private apiCancel = 'https://localhost:7030/GoodTransfer/cancelGoodTransfer';
-  private apiDownload = 'https://localhost:7030/GoodTransfer/download';
+  private apiGetAll = `${environment.apiBaseUrl}/GoodTransfer/getAllGoodTransferByRole`;
+  private apiAdd= `${environment.apiBaseUrl}/GoodTransfer/addGoodTransfer`;
+  private apiAccept = `${environment.apiBaseUrl}/GoodTransfer/acceptGoodTransfer`;
+  private apiGetById = `${environment.apiBaseUrl}/GoodTransfer/getGoodTransferById`;
+  private apiUpdate = `${environment.apiBaseUrl}/GoodTransfer/updateGoodTransfer`;
+  private apiCancel = `${environment.apiBaseUrl}/GoodTransfer/cancelGoodTransfer`;
+  private apiDownload = `${environment.apiBaseUrl}/GoodTransfer/download`;
 
 
   constructor(private http: HttpClient) {}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PriceProduct } from '../model/price.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -15,10 +16,10 @@ export class PriceProductService {
     protected delete: string;
   
     constructor(protected http: HttpClient) {
-        this.loadAll = "https://localhost:7030/PriceProduct"
-        this.addNew = "https://localhost:7030/PriceProduct/addNew"
-        this.update = "https://localhost:7030/PriceProduct/update"
-        this.delete = "https://localhost:7030/PriceProduct/delete"
+        this.loadAll = `${environment.apiBaseUrl}/PriceProduct`
+        this.addNew = `${environment.apiBaseUrl}/PriceProduct/addNew`
+        this.update = `${environment.apiBaseUrl}/PriceProduct/update`
+        this.delete = `${environment.apiBaseUrl}/PriceProduct/delete`
     }
 
     getAllPriceProduct(): Observable<PriceProduct[]> {
