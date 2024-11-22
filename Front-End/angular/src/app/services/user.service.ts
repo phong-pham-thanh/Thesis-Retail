@@ -3,15 +3,16 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Users } from '../model/user.model';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiGetAll = 'https://localhost:7030/User/getAllWithFullInfo';
-  private apiGetById = 'https://localhost:7030/User/getById';
-  private apiUpdate = 'https://localhost:7030/User/update';
-  private apiAdd = 'https://localhost:7030/User/add';
+  private apiGetAll = `${environment.apiBaseUrl}/User/getAllWithFullInfo`;
+  private apiGetById = `${environment.apiBaseUrl}/User/getById`;
+  private apiUpdate = `${environment.apiBaseUrl}/User/update`;
+  private apiAdd = `${environment.apiBaseUrl}/User/add`;
 
   constructor(private http: HttpClient) { }
 

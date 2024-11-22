@@ -3,14 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Bill } from '../model/bill.model';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class BillService {
 
 
-  private apiGetAll = 'https://localhost:7030/Bill/getAllByRole';
-  private apiAdd = 'https://localhost:7030/Bill/addBill';
+  private apiGetAll = `${environment.apiBaseUrl}/Bill/getAllByRole`;
+  private apiAdd = `${environment.apiBaseUrl}/Bill/addBill`;
 
   constructor(private http: HttpClient) { }
 
