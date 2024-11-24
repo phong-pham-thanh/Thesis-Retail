@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./stylePartner.css";
 import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomButton from "../../component/CustomeButton";
 import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
 import PartnerInformationPopupForm from "./PartnerInformationPopupForm";
-import AlertDialog from "../../component/AlertDialog";
+import EditIcon from "@mui/icons-material/Edit";
 import { ColumnsType } from "antd/es/table";
 
 interface PartnerType {
@@ -20,7 +19,7 @@ interface PartnerType {
 const emptydata: PartnerType = {
   id: "0",
   name: "",
-  totalSale: "0", // Initialize with 0 total sale
+  totalSale: "0",
   phoneNumber: "",
 };
 
@@ -31,12 +30,12 @@ export default function PartnerPage() {
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [partnerToDelete, setPartnerToDelete] = useState<PartnerType | null>(
-    null
-  );
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const getPartners = () => {
     setLoading(true);
@@ -85,11 +84,6 @@ export default function PartnerPage() {
     setIsChangeInformation(true);
   };
 
-  const showDeleteDialog = (partner: PartnerType) => {
-    setPartnerToDelete(partner);
-    setIsAlertVisible(true);
-  };
-
   const columns: ColumnsType<PartnerType> = [
     {
       title: "Mã đối tác",
@@ -119,23 +113,28 @@ export default function PartnerPage() {
     {
       title: "",
       key: "actions",
-      render: (text: any, record: PartnerType) => (
-        <Space size="middle">
+      render: (_, record) => (
+        <Space size="small">
           <Button
             size={"middle"}
-            icon={<EditOutlined />}
-            onClick={() => handleEditPartner(record)}
-          />
-          <Button
-            size={"middle"}
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => showDeleteDialog(record)}
-          />
+            onClick={() => {
+              handleEditPartner(record);
+            }}
+          >
+            <EditIcon />
+          </Button>
         </Space>
       ),
     },
   ];
+
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
+  };
 
   if (loading) return <h1>Đang tải ...</h1>;
 
@@ -183,6 +182,17 @@ export default function PartnerPage() {
               dataSource={filteredPartners}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true,
+                total: filteredPartners.length,
+                pageSizeOptions: ["10", "20", "50"],
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>
