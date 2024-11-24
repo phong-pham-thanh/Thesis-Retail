@@ -3,7 +3,6 @@ import "./styleProduct.css";
 import { Button, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditIcon from "@mui/icons-material/Edit";
-import ClearIcon from "@mui/icons-material/Clear";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ProductInformationPopupScreen from "./popupEditProduct";
 import api_links from "../../../app/api_links";
@@ -144,11 +143,6 @@ export default function Product() {
   const handleAddNew = () => {
     setPopupData(emptydata);
     setIsChangeInformation(true);
-  };
-
-  const showDeleteDialog = (product: DataType) => {
-    setProductToDelete(product);
-    setIsAlertVisible(true);
   };
 
   const handleConfirmDelete = () => {
@@ -296,9 +290,6 @@ export default function Product() {
           >
             <EditIcon />
           </Button>
-          <Button size={"middle"} onClick={() => showDeleteDialog(record)}>
-            <ClearIcon />
-          </Button>
         </Space>
       ),
     },
@@ -389,7 +380,7 @@ export default function Product() {
                 pageSize: pagination.pageSize,
                 showSizeChanger: true,
                 total: filteredProducts.length,
-                pageSizeOptions: ["5", "10", "20", "50"],
+                pageSizeOptions: ["10", "20", "50"],
                 onChange: (page, pageSize) => {
                   setPagination({ current: page, pageSize });
                 },

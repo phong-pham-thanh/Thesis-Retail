@@ -48,6 +48,10 @@ export default function Warehouse() {
   const [filteredWarehouses, setFilteredWarehouses] = useState<WarehouseType[]>(
     []
   );
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const getAllWarehouses = () => {
     const api_link = api_links.warehouse.getAll;
@@ -137,6 +141,14 @@ export default function Warehouse() {
     },
   ];
 
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
+  };
+
   if (loading) return <h1>Đang tải ...</h1>;
 
   return (
@@ -188,6 +200,17 @@ export default function Warehouse() {
               dataSource={filteredWarehouses}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true,
+                total: filteredWarehouses.length,
+                pageSizeOptions: ["5", "10", "20"],
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>

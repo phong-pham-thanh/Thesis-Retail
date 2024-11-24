@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styleCategory.css";
 import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomButton from "../../component/CustomeButton";
 import fetch_Api from "../../../app/api_fetch";
@@ -28,10 +28,10 @@ export default function CategoryPage() {
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<CategoryType | null>(
-    null
-  );
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
 
@@ -82,9 +82,12 @@ export default function CategoryPage() {
     setIsChangeInformation(true);
   };
 
-  const showDeleteDialog = (category: CategoryType) => {
-    setCategoryToDelete(category);
-    setIsAlertVisible(true);
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
   };
 
   const columns: ColumnsType<CategoryType> = [
@@ -104,19 +107,16 @@ export default function CategoryPage() {
     {
       title: "",
       key: "actions",
-      render: (text: any, record: CategoryType) => (
-        <Space size="middle">
+      render: (_, record) => (
+        <Space size="small">
           <Button
             size={"middle"}
-            icon={<EditOutlined />}
-            onClick={() => handleEditCategory(record)}
-          />
-          <Button
-            size={"middle"}
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => showDeleteDialog(record)}
-          />
+            onClick={() => {
+              handleEditCategory(record);
+            }}
+          >
+            <EditIcon />
+          </Button>
         </Space>
       ),
     },
@@ -168,6 +168,17 @@ export default function CategoryPage() {
               dataSource={filteredCategories}
               loading={loading}
               rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                showSizeChanger: true,
+                total: filteredCategories.length,
+                pageSizeOptions: ["10", "20", "50"],
+                onChange: (page, pageSize) => {
+                  setPagination({ current: page, pageSize });
+                },
+              }}
+              onChange={handleTableChange}
             />
           </div>
         </div>

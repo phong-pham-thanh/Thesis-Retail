@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./styleCustomer.css";
 import { Button, Input, Space, Table } from "antd";
-import { EditOutlined, DeleteOutlined } from "@mui/icons-material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CustomButton from "../../component/CustomeButton";
 import fetch_Api from "../../../app/api_fetch";
 import api_links from "../../../app/api_links";
 import CustomerInformationPopupScreen from "./CustomerInformationPopupForm";
-import AlertDialog from "../../component/AlertDialog";
-import message from "antd/lib/message";
+import EditIcon from "@mui/icons-material/Edit";
 import { ColumnsType } from "antd/es/table";
 
 interface UserType {
@@ -30,13 +28,11 @@ export default function UserPage() {
   const [isChangeInformation, setIsChangeInformation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<UserType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [timeoutId, setTimeoutId] = useState<number | undefined>(); // Timeout for search
+  const [timeoutId, setTimeoutId] = useState<number | undefined>();
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10, // Default page size
+    pageSize: 10,
   });
 
   const getUsers = () => {
@@ -62,7 +58,6 @@ export default function UserPage() {
     setSearchTerm(value);
     if (timeoutId) clearTimeout(timeoutId);
 
-    // Set timeout to delay search, simulating debounce effect
     const newTimeoutId = window.setTimeout(() => {
       if (value.trim()) {
         const filtered = customers.filter((customer) =>
@@ -70,9 +65,9 @@ export default function UserPage() {
         );
         setFilteredUsers(filtered);
       } else {
-        setFilteredUsers(customers); // If search term is cleared, reset to all customers
+        setFilteredUsers(customers);
       }
-    }, 2000); // 2 seconds delay
+    }, 2000);
 
     setTimeoutId(newTimeoutId);
   };
@@ -87,12 +82,6 @@ export default function UserPage() {
     setIsChangeInformation(true);
   };
 
-  const showDeleteDialog = (customer: UserType) => {
-    setUserToDelete(customer);
-    setIsAlertVisible(true);
-  };
-
-  // Handle pagination changes
   const handleTableChange = (pagination: any) => {
     setPagination({
       ...pagination,
@@ -123,19 +112,16 @@ export default function UserPage() {
     {
       title: "",
       key: "actions",
-      render: (text: any, record: UserType) => (
-        <Space size="middle">
+      render: (_, record) => (
+        <Space size="small">
           <Button
             size={"middle"}
-            icon={<EditOutlined />}
-            onClick={() => handleEditUser(record)}
-          />
-          <Button
-            size={"middle"}
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => showDeleteDialog(record)}
-          />
+            onClick={() => {
+              handleEditUser(record);
+            }}
+          >
+            <EditIcon />
+          </Button>
         </Space>
       ),
     },
@@ -190,8 +176,8 @@ export default function UserPage() {
               pagination={{
                 current: pagination.current,
                 pageSize: pagination.pageSize,
-                showSizeChanger: true, // Show options to change page size
-                pageSizeOptions: ["5", "10", "20", "50"], // Admin can select page size
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "50"],
                 onChange: (page, pageSize) => {
                   setPagination({ current: page, pageSize });
                 },
