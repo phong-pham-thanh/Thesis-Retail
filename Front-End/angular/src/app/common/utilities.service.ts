@@ -101,5 +101,18 @@ export class UtilitiesService {
         panelClass: panelClass
       });
     }
+
+    static randomInt(min: number, max: number): number {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    static generateRandomColors(count: number): string[] {
+      const colors: string[] = [];
+      for (let i = 0; i < count; i++) {
+        const color = `rgba(${this.randomInt(0, 255)}, ${this.randomInt(0, 255)}, ${this.randomInt(0, 255)}, 0.7)`;
+        colors.push(color);
+      }
+      return colors;
+    }
   }
   

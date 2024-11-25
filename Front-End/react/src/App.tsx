@@ -69,7 +69,7 @@ function App() {
               <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
               <Route path="/quan-ly/nhacungcap" element={<PartnerPage />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
-              <Route path="/quan-ly/baocao" element={<Report />} />
+              <Route path="/quan-ly/baocao" />
               <Route path="/quan-ly/retail" />
               <Route path="/quan-ly/price-management" />
               <Route path="/quan-ly/bill" />

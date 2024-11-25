@@ -9,6 +9,7 @@ using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
 using DocumentFormat.OpenXml.Packaging;
+using APIBackend.DataModel.Analyse;
 
 namespace APIBackend.Service
 {
@@ -21,6 +22,7 @@ namespace APIBackend.Service
         public GoodsExportModel AcceptGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public byte[] PrintGoodExport(int id);
+        public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -208,6 +210,10 @@ namespace APIBackend.Service
                 return memoryStream.ToArray();
             }
         }
-
+        
+        public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam)
+        {
+            return _goodExportRepository.GetAllGoodExportByDate(dateParam);
+        }
     }
 }

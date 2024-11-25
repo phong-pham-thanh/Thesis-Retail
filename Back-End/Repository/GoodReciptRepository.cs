@@ -1,4 +1,5 @@
 ﻿using APIBackend.DataModel;
+using APIBackend.DataModel.Analyse;
 using APIBackend.Mapper;
 using APIBackend.Models;
 using APIBackEnd.Data;
@@ -15,6 +16,7 @@ namespace APIBackend.Repository
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodRecipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
+        public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
@@ -80,6 +82,18 @@ namespace APIBackend.Repository
             _coreContext.SaveChanges();
             return _goodReciptMapper.ToModel(efObject);
         }
+
+        public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam)
+        {
+            List<GoodsReceiptModel> listGoodRecipt = new List<GoodsReceiptModel>();
+            listGoodRecipt = _goodReciptMapper.ToModels(_coreContext.GoodsReceipt
+                                                        .Where(re => re.ImportDate >= dateParam.StartDate && re.ImportDate <= dateParam.EndDate)
+                                                        .Include(go => go.ListGoodReciptDetails)
+                                                        .Include(go => go.Partner)
+                                                        .ToList());
+            return listGoodRecipt;
+        }
+
     }
 
 }

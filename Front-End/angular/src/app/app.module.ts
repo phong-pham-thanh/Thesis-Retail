@@ -29,6 +29,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BaseChartDirective } from 'ng2-charts';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -65,8 +66,10 @@ import { GoodTransferDetailComponent } from './good-transfer/good-transfer-detai
 import { GoodTransferViewComponent } from './good-transfer/good-transfer-view/good-transfer-view.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserFormComponent } from './user-list/user-form/user-form.component';
-import { EmptyComponentComponent } from './empty-component/empty-component.component'; // Đảm bảo bạn có reducers
-
+import { EmptyComponentComponent } from './empty-component/empty-component.component';
+import { AnalyseComponent } from './analyse/analyse.component';
+import { AnalyseReceiptGoodComponent } from './analyse/analyse-receipt-good/analyse-receipt-good.component';
+import { AnalyseExportGoodComponent } from './analyse/analyse-export-good/analyse-export-good.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -106,7 +109,10 @@ export function CustomPaginatorIntl() {
     GoodTransferViewComponent,
     UserListComponent,
     UserFormComponent,
-    EmptyComponentComponent
+    EmptyComponentComponent,
+    AnalyseComponent,
+    AnalyseReceiptGoodComponent,
+    AnalyseExportGoodComponent,
   ],
   imports: [
     BrowserModule,
@@ -169,6 +175,8 @@ export function CustomPaginatorIntl() {
     StoreModule.forRoot(usersReducer),
     EffectsModule.forRoot([UsersEffects]),
     EffectsModule.forFeature([UsersEffects]),
+    BaseChartDirective,
+
   ],
   providers: [
     provideNgxMask(),
