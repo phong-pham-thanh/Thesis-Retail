@@ -1,4 +1,5 @@
 ﻿using APIBackend.DataModel;
+using APIBackend.DataModel.Analyse;
 using APIBackend.Mapper;
 using APIBackend.Models;
 using APIBackEnd.Data;
@@ -16,6 +17,7 @@ namespace APIBackend.Repository
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
+        public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
     }
     public class GoodExportRepository : IGoodExportRepository
     {
@@ -79,6 +81,17 @@ namespace APIBackend.Repository
             _goodExportMapper.ToEntity(efObject, updateItem);
             _coreContext.SaveChanges();
             return _goodExportMapper.ToModel(efObject);
+        }
+
+        public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam)
+        {
+            
+            List<GoodsExportModel> result = new List<GoodsExportModel>();
+            result = _goodExportMapper.ToModels(_coreContext.GoodsExports
+                                                        .Where(re => re.ExportDate >= dateParam.StartDate && re.ExportDate <= dateParam.EndDate)
+                                                        .Include(go => go.ListGoodExportDetails)
+                                                        .ToList());
+            return result;
         }
 
     }

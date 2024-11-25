@@ -9,6 +9,7 @@ using NGO.Core.Repositories;
 using APIBackEnd.Data.Enum;
 using APIBackEnd.Models;
 using DocumentFormat.OpenXml.Packaging;
+using APIBackend.DataModel.Analyse;
 namespace APIBackend.Service
 {
     public interface IGoodReciptService
@@ -20,6 +21,7 @@ namespace APIBackend.Service
         public GoodsReceiptModel AcceptGoodReceipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public byte[] PrintGoodReceipt(int id);
+        public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -220,6 +222,10 @@ namespace APIBackend.Service
                 memoryStream.Position = 0;
                 return memoryStream.ToArray();
             }
+        }
+        public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam)
+        {
+            return _goodReciptRepository.GetAllGoodReciptsByDate(dateParam);
         }
     }
 }

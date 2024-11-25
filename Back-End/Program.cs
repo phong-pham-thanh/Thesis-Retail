@@ -98,6 +98,7 @@ builder.Services.AddScoped<IGoodTransferService, GoodTransferService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserWareHouseService, UserWareHouseService>();
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+builder.Services.AddScoped<IAnalyseService, AnalyseService>();
 
 var app = builder.Build();
 

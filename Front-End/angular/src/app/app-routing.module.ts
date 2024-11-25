@@ -11,10 +11,12 @@ import { PriceManagementFormComponent } from './price-management/price-managemen
 import { UserListComponent } from './user-list/user-list.component';
 import { AuthGuard } from './services/auth.guard';
 import { EmptyComponentComponent } from './empty-component/empty-component.component';
+import { AnalyseComponent } from './analyse/analyse.component';
 
 const routes: Routes = [
   {path: "login",  component: EmptyComponentComponent},
   {path: "quan-ly/retail", component: RetailComponentComponent, canActivate: [AuthGuard] },
+  {path: "quan-ly/baocao", component: AnalyseComponent, canActivate: [AuthGuard] },
   {path: "quan-ly/price-management", component: PriceManagementComponent, canActivate: [AuthGuard] },
   {path: "quan-ly/bill", component: BillListComponent, canActivate: [AuthGuard] },
   {path: "quan-ly/employee", component: UserListComponent, canActivate: [AuthGuard] },

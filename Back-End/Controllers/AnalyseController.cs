@@ -1,0 +1,36 @@
+﻿using APIBackend.Models;
+using APIBackEnd.Models;
+using APIBackEnd.Data;
+using APIBackend.Service;
+using Microsoft.AspNetCore.Mvc;
+using APIBackEnd.Controllers;
+using APIBackend.DataModel.Analyse;
+
+
+namespace APIBackend.Controllers
+{
+
+    [Route("[controller]")]
+    public class AnalyseController
+    {
+        private readonly IAnalyseService _service;
+        public AnalyseController(IAnalyseService service)
+        {
+            _service = service;
+        }
+
+        [HttpPost]
+        [Route("goodReceipt")]
+        public List<GoodNoteAnalyse> analyseGoodReceipt([FromBody] DateParam dateParam)
+        {
+            return _service.GetAllGoodReceiptByDate(dateParam);
+        }
+
+        [HttpPost]
+        [Route("goodExport")]
+        public List<GoodNoteAnalyse> analyseGoodExport([FromBody] DateParam dateParam)
+        {
+            return _service.GetAllGoodExporttByDate(dateParam);
+        }
+    }
+}
