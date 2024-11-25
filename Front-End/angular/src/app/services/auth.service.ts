@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiSetSession = `${environment.apiBaseUrl}/setSession`;
+  private apiSetSession = `${environment.apiBaseUrl}/User/setSession`;
 
   constructor(private http: HttpClient, private router: Router, private cookieService: CookieService) {}
 
