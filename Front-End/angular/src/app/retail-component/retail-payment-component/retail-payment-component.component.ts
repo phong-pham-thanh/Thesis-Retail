@@ -11,6 +11,7 @@ import { Users } from '../../model/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { filter, map, mergeMap, take } from 'rxjs';
 import { UtilitiesService } from '../../common/utilities.service';
+import { DialogService } from '../../common/dialog.service';
 
 @Component({
   selector: 'app-retail-payment-component',
@@ -31,6 +32,7 @@ export class RetailPaymentComponentComponent {
   constructor(
     public dialogRef: MatDialogRef<RetailPaymentComponentComponent>,
     protected store: Store<State>,
+    private dialogService: DialogService,
     private cookieService: CookieService,
     @Inject(MAT_DIALOG_DATA) public data: any) 
   {
@@ -87,8 +89,7 @@ export class RetailPaymentComponentComponent {
             }
             else{
               this.dialogRef.close(false);
-              // alert(error.error.detail);
-              UtilitiesService.showAlert(error.error.detail);
+              this.dialogService.showAlert(UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi thực hiện giao dịch");
             }
           }))
         

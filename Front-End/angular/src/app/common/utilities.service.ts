@@ -1,4 +1,3 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
 import _ from 'lodash';
 import * as moment from 'moment';
 
@@ -6,9 +5,7 @@ import * as moment from 'moment';
 
 export class UtilitiesService {
 
-  private static snackBar: MatSnackBar;
-  constructor(snackBar: MatSnackBar) {
-    UtilitiesService.snackBar = snackBar;
+  constructor() {
   }
 
     static convertDateTime(date: Date | string): Date {
@@ -92,14 +89,6 @@ export class UtilitiesService {
 
     static removeDiacritics(str: string): string {
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    }
-    static showAlert(message: string, action: string = 'Đóng', duration: number = 3000, panelClass: string[] = ['custom-snackbar']) {
-      this.snackBar.open(message, action, {
-        duration,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: panelClass
-      });
     }
 
     static randomInt(min: number, max: number): number {

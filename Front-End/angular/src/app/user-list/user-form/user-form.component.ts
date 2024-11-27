@@ -13,6 +13,7 @@ import { Users } from '../../model/user.model';
 import { Warehouse } from '../../model/warehouse.model';
 import { UtilitiesService } from '../../common/utilities.service';
 import { UserWareHouse } from '../../model/userWareHouse.model';
+import { DialogService } from '../../common/dialog.service';
 
 @Component({
   selector: 'app-user-form',
@@ -30,6 +31,7 @@ export class UserFormComponent {
   }
   constructor(
     protected store: Store<State>,
+    private dialogService: DialogService,
     @Inject(MAT_DIALOG_DATA) public data: PriceProduct,
     public dialogRef: MatDialogRef<UserFormComponent>) 
   {
@@ -85,7 +87,7 @@ export class UserFormComponent {
 
   onSubmit(employeeForm: any) {
     if (employeeForm.invalid) {
-      UtilitiesService.showAlert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      this.dialogService.showAlert('Vui lòng điền đầy đủ thông tin bắt buộc!');
       // alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
       return;
     }
@@ -110,7 +112,7 @@ export class UserFormComponent {
               this.dialogRef.close();
             }
             else{
-              UtilitiesService.showAlert(error.error.detail);
+              this.dialogService.showAlert(error.error.detail);
               // alert(error.error.detail);
             }
           }))

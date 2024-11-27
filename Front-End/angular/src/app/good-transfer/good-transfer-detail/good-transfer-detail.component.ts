@@ -27,6 +27,7 @@ import { Users } from '../../model/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { UtilitiesService } from '../../common/utilities.service'; // Đường dẫn tới service của bạn
 import * as moment from 'moment';
+import { DialogService } from '../../common/dialog.service';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class GoodTransferDetailComponent {
     private route: ActivatedRoute,
     protected store: Store<State>,
     private cookieService: CookieService,
+    private dialogService: DialogService,
     private router: Router,
   ) {
 
@@ -177,7 +179,7 @@ export class GoodTransferDetailComponent {
         this.store.pipe(select(goodTransferSelector.getError),
         map(error => {
           if(error){
-            UtilitiesService.showAlert('Có lỗi khi tạo mới');
+            this.dialogService.showAlert('Có lỗi khi tạo mới');
             // alert('Có lỗi khi tạo mới')
           }
           else{
