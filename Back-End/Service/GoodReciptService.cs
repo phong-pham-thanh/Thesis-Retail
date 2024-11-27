@@ -22,6 +22,7 @@ namespace APIBackend.Service
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public byte[] PrintGoodReceipt(int id);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
+        public bool RemoveGoodReceipt(int id);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -180,12 +181,24 @@ namespace APIBackend.Service
             return totalAmount;
         }
 
-        public void bindWareHouseToGoodNote(List<GoodsReceiptModel> listGoodExport)
+        public void bindWareHouseToGoodNote(List<GoodsReceiptModel> listGoodReceipt)
         {
-            foreach (GoodsReceiptModel item in listGoodExport)
+            foreach (GoodsReceiptModel item in listGoodReceipt)
             {
                 item.WareHouse = _wareHouseRepository.GetById(item.WareHouseId);
             }
+        }
+
+        public bool RemoveGoodReceipt(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                _goodReciptDetailRepository.DeleteListGoodReceiptDetailByGoodReceiptId(id);
+                _goodReciptRepository.RemoveGoodReceipt(id);
+                uow.Commit();
+            }
+
+            return true;
         }
 
         public byte[] PrintGoodReceipt(int id)

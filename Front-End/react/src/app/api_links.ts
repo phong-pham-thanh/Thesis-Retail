@@ -65,6 +65,10 @@ const api_links = {
         url: `${authUrl}/GoodRecipt/acceptGoodImport/`,
         method: "GET",
       },
+      delete: {
+        url: `${authUrl}/GoodRecipt/deleteItem/`,
+        method: "GET",
+      },
       cancel: {
         url: `${authUrl}/GoodRecipt/cancelGoodRecipt/`,
         method: "GET",
@@ -102,6 +106,10 @@ const api_links = {
       //SET STATE
       accept: {
         url: `${authUrl}/GoodExport/acceptGoodExport/`,
+        method: "GET",
+      },
+      delete: {
+        url: `${authUrl}/GoodExport/deleteItem/`,
         method: "GET",
       },
       cancel: {

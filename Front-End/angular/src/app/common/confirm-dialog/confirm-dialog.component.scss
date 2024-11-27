@@ -1,0 +1,19 @@
+/* styles.css hoặc file CSS component cụ thể */
+@keyframes slideInFromTop {
+    0% {
+      transform: translateY(-100%); /* Bắt đầu từ vị trí trên cùng của màn hình */
+    }
+    100% {
+      transform: translateY(0); /* Di chuyển đến vị trí ban đầu */
+    }
+  }
+  
+  /* Điều chỉnh vị trí dialog container để nó bắt đầu từ trên */
+  .mat-dialog-container {
+    position: fixed;   /* Đảm bảo dialog xuất hiện tại vị trí cố định */
+    top: 0;            /* Đặt vị trí của dialog ở phía trên cùng của màn hình */
+    left: 50%;         /* Căn giữa theo chiều ngang */
+    transform: translateX(-50%); /* Đảm bảo căn chỉnh chính xác */
+    animation: slideInFromTop 0.5s ease-out forwards; /* Áp dụng animation */
+  }
+  

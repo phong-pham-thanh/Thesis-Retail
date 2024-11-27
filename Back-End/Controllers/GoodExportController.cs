@@ -111,6 +111,13 @@ namespace APIBackEnd.Controllers
         }
 
         [HttpGet]
+        [Route("deleteItem/{id}")]
+        public bool DeleteGoodExport(int id)
+        {
+            return _goodExportService.RemoveGoodExport(id);
+        }
+
+        [HttpGet]
         [Route("download/{id}")]
         public IActionResult PrintGoodExport(int id)
         {

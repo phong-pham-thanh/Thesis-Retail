@@ -50,6 +50,19 @@ export class GoodTransferEffects {
       )
     );
 
+    deleteGoodTransfer$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(priceProductAction.GoodTransferActionTypes.DeleteGoodTransfer),
+        map((action: priceProductAction.DeleteGoodTransfer) => action.payload),
+        mergeMap((newItem) =>
+          this.priceProductService.deleteGoodTransfer(newItem).pipe(
+            map(result => new priceProductAction.DeleteGoodTransferSuccess(result)),
+            catchError(err => of(new priceProductAction.DeleteGoodTransferFail(err)))
+          )
+        )
+      )
+    );
+
     cancelGoodTransfer$ = createEffect(() =>
       this.actions$.pipe(
         ofType(priceProductAction.GoodTransferActionTypes.CancelGoodTransfer),

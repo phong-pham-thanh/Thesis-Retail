@@ -62,37 +62,14 @@ namespace APIBackEnd.Controllers
         [Route("updateGoodReceipt/{id}")]
         public GoodsReceiptModel EditGoodReceipt(int id, [FromBody] GoodsReceiptModel goodsReceiptModel)
         {
-            // {
-            //     "Id": 15,
-            //     "PartnerId": 2,
-            //     "ReceiptStatus": 1,
-            //     "ImportDate": "2024-10-09T00:00:00",
-            //     "WareHouseId": 1,
-            //     "ListGoodReciptDetailsModel": [
-            //             {
-            //                 "Id": 38,
-            //                 "GoodReceiptId": 15,
-            //                 "ProductId": 2,
-            //                 "PriceUnit": 100,
-            //                 "Quantity": 100
-            //             },
-            //             {
-            //                 "Id": 39,
-            //                 "GoodReceiptId": 15,
-            //                 "ProductId": 3,
-            //                 "PriceUnit": 100,
-            //                 "Quantity": 300
-            //             },
-            //             {
-            //                 "Id": 40,
-            //                 "GoodReceiptId": 15,
-            //                 "ProductId": 1005,
-            //                 "PriceUnit": 100,
-            //                 "Quantity": 300
-            //             }
-            //         ]
-            //     }
             return _goodReciptService.UpdateGoodReceipt(id, goodsReceiptModel);
+        }
+
+        [HttpGet]
+        [Route("deleteItem/{id}")]
+        public bool DeleteGoodReceipt(int id)
+        {
+            return _goodReciptService.RemoveGoodReceipt(id);
         }
 
         [HttpGet]

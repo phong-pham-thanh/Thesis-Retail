@@ -16,6 +16,7 @@ namespace APIBackend.Repository
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public bool RemoveGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
     }
@@ -92,6 +93,19 @@ namespace APIBackend.Repository
                                                         .Include(go => go.ListGoodExportDetails)
                                                         .ToList());
             return result;
+        }
+
+        public bool RemoveGoodExport(int id)
+        {
+            var item = _coreContext.GoodsExports.FirstOrDefault(x => x.Id == id);
+            if(item == null)
+            {
+                throw new ArgumentException("Good Export not found");
+            }
+            _coreContext.GoodsExports.Remove(item);
+            _coreContext.SaveChanges();
+
+            return true;
         }
 
     }

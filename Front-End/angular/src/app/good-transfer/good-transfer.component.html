@@ -116,17 +116,19 @@
                     </button>
                     <mat-menu #menu="matMenu">
                       <button mat-menu-item (click)="viewDetail(element)">
-                        <!-- <mat-icon>details</mat-icon> -->
-                        <i class="material-icons">info_outline</i>
+                        <mat-icon>info</mat-icon>
                         <span>Chi tiết</span>
                       </button>
                       <button *ngIf="element.status === 2"  mat-menu-item (click)="edit(element)">
                         <mat-icon>edit</mat-icon>
                         <span>Chỉnh sửa</span>
                       </button>
+                      <button mat-menu-item (click)="delete(element)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Xóa</span>
+                      </button>
                       <button mat-menu-item (click)="download(element.id)">
-                        <!-- <mat-icon>details</mat-icon> -->
-                        <i class="material-icons">info_outline</i>
+                        <mat-icon>print</mat-icon>
                         <span>Tải thông tin phiếu</span>
                       </button>
                     </mat-menu>
