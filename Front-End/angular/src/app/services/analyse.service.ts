@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { DateParam, GoodNoteAnalyse } from '../model/analyse.model';
+import { BillMonthAnalyse, DateParam, GoodNoteAnalyse } from '../model/analyse.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class AnalyseService {
 
   private apiGetAllReceiptAnalyse = `${environment.apiBaseUrl}/Analyse/goodReceipt`;
   private apiGetAllExportAnalyse = `${environment.apiBaseUrl}/Analyse/goodExport`;
+  private apiGetAllBillByMonthAnalyse = `${environment.apiBaseUrl}/Analyse/billByMonth`;
 
   constructor(private http: HttpClient) { }
 
@@ -20,5 +21,9 @@ export class AnalyseService {
 
   getProductExport(dateRange: DateParam) :Observable<GoodNoteAnalyse[]> {
     return this.http.post<GoodNoteAnalyse[]>(`${this.apiGetAllExportAnalyse}`, dateRange);
+  }
+
+  getBillByMonth(dateRange: DateParam) :Observable<BillMonthAnalyse[]> {
+    return this.http.post<BillMonthAnalyse[]>(`${this.apiGetAllBillByMonthAnalyse}`, dateRange);
   }
 }

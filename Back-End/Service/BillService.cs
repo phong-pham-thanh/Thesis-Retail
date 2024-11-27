@@ -8,6 +8,7 @@ using APIBackEnd.Models;
 using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
+using APIBackend.DataModel.Analyse;
 
 namespace APIBackend.Service
 {
@@ -15,6 +16,7 @@ namespace APIBackend.Service
     {
         public bool AddBill(BillModel billModel);
         public List<BillModel> GetAll();
+        public List<BillModel> GetAllByDate(DateParam dateParam);
         public List<BillModel> GetAllByRole();
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
@@ -105,6 +107,12 @@ namespace APIBackend.Service
                 return true;
             }
         }
+
+        public List<BillModel> GetAllByDate(DateParam dateParam)
+        {
+            return _billRepository.GetAllByDate(dateParam);
+        }
+
 
         private void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
         {

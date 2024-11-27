@@ -9,3 +9,11 @@ export class GoodNoteAnalyse{
     quantity: number;
     precentage: number;
 }
+
+export class BillMonthAnalyse{
+    month: number;
+    year: number;
+    totalAmount: number;
+    wareHouseId: number;
+    wareHouseName: number;
+}

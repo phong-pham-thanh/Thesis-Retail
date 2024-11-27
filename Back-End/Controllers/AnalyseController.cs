@@ -32,5 +32,13 @@ namespace APIBackend.Controllers
         {
             return _service.GetAllGoodExporttByDate(dateParam);
         }
+
+
+        [HttpPost]
+        [Route("billByMonth")]
+        public List<BillMonthAnalyse> analyseBillByMonth([FromBody] DateParam dateParam)
+        {
+            return _service.GetAllBillAnalyseMonth(dateParam);
+        }
     }
 }

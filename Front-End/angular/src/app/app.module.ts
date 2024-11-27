@@ -30,6 +30,8 @@ import * as moment from 'moment';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BaseChartDirective } from 'ng2-charts';
+import 'chartjs-adapter-date-fns'; // Import this at the top of your component
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 import { StoreModule } from '@ngrx/store';
@@ -70,6 +72,7 @@ import { EmptyComponentComponent } from './empty-component/empty-component.compo
 import { AnalyseComponent } from './analyse/analyse.component';
 import { AnalyseReceiptGoodComponent } from './analyse/analyse-receipt-good/analyse-receipt-good.component';
 import { AnalyseExportGoodComponent } from './analyse/analyse-export-good/analyse-export-good.component';
+import { AnalyseBillByMonthComponent } from './analyse/analyse-bill-by-month/analyse-bill-by-month.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -113,6 +116,7 @@ export function CustomPaginatorIntl() {
     AnalyseComponent,
     AnalyseReceiptGoodComponent,
     AnalyseExportGoodComponent,
+    AnalyseBillByMonthComponent,
   ],
   imports: [
     BrowserModule,
@@ -137,6 +141,7 @@ export function CustomPaginatorIntl() {
     NgbModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTabsModule,
     EffectsModule.forRoot([]),
 
     StoreModule.forFeature('price-product', priceReducer),
