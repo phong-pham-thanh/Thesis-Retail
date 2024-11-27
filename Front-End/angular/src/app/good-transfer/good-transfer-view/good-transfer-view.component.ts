@@ -17,6 +17,7 @@ import { UtilitiesService } from '../../common/utilities.service';
 export class GoodTransferViewComponent {
 
   currentGoodTransfer: GoodTransfer;
+  total: number;
 
   constructor(
     protected store: Store<State>,
@@ -27,7 +28,11 @@ export class GoodTransferViewComponent {
   {
 
     if(data && data.id > 0){
+      this.total = 0; 
       this.currentGoodTransfer = JSON.parse(JSON.stringify(data));
+      this.currentGoodTransfer.listGoodTransferDetailsModel.forEach(x => {
+        this.total += x.quantity;
+      })
     }
   }
 
