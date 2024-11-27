@@ -144,7 +144,7 @@ namespace APIBackend.Service
                                                             Price = group.OrderByDescending(x => x.StartDate).FirstOrDefault().Price,
                                                         }).ToList();
 
-            result = result.OrderBy(r => r.Year).ThenBy(r =>r.Month).ToList();
+            result = result.OrderBy(r => r.Year).ThenBy(r =>r.Month).ThenBy(r => r.Day).ToList();
             return result;
         }
     }

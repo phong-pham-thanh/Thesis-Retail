@@ -142,8 +142,10 @@ export class AnalysePriceProductComponent {
           }
         },
         elements: {
-          bar: {
-            borderWidth: 2,
+          point: {
+            radius: 8,
+            hoverRadius: 12,
+            pointStyle: 'circle'
           }
         }
       }
