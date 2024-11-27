@@ -10,22 +10,29 @@ namespace APIBackend.Service
     {
         List<GoodNoteAnalyse> GetAllGoodReceiptByDate(DateParam dateParam);
         public List<GoodNoteAnalyse> GetAllGoodExporttByDate(DateParam dateParam);
+        public List<BillMonthAnalyse> GetAllBillAnalyseMonth(DateParam dateParam);
     }
     public class AnalyseService : IAnalyseService
     {
         private readonly IGoodReciptService _goodReciptService;
         private readonly IGoodExportService _goodExportService;
+        private readonly IBillService _billService;
         private readonly IProductService _productService;
+        private readonly IWareHouseService _wareHouseService;
 
         public AnalyseService(
             IGoodReciptService goodReciptService,
             IGoodExportService goodExportService,
+            IBillService billService,
+            IWareHouseService wareHouseService,
             IProductService productService
             )
         {
             _goodReciptService = goodReciptService;
             _goodExportService = goodExportService;
             _productService = productService;
+            _billService = billService;
+            _wareHouseService = wareHouseService;
         }
 
         public List<GoodNoteAnalyse> GetAllGoodReceiptByDate(DateParam dateParam)
@@ -92,6 +99,31 @@ namespace APIBackend.Service
                 x.Precentage = (x.Quantity / totalItem) * 100;
                 return x;
             }).ToList();
+            return result;
+        }
+
+        public List<BillMonthAnalyse> GetAllBillAnalyseMonth(DateParam dateParam)
+        {
+            if (dateParam.StartDate == null)
+            {
+                dateParam.StartDate = DateTime.MinValue;
+            }
+            if (dateParam.EndDate == null)
+            {
+                dateParam.EndDate = DateTime.MaxValue;
+            }
+            List<BillModel> allBill = _billService.GetAllByDate(dateParam);
+            List<BillMonthAnalyse> result = allBill.GroupBy(b => new { b.CreatedDate.Month, b.CreatedDate.Year, b.WareHouseId })
+                                .Select(group => new BillMonthAnalyse
+                                {
+                                    Month = group.Key.Month,
+                                    Year = group.Key.Year,
+                                    WareHouseId = group.Key.WareHouseId,
+                                    WareHouseName = _wareHouseService.GetById(group.Key.WareHouseId).Address,
+                                    TotalAmount = group.Sum(g => g.TotalAmount),
+                                }).ToList();
+
+            result = result.OrderBy(x => x.Year).ThenBy(x => x.Month).ToList();
             return result;
         }
     

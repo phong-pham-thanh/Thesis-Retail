@@ -1,4 +1,5 @@
 ﻿using APIBackend.DataModel;
+using APIBackend.DataModel.Analyse;
 using APIBackend.Mapper;
 using APIBackend.Models;
 using APIBackEnd.Data;
@@ -13,8 +14,9 @@ namespace APIBackend.Repository
     {
         public BillModel AddBill(BillModel bill);
         public List<BillModel> GetAll();
+        public List<BillModel> GetAllByDate(DateParam dateParam);
     }
-    
+
     public class BillRepository : IBillRepository
     {
         private readonly CoreContext _coreContext;
@@ -45,6 +47,12 @@ namespace APIBackend.Repository
             _coreContext.Bill.Add(efObject);
             _coreContext.SaveChanges();
             return _billMapper.ToModel(efObject);
+        }
+
+        public List<BillModel> GetAllByDate(DateParam dateParam)
+        {
+            return _billMapper.ToModels(_coreContext.Bill.Where(b => b.CreatedDate >= dateParam.StartDate && b.CreatedDate <= dateParam.EndDate)
+                                                            .Include(b => b.ListBillDetails).ToList());
         }
 
     }
