@@ -18,6 +18,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GoodTransferService } from '../services/goodTransfer.service';
+import { DialogService } from '../common/dialog.service';
 
 @Component({
   selector: 'app-good-transfer',
@@ -61,6 +62,7 @@ export class GoodTransferComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private goodTransferService: GoodTransferService,
+    private dialogService: DialogService,
     private router: Router
   ) {
     // this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
@@ -163,7 +165,7 @@ export class GoodTransferComponent {
           ).subscribe();
         }
         else{
-          UtilitiesService.showAlert(result.message);
+          this.dialogService.showAlert(result.message);
           // alert(result.message);
         }
       }

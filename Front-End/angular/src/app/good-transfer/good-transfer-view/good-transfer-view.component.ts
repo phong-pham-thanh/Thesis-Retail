@@ -8,6 +8,7 @@ import * as goodTransferActions from '../../state/goodTransfer-state/goodTransfe
 import * as goodTransferSelector from '../../state/goodTransfer-state/goodTransfer.reducer';
 import { filter, map, mergeMap, take } from 'rxjs';
 import { Router } from '@angular/router';
+import { UtilitiesService } from '../../common/utilities.service';
 @Component({
   selector: 'app-good-transfer-view',
   templateUrl: './good-transfer-view.component.html',
@@ -43,7 +44,7 @@ export class GoodTransferViewComponent {
           if(error){
             this.dialogRef.close({
               isSuccess: false,
-              message: error.error.detail
+              message: UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi duyệt phiếu"
             });
           }
           else{
