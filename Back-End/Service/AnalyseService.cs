@@ -11,6 +11,7 @@ namespace APIBackend.Service
         List<GoodNoteAnalyse> GetAllGoodReceiptByDate(DateParam dateParam);
         public List<GoodNoteAnalyse> GetAllGoodExporttByDate(DateParam dateParam);
         public List<BillMonthAnalyse> GetAllBillAnalyseMonth(DateParam dateParam);
+        public List<PriceProductAnalyse> GetAllPriceOfProduct(int productId);
     }
     public class AnalyseService : IAnalyseService
     {
@@ -19,12 +20,14 @@ namespace APIBackend.Service
         private readonly IBillService _billService;
         private readonly IProductService _productService;
         private readonly IWareHouseService _wareHouseService;
+        private readonly IPriceProductService _priceProductService;
 
         public AnalyseService(
             IGoodReciptService goodReciptService,
             IGoodExportService goodExportService,
             IBillService billService,
             IWareHouseService wareHouseService,
+            IPriceProductService priceProductService,
             IProductService productService
             )
         {
@@ -32,6 +35,7 @@ namespace APIBackend.Service
             _goodExportService = goodExportService;
             _productService = productService;
             _billService = billService;
+            _priceProductService = priceProductService;
             _wareHouseService = wareHouseService;
         }
 
@@ -127,5 +131,21 @@ namespace APIBackend.Service
             return result;
         }
     
+        public List<PriceProductAnalyse> GetAllPriceOfProduct(int productId)
+        {
+            List<PriceProductModel> allById = _priceProductService.GetByProductId(productId);
+
+            List<PriceProductAnalyse> result =  allById.GroupBy(b => new { b.StartDate.Day, b.StartDate.Month, b.StartDate.Year })
+                                                        .Select(group => new PriceProductAnalyse
+                                                        {
+                                                            Day = group.Key.Day,
+                                                            Month = group.Key.Month,
+                                                            Year = group.Key.Year,
+                                                            Price = group.OrderByDescending(x => x.StartDate).FirstOrDefault().Price,
+                                                        }).ToList();
+
+            result = result.OrderBy(r => r.Year).ThenBy(r =>r.Month).ToList();
+            return result;
+        }
     }
 }
