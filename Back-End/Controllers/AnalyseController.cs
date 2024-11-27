@@ -40,5 +40,13 @@ namespace APIBackend.Controllers
         {
             return _service.GetAllBillAnalyseMonth(dateParam);
         }
+
+
+        [HttpGet]
+        [Route("priceProdctAnalyse/{productId}")]
+        public List<PriceProductAnalyse> analysePriceProduct(int productId)
+        {
+            return _service.GetAllPriceOfProduct(productId);
+        }
     }
 }

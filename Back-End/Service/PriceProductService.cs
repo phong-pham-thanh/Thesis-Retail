@@ -9,6 +9,7 @@ namespace APIBackend.Service
     public interface IPriceProductService
     {
         public List<PriceProductModel> GetAll();
+        public List<PriceProductModel> GetByProductId(int productId);
         public PriceProductModel AddNew(PriceProductModel priceProductModel);
         public PriceProductModel Update(int id, PriceProductModel priceProductModel);
         public bool Delete(int id);
@@ -51,6 +52,11 @@ namespace APIBackend.Service
         public bool Delete(int id)
         {
             return _priceProductRepository.Delete(id);
+        }
+
+        public List<PriceProductModel> GetByProductId(int productId)
+        {
+            return _priceProductRepository.GetByProductId(productId);
         }
 
     }

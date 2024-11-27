@@ -17,3 +17,10 @@ export class BillMonthAnalyse{
     wareHouseId: number;
     wareHouseName: number;
 }
+
+export class PriceProductAnalyse{
+    day: number;
+    month: number;
+    year: number;
+    price: number;
+}

@@ -10,6 +10,7 @@ namespace APIBackend.Repository
     {
         public List<PriceProductModel> GetAll();
         public PriceProductModel GetLastPriceByProductId(int productId);
+        public List<PriceProductModel> GetByProductId(int productId);
         public PriceProductModel AddNew(PriceProductModel domObject);
         public PriceProductModel Update(int id, PriceProductModel domObject);
         public bool Delete(int id);
@@ -68,6 +69,11 @@ namespace APIBackend.Repository
             _coreContext.PriceProduct.Remove(priceProduct);
             _coreContext.SaveChanges();
             return true;
+        }
+        public List<PriceProductModel> GetByProductId(int productId)
+        {
+            return _priceProductMapper.ToModels(_coreContext.PriceProduct.Where(x => x.ProductId == productId).ToList());
+
         }
     }
 }

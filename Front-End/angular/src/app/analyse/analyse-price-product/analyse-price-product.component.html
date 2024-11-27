@@ -1,0 +1,12 @@
+<div class="product-filter">
+    <label class="filter-label-price-management">Sản phẩm:</label>
+    <ng-select class="product-dropdown-filter" [items]="allProducts" bindLabel="name" bindValue="id"
+        [(ngModel)]="productSelectedId" name="productSelected" placeholder="Chọn sản phẩm để xem thống kê giá"
+        (ngModelChange)="onProductSelectedChange($event)">
+    </ng-select>
+    <input *ngIf="productSelectedId != null" placeholder="Điều chỉnh số ngày hiển thị" type="number" [(ngModel)]="stepSize" (input)="changeStepSize()">
+</div>
+
+<div style="width:100%;">
+    <canvas id="myChart" width="2000" height="650" #mychart></canvas>
+</div>
