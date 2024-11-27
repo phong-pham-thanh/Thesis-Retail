@@ -154,6 +154,21 @@ export default function ExportTransaction() {
       });
     setShowModal("edit");
   };
+
+  const handleDeleteConfirm = (ID: string) => {
+    getGoodReceiptByID(ID)
+      .then((res) => {
+        setGoodReciptData(res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        setGoodReciptData(emptydata);
+        console.log(error);
+      });
+    setShowModal("delete");
+  };
+
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -175,6 +190,22 @@ export default function ExportTransaction() {
       })
       .catch((error) => {
         message.error("Đơn " + receiptId + " chưa được duyệt");
+        message.error(error.detail);
+      });
+    setShowModal(undefined);
+  };
+
+  const handleDelete = (receiptId: number) => {
+    const api_link = api_links.goodsIssue.export.delete;
+    api_link.url = processAPIPostLink(api_link.url, receiptId);
+    console.log(api_link);
+    fetch_Api(api_link)
+      .then((res) => {
+        message.success("Đã xóa đơn " + receiptId);
+        // location.reload();
+      })
+      .catch((error) => {
+        message.error("Đơn " + receiptId + " chưa được xóa");
         message.error(error.detail);
       });
     setShowModal(undefined);
@@ -377,6 +408,7 @@ export default function ExportTransaction() {
             icon={<DeleteOutlined />}
             className="delete-button"
             onClick={() => {
+              handleDeleteConfirm(String(record.id));
               setShowModal("delete");
             }}
           >
@@ -408,7 +440,8 @@ export default function ExportTransaction() {
                 <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
                 <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
                 <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
-              </>
+                <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
+                </>
             ) : (
               <>
                 <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
@@ -522,12 +555,12 @@ export default function ExportTransaction() {
         <Modal
           title="Xoá"
           open={showModal === "delete"}
-          onOk={() => setShowModal(undefined)}
+          onOk={() => handleDelete(goodReceiptData.id)}
           onCancel={() => setShowModal(undefined)}
           okText="Xác nhận"
           cancelText="Huỷ"
         >
-          <p>Bạn có chắc sẽ xoá nó không?</p>
+          <p>Bạn có chắc sẽ xoá đơn số {goodReceiptData.id} không?</p>
         </Modal>
       </div>
     </React.Fragment>

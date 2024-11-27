@@ -11,6 +11,7 @@ export class GoodTransferService {
   private apiGetAll = `${environment.apiBaseUrl}/GoodTransfer/getAllGoodTransferByRole`;
   private apiAdd= `${environment.apiBaseUrl}/GoodTransfer/addGoodTransfer`;
   private apiAccept = `${environment.apiBaseUrl}/GoodTransfer/acceptGoodTransfer`;
+  private apiDelete = `${environment.apiBaseUrl}/GoodTransfer/deleteItem`;
   private apiGetById = `${environment.apiBaseUrl}/GoodTransfer/getGoodTransferById`;
   private apiUpdate = `${environment.apiBaseUrl}/GoodTransfer/updateGoodTransfer`;
   private apiCancel = `${environment.apiBaseUrl}/GoodTransfer/cancelGoodTransfer`;
@@ -29,6 +30,10 @@ export class GoodTransferService {
 
   acceptGoodTransfer(id: number){
     return this.http.get<GoodTransfer>(`${this.apiAccept}/${id}`)
+  }
+
+  deleteGoodTransfer(id: number){
+    return this.http.get<boolean>(`${this.apiDelete}/${id}`)
   }
 
   cancelGoodTransfer(id: number){

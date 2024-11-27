@@ -10,6 +10,7 @@ using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
 using DocumentFormat.OpenXml.Packaging;
 using APIBackend.DataModel.Analyse;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace APIBackend.Service
 {
@@ -23,6 +24,7 @@ namespace APIBackend.Service
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public byte[] PrintGoodExport(int id);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
+        public bool RemoveGoodExport(int id);
     }
     public class GoodExportService : IGoodExportService
     {
@@ -166,6 +168,19 @@ namespace APIBackend.Service
                 _inventoryRepository.UpdateInventory(goodExportDetailModel.ProductId, goodExportDetailModel.Quantity, currentGoodExport.WareHouseId, false);
             }
         }
+
+        public bool RemoveGoodExport(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                _goodExportDetailRepository.DeleteListGoodExportDetailByGoodExportId(id);
+                _goodExportRepository.RemoveGoodExport(id);
+                uow.Commit();
+            }
+
+            return true;
+        }
+
 
         public void bindWareHouseToGoodNote(List<GoodsExportModel> listGoodExport)
         {

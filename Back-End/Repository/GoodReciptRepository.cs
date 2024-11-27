@@ -17,6 +17,7 @@ namespace APIBackend.Repository
         public GoodsReceiptModel AcceptGoodRecipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
+        public bool RemoveGoodReceipt(int id);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
     {
@@ -94,6 +95,18 @@ namespace APIBackend.Repository
             return listGoodRecipt;
         }
 
+        public bool RemoveGoodReceipt(int id)
+        {
+            var item = _coreContext.GoodsReceipt.FirstOrDefault(x => x.Id == id);
+            if(item == null)
+            {
+                throw new ArgumentException("Good Receipt not found");
+            }
+            _coreContext.GoodsReceipt.Remove(item);
+            _coreContext.SaveChanges();
+
+            return true;
+        }
     }
 
 }

@@ -106,6 +106,13 @@ namespace APIBackend.Controllers
         }
 
         [HttpGet]
+        [Route("deleteItem/{id}")]
+        public bool DeleteGoodTransfer(int id)
+        {
+            return _goodTransferService.RemoveGoodTransfer(id);
+        }
+
+        [HttpGet]
         [Route("download/{id}")]
         public IActionResult DownloadGoodTransfer(int id)
         {

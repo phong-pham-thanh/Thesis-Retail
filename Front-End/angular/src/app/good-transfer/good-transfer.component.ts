@@ -6,7 +6,7 @@ import * as goodTransferActions from '../state/goodTransfer-state/goodTransfer.a
 import * as goodTransferSelector from '../state/goodTransfer-state/goodTransfer.reducer';
 import * as wareHouseActions from '../state/warehouse-state/warehouse.actions';
 import * as wareHouseSelector from '../state/warehouse-state/warehouse.reducer';
-import { filter, map, mergeMap } from 'rxjs';
+import { filter, map, mergeMap, take } from 'rxjs';
 import { GoodTransfer } from '../model/goodTransfer.model';
 import { Router } from '@angular/router';
 import { GoodTransferViewComponent } from './good-transfer-view/good-transfer-view.component';
@@ -128,6 +128,30 @@ export class GoodTransferComponent {
 
   edit(goodTransfer: GoodTransfer){
     this.router.navigate([`/quan-ly/good-transfer/edit`, goodTransfer.id]);
+  }
+
+  delete(goodTransfer: GoodTransfer){
+    this.dialogService.openConfirmDialog(`Bạn có chắc chắn muốn xóa phiếu số ${goodTransfer.id}`).subscribe(result => {
+      if (result) {
+        this.store.dispatch(new goodTransferActions.DeleteGoodTransfer(goodTransfer.id));
+        this.store.pipe(select(goodTransferSelector.getIsLoading),
+                        filter(loading => loading === false),
+                        mergeMap(_ => 
+                          this.store.pipe(select(goodTransferSelector.getError),
+                          map(error => {
+                            if(error){
+                              this.dialogService.showAlert('Có lỗi khi xóa phiếu');
+                              // alert('Có lỗi khi tạo mới')
+                            }
+                            else{
+                              this.dialogService.showAlert('Đã xóa phiếu số '+ goodTransfer.id);
+                              this.store.dispatch(new goodTransferActions.LoadAllGoodTransfer());
+                            }
+                          }))
+                        ), take(1)
+                      ).subscribe();
+      }
+    });
   }
 
   selectRow(event: Event, goodTransfer: GoodTransfer) {

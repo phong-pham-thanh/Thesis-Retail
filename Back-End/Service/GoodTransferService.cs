@@ -22,6 +22,7 @@ namespace APIBackend.Service
         public GoodsTransferModel UpdateGoodTransfer(int id, GoodsTransferModel updateItem);
         public GoodsTransferModel CancelGoodTransfer(int id);
         public byte[] PrintGoodTransfer(int id);
+        public bool RemoveGoodTransfer(int id);
     }
     public class GoodTransferService : IGoodTransferService
     {
@@ -237,14 +238,20 @@ namespace APIBackend.Service
             }
         }
 
+        
+        public bool RemoveGoodTransfer(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                _goodTransferDetailRepository.DeleteListGoodTransferDetailByGoodTransferId(id);
+                _goodTransferRepository.RemoveGoodTransfer(id);
+                uow.Commit();
+            }
 
-        // public void UpdateInventoryForGoodTransfer(GoodsTransferModel currentGoodTransfer)
-        // {
-        //     foreach(var goodTransferDetailModel in currentGoodTransfer.ListGoodTransferDetailsModel)
-        //     {
-        //         _inventoryRepository.UpdateInventory(goodTransferDetailModel.ProductId, goodTransferDetailModel.Quantity, currentGoodTransfer.WareHouseId, false);
-        //     }
-        // }
+            return true;
+        }
+
+
         public byte[] PrintGoodTransfer(int id)
         {
             GoodsTransferModel noteModel = _goodTransferRepository.GetGoodTransferById(id);

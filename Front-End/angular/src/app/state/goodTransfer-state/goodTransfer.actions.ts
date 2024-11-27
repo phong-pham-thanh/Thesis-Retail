@@ -29,6 +29,10 @@ export enum GoodTransferActionTypes {
     UpdateGoodTransferSuccess = '[UpdateGoodTransfer] Add new GoodTransfer Success',
     UpdateGoodTransferFail = '[UpdateGoodTransfer] Add new GoodTransfer Fail',
 
+    DeleteGoodTransfer = '[DeleteGoodTransfer] Add new GoodTransfer',
+    DeleteGoodTransferSuccess = '[DeleteGoodTransfer] Add new GoodTransfer Success',
+    DeleteGoodTransferFail = '[DeleteGoodTransfer] Add new GoodTransfer Fail',
+
     ResetCurrentGoodTransfer = '[Reset Current Good transfer] Reset Current Good transfer',
 }
 
@@ -104,6 +108,25 @@ export class CancelGoodTransferFail implements Action {
     constructor(public payload: string) { }
 }
 
+
+export class DeleteGoodTransfer implements Action {
+    readonly type = GoodTransferActionTypes.DeleteGoodTransfer;
+
+    constructor(public payload: number) { }
+}
+
+export class DeleteGoodTransferSuccess implements Action {
+    readonly type = GoodTransferActionTypes.DeleteGoodTransferSuccess;
+
+    constructor(public payload: boolean) { }
+}
+  
+export class DeleteGoodTransferFail implements Action {
+    readonly type = GoodTransferActionTypes.DeleteGoodTransferFail;
+  
+    constructor(public payload: string) { }
+}
+
 export class GetByIdGoodTransfer implements Action {
     readonly type = GoodTransferActionTypes.GetByIdGoodTransfer;
 
@@ -158,6 +181,9 @@ export type GoodTransferActions = LoadAllGoodTransfer
   | CancelGoodTransfer
   | CancelGoodTransferSuccess
   | CancelGoodTransferFail
+  | DeleteGoodTransfer
+  | DeleteGoodTransferSuccess
+  | DeleteGoodTransferFail
   | GetByIdGoodTransfer
   | GetByIdGoodTransferSuccess
   | GetByIdGoodTransferFail
