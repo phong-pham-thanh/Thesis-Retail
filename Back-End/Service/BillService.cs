@@ -1,4 +1,4 @@
-using APIBackEnd.Data;
+﻿using APIBackEnd.Data;
 using APIBackend.Models;
 using APIBackend.Mapper;
 using APIBackEnd.Mapper;
@@ -9,15 +9,18 @@ using APIBackEnd.Repository;
 using APIBackEnd.Data.Enum;
 using NGO.Core.Repositories;
 using APIBackend.DataModel.Analyse;
+using DocumentFormat.OpenXml.Packaging;
+using Microsoft.AspNetCore.Hosting;
 
 namespace APIBackend.Service
 {
     public interface IBillService
     {
-        public bool AddBill(BillModel billModel);
+        public BillModel AddBill(BillModel billModel);
         public List<BillModel> GetAll();
         public List<BillModel> GetAllByDate(DateParam dateParam);
         public List<BillModel> GetAllByRole();
+        public byte[] PrintBill(int id);
         // public List<BillModel> GetAllBills();
         // public BillModel GetBillById(int id);
         // public BillModel AcceptBill(int id);
@@ -36,6 +39,8 @@ namespace APIBackend.Service
         private readonly IUserRepository _userRepository;
         protected readonly IUnityOfWorkFactory _uowFactory;
         protected readonly IUserWareHouseService _userWareHouseService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWareHouseRepository _wareHouseRepository;
 
 
         public BillService(
@@ -49,6 +54,8 @@ namespace APIBackend.Service
             IUserRepository userRepository,
             IUnityOfWorkFactory uowFactory,
             IUserWareHouseService userWareHouseService,
+            IWebHostEnvironment webHostEnvironment,
+            IWareHouseRepository wareHouseRepository,
             IGoodExportService goodExportService
         ) 
         {
@@ -63,6 +70,8 @@ namespace APIBackend.Service
             _userRepository = userRepository;
             _uowFactory = uowFactory;
             _userWareHouseService = userWareHouseService;
+            _webHostEnvironment = webHostEnvironment;
+            _wareHouseRepository = wareHouseRepository;
         }
 
         public List<BillModel> GetAll()
@@ -87,7 +96,7 @@ namespace APIBackend.Service
             return result;
         }
 
-        public bool AddBill(BillModel billModel)
+        public BillModel AddBill(BillModel billModel)
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
@@ -104,7 +113,7 @@ namespace APIBackend.Service
                 }
                 AutoAddGoodExport(billModel, billModel.ListBillDetails);
                 uow.Commit();
-                return true;
+                return newBillModel;
             }
         }
 
@@ -133,5 +142,40 @@ namespace APIBackend.Service
             _goodExportService.AddGoodExport(goodsExportModel, listGoodExportDetailModels, autoAccept: true);
         }
 
+        public byte[] PrintBill(int id)
+        {
+            BillModel noteModel = _billRepository.GetById(id);
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "template");
+            string fileName = "BillTemplate.docx";
+            string filePath = Path.Combine(folderPath, fileName);
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(memoryStream, true))
+                {
+                    var mainPart = wordDoc.MainDocumentPart;
+                    if (mainPart != null)
+                    {
+                        Utilities.ReplaceFieldWithId(mainPart, "Id", id.ToString());
+                        Utilities.ReplaceFieldWithId(mainPart, "DateNote", noteModel.CreatedDate.ToShortDateString());
+                        Utilities.ReplaceFieldWithId(mainPart, "WareHouseName", _wareHouseRepository.GetById(noteModel.WareHouseId).Address);
+                        Utilities.ReplaceFieldWithId(mainPart, "TotalAmount", noteModel.TotalAmount.ToString("N0"));
+                        Utilities.ReplaceFieldWithId(mainPart, "CustomerName", noteModel.Customer?.Name != null ? noteModel.Customer?.Name : "Khách lẻ");
+                        foreach (var item in noteModel.ListBillDetails)
+                        {
+                            string productName = _productRepository.GetProductById(item.ProductId).Name;
+                            Utilities.AddRowToBookmarkTableReceipt(mainPart, "dataTable", productName, item.Quantity, item.PriceUnit, item.Quantity * item.PriceUnit);
+                        }
+                        mainPart.Document.Save();
+                    }
+                }
+                memoryStream.Position = 0;
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

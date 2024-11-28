@@ -12,6 +12,7 @@ export class BillService {
 
   private apiGetAll = `${environment.apiBaseUrl}/Bill/getAllByRole`;
   private apiAdd = `${environment.apiBaseUrl}/Bill/addBill`;
+  private apiDownload = `${environment.apiBaseUrl}/Bill/download`;
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +20,11 @@ export class BillService {
     return this.http.get<Bill[]>(this.apiGetAll, {withCredentials: true})
   }
 
-  addNewBill(param: Bill): Observable<boolean> {
-    return this.http.post<boolean>(this.apiAdd, param, {withCredentials: true})
+  addNewBill(param: Bill): Observable<Bill> {
+    return this.http.post<Bill>(this.apiAdd, param, {withCredentials: true})
+  }
+
+  downloadFile(id: number) {
+    return this.http.get(`${this.apiDownload}/${id}`, { responseType: 'blob' }); // Lấy file dưới dạng Blob
   }
 }

@@ -21,11 +21,14 @@ import { filter, map, mergeMap, take } from 'rxjs';
 import { Customer } from '../model/customer.model';
 import { CurrencyPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { RetailPaymentComponentComponent } from './retail-payment-component/retail-payment-component.component'; 
+import { RetailPaymentComponentComponent } from './retail-payment-component/retail-payment-component.component';
 import { CookieService } from 'ngx-cookie-service';
 import { Users } from '../model/user.model';
 import { Warehouse } from '../model/warehouse.model';
 import { UtilitiesService } from '../common/utilities.service';
+import { DialogService } from '../common/dialog.service';
+import { BillService } from '../services/bill.service';
+import * as billSelector from '../state/bill-state/bill.reducer';
 
 
 const imageUrl = assetUrl("images/Cocacola.png");
@@ -54,10 +57,12 @@ export class RetailComponentComponent implements OnInit {
   currentUser: Users;
   productSearchKeyName: string = null;
 
-  constructor(protected store: Store<State>, 
-    protected userStore: Store<State>, 
+  constructor(protected store: Store<State>,
+    protected userStore: Store<State>,
     private currencyPipe: CurrencyPipe,
     private dialog: MatDialog,
+    private dialogService: DialogService,
+    private billService: BillService,
     private cookieService: CookieService
   ) {
     this.store.dispatch(new productActions.LoadAllProduct());
@@ -65,7 +70,7 @@ export class RetailComponentComponent implements OnInit {
     this.store.dispatch(new customerActions.LoadAllCustomer());
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
 
-    
+
     const userCookieValue = this.cookieService.get('user');
     if (userCookieValue) {
       try {
@@ -84,57 +89,57 @@ export class RetailComponentComponent implements OnInit {
 
     this.store.pipe(select(productSelector.getIsLoaded),
       filter(loaded => loaded === true),
-      mergeMap(_ => 
+      mergeMap(_ =>
         this.store.pipe(select(productSelector.getAllProduct),
-        map(result => {
-          this.allProduct = result.filter(pro => pro.currentPrice); 
-          this.fullProductData = UtilitiesService.cloneDeep(this.allProduct);
-        }))
+          map(result => {
+            this.allProduct = result.filter(pro => pro.currentPrice);
+            this.fullProductData = UtilitiesService.cloneDeep(this.allProduct);
+          }))
       ), take(1)
     ).subscribe();
 
     this.store.pipe(select(warehouseSelector.getIsLoaded),
       filter(loaded => loaded === true),
-      mergeMap(_ => 
+      mergeMap(_ =>
         this.store.pipe(select(warehouseSelector.getAllWarehouseByRole),
-        map(result => {
-          this.allWarehouse = result;
-          if(result && result.length > 0){
-            this.userStore.pipe(select(userSelector.getIsLoaded),
-              // filter(loaded => loaded === true),
-              mergeMap(_ => 
-                this.userStore.pipe(select(userSelector.getCurrentUser),
-                map(currentU => {
-                  this.currentUser = currentU;
-                  if(!UtilitiesService.isNullOrEmpty(this.currentUser?.defaultWareHouseId)){
-                    this.currentWarehouse = result.find(w => w.id === this.currentUser.defaultWareHouseId)
-                  }else{
-                    this.currentWarehouse = result[0];
-                  }
-                }))
-              ), take(1)).subscribe();
-          }
-        }))
+          map(result => {
+            this.allWarehouse = result;
+            if (result && result.length > 0) {
+              this.userStore.pipe(select(userSelector.getIsLoaded),
+                // filter(loaded => loaded === true),
+                mergeMap(_ =>
+                  this.userStore.pipe(select(userSelector.getCurrentUser),
+                    map(currentU => {
+                      this.currentUser = currentU;
+                      if (!UtilitiesService.isNullOrEmpty(this.currentUser?.defaultWareHouseId)) {
+                        this.currentWarehouse = result.find(w => w.id === this.currentUser.defaultWareHouseId)
+                      } else {
+                        this.currentWarehouse = result[0];
+                      }
+                    }))
+                ), take(1)).subscribe();
+            }
+          }))
       ), take(1)
     ).subscribe();
 
     this.store.pipe(select(customerSelector.getIsLoaded),
       filter(loaded => loaded === true),
-      mergeMap(_ => 
+      mergeMap(_ =>
         this.store.pipe(select(customerSelector.getAllCustomer),
-        map(result => {
-          this.allCustomer = result; 
-        }))
+          map(result => {
+            this.allCustomer = result;
+          }))
       ), take(1)
     ).subscribe();
 
     this.store.pipe(select(pricePRoductSelector.getIsLoaded),
       filter(loaded => loaded === true),
-      mergeMap(_ => 
+      mergeMap(_ =>
         this.store.pipe(select(pricePRoductSelector.getAllPriceProduct),
-        map(result => {
-          this.allPriceProduct = result; 
-        }))
+          map(result => {
+            this.allPriceProduct = result;
+          }))
       )
     ).subscribe();
 
@@ -142,7 +147,7 @@ export class RetailComponentComponent implements OnInit {
 
   }
 
-  initComponent(){
+  initComponent() {
     this.currentBill = {
       createdDate: new Date(),
       listBillDetails: [],
@@ -151,13 +156,13 @@ export class RetailComponentComponent implements OnInit {
   }
 
 
-  addProductToBill(item: Product){
-    
-    if(this.currentBill && this.currentBill.listBillDetails && this.currentBill.listBillDetails.find(de => de.product.id === item.id) != null){
+  addProductToBill(item: Product) {
+
+    if (this.currentBill && this.currentBill.listBillDetails && this.currentBill.listBillDetails.find(de => de.product.id === item.id) != null) {
       let currentProductDetail: BillDetails = this.currentBill.listBillDetails.find(de => de.product.id === item.id)
       currentProductDetail.quantity += 1;
     }
-    else{
+    else {
       const newBillDetail: BillDetails = {
         productId: item.id,
         product: item,
@@ -169,13 +174,13 @@ export class RetailComponentComponent implements OnInit {
     }
     this.getTotalAmount();
   }
-  
-  changeQuantity(item: BillDetails, isPlus: boolean){
-    if(!this.currentBill) return;
-    if(isPlus){
+
+  changeQuantity(item: BillDetails, isPlus: boolean) {
+    if (!this.currentBill) return;
+    if (isPlus) {
       item.quantity += 1;
     }
-    else if(!isPlus && item.quantity > 1){
+    else if (!isPlus && item.quantity > 1) {
       item.quantity -= 1;
     }
     this.getTotalAmount();
@@ -186,7 +191,7 @@ export class RetailComponentComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     const keySearch = inputElement.value;
     this.allProduct = UtilitiesService.cloneDeep(this.fullProductData);
-    if(!UtilitiesService.isNullOrEmpty(keySearch) && keySearch !== ''){
+    if (!UtilitiesService.isNullOrEmpty(keySearch) && keySearch !== '') {
       this.allProduct = this.allProduct.filter(product =>
         UtilitiesService.removeDiacritics(product.name).includes(UtilitiesService.removeDiacritics(keySearch))
       );
@@ -195,29 +200,29 @@ export class RetailComponentComponent implements OnInit {
     this.allProduct = UtilitiesService.cloneDeep(this.fullProductData);
   }
 
-  removeItem(item: BillDetails){
+  removeItem(item: BillDetails) {
     this.currentBill.listBillDetails = this.currentBill.listBillDetails.filter(bi => bi.product?.id !== item.product?.id);
     this.getTotalAmount();
   }
 
-  getPriceProduct(product: Product){
-    if(!product.listPrices || product.listPrices.length == 0){
+  getPriceProduct(product: Product) {
+    if (!product.listPrices || product.listPrices.length == 0) {
       return "Chưa có giá";
     }
     return this.currencyPipe.transform(product.listPrices[0].price, 'VND', 'symbol', '1.0-0');
   }
 
-  getTotalAmount(){
+  getTotalAmount() {
     this.totalAmountBill = 0;
-    if(!this.currentBill || this.currentBill.listBillDetails.length == 0) return;
+    if (!this.currentBill || this.currentBill.listBillDetails.length == 0) return;
     this.currentBill.listBillDetails.forEach(item => {
-      if(item.priceUnit){
+      if (item.priceUnit) {
         this.totalAmountBill += (item.priceUnit * item.quantity)
       }
     })
   }
 
-  onPriceChange(item: any){
+  onPriceChange(item: any) {
     this.getTotalAmount();
   }
 
@@ -240,8 +245,31 @@ export class RetailComponentComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.initComponent()
+      if (result) {
+        this.dialogService.openConfirmDialog(`Giao dịch hoàn tất, bạn có muốn tải hóa đơn ?`).subscribe(result => {
+          if (result) {
+            this.store.pipe(select(billSelector.getCurrentBill),
+              map(currentBill => {
+                this.billService.downloadFile(currentBill.id).subscribe(
+                  (response: Blob) => {
+                    const fileName = `hoa_don_${currentBill.id}`;
+                    const blob = new Blob([response], {
+                      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    });
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                  },
+                  (error) => {
+                    alert("Tải hóa đơn bị lỗi");
+                    console.error('File download error:', error);
+                  }
+                );
+              })).subscribe()
+          }
+          this.initComponent()
+        });
       }
     });
   }

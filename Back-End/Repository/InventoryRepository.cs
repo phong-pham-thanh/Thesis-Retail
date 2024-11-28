@@ -42,14 +42,14 @@ namespace APIBackend.Repository
             {
                 if (inventory == null) 
                 {
-                    throw new InvalidOperationException($"Không tồn tại sản phẩm trong kho");
+                    throw new InvalidOperationException($"Không tồn tại sản phẩm "+ _coreContext.Product.Where(x => x.Id == idProduct).FirstOrDefault()?.Name +" trong kho");
                 }
                 else
                 {
                     inventory.Quantity -= Quantity;
                     if(inventory.Quantity < 0)
                     {
-                        throw new InvalidOperationException($"Không đủ tồn kho");
+                        throw new InvalidOperationException($"Không đủ tồn kho sản phẩm "+ _coreContext.Product.Where(x => x.Id == idProduct).FirstOrDefault()?.Name);
                     }
                 }
             }

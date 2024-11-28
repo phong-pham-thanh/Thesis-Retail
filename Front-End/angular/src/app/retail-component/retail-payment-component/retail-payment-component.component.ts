@@ -89,7 +89,7 @@ export class RetailPaymentComponentComponent {
             }
             else{
               this.dialogRef.close(false);
-              this.dialogService.showAlert(UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi thực hiện giao dịch");
+              this.dialogService.showAlert(!UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi thực hiện giao dịch");
             }
           }))
         

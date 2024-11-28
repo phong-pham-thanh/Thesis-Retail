@@ -6,6 +6,7 @@ export interface State{
 
 export interface BillState {
     allBill: Bill[];
+    currentBill: Bill;
     needRefreshBrowseList: boolean;
     isLoading: boolean;
     isLoaded: boolean;
