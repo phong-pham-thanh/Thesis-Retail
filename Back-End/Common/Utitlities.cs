@@ -117,7 +117,7 @@ public static class Utilities
         }
     }
 
-    public static void AddRowToBookmarkTableReceipt(MainDocumentPart mainPart, string bookmarkName, string productName, int quantity, int? price)
+    public static void AddRowToBookmarkTableReceipt(MainDocumentPart mainPart, string bookmarkName, string productName, int quantity, int? price, int? toPrice)
     {
         var bookmarkStart = mainPart.Document.Body.Descendants<BookmarkStart>().FirstOrDefault(b => b.Name == bookmarkName);
         if (bookmarkStart != null)
@@ -133,13 +133,23 @@ public static class Utilities
                 TableCell priceCell;
                 if (price.HasValue)
                 {
-                    priceCell = new TableCell(new Paragraph(new Run(new Text(price.Value.ToString("N0"))))); // Hiển thị giá trị nếu có
+                    priceCell = new TableCell(new Paragraph(new Run(new Text(price.Value.ToString("N0")))));
                 }
                 else
                 {
-                    priceCell = new TableCell(new Paragraph(new Run(new Text("")))); // Tạo ô trống nếu giá trị null
+                    priceCell = new TableCell(new Paragraph(new Run(new Text(""))));
+                }
+                TableCell toPriceCell;
+                if (toPrice.HasValue)
+                {
+                    toPriceCell = new TableCell(new Paragraph(new Run(new Text(toPrice.Value.ToString("N0")))));
+                }
+                else
+                {
+                    toPriceCell = new TableCell(new Paragraph(new Run(new Text(""))));
                 }
                 newRow.Append(priceCell);
+                newRow.Append(toPriceCell);
                 table.Append(newRow);
             }
         }

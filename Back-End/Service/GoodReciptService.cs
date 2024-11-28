@@ -227,7 +227,7 @@ namespace APIBackend.Service
                         foreach(var item in noteModel.ListGoodReciptDetailsModel)
                         {
                             string productName = _productRepository.GetProductById(item.ProductId).Name;
-                            Utilities.AddRowToBookmarkTableReceipt(mainPart, "dataTable", productName, item.Quantity, item.PriceUnit);
+                            Utilities.AddRowToBookmarkTableReceipt(mainPart, "dataTable", productName, item.Quantity, item.PriceUnit, item.Quantity * item.PriceUnit);
                         }
                         mainPart.Document.Save();
                     }

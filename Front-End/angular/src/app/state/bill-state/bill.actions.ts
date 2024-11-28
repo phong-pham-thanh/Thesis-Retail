@@ -40,7 +40,7 @@ export class AddNewBill implements Action {
 export class AddNewBillSuccess implements Action {
     readonly type = BillActionTypes.AddNewBillSuccess;
 
-    constructor(public payload: boolean) { }
+    constructor(public payload: Bill) { }
 }
   
 export class AddNewBillFail implements Action {

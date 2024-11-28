@@ -16,7 +16,7 @@ namespace APIBackend.Controllers
 
     [Route("[controller]")]
     [ApiController]
-    public class BillController
+    public class BillController : ControllerBase
     {
         private IBillService _billService;
 
@@ -36,30 +36,20 @@ namespace APIBackend.Controllers
 
         [HttpPost]
         [Route("addBill")]
-        public bool AddBill([FromBody] BillModel newBill)
+        public BillModel AddBill([FromBody] BillModel newBill)
         {
-            // {
-            //     "billModel": {
-            //         "CustomerId": 2,
-            //         "WareHouseId": 3,
-            //         "TotalAmount": 200,
-            //         "UserId": 1,
-            //         "ListBillDetails": []
-            //     },
-            //     "listBillDetailModels": [
-            //         {
-            //             "BillId": 4,
-            //             "ProductId": 4,
-            //             "Quantity": 15
-            //         },
-            //         {
-            //             "BillId": 4,
-            //             "ProductId": 5,
-            //             "Quantity": 16
-            //         }
-            //     ]
-            // }
             return _billService.AddBill(newBill);
+        }
+
+        [HttpGet]
+        [Route("download/{id}")]
+        public IActionResult DownloadBill(int id)
+        {
+            //return _billService.PrintBill(id);
+
+            var fileBytes = _billService.PrintBill(id);
+            string fileName = "ImportTemplate.docx";
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
     }
 }

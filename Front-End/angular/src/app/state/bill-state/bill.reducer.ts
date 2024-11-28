@@ -9,6 +9,7 @@ const initialState: BillState = {
     isLoading: false,
     isLoaded: false,
     isSaving: false,
+    currentBill: null,
     error: '',
 };
 
@@ -17,6 +18,11 @@ const getBillFeatureState = createFeatureSelector<BillState>('bill');
 export const getAllBill = createSelector(
     getBillFeatureState,
     state => state.allBill
+);
+
+export const getCurrentBill = createSelector(
+    getBillFeatureState,
+    state => state.currentBill
 );
 
 
@@ -75,6 +81,7 @@ export function billReducer(state = initialState, action: BillActions): BillStat
                 ...state,
                 isLoading: false,
                 isLoaded: true,
+                currentBill: action.payload,
                 needRefreshBrowseList: true,
                 error: ''
             };

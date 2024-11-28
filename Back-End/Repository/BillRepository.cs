@@ -14,6 +14,7 @@ namespace APIBackend.Repository
     {
         public BillModel AddBill(BillModel bill);
         public List<BillModel> GetAll();
+        public BillModel GetById(int id);
         public List<BillModel> GetAllByDate(DateParam dateParam);
     }
 
@@ -55,5 +56,9 @@ namespace APIBackend.Repository
                                                             .Include(b => b.ListBillDetails).ToList());
         }
 
+        public BillModel GetById(int id)
+        {
+            return _billMapper.ToModel(_coreContext.Bill.Where(b => b.Id == id).Include(b => b.ListBillDetails).FirstOrDefault());
+        }
     }
 }
