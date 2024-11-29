@@ -111,6 +111,7 @@ export class AnalysePriceProductComponent {
           },
           y: {
             type: 'linear',
+            min: 0,
             ticks: {
               callback: function (tick) {
                 return new Intl.NumberFormat('vi-VN', {
@@ -118,7 +119,9 @@ export class AnalysePriceProductComponent {
                   currency: 'VND',
                   minimumFractionDigits: 0,
                 }).format(tick as number);
-              }
+              },
+            stepSize: 1000,
+
             },
             title: {
               display: true,
@@ -135,6 +138,7 @@ export class AnalysePriceProductComponent {
             },
             zoom: {
               mode: 'xy',
+              overScaleMode: 'xy',
               wheel: {
                 enabled: true,
               },
