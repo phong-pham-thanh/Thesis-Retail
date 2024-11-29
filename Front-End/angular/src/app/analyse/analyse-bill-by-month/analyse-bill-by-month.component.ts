@@ -110,11 +110,12 @@ export class AnalyseBillByMonthComponent {
             zoom: {
               pan: {
                 enabled: true,
-                mode: 'x',
+                mode: 'xy',
                 threshold: 10,
               },
               zoom: {
-                mode: 'x',
+                mode: 'xy',
+                overScaleMode: 'xy',
                 wheel: {
                   enabled: true,
                 },
