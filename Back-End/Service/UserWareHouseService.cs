@@ -50,15 +50,15 @@ namespace APIBackend.Service
         public void UpdateUserWareHouseforUser(int userId, UserModel user)
         {
             List<int> newListWareHouseForUser = user.ListUserWareHouse.Select(x => x.WareHouseId).ToList();
-            if(newListWareHouseForUser == null || newListWareHouseForUser.Count() == 0)
-            {
-                _userWareHouseRepository.RemoveAllByUserId(user.Id);
-                return;
-            }
             List<UserWareHouseModel> lstCurrentWareHouseForUser = _userWareHouseRepository.GetAllByUserId(userId);
             List<int> lstIdWareHouseToRemove = lstCurrentWareHouseForUser.Where(x => !newListWareHouseForUser.Any(y => y == x.WareHouseId)).Select(x => x.WareHouseId).ToList();
 
             VerifyUserIsManagerOfWarehouse(userId, lstIdWareHouseToRemove);
+            if (newListWareHouseForUser == null || newListWareHouseForUser.Count() == 0)
+            {
+                _userWareHouseRepository.RemoveAllByUserId(user.Id);
+                return;
+            }
 
             List<int> lstIdWareHouseToAdd = newListWareHouseForUser.Where(x => !lstCurrentWareHouseForUser.Any(y => y.WareHouseId == x)).ToList();
             _userWareHouseRepository.RemoveListWarehouseOfUser(userId, lstIdWareHouseToRemove);
