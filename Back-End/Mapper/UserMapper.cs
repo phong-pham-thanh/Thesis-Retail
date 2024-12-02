@@ -24,9 +24,7 @@ namespace APIBackEnd.Mapper
             modelObject.Id = efObject.Id;
             modelObject.Name = efObject.Name;
             modelObject.Username = efObject.Username;
-            modelObject.Branch = efObject.Branch;
             modelObject.Address = efObject.Address;
-            modelObject.Age = efObject.Age;                    
             modelObject.DateOnboard = efObject.DateOnboard;                    
             modelObject.DateOfBirth = efObject.DateOfBirth;
             modelObject.IsAdmin = efObject.IsAdmin;
@@ -43,8 +41,6 @@ namespace APIBackEnd.Mapper
                 modelObject.Id = item.Id;
                 modelObject.Name = item.Name;
                 modelObject.Username = item.Username;
-                modelObject.Age = item.Age;
-                modelObject.Branch = item.Branch;
                 modelObject.Address = item.Address;
                 modelObject.DateOnboard = item.DateOnboard;
                 modelObject.DateOfBirth = item.DateOfBirth;
@@ -58,8 +54,6 @@ namespace APIBackEnd.Mapper
         {
             efObject.Name = domObject.Name;
             efObject.Username = domObject.Username;
-            efObject.Age = domObject.Age;
-            efObject.Branch = domObject.Branch;
             efObject.Address = domObject.Address;
             efObject.DateOnboard = domObject.DateOnboard;
             efObject.DateOfBirth = domObject.DateOfBirth;

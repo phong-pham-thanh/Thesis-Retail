@@ -170,9 +170,9 @@ namespace APIBackend.Service
         }
 
 
-        private int CaculateTotalAmount(List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
+        private long CaculateTotalAmount(List<GoodReceiptDetailModel> listGoodReceiptDetailModels)
         {
-            int totalAmount = 0;
+            long totalAmount = 0;
             foreach (GoodReceiptDetailModel goodReceiptDetailModel in listGoodReceiptDetailModels)
             {
                 int priceUnit = goodReceiptDetailModel.PriceUnit != null ? goodReceiptDetailModel.PriceUnit.Value : 0;

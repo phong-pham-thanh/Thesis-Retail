@@ -13,7 +13,6 @@ export function Account() {
     <div className="account-container">
       <div className="infor">
         <div>{cookies.get("user")?.name ?? "Anonymous"}</div>
-        <div>{cookies.get("user")?.branch ?? "No Branch"}</div>
       </div>
       <LogoutIcon
         onClick={() => {

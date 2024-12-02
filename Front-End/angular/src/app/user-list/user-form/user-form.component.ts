@@ -61,11 +61,11 @@ export class UserFormComponent {
   }
 
   normalizeData(saveData: Users){
-    saveData.dateOfBirth = saveData.dateOfBirth ? UtilitiesService.convertDateTime(saveData.dateOfBirth) : undefined;
-    saveData.dateOnboard = saveData.dateOnboard ? UtilitiesService.convertDateTime(saveData.dateOnboard) : undefined;
+    saveData.dateOfBirth = saveData.dateOfBirth ? UtilitiesService.convertMomentToDate(saveData.dateOfBirth) : undefined;
+    saveData.dateOnboard = saveData.dateOnboard ? UtilitiesService.convertMomentToDate(saveData.dateOnboard) : undefined;
 
     saveData.listUserWareHouse = [];
-    if(this.currentWareHouseId.length > 0){
+    if(!UtilitiesService.isNullOrEmpty(this.currentWareHouseId) &&  this.currentWareHouseId.length > 0){
       saveData.listUserWareHouse = this.currentWareHouseId.map(x => {
         return {
           userId: saveData.id,
