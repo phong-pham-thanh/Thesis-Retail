@@ -19,7 +19,7 @@ namespace APIBackend.DataModel
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public Users User { get; set; }
-        public int TotalAmount { get; set; }
+        public long TotalAmount { get; set; }
         public List<BillDetails> ListBillDetails { get; set; }
     }
 }

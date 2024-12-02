@@ -15,7 +15,7 @@ namespace APIBackend.Models
         public CustomerModel Customer { get; set; }
         public int WareHouseId { get; set; }
         public WareHouseModel WareHouse { get; set; }
-        public int TotalAmount { get; set; }
+        public long TotalAmount { get; set; }
         public int UserId { get; set; }
         public UserModel User { get; set; }
         public List<BillDetailModel> ListBillDetails { get; set; }

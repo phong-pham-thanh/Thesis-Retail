@@ -28,7 +28,7 @@ namespace APIBackEnd.Mapper
             _warehouseMapper = wareHouseMapper;
         }
 
-        public BillModel? ToModel(Bill efObject)
+        public BillModel ToModel(Bill efObject)
         {
             if (efObject == null)
             {
