@@ -151,7 +151,7 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id);
+                GoodsReceiptModel result = _goodReciptRepository.CancelGoodRecipt(id);
                 uow.Commit();
                 return result;
             }
