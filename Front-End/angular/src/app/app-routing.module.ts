@@ -14,6 +14,7 @@ import { EmptyComponentComponent } from './empty-component/empty-component.compo
 import { AnalyseComponent } from './analyse/analyse.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/quan-ly', pathMatch: 'full' }, // Route mặc định chuyển tới /quan-ly
   {path: "login",  component: EmptyComponentComponent},
   {path: "quan-ly/retail", component: RetailComponentComponent, canActivate: [AuthGuard] },
   {path: "quan-ly/baocao", component: AnalyseComponent, canActivate: [AuthGuard] },
