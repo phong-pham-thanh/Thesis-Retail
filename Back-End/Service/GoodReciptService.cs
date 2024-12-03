@@ -19,6 +19,7 @@ namespace APIBackend.Service
         public List<GoodsReceiptModel> GetAllGoodReciptsByRole();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
+        public GoodsReceiptModel CancelGoodRecipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public byte[] PrintGoodReceipt(int id);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
@@ -141,6 +142,16 @@ namespace APIBackend.Service
             {
                 GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id);
                 UpdateInventoryForGoodRecipt(result);
+                uow.Commit();
+                return result;
+            }
+        }
+
+        public GoodsReceiptModel CancelGoodRecipt(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id);
                 uow.Commit();
                 return result;
             }

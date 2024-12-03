@@ -81,6 +81,12 @@ namespace APIBackEnd.Controllers
             return _goodExportService.AcceptGoodExport(id);
         }
 
+        [HttpGet]
+        [Route("cancelGoodExport/{id}")]
+        public GoodsExportModel CancelGoodExport(int id)
+        {
+            return _goodExportService.CancelGoodExport(id);
+        }
 
         [HttpPut]
         [Route("updateGoodExport/{id}")]

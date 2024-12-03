@@ -16,6 +16,7 @@ namespace APIBackend.Repository
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel CancelGoodExport(int id);
         public bool RemoveGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
@@ -67,6 +68,20 @@ namespace APIBackend.Repository
                 throw new ArgumentException("Good Export not found");
             }
             efObject.ExportStatus = Status.Success;
+            _coreContext.SaveChanges();
+
+            return _goodExportMapper.ToModel(efObject);
+        }
+
+        public GoodsExportModel CancelGoodExport(int id)
+        {
+            GoodsExport efObject = _coreContext.GoodsExports.Where(x => x.Id == id).Include(x => x.ListGoodExportDetails).FirstOrDefault();
+
+            if(efObject == null)
+            {
+                throw new ArgumentException("Good Export not found");
+            }
+            efObject.ExportStatus = Status.Canceled;
             _coreContext.SaveChanges();
 
             return _goodExportMapper.ToModel(efObject);

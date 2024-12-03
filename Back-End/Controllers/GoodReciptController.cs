@@ -58,6 +58,13 @@ namespace APIBackEnd.Controllers
             return _goodReciptService.AcceptGoodReceipt(id);
         }
 
+        [HttpGet]
+        [Route("cancelGoodRecipt/{id}")]
+        public GoodsReceiptModel CancelGoodRecipt(int id)
+        {
+            return _goodReciptService.CancelGoodRecipt(id);
+        }
+
         [HttpPut]
         [Route("updateGoodReceipt/{id}")]
         public GoodsReceiptModel EditGoodReceipt(int id, [FromBody] GoodsReceiptModel goodsReceiptModel)

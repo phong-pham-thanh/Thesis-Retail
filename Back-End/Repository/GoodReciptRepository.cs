@@ -15,6 +15,7 @@ namespace APIBackend.Repository
         public List<GoodsReceiptModel> GetAllGoodRecipts();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodRecipt(int id);
+        public GoodsReceiptModel CancelGoodRecipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
         public bool RemoveGoodReceipt(int id);
@@ -72,6 +73,22 @@ namespace APIBackend.Repository
 
             return _goodReciptMapper.ToModel(efObject);
         }
+
+        public GoodsReceiptModel CancelGoodRecipt(int id)
+        {
+            GoodsReceipt efObject = _coreContext.GoodsReceipt.Where(x => x.Id == id).Include(x => x.ListGoodReciptDetails).FirstOrDefault();
+
+            if(efObject == null)
+            {
+                throw new ArgumentException("Good Receipt not found");
+            }
+            efObject.ReceiptStatus = Status.Canceled;
+            _coreContext.SaveChanges();
+
+            return _goodReciptMapper.ToModel(efObject);
+        }
+
+
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem)
         {
             GoodsReceipt efObject = _coreContext.GoodsReceipt.Where(g => g.Id == id).FirstOrDefault();

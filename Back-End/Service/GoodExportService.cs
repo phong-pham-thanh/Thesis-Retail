@@ -21,6 +21,7 @@ namespace APIBackend.Service
         public List<GoodsExportModel> GetAllGoodExportsByRole();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel CancelGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public byte[] PrintGoodExport(int id);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
@@ -160,6 +161,17 @@ namespace APIBackend.Service
                 return result;
             }
         }
+
+        public GoodsExportModel CancelGoodExport(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsExportModel result = _goodExportRepository.CancelGoodExport(id);
+                uow.Commit();
+                return result;
+            }
+        }
+
 
         public void UpdateInventoryForGoodExport(GoodsExportModel currentGoodExport)
         {
