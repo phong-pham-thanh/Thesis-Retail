@@ -49,7 +49,7 @@ namespace APIBackend.Service
             {
                 dateParam.EndDate = DateTime.MaxValue;
             }
-            List<GoodsReceiptModel> goodsReceipt = _goodReciptService.GetAllGoodReciptsByDate(dateParam);
+            List<GoodsReceiptModel> goodsReceipt = _goodReciptService.GetAllGoodReciptsByDate(dateParam).Where(g => g.ReceiptStatus == APIBackEnd.Data.Enum.Status.Success).ToList();
 
             List<GoodReceiptDetailModel> allDetails = goodsReceipt.SelectMany(gr => gr.ListGoodReciptDetailsModel).ToList();
 
@@ -84,7 +84,7 @@ namespace APIBackend.Service
             {
                 dateParam.EndDate = DateTime.MaxValue;
             }
-            List<GoodsExportModel> goodsExport = _goodExportService.GetAllGoodExportByDate(dateParam);
+            List<GoodsExportModel> goodsExport = _goodExportService.GetAllGoodExportByDate(dateParam).Where(g => g.ExportStatus == APIBackEnd.Data.Enum.Status.Success).ToList();
 
             List<GoodExportDetailModel> allDetails = goodsExport.SelectMany(gr => gr.ListGoodExportDetailsModel).ToList();
 
