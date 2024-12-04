@@ -10,6 +10,8 @@ namespace APIBackend.Repository
     {
         public bool UpdateInventory(int idProduct, int Quantity, int idWareHouse, bool isImport);
         public List<InventoryModel> GetInventoriesByProductId(int idProduct);
+        public List<InventoryModel> GetAllInventory();
+        public List<InventoryModel> GetInventoryByWarehouseId(int idWareHouse);
     }
     public class InventoryRepository : IInventoryRepository
     {
@@ -60,6 +62,16 @@ namespace APIBackend.Repository
         public List<InventoryModel> GetInventoriesByProductId(int idProduct)
         {
             return _inventoryMapper.ToModels(_coreContext.Inventories.Where(i => i.ProductId == idProduct).ToList());
+        }
+
+        
+        public List<InventoryModel> GetAllInventory()
+        {
+            return _inventoryMapper.ToModels(_coreContext.Inventories.ToList());
+        }
+        public List<InventoryModel> GetInventoryByWarehouseId(int idWareHouse)
+        {
+            return _inventoryMapper.ToModels(_coreContext.Inventories.Where(i => i.WareHouseId == idWareHouse).ToList());
         }
     }
 }
