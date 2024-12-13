@@ -49,7 +49,7 @@ export class GoodTransferViewComponent {
           if(error){
             this.dialogRef.close({
               isSuccess: false,
-              message: UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi duyệt phiếu"
+              message: !UtilitiesService.isNullOrEmpty(error.error.detail) ? error.error.detail : "Có lỗi khi duyệt phiếu"
             });
           }
           else{
