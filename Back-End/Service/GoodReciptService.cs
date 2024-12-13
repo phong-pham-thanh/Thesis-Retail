@@ -75,13 +75,15 @@ namespace APIBackend.Service
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
+            goodsReceiptModel.CreatedById = _userSessionService.GetCurrentUser().Id;
             if (!autoAccept)
             {
-                goodsReceipt.ReceiptStatus = Status.Process;
+                goodsReceiptModel.ReceiptStatus = Status.Process;
             }
             else
             {
-                goodsReceipt.ReceiptStatus = Status.Success;
+                goodsReceiptModel.ReceiptStatus = Status.Success;
+                goodsReceiptModel.AcceptedById = _userSessionService.GetCurrentUser().Id;
             }
             goodsReceiptModel.TotalAmount = this.CaculateTotalAmount(listGoodReceiptDetailModels);
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
@@ -140,7 +142,7 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id);
+                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id, _userSessionService.GetCurrentUser().Id);
                 UpdateInventoryForGoodRecipt(result);
                 uow.Commit();
                 return result;
@@ -151,7 +153,7 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsReceiptModel result = _goodReciptRepository.CancelGoodRecipt(id);
+                GoodsReceiptModel result = _goodReciptRepository.CancelGoodRecipt(id, _userSessionService.GetCurrentUser().Id);
                 uow.Commit();
                 return result;
             }

@@ -19,6 +19,9 @@ namespace APIBackend.DataModel
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public Users User { get; set; }
+        public int? AcceptedById { get; set; }
+        [ForeignKey("AcceptedById")]
+        public Users AcceptedBy { get; set; }
         public Status Status { get; set; }
         public List<GoodTransferDetails> ListGoodTransferDetails { get; set; }
     }

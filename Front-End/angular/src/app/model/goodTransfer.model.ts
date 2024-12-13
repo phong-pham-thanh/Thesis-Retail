@@ -15,5 +15,7 @@ export class GoodTransfer{
     fromWareHouse?: Warehouse;
     toWareHouse?: Warehouse;
     user?: Users;
+    acceptedById?: number;
+    acceptedBy?: Users;
     listGoodTransferDetailsModel?: GoodTransferDetails[];
 }

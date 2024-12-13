@@ -171,14 +171,14 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsTransferModel result = _goodTransferRepository.AcceptGoodTransfer(id);
+                GoodsTransferModel result = _goodTransferRepository.AcceptGoodTransfer(id, _userSessionService.GetCurrentUser().Id);
                 //UpdateInventoryForGoodTransfer(result);
                 GoodsExportModel exportModel = this.BuildGoodExportFromTransfer(result);
                 _goodExportService.AddGoodExport(exportModel, exportModel.ListGoodExportDetailsModel, autoAccept: true);
 
 
                 GoodsReceiptModel receiptModel = this.BuildGoodReceiptFromTransfer(result);
-                _goodReciptService.AddGoodRecipt(receiptModel, receiptModel.ListGoodReciptDetailsModel, autoAccept: true);
+                _goodReciptService.AddGoodRecipt(receiptModel, receiptModel.ListGoodReciptDetailsModel, autoAccept: false);
 
 
                 uow.Commit();
@@ -232,7 +232,7 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsTransferModel result = _goodTransferRepository.CancelGoodTransfer(id);
+                GoodsTransferModel result = _goodTransferRepository.CancelGoodTransfer(id, _userSessionService.GetCurrentUser().Id);
                 uow.Commit();
                 return result;
             }
