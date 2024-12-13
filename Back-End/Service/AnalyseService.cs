@@ -12,6 +12,7 @@ namespace APIBackend.Service
         public List<GoodNoteAnalyse> GetAllGoodExporttByDate(DateParam dateParam);
         public List<BillMonthAnalyse> GetAllBillAnalyseMonth(DateParam dateParam);
         public List<PriceProductAnalyse> GetAllPriceOfProduct(int productId);
+        public List<PriceProductAnalyse> GetAllPriceImportOfProduct(int productId);
     }
     public class AnalyseService : IAnalyseService
     {
@@ -147,5 +148,23 @@ namespace APIBackend.Service
             result = result.OrderBy(r => r.Year).ThenBy(r =>r.Month).ThenBy(r => r.Day).ToList();
             return result;
         }
+
+        public List<PriceProductAnalyse> GetAllPriceImportOfProduct(int productId)
+        {
+            List<GoodsReceiptModel> allById = _goodReciptService.GetAllGoodReceiptByProductId(productId);
+
+            List<PriceProductAnalyse> result = allById.GroupBy(b => new { b.ImportDate.Day, b.ImportDate.Month, b.ImportDate.Year })
+                                                        .Select(group => new PriceProductAnalyse
+                                                        {
+                                                            Day = group.Key.Day,
+                                                            Month = group.Key.Month,
+                                                            Year = group.Key.Year,
+                                                            Price = (int)group.OrderByDescending(x => x.ImportDate).FirstOrDefault().ListGoodReciptDetailsModel.FirstOrDefault(li => li.ProductId == productId && li.PriceUnit != null).PriceUnit,
+                                                        }).ToList();
+
+            result = result.OrderBy(r => r.Year).ThenBy(r => r.Month).ThenBy(r => r.Day).ToList();
+            return result;
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AnalyseService } from '../../services/analyse.service';
 import { DateParam, PriceProductAnalyse } from '../../model/analyse.model';
-import { Chart } from 'chart.js';
+import { Chart, Colors } from 'chart.js';
 import { Product } from '../../model/product.model';
 import { State } from '../../product-state/product.state';
 import { Store, select } from '@ngrx/store';
@@ -48,12 +48,31 @@ export class AnalysePriceProductComponent {
   }
 
   onProductSelectedChange(id: number) {
+    var datasetAnalyse: any[] = [];
     this.analyseService.getPriceProductAnalyse(id).subscribe((result: PriceProductAnalyse[]) => {
-      var datasetAnalyse: any[] = [];
       if (result.length > 0) {
         var newDataSetItem = {
           label: this.allProducts.find(x => x.id === id).name,
           fill: false,
+          data: result.map(r => {
+            return {
+              x: new Date(Number(r.year), Number(r.month) - 1, Number(r.day)),
+              y: r.price
+            }
+          })
+        }
+        datasetAnalyse.push(newDataSetItem);
+      }
+      this.chart.data.datasets = datasetAnalyse;
+      this.chart.update();
+    })
+
+    this.analyseService.getPriceProductImportAnalyse(id).subscribe((result: PriceProductAnalyse[]) => {
+      if (result.length > 0) {
+        var newDataSetItem = {
+          label: this.allProducts.find(x => x.id === id).name,
+          fill: false,
+          borderColor: "red",
           data: result.map(r => {
             return {
               x: new Date(Number(r.year), Number(r.month) - 1, Number(r.day)),
