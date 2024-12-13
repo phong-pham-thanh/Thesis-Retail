@@ -385,9 +385,10 @@ export default function ImportGoods() {
                     required: true,
                     message: 'Không để trống',
                   }]}
+                  initialValue={defaultWareHouseId}
                 >
                   <Select
-                    defaultValue={defaultWareHouseId}
+                    //defaultValue={defaultWareHouseId}
                     showSearch
                     placeholder="Chọn kho"
                     optionFilterProp="label"

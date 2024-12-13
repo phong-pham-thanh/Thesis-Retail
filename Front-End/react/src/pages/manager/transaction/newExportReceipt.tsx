@@ -375,12 +375,12 @@ export default function ExportGoods() {
                       required: true,
                       message: 'Không để trống',
                     }]}
+                    initialValue={defaultWareHouseId}
                   >
                     <Select
                       showSearch
                       placeholder="Chọn kho"
                       optionFilterProp="label"
-                      defaultValue={defaultWareHouseId}
                       onSelect={(value) => setSelectedWarehouseId(value)}
                     >
                       {allWarehouses?.map((d) => {

@@ -373,8 +373,8 @@ export default function ExportTransaction() {
     },
     {
       title: "Người tạo phiếu",
-      dataIndex: ["createBy", "name"],
-      sorter: (a, b) => a.createBy ? (b.createBy ? (-b.createBy?.name.localeCompare(a.createBy?.name)) : -1) : 1,
+      dataIndex: ["createdBy", "name"],
+      sorter: (a, b) => a.createdBy ? (b.createdBy ? (-b.createdBy?.name.localeCompare(a.createdBy?.name)) : -1) : 1,
     },
     /*{
       title: "Tổng tiền",
@@ -477,11 +477,11 @@ export default function ExportTransaction() {
                 >
                   {goodReceiptData.customer?.name}
                 </Form.Item>
-                <Form.Item className="createBy" label={"Người tạo phiếu"} name={"createBy"}>
-                  {goodReceiptData.createBy?.name}
+                <Form.Item className="createdBy" label={"Người tạo phiếu"} name={"createdBy"}>
+                  {goodReceiptData.createdBy?.name}
                 </Form.Item>
-                <Form.Item className="finishBy" label={"Người hoàn thành"} name={"finishBy"}>
-                  {goodReceiptData.exportStatus != 2 && goodReceiptData.finishBy?.name}
+                <Form.Item className="acceptedBy" label={"Người hoàn thành"} name={"acceptedBy"}>
+                  {goodReceiptData.exportStatus != 2 && goodReceiptData.acceptedBy?.name}
                 </Form.Item>
                 <Form.Item
                   className="status"

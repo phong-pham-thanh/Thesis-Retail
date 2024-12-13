@@ -167,10 +167,10 @@ export type GoodImportReceiptDetailDataType = {
   listGoodReciptDetailsModel: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
-  createBy?:{
+  createdBy?:{
     name: string;
   };
-  finishBy?:{
+  acceptedBy?:{
     name: string;
   };
 };
@@ -186,10 +186,10 @@ export type GoodExportReceiptDetailDataType = {
   listGoodExportDetailModels?: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
-  createBy?:{
+  createdBy?:{
     name: string;
   };
-  finishBy?:{
+  acceptedBy?:{
     name: string;
   };
 };
