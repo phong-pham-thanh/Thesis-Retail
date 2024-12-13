@@ -162,12 +162,14 @@ export default function ExportGoods() {
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState();
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
     getGoodReceiptByID(params.id)
       .then((res) => {
         setGoodReciptData(res.data);
+        setSelectedWarehouseId(res.data.wareHouseId);
         handleGetTableProductDataByID(res.data.listGoodExportDetailsModel);
         console.log(res.data);
       })
@@ -418,7 +420,7 @@ export default function ExportGoods() {
                         showSearch
                         placeholder="Chọn kho"
                         optionFilterProp="label"
-                      //defaultValue={goodReceiptData?.wareHouseId}
+                        onSelect={(value) => setSelectedWarehouseId(value)}
                       >
                         {allWarehouses?.map((d) => {
                           return (
@@ -442,7 +444,7 @@ export default function ExportGoods() {
                     >
                       <DatePicker
                         disabled={goodReceiptData?.exportStatus !== 2}
-                        showTime
+                        format="DD/MM/YYYY"
                         disabledDate={(current) => { return current.valueOf() > Date.now() }}
                       />
                     </Form.Item >
@@ -481,7 +483,7 @@ export default function ExportGoods() {
                   onFinish();//postGoodsIssue()
                 }}
                   style={{ backgroundColor: "#465d65" }}>
-                  Chỉnh sửa</Button>}
+                  Lưu thay đổi</Button>}
               </Row>
             </Space>
           </Form>
@@ -524,9 +526,17 @@ export default function ExportGoods() {
               <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
             </Row>
             <Card className="product-table" title={choosedCategory}>
-              {filteredProducts?.map((p) =>
-                <Card.Grid className="product-cell" style={gridStyle}
-                  onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+              {filteredProducts?.map((p) => {
+                const inventory = p.listInventories.find(
+                  (inv) => inv.wareHouseId === selectedWarehouseId
+                );
+                return (
+                  <Card.Grid className="product-cell" style={gridStyle}
+                    onClick={() => handleTableProductClick(p)}>
+                    <p>{p.name} </p>
+                    <p>(Kho: {inventory ? inventory.quantity : 0})</p>
+                  </Card.Grid>)
+              })}
             </Card>
           </div>
         }

@@ -435,7 +435,7 @@ export default function ImportTransaction() {
       sorter: (a, b) => a.importDate < b.importDate ? -1 : 1,
     },
     {
-      title: "Mã kho nhập",
+      title: "Kho nhập",
       // dataIndex: "wareHouseId",
       dataIndex: ["wareHouse", "address"],
       /*filters: filterByWarehouse,
@@ -448,6 +448,13 @@ export default function ImportTransaction() {
       /*filters: filterByPartner,
       onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
       sorter: (a, b) => a.partner ? (b.partner ? (-b.partner?.name.localeCompare(a.partner?.name)) : -1) : 1,
+    },
+    {
+      title: "Người tạo phiếu",
+      dataIndex: ["createBy", "name"],
+      /*filters: filterByPartner,
+      onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
+      sorter: (a, b) => a.createBy ? (b.createBy ? (-b.createBy?.name.localeCompare(a.createBy?.name)) : -1) : 1,
     },
     {
       title: "Tổng tiền",
@@ -515,9 +522,9 @@ export default function ImportTransaction() {
           footer={(_, { OkBtn, CancelBtn }) => (
             goodReceiptData.receiptStatus == 2 ?
               <>
-                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
+                <Button style={{"background":"green"}} onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button style={{"background":"red"}} onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button style={{"background":"orange"}} onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
                 <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
                 </>
               : <>
@@ -539,7 +546,7 @@ export default function ImportTransaction() {
                 </Form.Item>
                 <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
                   <ProcessDate dateString={goodReceiptData.importDate} />
-                </Form.Item>
+                  </Form.Item>
                 <Form.Item
                   className="trans"
                   label={"Nhà cung cấp"}
@@ -547,6 +554,12 @@ export default function ImportTransaction() {
                 >
                   {goodReceiptData.partner?.name}
                 </Form.Item>
+                <Form.Item className="createBy" label={"Người tạo phiếu"} name={"createBy"}>
+                  {goodReceiptData.createBy?.name}
+                  </Form.Item>
+                  <Form.Item className="finishBy" label={"Người hoàn thành"} name={"finishBy"}>
+                  {goodReceiptData.receiptStatus!=2 && goodReceiptData.finishBy?.name}
+                  </Form.Item>
                 <Form.Item
                   className="status"
                   label={"Trạng thái"}

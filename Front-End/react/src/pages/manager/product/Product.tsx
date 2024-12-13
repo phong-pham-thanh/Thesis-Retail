@@ -257,7 +257,7 @@ export default function Product() {
         const inventory = record.listInventories.find(
           (inv) => inv.wareHouseId === selectedWarehouseId
         );
-        return inventory ? inventory.quantity : "N/A";
+        return inventory ? inventory.quantity : 0;
       },
       sorter: (a, b) => {
         const quantityA =

@@ -68,6 +68,13 @@ export type ProductState = {
   description: string;
   status: boolean;
   imgPath?: string;
+  listInventories?:
+      {
+        "id": number,
+        "productId": number,
+        "wareHouseId": number,
+        "quantity": number
+      }[],
 };
 export type CategoryState = {
   id: string;
@@ -160,6 +167,12 @@ export type GoodImportReceiptDetailDataType = {
   listGoodReciptDetailsModel: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
+  createBy?:{
+    name: string;
+  };
+  finishBy?:{
+    name: string;
+  };
 };
 
 export type GoodExportReceiptDetailDataType = {
@@ -173,6 +186,12 @@ export type GoodExportReceiptDetailDataType = {
   listGoodExportDetailModels?: ListGoodReciptDetailsModel[];
   wareHouseId: string;
   wareHouse?: WarehouseState;
+  createBy?:{
+    name: string;
+  };
+  finishBy?:{
+    name: string;
+  };
 };
 
 type UserWarehouseType = {

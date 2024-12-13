@@ -212,31 +212,31 @@ export default function ExportTransaction() {
     setShowModal(undefined);
   };
 
-  const handleDownload =(receiptId: number) =>{
+  const handleDownload = (receiptId: number) => {
     const api_link = api_links.goodsIssue.export.download;
     api_link.url = processAPIPostLink(api_link.url, receiptId);
     axios
-    .get(api_link.url, { responseType: "blob" }) // Đảm bảo trả về blob
-    .then((response) => {
-      if (response.status === 200) {
-        const url = window.URL.createObjectURL(response.data);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `phieu_xuat_kho_${receiptId}`; // Đặt tên file
-        a.click();
+      .get(api_link.url, { responseType: "blob" }) // Đảm bảo trả về blob
+      .then((response) => {
+        if (response.status === 200) {
+          const url = window.URL.createObjectURL(response.data);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `phieu_xuat_kho_${receiptId}`; // Đặt tên file
+          a.click();
 
-        window.URL.revokeObjectURL(url);
+          window.URL.revokeObjectURL(url);
 
-        message.success("Đã tải phiếu xuất " + receiptId);
-      } else {
-        throw new Error(`Failed to download file: ${response.status}`);
-      }
-    })
-    .catch((error) => {
-      // Xử lý lỗi khi tải file thất bại
-      message.error("Không thể tải phiếu xuất " + receiptId);
-      message.error(error?.detail);
-    });
+          message.success("Đã tải phiếu xuất " + receiptId);
+        } else {
+          throw new Error(`Failed to download file: ${response.status}`);
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi khi tải file thất bại
+        message.error("Không thể tải phiếu xuất " + receiptId);
+        message.error(error?.detail);
+      });
   }
 
   const handleCancel = (receiptId: number | string) => {
@@ -361,7 +361,7 @@ export default function ExportTransaction() {
       sorter: (a, b) => a.exportDate < b.exportDate ? -1 : 1,
     },
     {
-      title: "Mã kho xuất",
+      title: "Kho xuất",
       // dataIndex: "wareHouseId",
       dataIndex: ["wareHouse", "address"],
       sorter: (a, b) => a.wareHouseId < b.wareHouseId ? -1 : 1,
@@ -370,6 +370,11 @@ export default function ExportTransaction() {
       title: "Khách hàng",
       dataIndex: ["customer", "name"],
       sorter: (a, b) => a.customer ? (b.customer ? (-b.customer?.name.localeCompare(a.customer?.name)) : -1) : 1,
+    },
+    {
+      title: "Người tạo phiếu",
+      dataIndex: ["createBy", "name"],
+      sorter: (a, b) => a.createBy ? (b.createBy ? (-b.createBy?.name.localeCompare(a.createBy?.name)) : -1) : 1,
     },
     /*{
       title: "Tổng tiền",
@@ -438,11 +443,11 @@ export default function ExportTransaction() {
           footer={(_, { OkBtn, CancelBtn }) =>
             goodReceiptData.exportStatus == 2 ? (
               <>
-                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
+                <Button style={{ "background": "green" }} onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button style={{ "background": "red" }} onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button style={{ "background": "orange" }} onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
                 <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
-                </>
+              </>
             ) : (
               <>
                 <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
@@ -469,9 +474,14 @@ export default function ExportTransaction() {
                   className="trans"
                   label={"Khách hàng"}
                   name={"trans"}
-                  rules={[{ required: true }]}
                 >
                   {goodReceiptData.customer?.name}
+                </Form.Item>
+                <Form.Item className="createBy" label={"Người tạo phiếu"} name={"createBy"}>
+                  {goodReceiptData.createBy?.name}
+                </Form.Item>
+                <Form.Item className="finishBy" label={"Người hoàn thành"} name={"finishBy"}>
+                  {goodReceiptData.exportStatus != 2 && goodReceiptData.finishBy?.name}
                 </Form.Item>
                 <Form.Item
                   className="status"
@@ -483,14 +493,14 @@ export default function ExportTransaction() {
               </Form>
             </div>
             <div className="modal-products">
-              <h4>
+              {/*<h4>
                 Tổng cộng: {goodReceiptData.totalAmount?.toLocaleString()}
-              </h4>
+              </h4>*/}
               <table>
                 <thead>
                   <th className="code">Tên sản phẩm</th>
                   <th className="quantity">Số lượng</th>
-                  <th className="name">Đơn giá</th>
+                  {/*<th className="name">Đơn giá</th>*/}
                 </thead>
                 <tbody>
                   {goodReceiptData.listGoodExportDetailsModel &&
@@ -502,9 +512,9 @@ export default function ExportTransaction() {
                             {product.product.name ? product.product.name : ""}
                           </td>
                           <td className="quantity">{product.quantity}</td>
-                          <td className="priceUnit">
+                          {/*<td className="priceUnit">
                             {product.priceUnit?.toLocaleString()}
-                          </td>
+                          </td>*/}
                         </tr>
                       )
                     )}
