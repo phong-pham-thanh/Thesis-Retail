@@ -18,6 +18,7 @@ namespace APIBackend.Repository
         public GoodsReceiptModel CancelGoodRecipt(int id, int acceptById);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId);
         public bool RemoveGoodReceipt(int id);
     }
     public class GoodsReciptRepository : IGoodReciptRepository
@@ -116,6 +117,16 @@ namespace APIBackend.Repository
                                                         .Include(go => go.Partner)
                                                         .ToList());
             return listGoodRecipt;
+        }
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId)
+        {
+            List<GoodsReceiptModel> listGoodRecipt = new List<GoodsReceiptModel>();
+            listGoodRecipt = _goodReciptMapper.ToModels(_coreContext.GoodsReceipt
+                                                        .Include(go => go.ListGoodReciptDetails)
+                                                        .Where(go => go.ListGoodReciptDetails.Any(li => li.ProductId == productId && li.PriceUnit != null))
+                                                        .ToList());
+            return listGoodRecipt;
+
         }
 
         public bool RemoveGoodReceipt(int id)

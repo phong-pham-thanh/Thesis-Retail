@@ -48,5 +48,12 @@ namespace APIBackend.Controllers
         {
             return _service.GetAllPriceOfProduct(productId);
         }
+
+        [HttpGet]
+        [Route("priceProdctImportAnalyse/{productId}")]
+        public List<PriceProductAnalyse> analysePriceProductImport(int productId)
+        {
+            return _service.GetAllPriceImportOfProduct(productId);
+        }
     }
 }

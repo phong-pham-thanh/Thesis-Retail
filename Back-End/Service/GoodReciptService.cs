@@ -24,6 +24,7 @@ namespace APIBackend.Service
         public byte[] PrintGoodReceipt(int id);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
         public bool RemoveGoodReceipt(int id);
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -253,5 +254,11 @@ namespace APIBackend.Service
         {
             return _goodReciptRepository.GetAllGoodReciptsByDate(dateParam);
         }
+
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId)
+        {
+            return _goodReciptRepository.GetAllGoodReceiptByProductId(productId);
+        }
+
     }
 }

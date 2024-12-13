@@ -13,6 +13,7 @@ export class AnalyseService {
   private apiGetAllExportAnalyse = `${environment.apiBaseUrl}/Analyse/goodExport`;
   private apiGetAllBillByMonthAnalyse = `${environment.apiBaseUrl}/Analyse/billByMonth`;
   private apiGetAllPriceProductAnalyse = `${environment.apiBaseUrl}/Analyse/priceProdctAnalyse`;
+  private apiGetAllPriceProductImportAnalyse = `${environment.apiBaseUrl}/Analyse/priceProdctImportAnalyse`;
 
   constructor(private http: HttpClient) { }
 
@@ -30,5 +31,9 @@ export class AnalyseService {
 
   getPriceProductAnalyse(productId: number) :Observable<PriceProductAnalyse[]> {
     return this.http.get<PriceProductAnalyse[]>(`${this.apiGetAllPriceProductAnalyse}/${productId}`)
+  }
+
+  getPriceProductImportAnalyse(productId: number) :Observable<PriceProductAnalyse[]> {
+    return this.http.get<PriceProductAnalyse[]>(`${this.apiGetAllPriceProductImportAnalyse}/${productId}`)
   }
 }
