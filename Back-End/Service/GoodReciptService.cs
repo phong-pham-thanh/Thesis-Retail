@@ -19,10 +19,12 @@ namespace APIBackend.Service
         public List<GoodsReceiptModel> GetAllGoodReciptsByRole();
         public GoodsReceiptModel GetGoodReciptById(int id);
         public GoodsReceiptModel AcceptGoodReceipt(int id);
+        public GoodsReceiptModel CancelGoodRecipt(int id);
         public GoodsReceiptModel UpdateGoodReceipt(int id, GoodsReceiptModel updateItem);
         public byte[] PrintGoodReceipt(int id);
         public List<GoodsReceiptModel> GetAllGoodReciptsByDate(DateParam dateParam);
         public bool RemoveGoodReceipt(int id);
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId);
     }
     public class GoodReciptService : IGoodReciptService
     {
@@ -74,13 +76,15 @@ namespace APIBackend.Service
         {
             //Add good recipt
             GoodsReceipt goodsReceipt = new GoodsReceipt();
+            goodsReceiptModel.CreatedById = _userSessionService.GetCurrentUser().Id;
             if (!autoAccept)
             {
-                goodsReceipt.ReceiptStatus = Status.Process;
+                goodsReceiptModel.ReceiptStatus = Status.Process;
             }
             else
             {
-                goodsReceipt.ReceiptStatus = Status.Success;
+                goodsReceiptModel.ReceiptStatus = Status.Success;
+                goodsReceiptModel.AcceptedById = _userSessionService.GetCurrentUser().Id;
             }
             goodsReceiptModel.TotalAmount = this.CaculateTotalAmount(listGoodReceiptDetailModels);
             _goodReciptMapper.ToEntity(goodsReceipt, goodsReceiptModel);
@@ -139,8 +143,18 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id);
+                GoodsReceiptModel result = _goodReciptRepository.AcceptGoodRecipt(id, _userSessionService.GetCurrentUser().Id);
                 UpdateInventoryForGoodRecipt(result);
+                uow.Commit();
+                return result;
+            }
+        }
+
+        public GoodsReceiptModel CancelGoodRecipt(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsReceiptModel result = _goodReciptRepository.CancelGoodRecipt(id, _userSessionService.GetCurrentUser().Id);
                 uow.Commit();
                 return result;
             }
@@ -240,5 +254,11 @@ namespace APIBackend.Service
         {
             return _goodReciptRepository.GetAllGoodReciptsByDate(dateParam);
         }
+
+        public List<GoodsReceiptModel> GetAllGoodReceiptByProductId(int productId)
+        {
+            return _goodReciptRepository.GetAllGoodReceiptByProductId(productId);
+        }
+
     }
 }

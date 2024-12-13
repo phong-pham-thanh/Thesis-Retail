@@ -62,7 +62,7 @@ const api_links = {
 
       //SET STATE
       accept: {
-        url: `${authUrl}/GoodRecipt/acceptGoodImport/`,
+        url: `${authUrl}/GoodRecipt/acceptGoodRecipt/`,
         method: "GET",
       },
       delete: {

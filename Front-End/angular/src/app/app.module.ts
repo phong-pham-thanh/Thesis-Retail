@@ -59,6 +59,9 @@ import { goodTransferReducer } from './state/goodTransfer-state/goodTransfer.red
 import { UsersEffects } from './state/users-state/users.effects';
 import { usersReducer } from './state/users-state/users.reducer';
 
+import { InventoryEffects } from './state/inventory-state/inventory.effects';
+import { inventoryReducer } from './state/inventory-state/inventory.reducer';
+
 import { PriceManagementFormComponent } from './price-management/price-management-form/price-management-form.component';
 import { RetailPaymentComponentComponent } from './retail-component/retail-payment-component/retail-payment-component.component';
 import { BillListComponent } from './bill-list/bill-list.component';
@@ -184,6 +187,12 @@ export function CustomPaginatorIntl() {
     StoreModule.forRoot(usersReducer),
     EffectsModule.forRoot([UsersEffects]),
     EffectsModule.forFeature([UsersEffects]),
+    
+    StoreModule.forFeature('inventory', inventoryReducer),
+    StoreModule.forRoot(inventoryReducer),
+    EffectsModule.forRoot([InventoryEffects]),
+    EffectsModule.forFeature([InventoryEffects]),
+
     BaseChartDirective,
 
   ],

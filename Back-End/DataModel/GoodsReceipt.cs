@@ -19,5 +19,11 @@ namespace APIBackEnd.Data
         public Status ReceiptStatus { get; set; }
         public List<GoodReceiptDetails> ListGoodReciptDetails {get; set;}
         public long? TotalAmount { get; set; }
+        public int? CreatedById { get; set; }
+        [ForeignKey("CreatedById")]
+        public Users CreatedBy { get; set; }
+        public int? AcceptedById { get; set; }
+        [ForeignKey("AcceptedById")]
+        public Users AcceptedBy { get; set; }
     }
 }

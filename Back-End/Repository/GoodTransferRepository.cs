@@ -14,9 +14,9 @@ namespace APIBackend.Repository
         public GoodsTransfer AddGoodTransfer(GoodsTransfer goodsTransfer);
         public List<GoodsTransferModel> GetAllGoodTransfers();
         public GoodsTransferModel GetGoodTransferById(int id);
-        public GoodsTransferModel AcceptGoodTransfer(int id);
+        public GoodsTransferModel AcceptGoodTransfer(int id, int acceptedById);
         public GoodsTransferModel UpdateGoodTransfer(int id, GoodsTransferModel updateItem);
-        public GoodsTransferModel CancelGoodTransfer(int id);
+        public GoodsTransferModel CancelGoodTransfer(int id, int acceptedById);
         public bool RemoveGoodTransfer(int id);
     }
     public class GoodTransferRepository : IGoodTransferRepository
@@ -46,6 +46,7 @@ namespace APIBackend.Repository
             return _goodTransferMapper.ToModel(_coreContext.GoodsTransfers
                                             .Include(go => go.FromWareHouse)
                                             .Include(go => go.ToWareHouse)
+                                            .Include(go => go.AcceptedBy)
                                             .Include(go => go.ListGoodTransferDetails)
                                             .Where(go => go.Id == id).FirstOrDefault());
         }
@@ -56,12 +57,13 @@ namespace APIBackend.Repository
             listGoodTransfers = _coreContext.GoodsTransfers
                                             .Include(go => go.FromWareHouse)
                                             .Include(go => go.ToWareHouse)
+                                            .Include(go => go.AcceptedBy)
                                             .Include(go => go.ListGoodTransferDetails)
                                             .ToList();
             return _goodTransferMapper.ToModels(listGoodTransfers);
         }
 
-        public GoodsTransferModel AcceptGoodTransfer(int id)
+        public GoodsTransferModel AcceptGoodTransfer(int id, int acceptedById)
         {
             GoodsTransfer efObject = _coreContext.GoodsTransfers.Where(x => x.Id == id).Include(x => x.ListGoodTransferDetails).FirstOrDefault();
 
@@ -69,6 +71,7 @@ namespace APIBackend.Repository
             {
                 throw new ArgumentException("Good Transfer not found");
             }
+            efObject.AcceptedById = acceptedById;
             efObject.Status = Status.Success;
             _coreContext.SaveChanges();
 
@@ -87,7 +90,7 @@ namespace APIBackend.Repository
             return _goodTransferMapper.ToModel(efObject);
         }
 
-        public GoodsTransferModel CancelGoodTransfer(int id)
+        public GoodsTransferModel CancelGoodTransfer(int id, int acceptedById)
         {
             GoodsTransfer efObject = _coreContext.GoodsTransfers.Where(x => x.Id == id).Include(x => x.ListGoodTransferDetails).FirstOrDefault();
 
@@ -96,6 +99,7 @@ namespace APIBackend.Repository
                 throw new ArgumentException("Good Transfer not found");
             }
             efObject.Status = Status.Canceled;
+            efObject.AcceptedById = acceptedById;
             _coreContext.SaveChanges();
 
             return _goodTransferMapper.ToModel(efObject);

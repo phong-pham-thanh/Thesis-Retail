@@ -21,6 +21,7 @@ namespace APIBackend.Service
         public List<GoodsExportModel> GetAllGoodExportsByRole();
         public GoodsExportModel GetGoodExportById(int id);
         public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel CancelGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public byte[] PrintGoodExport(int id);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
@@ -74,6 +75,7 @@ namespace APIBackend.Service
             {
                 //Add good Export
                 GoodsExport goodsExport = new GoodsExport();
+                goodsExportModel.CreatedById = _userSessionService.GetCurrentUser().Id;
 
                 if (!autoAccept)
                 {
@@ -82,6 +84,7 @@ namespace APIBackend.Service
                 else
                 {
                     goodsExportModel.ExportStatus = Status.Success;
+                    goodsExportModel.AcceptedById = _userSessionService.GetCurrentUser().Id;
                 }
 
                 _goodExportMapper.ToEntity(goodsExport, goodsExportModel);
@@ -154,12 +157,23 @@ namespace APIBackend.Service
         {
             using (var uow = _uowFactory.CreateUnityOfWork())
             {
-                GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id);
+                GoodsExportModel result = _goodExportRepository.AcceptGoodExport(id, _userSessionService.GetCurrentUser().Id);
                 UpdateInventoryForGoodExport(result);
                 uow.Commit();
                 return result;
             }
         }
+
+        public GoodsExportModel CancelGoodExport(int id)
+        {
+            using (var uow = _uowFactory.CreateUnityOfWork())
+            {
+                GoodsExportModel result = _goodExportRepository.CancelGoodExport(id, _userSessionService.GetCurrentUser().Id);
+                uow.Commit();
+                return result;
+            }
+        }
+
 
         public void UpdateInventoryForGoodExport(GoodsExportModel currentGoodExport)
         {

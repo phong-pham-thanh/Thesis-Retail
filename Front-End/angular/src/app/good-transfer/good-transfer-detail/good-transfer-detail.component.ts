@@ -9,10 +9,12 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { State } from '../../state/goodTransfer-state/goodTransfer.state';
 import * as productActions from '../../product-state/product.actions';
 import * as productSelector from '../../product-state/product.reducer';
-import { filter, map, mergeMap, take } from 'rxjs';
+import { filter, from, map, mergeMap, take } from 'rxjs';
 import { Product } from '../../model/product.model';
 import * as GoodTransferActions from '../../state/goodTransfer-state/goodTransfer.actions';
 
+import * as inventoryActions from '../../state/inventory-state/inventory.actions';
+import * as inventorySelector from '../../state/inventory-state/inventory.reducer';
 import * as goodTransferSelector from '../../state/goodTransfer-state/goodTransfer.reducer';
 
 
@@ -28,6 +30,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { UtilitiesService } from '../../common/utilities.service'; // Đường dẫn tới service của bạn
 import * as moment from 'moment';
 import { DialogService } from '../../common/dialog.service';
+import { Inventory } from '../../model/inventory.model';
 
 
 @Component({
@@ -48,6 +51,8 @@ export class GoodTransferDetailComponent {
   currentGoodTransfer: GoodTransfer = {};
   currentUser: Users;
   isUpdate: boolean = false;
+  allInventory: Inventory[] = [];
+  
   constructor(
     private route: ActivatedRoute,
     protected store: Store<State>,
@@ -81,6 +86,7 @@ export class GoodTransferDetailComponent {
     
     this.store.dispatch(new productActions.LoadAllProduct());
     this.store.dispatch(new warehouseActions.LoadAllWarehouse());
+    this.store.dispatch(new inventoryActions.LoadAllInventory());
   }
 
   
@@ -91,24 +97,17 @@ export class GoodTransferDetailComponent {
   onFromWarehouseChange(selectedFromWarehouse: Warehouse) {
     this.fromWarehouse = selectedFromWarehouse;
     this.filteredToWarehouse = this.allWarehouse.filter(warehouse => warehouse.id !== selectedFromWarehouse?.id);
+    this.assignInventoryToProduct();
   }
 
   onToWarehouseChange(selectedToWarehouse: Warehouse) {
     this.toWarehouse = selectedToWarehouse;
     this.filteredFromWarehouse = this.allWarehouse.filter(warehouse => warehouse.id !== selectedToWarehouse?.id);
+    this.assignInventoryToProduct();
   }
 
   ngOnInit(): void {
 
-    this.store.pipe(select(productSelector.getIsLoaded),
-      filter(loaded => loaded === true),
-      mergeMap(_ => 
-        this.store.pipe(select(productSelector.getAllProduct),
-        map(result => {
-          this.allProduct = result.filter(pro => pro.currentPrice); 
-        }))
-      ), take(1)
-    ).subscribe();
 
     this.store.pipe(select(warehouseSelector.getIsLoaded),
       filter(loaded => loaded === true),
@@ -137,10 +136,57 @@ export class GoodTransferDetailComponent {
                 this.initData(result);
               });
           }
+
+          this.store.pipe(select(productSelector.getIsLoaded),
+            filter(loaded => loaded === true),
+            mergeMap(_ => 
+              this.store.pipe(select(productSelector.getAllProduct),
+              map(allPro => {
+                let result: Product[] = UtilitiesService.cloneDeep(allPro);
+                this.allProduct = result.filter(pro => pro.currentPrice).map(item => {
+                  item.inventoryFrom = 0;
+                  item.inventoryTo = 0;
+                  return item;
+                });
+                this.store.pipe(select(inventorySelector.getIsLoaded),
+                  filter(invenLoaded => invenLoaded === true),
+                  mergeMap(_ =>
+                    this.store.pipe(select(inventorySelector.getAllInventory),
+                    map(allInven => {
+                      this.allInventory = UtilitiesService.cloneDeep(allInven);
+                      
+                    }))
+                  ), take(1)).subscribe()
+              }))
+            ), take(1)
+          ).subscribe();
         }))
       ), take(1)
     ).subscribe();
     
+  }
+
+  assignInventoryToProduct(){
+    this.allProduct.forEach(item => {
+      item.inventoryFrom = 0
+      item.inventoryTo = 0
+    });
+    if(!UtilitiesService.isNullOrEmpty(this.fromWarehouse)){
+      this.allInventory.filter(a => a.wareHouseId === this.fromWarehouse.id).forEach(inven => {
+        let existingPro = this.allProduct.find(p => p.id === inven.productId);
+        if(!UtilitiesService.isNullOrEmpty(existingPro)){
+          existingPro.inventoryFrom = inven.quantity;
+        }
+      })
+    }
+    if(!UtilitiesService.isNullOrEmpty(this.toWarehouse)){
+      this.allInventory.filter(a => a.wareHouseId === this.toWarehouse.id).forEach(inven => {
+        let existingPro = this.allProduct.find(p => p.id === inven.productId);
+        if(!UtilitiesService.isNullOrEmpty(existingPro)){
+          existingPro.inventoryTo = inven.quantity;
+        }
+      })
+    }
   }
 
   initData(result: GoodTransfer){

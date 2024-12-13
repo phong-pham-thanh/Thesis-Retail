@@ -14,6 +14,8 @@ import * as warehouseActions from '../state/warehouse-state/warehouse.actions';
 import * as warehouseSelector from '../state/warehouse-state/warehouse.reducer';
 import * as customerActions from '../customer-state/customer.actions';
 import * as customerSelector from '../customer-state/customer.reducer';
+import * as inventoryActions from '../state/inventory-state/inventory.actions';
+import * as inventorySelector from '../state/inventory-state/inventory.reducer';
 import * as priceProductActions from '../price-management/price-state/price.actions';
 import { PriceProduct } from '../model/price.model';
 import * as pricePRoductSelector from '../price-management/price-state/price.reducer';
@@ -29,6 +31,7 @@ import { UtilitiesService } from '../common/utilities.service';
 import { DialogService } from '../common/dialog.service';
 import { BillService } from '../services/bill.service';
 import * as billSelector from '../state/bill-state/bill.reducer';
+import { Inventory } from '../model/inventory.model';
 
 
 const imageUrl = assetUrl("images/Cocacola.png");
@@ -56,6 +59,7 @@ export class RetailComponentComponent implements OnInit {
   totalAmountBill: number = 0;
   currentUser: Users;
   productSearchKeyName: string = null;
+  allInventory: Inventory[] = [];
 
   constructor(protected store: Store<State>,
     protected userStore: Store<State>,
@@ -69,6 +73,7 @@ export class RetailComponentComponent implements OnInit {
     this.store.dispatch(new warehouseActions.LoadAllWarehouseByRole());
     this.store.dispatch(new customerActions.LoadAllCustomer());
     this.store.dispatch(new priceProductActions.LoadAllPriceProduct());
+    this.store.dispatch(new inventoryActions.LoadAllInventory());
 
 
     const userCookieValue = this.cookieService.get('user');
@@ -91,37 +96,54 @@ export class RetailComponentComponent implements OnInit {
       filter(loaded => loaded === true),
       mergeMap(_ =>
         this.store.pipe(select(productSelector.getAllProduct),
-          map(result => {
-            this.allProduct = result.filter(pro => pro.currentPrice);
-            this.fullProductData = UtilitiesService.cloneDeep(this.allProduct);
-          }))
+          mergeMap(allPro => 
+            this.store.pipe(select(inventorySelector.getIsLoaded),
+              filter(invenLoaded => invenLoaded === true),
+              mergeMap(_ =>
+                this.store.pipe(select(inventorySelector.getAllInventory),
+                map(allInven => {
+                  let result: Product[] = UtilitiesService.cloneDeep(allPro);
+                  this.allProduct = result.filter(pro => pro.currentPrice).map(item => {
+                    item.inventory = 0;
+                    return item;
+                  });
+                  this.fullProductData = UtilitiesService.cloneDeep(this.allProduct);
+                  this.allInventory = UtilitiesService.cloneDeep(allInven);
+
+                  this.store.pipe(select(warehouseSelector.getIsLoaded),
+                    filter(loaded => loaded === true),
+                    mergeMap(_ =>
+                      this.store.pipe(select(warehouseSelector.getAllWarehouseByRole),
+                        map(result => {
+                          this.allWarehouse = result;
+                          if (result && result.length > 0) {
+                            this.userStore.pipe(select(userSelector.getIsLoaded),
+                              // filter(loaded => loaded === true),
+                              mergeMap(_ =>
+                                this.userStore.pipe(select(userSelector.getCurrentUser),
+                                  map(currentU => {
+                                    this.currentUser = currentU;
+                                    if (!UtilitiesService.isNullOrEmpty(this.currentUser?.defaultWareHouseId)) {
+                                      this.currentWarehouse = result.find(w => w.id === this.currentUser.defaultWareHouseId)
+                                    } else {
+                                      this.currentWarehouse = result[0];
+                                    }
+                                    this.assignInventoryToProduct();
+                                  }))
+                              ), take(1)).subscribe();
+                          }
+                        }))
+                    ), take(1)
+                  ).subscribe();
+
+                }))
+              )
+            )
+          ))
       ), take(1)
     ).subscribe();
 
-    this.store.pipe(select(warehouseSelector.getIsLoaded),
-      filter(loaded => loaded === true),
-      mergeMap(_ =>
-        this.store.pipe(select(warehouseSelector.getAllWarehouseByRole),
-          map(result => {
-            this.allWarehouse = result;
-            if (result && result.length > 0) {
-              this.userStore.pipe(select(userSelector.getIsLoaded),
-                // filter(loaded => loaded === true),
-                mergeMap(_ =>
-                  this.userStore.pipe(select(userSelector.getCurrentUser),
-                    map(currentU => {
-                      this.currentUser = currentU;
-                      if (!UtilitiesService.isNullOrEmpty(this.currentUser?.defaultWareHouseId)) {
-                        this.currentWarehouse = result.find(w => w.id === this.currentUser.defaultWareHouseId)
-                      } else {
-                        this.currentWarehouse = result[0];
-                      }
-                    }))
-                ), take(1)).subscribe();
-            }
-          }))
-      ), take(1)
-    ).subscribe();
+    
 
     this.store.pipe(select(customerSelector.getIsLoaded),
       filter(loaded => loaded === true),
@@ -155,6 +177,20 @@ export class RetailComponentComponent implements OnInit {
     this.totalAmountBill = 0;
   }
 
+
+  assignInventoryToProduct(){
+    this.allProduct.forEach(item => item.inventory = 0);
+    this.allInventory.filter(a => a.wareHouseId === this.currentWarehouse.id).forEach(inven => {
+      let existingPro = this.allProduct.find(p => p.id === inven.productId);
+      if(!UtilitiesService.isNullOrEmpty(existingPro)){
+        existingPro.inventory = inven.quantity;
+      }
+    })
+  }
+
+  currentWarehouseChange(){
+    this.assignInventoryToProduct();
+  }
 
   addProductToBill(item: Product) {
 
@@ -227,10 +263,10 @@ export class RetailComponentComponent implements OnInit {
   }
 
   openPaymentDialog() {
-    // if(!this.currentBill || !this.currentBill.listBillDetails ||  this.currentBill.listBillDetails.length === 0 ){
-    //   alert("Hãy thêm sản phẩm vào giỏ hàng")
-    //   return;
-    // }
+    if(!this.currentBill || !this.currentBill.listBillDetails ||  this.currentBill.listBillDetails.length === 0 ){
+      this.dialogService.showAlert("Hãy thêm sản phẩm vào giỏ hàng");
+      return;
+    }
 
     this.currentBill.wareHouseId = this.currentWarehouse.id;
     this.currentBill.totalAmount = this.totalAmountBill;

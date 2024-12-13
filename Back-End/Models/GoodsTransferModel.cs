@@ -17,6 +17,8 @@ namespace APIBackend.Models
         public WareHouseModel ToWareHouse { get; set; }
         public int UserId { get; set; }
         public UserModel User { get; set; }
+        public int? AcceptedById { get; set; }
+        public UserModel AcceptedBy { get; set; }
         public Status Status { get; set; }
         public List<GoodTransferDetailModel> ListGoodTransferDetailsModel { get; set; }
     }

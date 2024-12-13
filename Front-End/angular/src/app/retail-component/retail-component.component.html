@@ -18,6 +18,7 @@
                 [(ngModel)]="currentWarehouse" 
                 name="warehouseName" 
                 [clearable]="false"
+                (ngModelChange)="currentWarehouseChange()"
                 #warehouseName="ngModel">
             </ng-select>
         </div>
@@ -61,6 +62,7 @@
                 <div class="product-item">
                     <img src="{{item.imgPath ? item.imgPath : 'https://localhost:7030/images/default/default_image.png'}}" alt="{{item.name}}" width="70" height="70">
                     <span class="product-name">{{item.name}}</span>
+                    <span class="product-name">Tồn kho: {{item.inventory}}</span>
                     <span class="product-price">{{item.currentPrice | currency:'VND':'symbol':'1.0-0' }}</span>
                     <button class="add-to-cart" (click)="addProductToBill(item)">+</button>
                 </div>

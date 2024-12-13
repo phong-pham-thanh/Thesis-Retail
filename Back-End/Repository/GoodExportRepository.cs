@@ -15,7 +15,8 @@ namespace APIBackend.Repository
         public GoodsExport AddGoodExport(GoodsExport goodsExport);
         public List<GoodsExportModel> GetAllGoodExports();
         public GoodsExportModel GetGoodExportById(int id);
-        public GoodsExportModel AcceptGoodExport(int id);
+        public GoodsExportModel AcceptGoodExport(int id, int acceptById);
+        public GoodsExportModel CancelGoodExport(int id, int acceptById);
         public bool RemoveGoodExport(int id);
         public GoodsExportModel UpdateGoodExport(int id, GoodsExportModel updateItem);
         public List<GoodsExportModel> GetAllGoodExportByDate(DateParam dateParam);
@@ -45,6 +46,8 @@ namespace APIBackend.Repository
         public GoodsExportModel GetGoodExportById(int id)
         {
             return _goodExportMapper.ToModel(_coreContext.GoodsExports.Include(go => go.Customer)
+                                            .Include(go => go.CreatedBy)
+                                            .Include(go => go.AcceptedBy)
                                             .Include(go => go.ListGoodExportDetails)
                                             .Where(go => go.Id == id).FirstOrDefault());
         }
@@ -54,11 +57,13 @@ namespace APIBackend.Repository
             List<GoodsExport> listGoodExports= new List<GoodsExport>();
             listGoodExports = _coreContext.GoodsExports
                                             .Include(go => go.Customer)
+                                            .Include(go => go.CreatedBy)
+                                            .Include(go => go.AcceptedBy)
                                             .Include(go => go.ListGoodExportDetails).ToList();
             return _goodExportMapper.ToModels(listGoodExports);
         }
 
-        public GoodsExportModel AcceptGoodExport(int id)
+        public GoodsExportModel AcceptGoodExport(int id, int acceptById)
         {
             GoodsExport efObject = _coreContext.GoodsExports.Where(x => x.Id == id).Include(x => x.ListGoodExportDetails).FirstOrDefault();
 
@@ -67,6 +72,22 @@ namespace APIBackend.Repository
                 throw new ArgumentException("Good Export not found");
             }
             efObject.ExportStatus = Status.Success;
+            efObject.AcceptedById = acceptById;
+            _coreContext.SaveChanges();
+
+            return _goodExportMapper.ToModel(efObject);
+        }
+
+        public GoodsExportModel CancelGoodExport(int id, int acceptById)
+        {
+            GoodsExport efObject = _coreContext.GoodsExports.Where(x => x.Id == id).Include(x => x.ListGoodExportDetails).FirstOrDefault();
+
+            if(efObject == null)
+            {
+                throw new ArgumentException("Good Export not found");
+            }
+            efObject.ExportStatus = Status.Canceled;
+            efObject.AcceptedById = acceptById;
             _coreContext.SaveChanges();
 
             return _goodExportMapper.ToModel(efObject);

@@ -15,6 +15,8 @@
             <p><strong>Ngày tạo phiếu: {{currentGoodTransfer.transferDate | date: 'dd/MM/yyyy' }}  </strong></p>
             <p><strong>Xuất từ kho: {{currentGoodTransfer.fromWareHouse?.address}}  </strong></p>
             <p><strong>Nhập đến kho:  {{currentGoodTransfer.toWareHouse?.address}} </strong></p>
+            <p><strong>Người tạo phiếu:  {{currentGoodTransfer.user?.name}} </strong></p>
+            <p *ngIf="currentGoodTransfer.status !== 2"><strong>Người hoàn thành: {{currentGoodTransfer.acceptedBy?.name}} </strong></p>
             <p><strong>Trạng thái: </strong>
                 <span *ngIf="currentGoodTransfer.status === 0" class="error-good-transfer">Đã Hủy</span>
                 <span *ngIf="currentGoodTransfer.status === 1" class="complete-good-transfer">Hoàn thành</span>

@@ -78,6 +78,7 @@ function App() {
               <Route path="/quan-ly/employee"/>
 
             </Route>
+            <Route path="*" element={<Navigate to="/quan-ly" replace />} />
           </Routes>
         </div>
       </BrowserRouter>
