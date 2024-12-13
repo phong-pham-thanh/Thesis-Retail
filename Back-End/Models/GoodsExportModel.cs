@@ -17,5 +17,9 @@ namespace APIBackEnd.Models
         public List<GoodExportDetailModel> ListGoodExportDetailsModel { get; set; }
         public CustomerModel Customer { get; set; }
         public WareHouseModel WareHouse { get; set; }
+        public int? CreatedById { get; set; }
+        public UserModel CreatedBy { get; set; }
+        public int? AcceptedById { get; set; }
+        public UserModel AcceptedBy { get; set; }
     }
 }

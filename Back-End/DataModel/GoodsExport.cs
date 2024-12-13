@@ -12,11 +12,17 @@ namespace APIBackend.DataModel
         public DateTime ExportDate { get; set; }
         public int? CustomerId { get; set; }
         [ForeignKey("CustomerId")]
-        public Customers? Customer { get; set; }
+        public Customers Customer { get; set; }
         public int WareHouseId { get; set; }
         [ForeignKey("WareHouseId")]
-        public WareHouses? WareHouse { get; set; }
+        public WareHouses WareHouse { get; set; }
         public Status ExportStatus { get; set; }
-        public List<GoodExportDetails>? ListGoodExportDetails { get; set; }
+        public int? CreatedById { get; set; }
+        [ForeignKey("CreatedById")]
+        public Users CreatedBy { get; set; }
+        public int? AcceptedById { get; set; }
+        [ForeignKey("AcceptedById")]
+        public Users AcceptedBy { get; set; }
+        public List<GoodExportDetails> ListGoodExportDetails { get; set; }
     }
 }

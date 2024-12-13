@@ -25,27 +25,27 @@ export class GoodTransferService {
   }
 
   addNewGoodTransfer(goodTransfer: GoodTransfer){
-    return this.http.post<GoodTransfer>(this.apiAdd, goodTransfer)
+    return this.http.post<GoodTransfer>(this.apiAdd, goodTransfer, {withCredentials: true})
   }
 
   acceptGoodTransfer(id: number){
-    return this.http.get<GoodTransfer>(`${this.apiAccept}/${id}`)
+    return this.http.get<GoodTransfer>(`${this.apiAccept}/${id}`, {withCredentials: true})
   }
 
   deleteGoodTransfer(id: number){
-    return this.http.get<boolean>(`${this.apiDelete}/${id}`)
+    return this.http.get<boolean>(`${this.apiDelete}/${id}`, {withCredentials: true})
   }
 
   cancelGoodTransfer(id: number){
-    return this.http.get<GoodTransfer>(`${this.apiCancel}/${id}`)
+    return this.http.get<GoodTransfer>(`${this.apiCancel}/${id}`, {withCredentials: true})
   }
   
   getByIdGoodTransfer(id: number){
-    return this.http.get<GoodTransfer>(`${this.apiGetById}/${id}`)
+    return this.http.get<GoodTransfer>(`${this.apiGetById}/${id}`, {withCredentials: true})
   }
   
   updateGoodTransfer(goodTransfer: GoodTransfer){
-    return this.http.post<GoodTransfer>(`${this.apiUpdate}/${goodTransfer.id}`, goodTransfer)
+    return this.http.post<GoodTransfer>(`${this.apiUpdate}/${goodTransfer.id}`, goodTransfer, {withCredentials: true})
   }
 
   downloadFile(id: number) {

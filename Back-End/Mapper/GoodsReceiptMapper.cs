@@ -15,14 +15,17 @@ namespace APIBackEnd.Mapper
         private readonly IGoodReciptDetailMapper _goodReciptDetailMapper;
         private readonly IPartnerMapper _partnerMapper;
         private readonly IWareHouseMapper _wareHouseMapper;
+        private readonly IUserMapper _userMapper;
         public GoodsReceiptMapper(IGoodReciptDetailMapper goodReciptDetailMapper,
             IPartnerMapper partnerMapper,
+            IUserMapper userMapper,
             IWareHouseMapper wareHouseMapper
             ) 
         {
             _goodReciptDetailMapper = goodReciptDetailMapper;
             _partnerMapper = partnerMapper;
             _wareHouseMapper = wareHouseMapper;
+            _userMapper = userMapper;
         }
         public GoodsReceiptModel ToModel(GoodsReceipt efObject)
         {
@@ -39,6 +42,10 @@ namespace APIBackEnd.Mapper
             modelObject.ReceiptStatus = efObject.ReceiptStatus;
             modelObject.ImportDate = efObject.ImportDate;
             modelObject.TotalAmount = efObject.TotalAmount;
+            modelObject.CreatedById = efObject.CreatedById;
+            modelObject.CreatedBy = _userMapper.ToModel(efObject.CreatedBy);
+            modelObject.AcceptedById = efObject.AcceptedById;
+            modelObject.AcceptedBy = _userMapper.ToModel(efObject.AcceptedBy);
             modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(efObject.ListGoodReciptDetails);
             return modelObject;
         }
@@ -57,6 +64,10 @@ namespace APIBackEnd.Mapper
                 modelObject.Partner = _partnerMapper.ToModel(item.Partner);
                 modelObject.WareHouseId = item.WareHouseId;
                 modelObject.WareHouse = _wareHouseMapper.ToModel(item.WareHouse);
+                modelObject.CreatedById = item.CreatedById;
+                modelObject.AcceptedById = item.CreatedById;
+                modelObject.AcceptedBy = _userMapper.ToModel(item.AcceptedBy);
+                modelObject.CreatedBy = _userMapper.ToModel(item.CreatedBy);
                 modelObject.ListGoodReciptDetailsModel = _goodReciptDetailMapper.ToModels(item.ListGoodReciptDetails);
                 result.Add(modelObject);
             }
@@ -74,6 +85,8 @@ namespace APIBackEnd.Mapper
             efObject.ReceiptStatus = modelObject.ReceiptStatus;
             efObject.ImportDate = modelObject.ImportDate;
             efObject.TotalAmount = modelObject.TotalAmount;
+            efObject.CreatedById = modelObject.CreatedById;
+            efObject.AcceptedById = modelObject.AcceptedById;
             return;
         }
     }

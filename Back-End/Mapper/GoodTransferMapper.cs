@@ -1,5 +1,6 @@
 ﻿using APIBackend.DataModel;
 using APIBackend.Models;
+using APIBackEnd.Mapper;
 
 namespace APIBackend.Mapper
 {
@@ -14,14 +15,17 @@ namespace APIBackend.Mapper
         private readonly IGoodTransferDetailMapper _goodTransferDetailMapper;
         private readonly ICustomerMapper _customerMapper;
         private readonly IWareHouseMapper _warehouseMapper;
+        private readonly IUserMapper _userMapper;
         public GoodsTransferMapper(
             IGoodTransferDetailMapper goodTransferDetailMapper, 
             ICustomerMapper customerMapper,
+            IUserMapper userMapper,
             IWareHouseMapper wareHouseMapper) 
         {
             _goodTransferDetailMapper = goodTransferDetailMapper;
             _customerMapper = customerMapper;
             _warehouseMapper = wareHouseMapper;
+            _userMapper = userMapper;
         }
         public GoodsTransferModel ToModel(GoodsTransfer efObject)
         {
@@ -35,6 +39,8 @@ namespace APIBackend.Mapper
             modelObject.FromWareHouseId = efObject.FromWareHouseId;
             modelObject.ToWareHouseId = efObject.ToWareHouseId;
             modelObject.UserId = efObject.UserId;
+            modelObject.AcceptedById = efObject.AcceptedById;
+            modelObject.AcceptedBy = _userMapper.ToModel(efObject.AcceptedBy);
             modelObject.Status = efObject.Status;
             modelObject.FromWareHouse = _warehouseMapper.ToModel(efObject.FromWareHouse);
             modelObject.ToWareHouse = _warehouseMapper.ToModel(efObject.ToWareHouse);
@@ -55,6 +61,8 @@ namespace APIBackend.Mapper
                 modelObject.UserId = item.UserId;
                 modelObject.Status = item.Status;
                 modelObject.FromWareHouse = _warehouseMapper.ToModel(item.FromWareHouse);
+                modelObject.AcceptedById = item.AcceptedById;
+                modelObject.AcceptedBy = _userMapper.ToModel(item.AcceptedBy);
                 modelObject.ToWareHouse = _warehouseMapper.ToModel(item.ToWareHouse);
                 modelObject.ListGoodTransferDetailsModel = _goodTransferDetailMapper.ToModels(item.ListGoodTransferDetails);
                 result.Add(modelObject);
@@ -72,6 +80,7 @@ namespace APIBackend.Mapper
             efObject.FromWareHouseId = modelObject.FromWareHouseId;
             efObject.ToWareHouseId = modelObject.ToWareHouseId;
             efObject.UserId = modelObject.UserId;
+            efObject.AcceptedById = modelObject.AcceptedById;
             efObject.Status = modelObject.Status;
             return;
         }
