@@ -120,6 +120,7 @@ export default function ExportTransaction() {
   const [form] = Form.useForm();
 
   useEffect(() => {
+    document.title = "Quản lý Xuất hàng";
     getAllGoodReceipt()
       .then((res) => {
         setExportReciptData(res.data);
@@ -538,12 +539,12 @@ export default function ExportTransaction() {
             >
               Thêm mới
             </Button>
-            <Button icon={<DownloadOutlined />} className="custom-button">
+            {/*<Button icon={<DownloadOutlined />} className="custom-button">
               Nhập File
             </Button>
             <Button icon={<UploadOutlined />} className="custom-button">
               Xuất File
-            </Button>
+            </Button>*/}
           </div>
           <Table
             columns={columns}

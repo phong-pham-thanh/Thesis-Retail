@@ -120,6 +120,14 @@ export default function ExportGoods() {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
         </Space>),
+    },
+    {
+      title: 'Thành tiền',
+      dataIndex: 'subTotal',
+      render: (_, record) => (
+        <Space size="small">
+          {record.subTotal.toLocaleString()}
+        </Space>),
     },*/
     {
       title: 'Số lượng',
@@ -134,15 +142,6 @@ export default function ExportGoods() {
             }} />
         </Space>),
     },
-    {
-      title: 'Thành tiền',
-      dataIndex: 'subTotal',
-      render: (_, record) => (
-        <Space size="small">
-          {record.subTotal.toLocaleString()}
-        </Space>),
-    },
-
   ];
 
   const [form] = Form.useForm();

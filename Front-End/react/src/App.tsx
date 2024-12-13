@@ -38,8 +38,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/quan-ly" element={<Manager />}>
-              <Route path="/quan-ly/kiemkho" element={<Product />} />
-              <Route path="/quan-ly/danhmuc" element={<CategoryPage />} />
+              <Route path="/quan-ly/kiem-kho" element={<Product />} />
+              <Route path="/quan-ly/danh-muc" element={<CategoryPage />} />
               {/* <Route path="/quan-ly/employee" element={<Employee />} /> */}
               <Route path="/quan-ly/quan-ly-kho" element={<WarehousePage />} />
               <Route
@@ -66,8 +66,8 @@ function App() {
                 path="/quan-ly/xuat-hang/chinh-sua/:id"
                 element={<EditExportGoods />}
               />
-              <Route path="/quan-ly/khachhang" element={<CustomerPage />} />
-              <Route path="/quan-ly/nhacungcap" element={<PartnerPage />} />
+              <Route path="/quan-ly/khach-hang" element={<CustomerPage />} />
+              <Route path="/quan-ly/nha-cung-cap" element={<PartnerPage />} />
               <Route path="/quan-ly/khuyenmai" element={<Promotion />} />
               <Route path="/quan-ly/baocao" />
               <Route path="/quan-ly/retail" />

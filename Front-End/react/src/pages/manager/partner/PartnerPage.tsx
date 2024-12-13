@@ -53,6 +53,7 @@ export default function PartnerPage() {
   };
 
   useEffect(() => {
+    document.title = "Danh sách Nhà cung cấp";
     getPartners();
   }, [refresh]);
 

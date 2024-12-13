@@ -95,6 +95,7 @@ export default function Product() {
   };
 
   useEffect(() => {
+    document.title = "Kiểm kho";
     getAllProducts();
   }, [refresh]);
 
@@ -327,13 +328,13 @@ export default function Product() {
               gap: "10px",
             }}
           >
-            <CustomButton
+            {/*<CustomButton
               text="Xuất file"
               icon={<UploadFile />}
               onClick={() => message.info("Đang xuất file ...")}
               backgroundColor="#28C2FF"
               color="#fff"
-            />
+            />*/}
             <CustomButton
               text="Thêm mới"
               icon={<AddCircleIcon />}
@@ -370,7 +371,7 @@ export default function Product() {
               </span>
             </div>
             <Table
-              rowSelection={rowSelection}
+              //rowSelection={rowSelection}
               columns={columns}
               dataSource={filteredProducts}
               loading={loading}

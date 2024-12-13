@@ -129,6 +129,7 @@ export default function ImportTransaction() {
   ];
 
   useEffect(() => {
+    document.title = "Quản lý Nhập hàng";
     getAllGoodReceipt()
       .then((res) => {
         setImportReciptData(res.data);
@@ -608,12 +609,12 @@ export default function ImportTransaction() {
             >
               Thêm mới
             </Button>
-            <Button icon={<DownloadOutlined />} className="custom-button">
+            {/*<Button icon={<DownloadOutlined />} className="custom-button">
               Nhập File
             </Button>
             <Button icon={<UploadOutlined />} className="custom-button">
               Xuất File
-            </Button>
+            </Button>*/}
           </div>
           <Table
             columns={columns}

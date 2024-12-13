@@ -70,6 +70,7 @@ export default function Warehouse() {
   };
 
   useEffect(() => {
+    document.title = "Quản lý Kho";
     getAllWarehouses();
   }, [refresh]);
 
@@ -166,13 +167,13 @@ export default function Warehouse() {
           <div
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
-            <CustomButton
+            {/*<CustomButton
               text="Xuất file"
               icon={<UploadFile />}
               onClick={() => message.info("Đang xuất file...")}
               backgroundColor="#28C2FF"
               color="#fff"
-            />
+            />*/}
             <CustomButton
               text="Thêm mới"
               icon={<AddCircleIcon />}

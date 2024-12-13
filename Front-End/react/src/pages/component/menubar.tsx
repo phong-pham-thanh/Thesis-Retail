@@ -53,7 +53,7 @@ export default function NavBar() {
       icon: <DashboardIcon />,
       path: "tongquan",
       status:
-        location.pathname.includes("tongquan") ||
+        //location.pathname.includes("tongquan") ||
         location.pathname.includes("quan-ly-kho"),
       subNav: [
         {
@@ -69,22 +69,22 @@ export default function NavBar() {
       icon: <InventoryIcon />,
       path: "hanghoa/",
       status:
-        location.pathname.includes("hanghoa") ||
-        location.pathname.includes("kiemkho") ||
-        location.pathname.includes("danhmuc"),
+        //location.pathname.includes("hang-hoa") ||
+        location.pathname.includes("kiem-kho") ||
+        location.pathname.includes("danh-muc"),
       subNav: [
         {
           title: "Kiểm kho",
           icon: <FactCheckIcon />,
-          path: "kiemkho",
-          status: location.pathname.includes("kiemkho"),
+          path: "kiem-kho",
+          status: location.pathname.includes("kiem-kho"),
         },
         isAdmin
           ? {
               title: "Danh mục",
               icon: <CategoryIcon />,
-              path: "danhmuc",
-              status: location.pathname.includes("danhmuc"),
+              path: "danh-muc",
+              status: location.pathname.includes("danh-muc"),
             }
           : null,
       ],
@@ -94,7 +94,7 @@ export default function NavBar() {
       icon: <ReceiptLongIcon />,
       path: "giaodich",
       status:
-        location.pathname.includes("giaodich") ||
+        //location.pathname.includes("giaodich") ||
         location.pathname.includes("nhap-hang") ||
         location.pathname.includes("xuat-hang"),
       subNav: [
@@ -130,21 +130,21 @@ export default function NavBar() {
           icon: <HandshakeIcon />,
           path: "doitac",
           status:
-            location.pathname.includes("doitac") ||
-            location.pathname.includes("khachhang") ||
-            location.pathname.includes("nhacungcap"),
+            //location.pathname.includes("doitac") ||
+            location.pathname.includes("khach-hang") ||
+            location.pathname.includes("nha-cung-cap"),
           subNav: [
             {
               title: "Khách hàng",
               icon: <PeopleIcon />,
-              path: "khachhang",
-              status: location.pathname.includes("khachhang"),
+              path: "khach-hang",
+              status: location.pathname.includes("khach-hang"),
             },
             {
               title: "Nhà cung cấp",
               icon: <AddBusinessIcon />,
-              path: "nhacungcap",
-              status: location.pathname.includes("nhacungcap"),
+              path: "nha-cung-cap",
+              status: location.pathname.includes("nha-cung-cap"),
             },
           ],
         }
