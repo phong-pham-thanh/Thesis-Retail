@@ -99,7 +99,11 @@
         <div class="product-table">
             <div class="product-table-title">All</div>
             <ng-container *ngFor="let product of allProduct">
-                <div class="product-cell" (click)="addProduct(product)">{{product.name}}</div>
+                <div class="product-cell" (click)="addProduct(product)">
+                    <b>{{product.name}}</b>
+                    <p>Tồn kho xuất: {{product.inventoryFrom}}</p>
+                    <p>Tồn kho nhập: {{product.inventoryTo}}</p>
+                </div>
             </ng-container>
         </div>
     </div>

@@ -9,4 +9,7 @@ export class Product{
     currentPrice: number;
     listPrices: PriceProduct[];
     imgPath: string;
+    inventory?: number;
+    inventoryFrom?: number;
+    inventoryTo?: number;
 }

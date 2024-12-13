@@ -162,7 +162,7 @@ body {
 
 
 .product-list-retail {
-    width: 30%;
+    width: 32%;
     display: flex;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -180,8 +180,8 @@ body {
     flex-direction: column;
     align-items: center;
     position: relative; /* Make this container the reference for absolute positioning */
-    width: 150px; /* Adjust width to fit content */
-    height: 150px;
+    width: 180px; /* Adjust width to fit content */
+    height: 180px;
 }
 
 .product-name {
