@@ -480,9 +480,11 @@ export default function ExportTransaction() {
                 <Form.Item className="createdBy" label={"Người tạo phiếu"} name={"createdBy"}>
                   {goodReceiptData.createdBy?.name}
                 </Form.Item>
-                <Form.Item className="acceptedBy" label={"Người hoàn thành"} name={"acceptedBy"}>
-                  {goodReceiptData.exportStatus != 2 && goodReceiptData.acceptedBy?.name}
-                </Form.Item>
+                {goodReceiptData.exportStatus !== 2 && (
+                  <Form.Item className="acceptedBy" label="Người hoàn thành" name="acceptedBy">
+                    {goodReceiptData.acceptedBy?.name}
+                  </Form.Item>
+                )}
                 <Form.Item
                   className="status"
                   label={"Trạng thái"}

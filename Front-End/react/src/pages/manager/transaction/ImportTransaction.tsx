@@ -557,9 +557,11 @@ export default function ImportTransaction() {
                 <Form.Item className="createdBy" label={"Người tạo phiếu"} name={"createdBy"}>
                   {goodReceiptData.createdBy?.name}
                   </Form.Item>
-                  <Form.Item className="acceptedBy" label={"Người hoàn thành"} name={"acceptedBy"}>
-                  {goodReceiptData.receiptStatus!=2 && goodReceiptData.acceptedBy?.name}
-                  </Form.Item>
+                  {goodReceiptData.receiptStatus !== 2 && (
+                    <Form.Item className="acceptedBy" label="Người hoàn thành" name="acceptedBy">
+                      {goodReceiptData.acceptedBy?.name}
+                    </Form.Item>
+                  )}
                 <Form.Item
                   className="status"
                   label={"Trạng thái"}
