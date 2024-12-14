@@ -68,7 +68,7 @@ export default function Login() {
   useEffect(() => {
     document.title = "Đăng nhập";
     if (cookies.get("user") !== undefined) {
-      navigate("/quan-ly");
+      navigate("/quan-ly/ban-hang");
       //return
     }
   }, []);
@@ -102,7 +102,7 @@ export default function Login() {
           }
           if (res.status == 200) {
             cookies.set("user", res.data, { path: '/', maxAge: 7200 })  // set cookies for 30 minutes
-            navigate("/quan-ly");
+            navigate("/quan-ly/ban-hang");
           }
     })
     .catch((error) => 
@@ -116,7 +116,7 @@ export default function Login() {
   }
 
   if (cookies.get("user") !== undefined) {
-    navigate("/quan-ly");
+    navigate("/quan-ly/ban-hang");
     //return
   }
 

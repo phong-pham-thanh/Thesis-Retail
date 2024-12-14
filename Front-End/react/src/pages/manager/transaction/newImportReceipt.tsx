@@ -31,6 +31,8 @@ import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
 import { handleSearch } from "../../../app/processFunction";
 import Cookies from "universal-cookie";
+import { TodaySharp } from "@mui/icons-material";
+import moment from "moment";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -61,6 +63,7 @@ const gridStyle: React.CSSProperties = {
 export default function ImportGoods() {
   const navigate = useNavigate();
   const cookies = new Cookies();
+  const defaultWareHouseId = cookies.get("user")?.defaultWareHouseId;
 
   const productColumns: ColumnsType<ProductState> = [
     {
@@ -151,11 +154,14 @@ export default function ImportGoods() {
   const [allPartners, setAllPartners] = useState<PartnerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState(defaultWareHouseId);
   const [choosedCategory, setChoosedCategory] = useState("Tất cả");
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
+
+  const today= new Date();
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
@@ -188,7 +194,6 @@ export default function ImportGoods() {
       .catch((error) => {
         console.log(error);
       });
-
   }, []);
 
   //useSelector, useNavigate
@@ -319,7 +324,7 @@ export default function ImportGoods() {
     const postData: ExportDataType = {
       goodsReceiptModel: {
         id: "0",
-        importDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        importDate: form.getFieldValue("exportDate")?.toISOString()?? today.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         partnerId: form.getFieldValue("partnerId"),
         receiptStatus: 2,
         ListGoodReciptDetailsModel: [],
@@ -336,7 +341,7 @@ export default function ImportGoods() {
       })
       .catch((error) => {
         console.log(error);
-        message.error("Tạo thất bại");
+        message.error("Tạo thất bại " + error.detail);
       });
 
   };
@@ -380,12 +385,14 @@ export default function ImportGoods() {
                     required: true,
                     message: 'Không để trống',
                   }]}
+                  initialValue={defaultWareHouseId}
                 >
                   <Select
-                    defaultValue={cookies.get("user")?.defaultWareHouseId}
+                    //defaultValue={defaultWareHouseId}
                     showSearch
                     placeholder="Chọn kho"
                     optionFilterProp="label"
+                    onSelect={(value)=>setSelectedWarehouseId(value)}
                   >
                     {allWarehouses?.map((d) => {
                       return (
@@ -404,9 +411,11 @@ export default function ImportGoods() {
                     required: true,
                     message: 'Không để trống',
                   }]}
+                  initialValue={moment(today)}
                 >
                   <DatePicker
-                    showTime
+                    format={"DD/MM/YYYY"}
+                    //defaultValue={moment(today.toLocaleString(), "DD/MM/YYYY")}
                     disabledDate={(current) => { return current.valueOf() > Date.now() }}
                   />
                 </Form.Item >
@@ -415,10 +424,6 @@ export default function ImportGoods() {
                 label={"Nhà cung cấp"}
                 name={"partnerId"}
                 layout="vertical"
-                rules={[{
-                  required: true,
-                  message: 'Không để trống',
-                }]}
               >
                 <Select
                   showSearch
@@ -491,9 +496,16 @@ export default function ImportGoods() {
           })}*\/
           />*/}
           <Card className="product-table" title={choosedCategory}>
-            {filteredProducts?.map((p) =>
+            {filteredProducts?.map((p) =>{
+              const inventory = p.listInventories.find(
+                (inv) => inv.wareHouseId === selectedWarehouseId
+              );
+              return (
               <Card.Grid className="product-cell" style={gridStyle}
-                onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+                onClick={() => handleTableProductClick(p)}>
+                  <p>{p.name} </p>
+                  <p>(Kho: {inventory ? inventory.quantity : 0})</p>
+                </Card.Grid>)})}
           </Card>
         </div>
 

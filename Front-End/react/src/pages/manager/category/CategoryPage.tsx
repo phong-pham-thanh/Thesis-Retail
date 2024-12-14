@@ -51,6 +51,7 @@ export default function CategoryPage() {
   };
 
   useEffect(() => {
+    document.title = "Quản lý Danh mục";
     getCategories();
   }, [refresh]);
 

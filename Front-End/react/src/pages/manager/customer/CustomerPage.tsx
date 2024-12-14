@@ -51,6 +51,7 @@ export default function UserPage() {
   };
 
   useEffect(() => {
+    document.title = "Danh sách Khách hàng";
     getUsers();
   }, [refresh]);
 

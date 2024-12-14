@@ -50,6 +50,7 @@ for (let i = 0; i < 30; i++) {
 
 export default function Employee() {
   useEffect(() => {
+    document.title = "Danh sách Nhân viên";
   }, []);
   //useSelector, useNavigate
 

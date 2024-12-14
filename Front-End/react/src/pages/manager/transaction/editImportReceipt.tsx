@@ -161,12 +161,16 @@ export default function ImportGoods() {
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState();
+
+  const defaultWareHouseId = Number(goodReceiptData?.wareHouseId);
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
     getGoodReceiptByID(params.id)
       .then((res) => {
         setGoodReciptData(res.data);
+        setSelectedWarehouseId(res.data.wareHouseId)
         handleGetTableProductDataByID(res.data.listGoodReciptDetailsModel);
         console.log(res.data);
       })
@@ -412,6 +416,7 @@ export default function ImportGoods() {
                         showSearch
                         placeholder="Chọn kho"
                         optionFilterProp="label"
+                        onSelect={(value)=>setSelectedWarehouseId(value)}
                       >
                         {allWarehouses?.map((d) => {
                           return (
@@ -434,8 +439,8 @@ export default function ImportGoods() {
                       initialValue={moment(goodReceiptData?.importDate)}
                     >
                       <DatePicker
+                      format="DD/MM/YYYY"
                         disabled={goodReceiptData?.receiptStatus !== 2}
-                        showTime
                         disabledDate={(current) => { return current.valueOf() > Date.now() }}
                       />
                     </Form.Item >
@@ -474,7 +479,7 @@ export default function ImportGoods() {
                     onFinish();//postGoodsIssue()
                   }}
                     style={{ backgroundColor: "#465d65" }}>
-                    Thêm mới</Button>
+                    Lưu thay đổi </Button>
                 }
               </Row>
             </Space>
@@ -518,10 +523,17 @@ export default function ImportGoods() {
               <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
             </Row>
             <Card className="product-table" title={choosedCategory}>
-              {filteredProducts?.map((p) =>
-                <Card.Grid className="product-cell" style={gridStyle}
-                  onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
-            </Card>
+            {filteredProducts?.map((p) =>{
+              const inventory = p.listInventories.find(
+                (inv) => inv.wareHouseId === selectedWarehouseId
+              );
+              return (
+              <Card.Grid className="product-cell" style={gridStyle}
+                onClick={() => handleTableProductClick(p)}>
+                  <p>{p.name} </p>
+                  <p>(Kho: {inventory ? inventory.quantity : 0})</p>
+                </Card.Grid>)})}
+          </Card>
           </div>
         }
 

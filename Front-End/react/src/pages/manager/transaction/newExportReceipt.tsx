@@ -31,6 +31,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Search from "antd/lib/input/Search";
 import Cookies from "universal-cookie";
+import moment from "moment";
 
 const Option = Select.Option;
 type SearchProps = GetProps<typeof Input.Search>;
@@ -61,6 +62,7 @@ const gridStyle: React.CSSProperties = {
 export default function ExportGoods() {
   const navigate = useNavigate();
   const cookies = new Cookies();
+  const defaultWareHouseId = cookies.get("user")?.defaultWareHouseId;
 
   const productColumns: ColumnsType<ProductState> = [
     {
@@ -120,6 +122,14 @@ export default function ExportGoods() {
               updateExportProduct(record.productId, "updatePrice", e);
             }} />
         </Space>),
+    },
+    {
+      title: 'Thành tiền',
+      dataIndex: 'subTotal',
+      render: (_, record) => (
+        <Space size="small">
+          {record.subTotal.toLocaleString()}
+        </Space>),
     },*/
     {
       title: 'Số lượng',
@@ -134,15 +144,6 @@ export default function ExportGoods() {
             }} />
         </Space>),
     },
-    {
-      title: 'Thành tiền',
-      dataIndex: 'subTotal',
-      render: (_, record) => (
-        <Space size="small">
-          {record.subTotal.toLocaleString()}
-        </Space>),
-    },
-
   ];
 
   const [form] = Form.useForm();
@@ -151,11 +152,14 @@ export default function ExportGoods() {
   const [allCustomers, setAllCustomers] = useState<CustomerState[]>([]);
   const [allWarehouses, setAllWarehouses] = useState<WarehouseState[]>([]);
   const [allCategory, setAllCategory] = useState<CategoryType[]>([]);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState(defaultWareHouseId);
   const [choosedCategory, setChoosedCategory] = useState("Tất cả");
   const [exportTableData, setExportTableData] = useState<ExportProductTableState[]>([]);
   const [tempListGoodReceiptDetailModels, setTempList] = useState<ListGoodReciptDetailsModel[]>([]);
   const [total, setTotal] = useState(0);
   const [totalQty, setTotalQty] = useState(0);
+
+  const today = new Date();
 
   // const data: DataType[] = []; // Assuming DataType is the type of your data
   useEffect(() => {
@@ -307,7 +311,7 @@ export default function ExportGoods() {
     const postData: ExportDataType = {
       goodsExportModel: {
         id: "0",
-        exportDate: form.getFieldValue("exportDate")?.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
+        exportDate: form.getFieldValue("exportDate")?.toISOString() ?? today.toISOString(), //event.toISOString(),//form.getFieldValue("exportDate"),
         customerId: form.getFieldValue("customerId"),
         exportStatus: 2,
         listGoodExportDetailModels: [],
@@ -371,12 +375,13 @@ export default function ExportGoods() {
                       required: true,
                       message: 'Không để trống',
                     }]}
+                    initialValue={defaultWareHouseId}
                   >
                     <Select
                       showSearch
                       placeholder="Chọn kho"
                       optionFilterProp="label"
-                      defaultValue={cookies.get("user")?.defaultWareHouseId}
+                      onSelect={(value) => setSelectedWarehouseId(value)}
                     >
                       {allWarehouses?.map((d) => {
                         return (
@@ -396,9 +401,10 @@ export default function ExportGoods() {
                       required: true,
                       message: 'Không để trống',
                     }]}
+                    initialValue={moment(today)}
                   >
                     <DatePicker
-                      showTime
+                      format={"DD/MM/YYYY"}
                       disabledDate={(current) => { return current.valueOf() > Date.now() }}
                     />
                   </Form.Item >
@@ -409,10 +415,6 @@ export default function ExportGoods() {
                     label={"Khách hàng"}
                     name={"customerId"}
                     layout="vertical"
-                    rules={[{
-                      required: true,
-                      message: 'Không để trống',
-                    }]}
                   >
                     <Select
                       showSearch
@@ -449,8 +451,8 @@ export default function ExportGoods() {
                     <Table.Summary.Cell index={0}></Table.Summary.Cell>
                     <Table.Summary.Cell index={1}><h4>Tổng cộng:</h4></Table.Summary.Cell>
                     <Table.Summary.Cell index={2}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={3}></Table.Summary.Cell>
-                    <Table.Summary.Cell index={4}>{totalQty}</Table.Summary.Cell>
+                    <Table.Summary.Cell index={3}>{totalQty}</Table.Summary.Cell>
+                    <Table.Summary.Cell index={4}></Table.Summary.Cell>
                     <Table.Summary.Cell index={5}>{total.toLocaleString()}</Table.Summary.Cell>
                   </Table.Summary.Row>
                 </Table.Summary>
@@ -476,9 +478,17 @@ export default function ExportGoods() {
             <Search placeholder="Tìm trong tất cả" onSearch={onSearch} style={{ width: "50%" }} />
           </Row>
           <Card className="product-table" title={choosedCategory}>
-            {filteredProducts?.map((p) =>
-              <Card.Grid className="product-cell" style={gridStyle}
-                onClick={() => handleTableProductClick(p)}>{p.name}</Card.Grid>)}
+            {filteredProducts?.map((p) => {
+              const inventory = p.listInventories.find(
+                (inv) => inv.wareHouseId === selectedWarehouseId
+              );
+              return (
+                <Card.Grid className="product-cell" style={gridStyle}
+                  onClick={() => handleTableProductClick(p)}>
+                  <p>{p.name} </p>
+                  <p>(Kho: {inventory ? inventory.quantity : 0})</p>
+                </Card.Grid>)
+            })}
           </Card>
         </div>
 

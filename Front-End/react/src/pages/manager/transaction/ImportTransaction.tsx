@@ -129,6 +129,7 @@ export default function ImportTransaction() {
   ];
 
   useEffect(() => {
+    document.title = "Quản lý Nhập hàng";
     getAllGoodReceipt()
       .then((res) => {
         setImportReciptData(res.data);
@@ -434,7 +435,7 @@ export default function ImportTransaction() {
       sorter: (a, b) => a.importDate < b.importDate ? -1 : 1,
     },
     {
-      title: "Mã kho nhập",
+      title: "Kho nhập",
       // dataIndex: "wareHouseId",
       dataIndex: ["wareHouse", "address"],
       /*filters: filterByWarehouse,
@@ -447,6 +448,13 @@ export default function ImportTransaction() {
       /*filters: filterByPartner,
       onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
       sorter: (a, b) => a.partner ? (b.partner ? (-b.partner?.name.localeCompare(a.partner?.name)) : -1) : 1,
+    },
+    {
+      title: "Người tạo phiếu",
+      dataIndex: ["createdBy", "name"],
+      /*filters: filterByPartner,
+      onFilter: (value, record) => String(record.partner.id).indexOf(value as string) === 0,*/
+      sorter: (a, b) => a.createdBy ? (b.createdBy ? (-b.createdBy?.name.localeCompare(a.createdBy?.name)) : -1) : 1,
     },
     {
       title: "Tổng tiền",
@@ -514,9 +522,9 @@ export default function ImportTransaction() {
           footer={(_, { OkBtn, CancelBtn }) => (
             goodReceiptData.receiptStatus == 2 ?
               <>
-                <Button onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
-                <Button onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
-                <Button onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
+                <Button style={{"background":"green"}} onClick={() => handleAccept(goodReceiptData.id)}>Hoàn thành</Button>
+                <Button style={{"background":"red"}} onClick={() => handleCancel(goodReceiptData.id)}>Hủy bỏ</Button>
+                <Button style={{"background":"orange"}} onClick={() => navigate("chinh-sua/" + goodReceiptData.id)}>Chỉnh sửa</Button>
                 <Button onClick={() => handleDownload(goodReceiptData.id)}>Tải thông tin phiếu</Button>
                 </>
               : <>
@@ -538,7 +546,7 @@ export default function ImportTransaction() {
                 </Form.Item>
                 <Form.Item className="time" label={"Ngày nhập"} name={"time"}>
                   <ProcessDate dateString={goodReceiptData.importDate} />
-                </Form.Item>
+                  </Form.Item>
                 <Form.Item
                   className="trans"
                   label={"Nhà cung cấp"}
@@ -546,6 +554,12 @@ export default function ImportTransaction() {
                 >
                   {goodReceiptData.partner?.name}
                 </Form.Item>
+                <Form.Item className="createdBy" label={"Người tạo phiếu"} name={"createdBy"}>
+                  {goodReceiptData.createdBy?.name}
+                  </Form.Item>
+                  <Form.Item className="acceptedBy" label={"Người hoàn thành"} name={"acceptedBy"}>
+                  {goodReceiptData.receiptStatus!=2 && goodReceiptData.acceptedBy?.name}
+                  </Form.Item>
                 <Form.Item
                   className="status"
                   label={"Trạng thái"}
@@ -608,12 +622,12 @@ export default function ImportTransaction() {
             >
               Thêm mới
             </Button>
-            <Button icon={<DownloadOutlined />} className="custom-button">
+            {/*<Button icon={<DownloadOutlined />} className="custom-button">
               Nhập File
             </Button>
             <Button icon={<UploadOutlined />} className="custom-button">
               Xuất File
-            </Button>
+            </Button>*/}
           </div>
           <Table
             columns={columns}
