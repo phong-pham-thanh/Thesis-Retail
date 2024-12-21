@@ -19,5 +19,6 @@ namespace APIBackEnd.Models
         public int? CurrentPrice { get; set; }
         public string ImgPath { get; set; }
         public string Barcode { get; set; }
+        public string LeafPath { get; set; }
     }
 }

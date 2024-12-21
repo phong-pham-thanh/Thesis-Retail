@@ -154,6 +154,7 @@ namespace APIBackend.Service
         {
             foreach (var productModel in productModels)
             {
+                productModel.LeafPath = productModel.ImgPath;
                 productModel.ImgPath = productModel.ImgPath != null ? $"{_baseUrl}/{productModel.ImgPath}" : null;
             }
         }
