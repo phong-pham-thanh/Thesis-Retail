@@ -41,6 +41,7 @@ namespace APIBackEnd.Mapper
             modelObject.Description = efObject.Description;
             modelObject.CurrentPrice = efObject.CurrentPrice;
             modelObject.ImgPath = efObject.ImgPath;
+            modelObject.Barcode = efObject.Barcode;
             return modelObject;
         }
 
@@ -60,6 +61,7 @@ namespace APIBackEnd.Mapper
                 modelObject.Description = item.Description;
                 modelObject.CurrentPrice = item.CurrentPrice;
                 modelObject.ImgPath = item.ImgPath;
+                modelObject.Barcode = item.Barcode;
                 result.Add(modelObject);
             }
             return result;
@@ -78,6 +80,7 @@ namespace APIBackEnd.Mapper
             efObject.Description = modelObject.Description;
             efObject.CurrentPrice = modelObject.CurrentPrice;
             efObject.ImgPath = modelObject.ImgPath;
+            efObject.Barcode = modelObject.Barcode;
             return efObject;
         }
     }

@@ -63,6 +63,7 @@ export default function ProductInformationPopupScreen({
     if (type === "edit" && data) {
       form.setFieldsValue({
         ...data,
+        barcode: data.barcode,
         categoryId: data.category.id,
       });
       // setImageUrl(data.imgPath || "");
@@ -184,6 +185,16 @@ export default function ProductInformationPopupScreen({
             ))}
           </Select>
         </Form.Item>
+
+
+        <Form.Item
+          name="barcode"
+          label="Barcode"
+          // rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
+        >
+          <Input />
+        </Form.Item>
+
         <Form.Item name="status" valuePropName="checked">
           <Checkbox>Active</Checkbox>
         </Form.Item>

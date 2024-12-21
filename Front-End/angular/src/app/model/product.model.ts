@@ -12,4 +12,5 @@ export class Product{
     inventory?: number;
     inventoryFrom?: number;
     inventoryTo?: number;
+    barCode: string;
 }

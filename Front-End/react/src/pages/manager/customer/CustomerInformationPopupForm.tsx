@@ -68,7 +68,7 @@ export default function CustomerInformationPopupScreen({
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Lỗi khi lưu thông tin khách hàng.");
+          message.error(error?.detail != null ? error.detail :  "Lỗi khi lưu thông tin khách hàng.");
         } finally {
           setLoading(false);
         }

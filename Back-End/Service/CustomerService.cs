@@ -36,13 +36,13 @@ namespace APIBackend.Service
 
         public CustomerModel AddNewCustomer(CustomerModel customerModel)
         {
-            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel);
+            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel, columnName: "PhoneNumber");
             return _customerRepository.AddNewCustomer(customerModel);
         }
 
         public CustomerModel UpdateCustomer(int id, CustomerModel customerModel)
         {
-            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel, id: id);
+            Utilities.ValidateDuplicate<CustomerModel>(_customerRepository.GetAll(), customerModel, id: id, columnName: "PhoneNumber");
             return _customerRepository.UpdateCustomer(id, customerModel);
         }
 

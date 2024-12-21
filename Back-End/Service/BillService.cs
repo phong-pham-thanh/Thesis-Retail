@@ -19,6 +19,7 @@ namespace APIBackend.Service
         public BillModel AddBill(BillModel billModel);
         public List<BillModel> GetAll();
         public List<BillModel> GetAllByDate(DateParam dateParam);
+        public List<BillModel> GetAllByDateAndProductId(DateParam dateParam, int productId);
         public List<BillModel> GetAllByRole();
         public byte[] PrintBill(int id);
         // public List<BillModel> GetAllBills();
@@ -122,6 +123,11 @@ namespace APIBackend.Service
             return _billRepository.GetAllByDate(dateParam);
         }
 
+        public List<BillModel> GetAllByDateAndProductId(DateParam dateParam, int productId)
+        {
+            return _billRepository.GetAllByDateAndProductId(dateParam, productId);
+
+        }
 
         private void AutoAddGoodExport(BillModel billModel, List<BillDetailModel> listBillDetailModels)
         {

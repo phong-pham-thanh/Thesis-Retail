@@ -18,5 +18,6 @@ namespace APIBackEnd.Models
         public List<PriceProductModel> ListPrices { get; set; }
         public int? CurrentPrice { get; set; }
         public string ImgPath { get; set; }
+        public string Barcode { get; set; }
     }
 }

@@ -69,7 +69,7 @@ export default function PartnerInformationPopupScreen({
           if (onSave) onSave(); // Trigger refresh or other action
           handleCancel();
         } catch (error) {
-          message.error("Lỗi khi lưu thông tin đối tác.");
+          message.error(error?.detail != null ? error.detail :  "Lỗi khi lưu thông tin đối tác.");
         } finally {
           setLoading(false);
         }

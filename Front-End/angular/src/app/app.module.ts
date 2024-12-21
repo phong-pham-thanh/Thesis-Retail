@@ -78,6 +78,7 @@ import { AnalyseExportGoodComponent } from './analyse/analyse-export-good/analys
 import { AnalyseBillByMonthComponent } from './analyse/analyse-bill-by-month/analyse-bill-by-month.component';
 import { AnalysePriceProductComponent } from './analyse/analyse-price-product/analyse-price-product.component';
 import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
+import { AnalyseTopProductSaleComponent } from './analyse/analyse-top-product-sale/analyse-top-product-sale.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -124,6 +125,7 @@ export function CustomPaginatorIntl() {
     AnalyseBillByMonthComponent,
     AnalysePriceProductComponent,
     ConfirmDialogComponent,
+    AnalyseTopProductSaleComponent,
   ],
   imports: [
     BrowserModule,

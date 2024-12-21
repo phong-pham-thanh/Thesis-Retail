@@ -52,8 +52,9 @@ export class AnalysePriceProductComponent {
     this.analyseService.getPriceProductAnalyse(id).subscribe((result: PriceProductAnalyse[]) => {
       if (result.length > 0) {
         var newDataSetItem = {
-          label: this.allProducts.find(x => x.id === id).name,
+          label: "Giá niêm yết",
           fill: false,
+          borderColor: "blue",
           data: result.map(r => {
             return {
               x: new Date(Number(r.year), Number(r.month) - 1, Number(r.day)),
@@ -70,7 +71,7 @@ export class AnalysePriceProductComponent {
     this.analyseService.getPriceProductImportAnalyse(id).subscribe((result: PriceProductAnalyse[]) => {
       if (result.length > 0) {
         var newDataSetItem = {
-          label: this.allProducts.find(x => x.id === id).name,
+          label: "Giá nhập",
           fill: false,
           borderColor: "red",
           data: result.map(r => {

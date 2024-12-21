@@ -126,7 +126,7 @@ export default function Login() {
     <div className="login">
       <div className="box-form">
         <img src={svgLogo} alt="App logo" />
-        <h2 className="title">Login</h2> <br />
+        <h2 className="title">Đăng nhập</h2> <br />
         <Form
           layout="vertical"
           name="normal_login"
@@ -136,7 +136,7 @@ export default function Login() {
         >
           <Form.Item
             className="email"
-            label={"Email Address"}
+            label={"Tên đăng nhập"}
             name={"username"}
             required
           >
@@ -144,20 +144,20 @@ export default function Login() {
           </Form.Item>
           <Form.Item
             className="password"
-            label={"Password"}
+            label={"Mật khẩu"}
             name={"password"}
             required
           >
             <Input.Password />
           </Form.Item>
-          <div className="more-action">
+          {/* <div className="more-action">
             <Checkbox>Remember me</Checkbox>
             <Form.Item>
               <a className="login-form-forgot" href="">
                 Reset Password?
               </a>
             </Form.Item>
-          </div>
+          </div> */}
           <Form.Item>
             <Button
               type="primary"
@@ -168,7 +168,7 @@ export default function Login() {
                 <FontAwesomeIcon className="circle-loading" icon={faSpinner}
                   onClick={() => onFinish} />
               ) : (
-                "Log in"
+                "Đăng nhập"
               )}
             </Button>
             {errorMessage() && (
@@ -197,12 +197,12 @@ export default function Login() {
               ""
             )}
           </Form.Item>
-          <div className="signup-account">
+          {/* <div className="signup-account">
             <span>Don't have account yet?</span>
             <a className="signup-action" href="/register">
               New Account
             </a>
-          </div>
+          </div> */}
         </Form>
       </div>
       <div className="right-content">

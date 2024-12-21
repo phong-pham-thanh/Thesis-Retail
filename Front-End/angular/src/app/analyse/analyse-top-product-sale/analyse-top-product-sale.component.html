@@ -1,0 +1,32 @@
+<div class="container">
+    <h2>Top sản phẩm bán chạy theo khoảng thời gian</h2>
+
+
+
+    <mat-form-field appearance="fill" class="range-date-picker-bill-list">
+        <mat-label>Tìm theo khoảng ngày</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Ngày bắt đầu" (dateChange)="onDateRangeChange($event)">
+            <input matEndDate placeholder="Ngày kết thúc" (dateChange)="onDateRangeChange($event)">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <input type="number" id="inputData" class="max-value-top-sale" [(ngModel)]="topSale" placeholder="Giới hạn số sản phẩm" />
+    <button class="btn btn-primary" (click)="getDataAnalyse()">Thống kê</button>
+
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng đã bán</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of currentData">
+                <td>{{ item.productName }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

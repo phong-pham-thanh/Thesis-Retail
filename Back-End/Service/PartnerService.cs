@@ -34,13 +34,13 @@ namespace APIBackend.Service
 
         public PartnerModel AddNewPartner(PartnerModel partnerModel)
         {
-            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel);
+            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel, columnName: "PhoneNumber");
             return _partnerRepository.AddNewPartner(partnerModel);
         }
 
         public PartnerModel UpdatePartner(int id, PartnerModel partnerModel)
         {
-            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel, id: id);
+            Utilities.ValidateDuplicate<PartnerModel>(_partnerRepository.GetAll(), partnerModel, id: id, "PhoneNumber");
             return _partnerRepository.UpdatePartner(id, partnerModel);
         }
 

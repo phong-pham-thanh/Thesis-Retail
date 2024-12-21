@@ -69,7 +69,8 @@ public static class Utilities
 
         if (exists)
         {
-            throw new InvalidOperationException($"Item with the name '{nameValue}' already exists.");
+            string objectDuplicate = columnName != "Name" ? columnName : "Tên";
+            throw new InvalidOperationException($"Đối tượng với '{columnName}' '{nameValue}' đã tồn tại.");
         }
     }
 

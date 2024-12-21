@@ -16,6 +16,7 @@ namespace APIBackend.Repository
         public List<BillModel> GetAll();
         public BillModel GetById(int id);
         public List<BillModel> GetAllByDate(DateParam dateParam);
+        public List<BillModel> GetAllByDateAndProductId(DateParam dateParam, int productId);
     }
 
     public class BillRepository : IBillRepository
@@ -53,12 +54,21 @@ namespace APIBackend.Repository
         public List<BillModel> GetAllByDate(DateParam dateParam)
         {
             return _billMapper.ToModels(_coreContext.Bill.Where(b => b.CreatedDate >= dateParam.StartDate && b.CreatedDate <= dateParam.EndDate)
-                                                            .Include(b => b.ListBillDetails).ToList());
+                                                            .Include(b => b.ListBillDetails).ThenInclude(b => b.Product)
+                                                            .ToList());
         }
 
         public BillModel GetById(int id)
         {
             return _billMapper.ToModel(_coreContext.Bill.Where(b => b.Id == id).Include(b => b.ListBillDetails).FirstOrDefault());
+        }
+        public List<BillModel> GetAllByDateAndProductId(DateParam dateParam, int productId)
+        {
+            return _billMapper.ToModels(_coreContext.Bill
+                            .Include(b => b.ListBillDetails)
+                            .Where(b => b.CreatedDate >= dateParam.StartDate 
+                                        && b.CreatedDate <= dateParam.EndDate
+                                        && b.ListBillDetails.Any(li => li.ProductId == productId)).ToList());
         }
     }
 }

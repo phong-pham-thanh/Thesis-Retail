@@ -35,6 +35,7 @@ interface DataType {
   status: boolean;
   listInventories: InventoryType[];
   imgPath: string;
+  barCode: string;
 }
 
 const emptydata: DataType = {
@@ -50,6 +51,7 @@ const emptydata: DataType = {
   status: true,
   listInventories: [],
   imgPath: "",
+  barCode: "",
 };
 
 export default function Product() {

@@ -68,6 +68,7 @@ export type ProductState = {
   description: string;
   status: boolean;
   imgPath?: string;
+  barcode?: string;
   listInventories?:
       {
         "id": number,

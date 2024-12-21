@@ -13,6 +13,7 @@ namespace APIBackend.Service
         public List<BillMonthAnalyse> GetAllBillAnalyseMonth(DateParam dateParam);
         public List<PriceProductAnalyse> GetAllPriceOfProduct(int productId);
         public List<PriceProductAnalyse> GetAllPriceImportOfProduct(int productId);
+        public List<GoodNoteAnalyse> GetAllProductSaleAnalyseMonth(DateParam dateParam, int? topSale);
     }
     public class AnalyseService : IAnalyseService
     {
@@ -166,5 +167,29 @@ namespace APIBackend.Service
             return result;
         }
 
+
+        public List<GoodNoteAnalyse> GetAllProductSaleAnalyseMonth(DateParam dateParam, int? topSale)
+        {
+            topSale = topSale != null && topSale > 0 ? topSale : Int32.MaxValue;
+            if (dateParam.StartDate == null)
+            {
+                dateParam.StartDate = DateTime.MinValue;
+            }
+            if (dateParam.EndDate == null)
+            {
+                dateParam.EndDate = DateTime.MaxValue;
+            }
+            List<BillModel> allBill = _billService.GetAllByDate(dateParam);
+            List<BillDetailModel> allBillDetai = allBill.SelectMany(b => b.ListBillDetails).ToList();
+
+            List<GoodNoteAnalyse> result = allBillDetai.GroupBy(b => b.ProductId)
+                                .Select(group => new GoodNoteAnalyse
+                                {
+                                    ProductId = group.Key,
+                                    ProductName = group.FirstOrDefault().Product.Name,
+                                    Quantity = group.Sum(g => g.Quantity),
+                                }).ToList();
+            return result.OrderByDescending(r => r.Quantity).Take((int)topSale).ToList();
+        }
     }
 }

@@ -14,6 +14,7 @@ export class AnalyseService {
   private apiGetAllBillByMonthAnalyse = `${environment.apiBaseUrl}/Analyse/billByMonth`;
   private apiGetAllPriceProductAnalyse = `${environment.apiBaseUrl}/Analyse/priceProdctAnalyse`;
   private apiGetAllPriceProductImportAnalyse = `${environment.apiBaseUrl}/Analyse/priceProdctImportAnalyse`;
+  private apiGetTopSale = `${environment.apiBaseUrl}/Analyse/getTopSale`;
 
   constructor(private http: HttpClient) { }
 
@@ -35,5 +36,9 @@ export class AnalyseService {
 
   getPriceProductImportAnalyse(productId: number) :Observable<PriceProductAnalyse[]> {
     return this.http.get<PriceProductAnalyse[]>(`${this.apiGetAllPriceProductImportAnalyse}/${productId}`)
+  }
+
+  getTopSale(dateRange: DateParam, topSale: number) :Observable<GoodNoteAnalyse[]> {
+    return this.http.post<GoodNoteAnalyse[]>(`${this.apiGetTopSale}/${topSale}`, dateRange)
   }
 }

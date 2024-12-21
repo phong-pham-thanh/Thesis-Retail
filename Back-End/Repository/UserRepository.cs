@@ -58,6 +58,7 @@ namespace APIBackEnd.Repository
         {
             Users efobject = new Users();
             _userMapper.ToEntity(efobject, user);
+            efobject.Password = "123";
             _coreContext.Users.Add(efobject);
             _coreContext.SaveChanges(true);
             return _userMapper.ToModel(efobject);

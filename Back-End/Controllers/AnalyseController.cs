@@ -55,5 +55,12 @@ namespace APIBackend.Controllers
         {
             return _service.GetAllPriceImportOfProduct(productId);
         }
+
+        [HttpPost]
+        [Route("getTopSale/{topSale}")]
+        public List<GoodNoteAnalyse> GetTopSale([FromBody] DateParam dateParam, int topSale)
+        {
+            return _service.GetAllProductSaleAnalyseMonth(dateParam, topSale);
+        }
     }
 }
