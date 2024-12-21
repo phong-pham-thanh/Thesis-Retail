@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Product } from '../model/product.model';
 import { assetUrl } from "../../single-spa/asset-url";
 import { BillDetails } from '../model/billDetail.model';
@@ -32,6 +32,7 @@ import { DialogService } from '../common/dialog.service';
 import { BillService } from '../services/bill.service';
 import * as billSelector from '../state/bill-state/bill.reducer';
 import { Inventory } from '../model/inventory.model';
+import { BarcodeScannerService } from '../services/barcode-scanner.service';
 
 
 const imageUrl = assetUrl("images/Cocacola.png");
@@ -67,7 +68,8 @@ export class RetailComponentComponent implements OnInit {
     private dialog: MatDialog,
     private dialogService: DialogService,
     private billService: BillService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private barcodeScannerService: BarcodeScannerService,
   ) {
     this.store.dispatch(new productActions.LoadAllProduct());
     this.store.dispatch(new warehouseActions.LoadAllWarehouseByRole());
@@ -89,6 +91,18 @@ export class RetailComponentComponent implements OnInit {
     }
   }
 
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.barcodeScannerService.handleKeyPress(event, (barcode) => {
+      const selectProduct = this.allProduct.find(p => p.barcode == barcode);
+      if(UtilitiesService.isNullOrEmpty(selectProduct)){
+        this.dialogService.showAlert("Hiện không có sản phẩm này");
+        return;
+      }
+      this.addProductToBill(selectProduct);
+    });
+  }
 
   ngOnInit(): void {
 

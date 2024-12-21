@@ -66,12 +66,11 @@ export default function ProductInformationPopupScreen({
         barcode: data.barcode,
         categoryId: data.category.id,
       });
-      // setImageUrl(data.imgPath || "");
+      setImageUrl(data.leafPath || "");
       setFullPath(data.imgPath || "");
     } else if (type === "create") {
       form.resetFields();
     }
-    clearImage();
   }, [data, type, form]);
 
   const handleCancel = () => {
